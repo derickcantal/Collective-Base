@@ -3,6 +3,7 @@
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\LeeseeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportsController;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Counter;
 use App\Http\Controllers\DashboardController;
@@ -22,9 +23,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'displayall'])->name('dashboard.edit');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/users', [UsersController::class, 'displayall'])->name('users');
@@ -35,10 +36,10 @@ Route::middleware('auth')->group(function () {
     
 });
 
-Route::get('/reports', function () {
-    return view('reports');
-})->middleware(['auth', 'verified'])->name('reports');
-
+Route::middleware('auth')->group(function () {
+    Route::get('/reports', [ReportsController::class, 'displayall'])->name('reports.edit');
+    
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
