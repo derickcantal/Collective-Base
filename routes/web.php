@@ -24,11 +24,12 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'displayall'])->name('dashboard.edit');
+    Route::get('/dashboard', [DashboardController::class, 'displaysales'])->name('dashboard.edit');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/users', [UsersController::class, 'displayall'])->name('users');
+    Route::get('/users', [UsersController::class, 'displayall'])->name('users.edit');
+    
 });
 
 Route::middleware('auth')->group(function () {

@@ -1,16 +1,10 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Users') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
+<section>
+	<div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                    <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-3 pb-4 bg-white dark:bg-gray-900">
+                    <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
                         <div>
                             <x-primary-button class="ms-4">
                                 {{ __('Add New User') }}
@@ -84,4 +78,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</section>

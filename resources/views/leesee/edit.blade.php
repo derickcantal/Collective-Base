@@ -12,7 +12,7 @@
 
             </div>
         </div>
-    </div>
+    </div> 
 
     <div class="py-1">
         <div class="grid grid-cols-2 gap-1">
