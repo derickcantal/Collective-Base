@@ -70,7 +70,13 @@
                                 </td>
                             </tr>
                             @endforeach
+                            @if(empty($products))
+							<td scope="row" class="px-6 py-4">
+								No Records Found.
+							</td>	
+							@endif
                         </tbody>
+
                     </table>
                 </div>
   

@@ -18,8 +18,11 @@ return new class extends Migration
             $table->integer('cabinetid');
             $table->string('cabinetname');
             $table->string('productname');
+            $table->integer('qty');
             $table->decimal('origprice', $precision = 8, $scale = 2);
             $table->decimal('srp', $precision = 8, $scale = 2);
+            $table->decimal('total', $precision = 8, $scale = 2);
+            $table->decimal('grandtotal', $precision = 8, $scale = 2);
             $table->integer('userid');
             $table->string('username');
             $table->string('accesstype');

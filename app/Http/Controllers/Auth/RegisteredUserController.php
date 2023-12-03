@@ -42,7 +42,7 @@ class RegisteredUserController extends Controller
             'branchid' => ['integer', 'max:255'],
             'branchname' => ['required', 'string', 'max:255'],
             'accesstype' => ['required', 'string', 'max:255'],
-            'status' => ['required', 'string', 'max:255'],
+            'status' => ['string', 'max:255'],
         ]);
 
         $user = User::create([
@@ -57,9 +57,10 @@ class RegisteredUserController extends Controller
             'branchid' => '1',
             'branchname' => $request->branchname,
             'accesstype' => $request->accesstype,
-            'status' => $request->status,
+            'status' => 'Active',
         ]);
 
+        
         event(new Registered($user));
 
         Auth::login($user);

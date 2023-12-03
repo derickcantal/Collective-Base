@@ -12,7 +12,7 @@
         <!-- Email Address -->
         <div class="mt-4">
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="email" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
@@ -70,24 +70,41 @@
         <!-- branchname -->
         <div class="mt-4">
             <x-input-label for="branchname" :value="__('Branch Name')" />
-            <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname')" required autofocus autocomplete="off" />
+            <!-- <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname')" required autofocus autocomplete="off" /> -->
+            <select id="branchname" name="branchname" class="form-select mt-1 block w-full" :value="old('branchname')">
+                <option value = "CB Main">CB Main</option>
+                <option value = "CB Annex">CB Annex</option>
+                <option value = "CB Complex">CB Complex</option>
+                <option value = "CB Plus 1">CB Plus 1</option>
+                <option value = "CB Plus 2">CB Plus 2</option>
+                <option value = "CB Plus 3">CB Plus 3</option>
+            </select>
             <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
         </div>
 
+        
         <!-- accesstype -->
         <div class="mt-4">
             <x-input-label for="accesstype" :value="__('Access Type')" />
-            <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" :value="old('accesstype')" required autofocus autocomplete="off" />
+            <!-- <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" :value="old('accesstype')" required autofocus autocomplete="off" /> -->
+            <select id="accesstype" name="accesstype" class="form-select mt-1 block w-full" :value="old('accesstype')">
+                <option value ="Administrator">Administrator</option>
+                <option value ="Supervisor">Supervisor</option>
+                <option value ="Cashier">Cashier</option>
+                <option value ="Leesee">Leesee</option>
+            </select>
             <x-input-error :messages="$errors->get('accesstype')" class="mt-2" />
         </div>
 
-        <!-- status -->
-        <div class="mt-4">
-            <x-input-label for="status" :value="__('Status')" />
-            <x-text-input id="status" class="block mt-1 w-full" type="text" name="status" :value="old('status')" required autofocus autocomplete="off" />
-            <x-input-error :messages="$errors->get('status')" class="mt-2" />
-        </div>
-
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="flex items-center justify-end mt-4">
             <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
                 {{ __('Already registered?') }}
