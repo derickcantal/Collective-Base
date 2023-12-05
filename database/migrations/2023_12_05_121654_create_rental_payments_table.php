@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rental_paymenents', function (Blueprint $table) {
+        Schema::create('rental_payments', function (Blueprint $table) {
             $table->increments('rpid');
             $table->integer('userid');
             $table->string('username');
@@ -19,7 +19,10 @@ return new class extends Migration
             $table->string('lastname');
             $table->decimal('rpamount', $precision = 8, $scale = 2);
             $table->string('rppaytype');
+            $table->string('rpmonthyear');
             $table->string('rpnotes');
+            $table->integer('branchid');
+            $table->string('branchname');
             $table->string('avatarproof');
             $table->timestamps();
             $table->string('created_by');
@@ -32,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rental_paymenents');
+        Schema::dropIfExists('rental_payments');
     }
 };
