@@ -7,6 +7,8 @@ use App\Http\Controllers\ReportsController;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Counter;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SalesController;
+use App\Http\Controllers\SalesRequestsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +26,7 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'displaysales'])->name('dashboard.edit');
+    Route::get('/dashboard', [DashboardController::class, 'displayall'])->name('dashboard.edit');
 });
 
 Route::middleware('auth')->group(function () {

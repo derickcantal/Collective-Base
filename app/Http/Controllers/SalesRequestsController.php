@@ -7,15 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
-use App\Models\User;
+use App\Models\Sales_Requests;
 
-class LeeseeController extends Controller
+
+class SalesRequestsController extends Controller
 {
-     public function displayall()
+    public function displayall()
     {
-        $leesee = User::where('accesstype', 'Leesee')->get();
         $sales_requests = DB::table('sales_requests')->get();
-        
-        return view('leesee.edit', ['leesee' => $leesee],['sales_requests' => $sales_requests]);
+        return view('dashboard.edit',['sales_requests' => $sales_requests]);
     }
 }

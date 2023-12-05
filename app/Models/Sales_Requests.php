@@ -21,7 +21,6 @@ class Sales_Requests extends Model
                 'rnotes',
                 'userid',
                 'firstname',
-                'userid',
                 'lastname',
                 'updated_by',
                 'status',

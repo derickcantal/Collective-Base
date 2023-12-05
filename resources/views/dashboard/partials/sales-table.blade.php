@@ -8,7 +8,7 @@
 						{{ __("Sales") }}
 					</div>
 
-					@csrf
+					
 					<div class="max-w-7xl overflow-x-auto shadow-md sm:rounded-lg " >
 						<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
 							<thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -43,7 +43,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								
+								@csrf
 								@foreach($sales as $sale) 
 								
 								<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -77,7 +77,7 @@
 								</tr>
 								@endforeach
 							</tbody>
-							@if(empty($products))
+							@if(empty($sale))
 							<td scope="row" class="px-6 py-4">
 								No Records Found.
 							</td>	
