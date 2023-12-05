@@ -50,14 +50,14 @@
                         @foreach($rentalpayments as $rental) 
                         
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <td class="px-6 py-4">
                                 <x-input-label for="rpid" :value="$rental->rpid"/>
-                            </th>
+                            </td>
                             <td class="px-6 py-4">
                                 <x-input-label for="username" :value="$rental->username"/>
                             </td>
                             <td class="px-6 py-4">
-                                <x-input-label for="lastname" :value="$rental->lastname"/>, <x-input-label for="firstname" :value="$rental->firstname"/>
+                            <x-input-label for="lastname" :value="$rental->lastname"/>, <x-input-label for="firstname" :value="$rental->firstname"/>
                             </td>
                             <td class="px-6 py-4">
                                 <x-input-label for="rpamount" :value="$rental->rpamount"/>

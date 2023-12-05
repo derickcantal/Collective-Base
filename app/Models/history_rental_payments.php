@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 
-class attendance extends Model
+class history_rental_payments extends Model
 {
     use HasFactory;
 
@@ -15,11 +15,15 @@ class attendance extends Model
         'username',
         'firstname',
         'lastname',
+        'rpamount',
+        'rppaytype',
+        'rpmonthyear',
+        'rpnotes',
         'branchid',
         'branchname',
-        'attnotes',
+        'avatarproof',
         'status',
     ];
 
-    protected $primaryKey = 'attid';
+    protected $primaryKey = 'rpid';
 }

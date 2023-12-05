@@ -6,20 +6,26 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 
-class attendance extends Model
+class history_sales_requests extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'userid',
-        'username',
-        'firstname',
-        'lastname',
+        'salesrid',
         'branchid',
         'branchname',
-        'attnotes',
+        'cabinetid',
+        'cabinetname',
+        'totalsales',
+        'totalcollected',
+        'avatarproof',
+        'rnotes',
+        'userid',
+        'firstname',
+        'lastname',
+        'updated_by',
         'status',
     ];
 
-    protected $primaryKey = 'attid';
+    protected $primaryKey = 'salesrid';
 }
