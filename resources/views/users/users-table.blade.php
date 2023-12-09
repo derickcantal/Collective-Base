@@ -6,9 +6,10 @@
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                     <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-800">
                         <div>
-                            <x-primary-button class="ms-4">
-                                {{ __('Add New User') }}
-                            </x-primary-button>
+                                @include('users.partials.users-add')
+                                <x-primary-button class="ms-4" x-data="" x-on:click.prevent="$dispatch('open-modal', 'add-user')">
+                                    {{ __('Add New User') }}
+                                </x-primary-button>
                             
                         </div>
                         <label for="table-search" class="sr-only">Search</label>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\LeeseeController;
 use App\Http\Controllers\ProfileController;
@@ -26,21 +27,19 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'displayall'])->name('dashboard.edit');
+    Route::get('/dashboard', [DashboardController::class, 'displayall'])->name('dashboard.index');
+});
+Route::middleware('auth')->group(function () {
+    Route::resource('users', UsersController::class);
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/users', [UsersController::class, 'displayall'])->name('users.edit');
+    Route::get('/leesee', [LeeseeController::class, 'displayall'])->name('leesee.index');
     
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/leesee', [LeeseeController::class, 'displayall'])->name('leesee.edit');
-    
-});
-
-Route::middleware('auth')->group(function () {
-    Route::get('/reports', [ReportsController::class, 'displayall'])->name('reports.edit');
+    Route::get('/reports', [ReportsController::class, 'displayall'])->name('reports.index');
     
 });
 

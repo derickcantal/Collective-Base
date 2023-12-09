@@ -21,7 +21,7 @@ class DashboardController extends Controller
         $attendance = DB::table('attendance')->get();
         $rentalpayments = DB::table('rental_payments')->get();
 
-        return view('dashboard.edit')->with(['sales' => $sales])
+        return view('dashboard.index')->with(['sales' => $sales])
                                         ->with(['sales_requests' => $sales_requests])
                                         ->with(['attendance' => $attendance])
                                         ->with(['rentalpayments' => $rentalpayments]);

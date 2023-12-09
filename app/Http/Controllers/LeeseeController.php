@@ -16,6 +16,6 @@ class LeeseeController extends Controller
         $leesee = User::where('accesstype', 'Leesee')->get();
         $sales_requests = DB::table('sales_requests')->get();
         
-        return view('leesee.edit', ['leesee' => $leesee],['sales_requests' => $sales_requests]);
+        return view('leesee.index', ['leesee' => $leesee],['sales_requests' => $sales_requests]);
     }
 }

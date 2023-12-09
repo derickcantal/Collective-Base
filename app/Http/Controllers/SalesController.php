@@ -16,6 +16,6 @@ class SalesController extends Controller
     {
         $sales = sales::all();
 
-        return view('dashboard.edit',['sales' => $sales]);
+        return view('dashboard.index',['sales' => $sales]);
     }
 }

@@ -21,7 +21,7 @@ class ReportsController extends Controller
         $attendance = DB::table('history_attendance')->get();
         $rentalpayments = DB::table('history_rental_payments')->get();
 
-        return view('reports.edit')->with(['sales' => $sales])
+        return view('reports.index')->with(['sales' => $sales])
                                     ->with(['sales_requests' => $sales_requests])
                                     ->with(['attendance' => $attendance])
                                     ->with(['rentalpayments' => $rentalpayments]);

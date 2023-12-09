@@ -15,6 +15,6 @@ class SalesRequestsController extends Controller
     public function displayall()
     {
         $sales_requests = DB::table('sales_requests')->get();
-        return view('dashboard.edit',['sales_requests' => $sales_requests]);
+        return view('dashboard.index',['sales_requests' => $sales_requests]);
     }
 }
