@@ -64,20 +64,20 @@
                                                 
                                             </tr>
                                         </thead>
-                                             @foreach ($user as $users)
+                                             @forelse ($user as $users)
                                         
                                         <tbody>
                                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                                
                                                 <td class="px-6 py-4">
-                                                    <x-input-label for="userid" value=" {{ ++$i }}"/>
+                                                    <x-input-label>{{ ++$i }}</x-input-label>
                                                 </td>
                                                 <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                                                    <img class="w-10 h-10 rounded-full" src="$users->avatar" alt="avatar">
+                                                    <img class="w-10 h-10 rounded-full" src="{{ "/storage/$users->avatar" }}" alt="avatar">
                                                     <div class="ps-3">
                                                         <div class="text-base font-semibold"><x-input-label for="username" :value="$users->username"/></div>
-                                                        <div class="font-normal text-gray-500"><x-input-label for="email" :value="$users->lastname"/></div>
-                                                    </div>  
+                                                        <x-input-label>{{ $users->lastname }}, {{ $users->firstname }} {{ $users->middlename }}</x-input-label>
+                                                        <x-input-label for="email" :value="$users->email"/>
                                                 </th>
                                                 <td class="px-6 py-4">
                                                     <x-input-label for="branchname" :value="$users->branchname"/>
@@ -92,7 +92,7 @@
                                                 </td>
                                                 <td class="px-6 py-4">
                                                     
-                                                    <form method="POST" action="{{ route('users.destroy',$users->userid) }}" >
+                                                    <form action="{{ route('users.destroy',$users->userid) }}" method="POST">
                                                     <a class="font-medium text-green-600 dark:text-green-500 hover:underline" href="{{ route('users.show',$users->userid) }}">Show</a>
                                                     |
                                                     <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('users.edit',$users->userid) }}">Modify</a>
@@ -104,15 +104,18 @@
                                                     </form>
                                                 </td>
                                             </tr>
-                                            @endforeach
-                                            @if(empty($users))
+                                           
+                                            @empty
                                             <td scope="row" class="px-6 py-4">
                                                 No Records Found.
                                             </td>	
-                                            @endif
+                                            @endforelse
+                                            	
                                         </tbody>
                                     </table>
-                                    {!! $user->links() !!}
+                                    <div class="mt-4">
+                                        {!! $user->links() !!}
+                                    </div>
                                     
                                 </div>
                             </div>

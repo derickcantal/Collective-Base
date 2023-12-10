@@ -118,7 +118,7 @@ class UsersController extends Controller
         $request->validate([
             'avatar' => ['string', 'max:255'],
             'username' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'firstname' => ['required', 'string', 'max:255'],
             'middlename' => ['required', 'string', 'max:255'],
@@ -142,7 +142,7 @@ class UsersController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request, User $user): RedirectResponse
     {
 
         $user->delete();

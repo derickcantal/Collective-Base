@@ -10,6 +10,7 @@ use App\Livewire\Counter;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SalesRequestsController;
+use App\Http\Controllers\Profile\AvatarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile/avatar',[AvatarController::class,'update'])->name('profile.avatar');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
