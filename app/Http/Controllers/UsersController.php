@@ -1,24 +1,36 @@
 <?php
 
 namespace App\Http\Controllers;
+        
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserTableRequest;
+use App\Http\Requests\UserUpdateTableRequest;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
-use Illuminate\View\View;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+
 
 class UsersController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $user = User::wherenot('accesstype', 'Leesee')->latest()->paginate(5);
+        $request->search;
+        $user = User::whereNot('accesstype',"Leesee")
+                    ->where(function(Builder $builder) use($request){
+                        $builder->where('username','like',"%{$request->search}%")
+                                ->orWhere('firstname','like',"%{$request->search}%")
+                                ->orWhere('lastname','like',"%{$request->search}%")
+                                ->orWhere('middlename','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('email','like',"%{$request->search}%")
+                                ->orWhere('status','like',"%{$request->search}%") ;
+                    })
+                    ->paginate(5);
     
         return view('users.index',compact('user'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -40,23 +52,9 @@ class UsersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserTableRequest $request)
     {
-        $request->validate([
-            'avatar' => ['string', 'max:255'],
-            'username' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'firstname' => ['required', 'string', 'max:255'],
-            'middlename' => ['required', 'string', 'max:255'],
-            'lastname' => ['required', 'string', 'max:255'],
-            'birthdate' => ['required', 'date', 'max:255'],
-            'branchid' => ['integer', 'max:255'],
-            'branchname' => ['required', 'string', 'max:255'],
-            'accesstype' => ['required', 'string', 'max:255'],
-            'status' => ['string', 'max:255'],
-        ]);
-
+        
         $user = User::create([
             'avatar' => 'avatar',
             'username' => $request->username,
@@ -113,22 +111,8 @@ class UsersController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UserUpdateTableRequest $request, User $user)
     {
-        $request->validate([
-            'avatar' => ['string', 'max:255'],
-            'username' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'firstname' => ['required', 'string', 'max:255'],
-            'middlename' => ['required', 'string', 'max:255'],
-            'lastname' => ['required', 'string', 'max:255'],
-            'birthdate' => ['required', 'date', 'max:255'],
-            'branchid' => ['integer', 'max:255'],
-            'branchname' => ['required', 'string', 'max:255'],
-            'accesstype' => ['required', 'string', 'max:255'],
-            'status' => ['string', 'max:255'],
-        ]);
     
         $user->update($request->all());
     

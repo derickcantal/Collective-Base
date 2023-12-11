@@ -12,19 +12,24 @@
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                                 
-                                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                                    <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-800">
-                                        <div>
-                                            <x-primary-button class="ms-4">
-                                                <a class="btn btn-primary" href="{{ route('users.create') }}"> Create New user</a>
-                                            </x-primary-button>
+                                <div class="grid gap-4 mb-4 grid-cols-2">  
+                                        <div class="col-span-2 sm:col-span-1">
+                                            <div>
+                                                <x-primary-button class="ms-4">
+                                                    <a class="btn btn-primary" href="{{ route('users.create') }}"> Create New user</a>
+                                                </x-primary-button>
+                                            </div>
                                         </div>
-                                    
-                                        <label for="table-search" class="sr-only">Search</label>
-                                        <div class="relative">
-                                            <input type="text" id="table-search-users" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for users">
+                                        <div class="col-span-2 sm:col-span-1 flex justify-end">
+                                            <form action="{{ route('users.index') }}" method="get">
+                                                    <input type="text" name="search" id="table-search-users" class=" text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for users">
+                                                    <x-primary-button class="ms-4">
+                                                     Search
+                                                    </x-primary-button>
+                                                
+                                            </form>
                                         </div>
-                                    </div>
+                                </div>
                         
                                     @if ($message = Session::get('success'))
                                     <div class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800" role="alert">
@@ -37,7 +42,7 @@
                                     </div>
                                     </div>
                                     @endif
-                                    
+                                </div>    
 
                                     @csrf
                                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
