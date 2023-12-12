@@ -10,6 +10,8 @@ class attendance extends Model
 {
     use HasFactory;
 
+    protected $table = 'attendance';
+    
     protected $fillable = [
         'userid',
         'username',
@@ -22,4 +24,5 @@ class attendance extends Model
     ];
 
     protected $primaryKey = 'attid';
+
 }

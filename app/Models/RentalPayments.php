@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 
-class RentalPayment extends Model
+class RentalPayments extends Model
 {
     use HasFactory;
+
+    protected $table = 'Rental_Payments';  
 
     protected $fillable = [
         'userid',
@@ -22,6 +24,7 @@ class RentalPayment extends Model
         'branchid',
         'branchname',
         'avatarproof',
+        'created_by',
         'status',
     ];
 

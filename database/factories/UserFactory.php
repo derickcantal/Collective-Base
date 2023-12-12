@@ -25,13 +25,13 @@ class UserFactory extends Factory
         $branchname = ['CB Main', 'CB Annex', 'CB Complex', 'CB Plus 1', 'CB Plus 2', 'CB Plus 3'];
         $status = ['Active', 'Inactive'];
         $atype = ['Administrator', 'Supervisor','Cashier','Leesee'];
+
         return [
-            'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
             'avatar' => 'avatars/avatar-default.jpg',
             'username' => Str::random(10),
             'email' => fake()->unique()->safeEmail(),
-            'password' => Hash::make('password'),
+            'password' => static::$password ??= Hash::make('password'),
             'firstname' => Str::random(1),
             'middlename'=> Str::random(1),
             'lastname' => fake()->name(),

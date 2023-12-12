@@ -10,6 +10,8 @@ class history_sales extends Model
 {
     use HasFactory;
 
+    protected $table = 'history_sales';      
+
     protected $fillable = [
         'salesname',
         'salesavatar',

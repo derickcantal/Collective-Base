@@ -10,6 +10,8 @@ class history_sales_requests extends Model
 {
     use HasFactory;
 
+    protected $table = 'history_sales_requests';   
+
     protected $fillable = [
         'salesrid',
         'branchid',

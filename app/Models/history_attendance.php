@@ -10,6 +10,8 @@ class history_attendance extends Model
 {
     use HasFactory;
 
+    protected $table = 'history_attendance';
+
     protected $fillable = [
         'userid',
         'username',

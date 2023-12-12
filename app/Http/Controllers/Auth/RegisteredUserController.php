@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserTableRequest;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -28,25 +29,11 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(UserTableRequest $request): RedirectResponse
     {
-        $request->validate([
-            'avatar' => ['string', 'max:255'],
-            'username' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'firstname' => ['required', 'string', 'max:255'],
-            'middlename' => ['required', 'string', 'max:255'],
-            'lastname' => ['required', 'string', 'max:255'],
-            'birthdate' => ['required', 'date', 'max:255'],
-            'branchid' => ['integer', 'max:255'],
-            'branchname' => ['required', 'string', 'max:255'],
-            'accesstype' => ['required', 'string', 'max:255'],
-            'status' => ['string', 'max:255'],
-        ]);
 
         $user = User::create([
-            'avatar' => 'img/avatar-default.jpg',
+            'avatar' => 'avatars/avatar-default.jpg',
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),

@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 
-class Sales_Requests extends Model
+class SalesRequests extends Model
 {
     use HasFactory;
 
+        protected $table = 'Sales_Requests';  
+
         protected $fillable = [
-            'salesrid',
             'branchid',
             'branchname',
             'cabinetid',

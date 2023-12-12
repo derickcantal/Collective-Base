@@ -10,6 +10,8 @@ class history_rental_payments extends Model
 {
     use HasFactory;
 
+    protected $table = 'history_rental_payments';
+
     protected $fillable = [
         'userid',
         'username',
