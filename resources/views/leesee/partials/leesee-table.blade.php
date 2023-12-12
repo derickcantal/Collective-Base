@@ -46,7 +46,7 @@
 
                                 
                                 <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                                    <img class="w-10 h-10 rounded-full" src="$leesees->avatar" alt="avatar">
+                                    <img class="w-10 h-10 rounded-full" src="{{ asset("/$leesees->avatar") }}" alt="avatar">
                                     <div class="ps-3">
                                         <div class="text-base font-semibold"><x-input-label for="username" :value="$leesees->username"/></div>
                                         <div class="font-normal text-gray-500"><x-input-label for="email" :value="$leesees->lastname"/></div>

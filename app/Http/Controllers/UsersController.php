@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
         
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserSearchRequest;
 use App\Http\Requests\UserTableRequest;
 use App\Http\Requests\UserUpdateTableRequest;
 use App\Models\User;
@@ -17,7 +18,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 class UsersController extends Controller
 {
 
-    public function index(Request $request)
+    public function index(UserSearchRequest $request)
     {
         $request->search;
         $user = User::whereNot('accesstype',"Leesee")
@@ -56,7 +57,7 @@ class UsersController extends Controller
     {
         
         $user = User::create([
-            'avatar' => 'avatar',
+            'avatar' => 'img/avatar-default.jpg',
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -90,7 +91,8 @@ class UsersController extends Controller
      */
     public function show(User $user)
     {
-        return view('users.show',['user' => $user]);
+        $user = User::find('user');
+        return view('users.index',['user' => $user]);
     } 
      
     /**

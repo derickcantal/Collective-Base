@@ -78,7 +78,7 @@
                                                     <x-input-label>{{ ++$i }}</x-input-label>
                                                 </td>
                                                 <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                                                    <img class="w-10 h-10 rounded-full" src="{{ "/storage/$users->avatar" }}" alt="avatar">
+                                                    <img class="w-10 h-10 rounded-full" src="{{ asset("/storage/$users->avatar") }}" alt="avatar">
                                                     <div class="ps-3">
                                                         <div class="text-base font-semibold"><x-input-label for="username" :value="$users->username"/></div>
                                                         <x-input-label>{{ $users->lastname }}, {{ $users->firstname }} {{ $users->middlename }}</x-input-label>
@@ -98,7 +98,7 @@
                                                 <td class="px-6 py-4">
                                                     
                                                     <form action="{{ route('users.destroy',$users->userid) }}" method="POST">
-                                                    <a class="font-medium text-green-600 dark:text-green-500 hover:underline" href="{{ route('users.show',$users->userid) }}">Show</a>
+                                                    <a class="font-medium text-green-600 dark:text-green-500 hover:underline" data-modal-target="show-user" data-modal-toggle="show-user" >Show</a>
                                                     |
                                                     <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('users.edit',$users->userid) }}">Modify</a>
                                                     @csrf
@@ -129,7 +129,50 @@
                 </div>
             </div>
         </div>
+        
+
+
+
+<!-- Main modal -->
+<div id="show-user" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    User Profile Information
+                </h3>
+                <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="show-user">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-4 md:p-5">
+                 
+                <div>
+                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username: </label>
+                </div>
+                
+                <div class="flex justify-between">
+                    <div class="flex items-start">
+                        
+                        <div class="flex items-center h-5 text-sm font-medium text-gray-900 dark:text-white">
+                            -<x-input-label>, </x-input-label>
+                        </div>
+                    </div>
+                </div>
+                   
+            </div>
+        </div>
+    </div>
+</div> 
+
     </section>
+
 </x-app-layout>
 
 

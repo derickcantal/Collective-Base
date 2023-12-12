@@ -4,7 +4,7 @@
             {{ __('Profile Avatar') }}
         </h2>
 
-        <img width="100" height="100" class="rounded-full mt-4" src="{{ "/storage/$user->avatar" }}" alt="user avatar" />
+        <img width="100" height="100" class="rounded-full mt-4" src="{{ asset("/storage/$user->avatar") }}" alt="user avatar" />
 
         
     </header>

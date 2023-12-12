@@ -23,7 +23,7 @@
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('leesee.index')" :active="request()->routeIs('leesee.index')">
-                        {{ __('Leesee') }}
+                        {{ __('Renters') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
@@ -56,7 +56,7 @@
                             {{ __('Users') }}
                         </x-dropdown-link>
                         <x-dropdown-link :href="route('leesee.index')" :active="request()->routeIs('leesee.index')">
-                            {{ __('Leesee') }}
+                            {{ __('Renters') }}
                         </x-dropdown-link>
                         <x-dropdown-link :href="route('reports.index')" :active="request()->routeIs('reports.index')">
                             {{ __('Reports') }}
@@ -105,7 +105,7 @@
         </div>
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('leesee.index')" :active="request()->routeIs('leesee.index')">
-                {{ __('Leesee') }}
+                {{ __('Renters') }}
             </x-responsive-nav-link>
         </div>
         <div class="pt-2 pb-3 space-y-1">

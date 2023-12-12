@@ -5,6 +5,8 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
+use Illuminate\Support\Arr;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -20,12 +22,24 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $branchname = ['CB Main', 'CB Annex', 'CB Complex', 'CB Plus 1', 'CB Plus 2', 'CB Plus 3'];
+        $status = ['Active', 'Inactive'];
+        $atype = ['Administrator', 'Supervisor','Cashier','Leesee'];
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'avatar' => 'avatars/avatar-default.jpg',
+            'username' => Str::random(10),
+            'email' => fake()->unique()->safeEmail(),
+            'password' => Hash::make('password'),
+            'firstname' => Str::random(1),
+            'middlename'=> Str::random(1),
+            'lastname' => fake()->name(),
+            'birthdate' => Carbon::create('2000', '01', '01'),
+            'branchid' => '1',
+            'branchname' => Arr::random($branchname),
+            'accesstype' => Arr::random($atype),
+            'status' => Arr::random($status),
         ];
     }
 

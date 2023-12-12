@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <u><a href="{{ route('users.index') }}"> Users</a></u> / {{ __('Create New User') }}
+            <u><a href="{{ route('users.index') }}"> Users</a></u> / {{ __('Modify User') }} / {{ $user->username }}
         </h2>
     </x-slot>
     <section>
@@ -56,7 +56,7 @@
                                                 <!-- username -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="username" :value="__('Username')" />
-                                                    <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username', $user->username)" required autofocus autocomplete="username" />
+                                                    <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username', $user->username)" required autofocus />
                                                     <x-input-error :messages="$errors->get('username')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -64,7 +64,7 @@
                                                 <!-- Email Address -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="email" :value="__('Email')" />
-                                                    <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $user->email)" required autocomplete="email" />
+                                                    <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $user->email)" required />
                                                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -76,7 +76,7 @@
                                                     <x-text-input id="password" class="block mt-1 w-full"
                                                                     type="password"
                                                                     name="password"
-                                                                    required autocomplete="new-password" />
+                                                                    required />
 
                                                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                                                 </div>
@@ -88,7 +88,7 @@
 
                                                     <x-text-input id="password_confirmation" class="block mt-1 w-full"
                                                                     type="password"
-                                                                    name="password_confirmation" required autocomplete="new-password" />
+                                                                    name="password_confirmation" required />
 
                                                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                                                 </div>                    
@@ -97,7 +97,7 @@
                                                 <!-- firstname -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="firstname" :value="__('First Name')" />
-                                                    <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname', $user->firstname)" required autofocus autocomplete="given-name" />
+                                                    <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname', $user->firstname)" required autofocus/>
                                                     <x-input-error :messages="$errors->get('firstname')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -105,7 +105,7 @@
                                                 <!-- middlename -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="middlename" :value="__('Middle Name')" />
-                                                    <x-text-input id="middlename" class="block mt-1 w-full" type="text" name="middlename" :value="old('middlename', $user->middlename)" required autofocus autocomplete="additional-name" />
+                                                    <x-text-input id="middlename" class="block mt-1 w-full" type="text" name="middlename" :value="old('middlename', $user->middlename)" required autofocus />
                                                     <x-input-error :messages="$errors->get('username')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -113,7 +113,7 @@
                                                     <!-- lastname -->
                                                     <div class="form-group mt-4">
                                                     <x-input-label for="lastname" :value="__('Last Name')" />
-                                                    <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname', $user->lastname)" required autofocus autocomplete="family-name" />
+                                                    <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname', $user->lastname)" required />
                                                     <x-input-error :messages="$errors->get('lastname')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -121,7 +121,7 @@
                                                 <!-- birthdate -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="birthdate" :value="__('Birth Date')" />
-                                                    <x-text-input id="birthdate" class="block mt-1 w-full" type="date" name="birthdate" :value="old('birthdate', $user->birthdate)" required autofocus autocomplete="bday" />
+                                                    <x-text-input id="birthdate" class="block mt-1 w-full" type="date" name="birthdate" :value="date('Y-m-d',strtotime(old('birthdate', $user->birthdate)))" required autofocus autocomplete="bday" />
                                                     <x-input-error :messages="$errors->get('birthdate')" class="mt-2" />
                                                 </div>
                                             </div>

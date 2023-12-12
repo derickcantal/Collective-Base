@@ -57,7 +57,7 @@
             <div>
                 <a href="/">
                     <div class="flex justify-center">
-                        <img width="100" height="100" class="rounded-sm mt-4" src="{{ "/img/collective-base-logo.jpg" }}" alt="user avatar" />
+                        <img width="100" height="100" class="rounded-sm mt-4" src="{{ asset("/img/collective-base-logo.jpg") }}" alt="logo" />
                     </div>
                 </a>
             </div>

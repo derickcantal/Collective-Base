@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://c09b-31-215-79-194.ngrok-free.app'),
 
     'asset_url' => env('ASSET_URL'),
 
