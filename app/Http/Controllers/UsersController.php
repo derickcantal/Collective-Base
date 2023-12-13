@@ -11,7 +11,6 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 
@@ -57,7 +56,7 @@ class UsersController extends Controller
     {
         
         $user = User::create([
-            'avatar' => 'img/avatar-default.jpg',
+            'avatar' => 'avatars/avatar-default.jpg',
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -91,8 +90,7 @@ class UsersController extends Controller
      */
     public function show(User $user)
     {
-        $user = User::find('user');
-        return view('users.index',['user' => $user]);
+        return view('users.show',['user' => $user]);
     } 
      
     /**

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Users') }}
+            {{ __('Renters') }}
         </h2>
     </x-slot>
     <section>
@@ -16,12 +16,12 @@
                                         <div class="col-span-2 sm:col-span-1">
                                             <div>
                                                 <x-primary-button class="ms-4">
-                                                    <a class="btn btn-primary" href="{{ route('users.create') }}"> Create New user</a>
+                                                    <a class="btn btn-primary" href="{{ route('renters.create') }}"> Create New user</a>
                                                 </x-primary-button>
                                             </div>
                                         </div>
                                         <div class="col-span-2 sm:col-span-1 flex justify-end">
-                                            <form action="{{ route('users.index') }}" method="get">
+                                            <form action="{{ route('renters.index') }}" method="get">
                                                     <input type="text" name="search" id="table-search-users" class=" text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for users">
                                                     <x-primary-button class="ms-4">
                                                      Search
@@ -105,8 +105,8 @@
                                                 </td>
                                                 <td class="px-6 py-4">
                                                     
-                                                    <form action="{{ route('users.destroy',$users->userid) }}" method="POST">
-                                                    <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('users.edit',$users->userid) }}">Modify</a>
+                                                    <form action="{{ route('renters.destroy',$users->userid) }}" method="POST">
+                                                    <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('renters.edit',$users->userid) }}">Modify</a>
                                                         @csrf
                                                         @method('DELETE')
                                                         <x-danger-button class="ms-3">
@@ -129,6 +129,13 @@
                                     </div>
                                     
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="py-4">
+                        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                                @include('renters.leesee-request-table')
                             </div>
                         </div>
                     </div>
