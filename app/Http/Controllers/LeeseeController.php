@@ -23,10 +23,8 @@ class LeeseeController extends Controller
         return view('leesee.index', ['leesee' => $leesee],['sales_requests' => $sales_requests]);
     }
 
-    public function index(UserSearchRequest $request)
+    public function search(UserSearchRequest $request)
     {
-        $request->search;
-        $sales_requests = SalesRequests::all();
         $user = User::where('accesstype',"Leesee")
                     ->where(function(Builder $builder) use($request){
                         $builder->where('username','like',"%{$request->search}%")
@@ -35,11 +33,22 @@ class LeeseeController extends Controller
                                 ->orWhere('middlename','like',"%{$request->search}%")
                                 ->orWhere('branchname','like',"%{$request->search}%")
                                 ->orWhere('email','like',"%{$request->search}%")
-                                ->orWhere('status','like',"%{$request->search}%") ;
+                                ->orWhere('status','like',"%{$request->search}%") 
+                                ->orderBy('status','asc');
                     })
                     ->paginate(5);
     
-        return view('renters.index',compact('user'),compact('sales_requests'))
+        return view('renters.index',compact('user'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+
+    public function index(Request $request)
+    {
+        $user = User::where('accesstype',"Leesee")
+                    ->orderBy('status','asc')
+                    ->paginate(5);
+    
+        return view('renters.index',compact('user'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
      

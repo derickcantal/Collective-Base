@@ -2,7 +2,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <a href="{{ route('users.index') }}"> Users</a> /<u> {{ __('Create New User') }}</u>
+            <u><a href="{{ route('rentersrequests.index') }}"> Renters Requests</a></u> / {{ __('Create New Renters') }}
         </h2>
     </x-slot>
     <section>
@@ -10,7 +10,7 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <form action="{{ route('users.store') }}" method="POST" class="p-4 md:p-5">
+                        <form action="{{ route('rentersrequests.store') }}" method="POST" class="p-4 md:p-5">
                         @csrf   
                             <div class="relative p-4 w-full max-w-full max-h-full">
                                 <!-- Error & Success Notification -->        
@@ -52,8 +52,6 @@
                                         </h3>
                                     </div>
                                     <!-- Modal body -->
-                                    
-
                                         <div class="grid gap-4 mb-4 grid-cols-2">
                                             <div class="col-span-2 sm:col-span-1 ">
                                                 <!-- username -->
@@ -149,12 +147,7 @@
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="accesstype" :value="__('Access Type')" />
                                                     <!-- <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" :value="old('accesstype')" required autofocus autocomplete="off" /> -->
-                                                    <select id="accesstype" name="accesstype" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('accesstype')">
-                                                        <option value ="Administrator">Administrator</option>
-                                                        <option value ="Supervisor">Supervisor</option>
-                                                        <option value ="Cashier">Cashier</option>
-                                                        <option value ="Leesee">Leesee</option>
-                                                    </select>
+                                                    <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" :value="old('accesstype','Renters')" required autofocus disabled/>
                                                     <x-input-error :messages="$errors->get('accesstype')" class="mt-2" />
                                                 </div>
                                             </div>

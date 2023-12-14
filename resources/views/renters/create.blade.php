@@ -147,12 +147,7 @@
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="accesstype" :value="__('Access Type')" />
                                                     <!-- <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" :value="old('accesstype')" required autofocus autocomplete="off" /> -->
-                                                    <select id="accesstype" name="accesstype" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('accesstype')">
-                                                        <option value ="Administrator">Administrator</option>
-                                                        <option value ="Supervisor">Supervisor</option>
-                                                        <option value ="Cashier">Cashier</option>
-                                                        <option value ="Leesee">Leesee</option>
-                                                    </select>
+                                                    <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" :value="old('accesstype','Renters')" required autofocus disabled/>
                                                     <x-input-error :messages="$errors->get('accesstype')" class="mt-2" />
                                                 </div>
                                             </div>

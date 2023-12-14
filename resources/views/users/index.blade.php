@@ -21,12 +21,11 @@
                                             </div>
                                         </div>
                                         <div class="col-span-2 sm:col-span-1 flex justify-end">
-                                            <form action="{{ route('users.index') }}" method="get">
-                                                    <input type="text" name="search" id="table-search-users" class=" text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for users">
+                                            <form action="{{ route('users.search') }}" method="get">
+                                                    <input type="text" name="search" id="search" class=" text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for users">
                                                     <x-primary-button class="ms-4">
-                                                     Search
+                                                        Search
                                                     </x-primary-button>
-                                                
                                             </form>
                                         </div>
                                 </div>
@@ -125,7 +124,7 @@
                                         </tbody>
                                     </table>
                                     <div class="mt-4">
-                                        {!! $user->links() !!}
+                                        {!! $user->appends(request()->query())->links() !!}
                                     </div>
                                     
                                 </div>

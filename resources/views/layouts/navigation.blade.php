@@ -22,7 +22,7 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('leesee.index')" :active="request()->routeIs('leesee.index')">
+                    <x-nav-link :href="route('renters.index')" :active="request()->routeIs('renters.index')">
                         {{ __('Renters') }}
                     </x-nav-link>
                 </div>
@@ -55,7 +55,7 @@
                         <x-dropdown-link :href="route('users.index')" :active="request()->routeIs('users.index')">
                             {{ __('Users') }}
                         </x-dropdown-link>
-                        <x-dropdown-link :href="route('leesee.index')" :active="request()->routeIs('leesee.index')">
+                        <x-dropdown-link :href="route('renters.index')" :active="request()->routeIs('renters.index')">
                             {{ __('Renters') }}
                         </x-dropdown-link>
                         <x-dropdown-link :href="route('reports.index')" :active="request()->routeIs('reports.index')">
@@ -104,7 +104,7 @@
             </x-responsive-nav-link>
         </div>
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('leesee.index')" :active="request()->routeIs('leesee.index')">
+            <x-responsive-nav-link :href="route('renters.index')" :active="request()->routeIs('renters.index')">
                 {{ __('Renters') }}
             </x-responsive-nav-link>
         </div>

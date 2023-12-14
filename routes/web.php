@@ -32,7 +32,11 @@ Route::middleware('auth')->group(function () {
 });
 Route::middleware('auth')->group(function () {
     Route::resource('users', UsersController::class);
+    Route::get('search/users', [UsersController::class, 'search'])->name('users.search');
     Route::resource('renters', LeeseeController::class);
+    Route::get('search/renters', [LeeseeController::class, 'search'])->name('renters.search');
+    Route::resource('rentersrequests', SalesRequestsController::class);
+    Route::get('search/rentersrequest', [SalesRequestsController::class, 'search'])->name('rentersrequests.search');
 });
 
 Route::middleware('auth')->group(function () {

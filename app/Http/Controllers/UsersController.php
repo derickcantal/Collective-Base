@@ -16,20 +16,49 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class UsersController extends Controller
 {
-
-    public function index(UserSearchRequest $request)
+    public function search(UserSearchRequest $request)
     {
-        $request->search;
-        $user = User::whereNot('accesstype',"Leesee")
+        $svalue = "";
+        $svalue = $request->search;
+
+        if($svalue = "")
+        {
+            $user = User::whereNot('accesstype',"Leesee")
+                    ->orderBy('status','asc')
+                    ->paginate(5);
+        return view('users.index',compact('user'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+            
+        }
+        else
+        {
+            $user = User::whereNot('accesstype',"Leesee")
                     ->where(function(Builder $builder) use($request){
                         $builder->where('username','like',"%{$request->search}%")
                                 ->orWhere('firstname','like',"%{$request->search}%")
                                 ->orWhere('lastname','like',"%{$request->search}%")
                                 ->orWhere('middlename','like',"%{$request->search}%")
                                 ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('accesstype','like',"%{$request->search}%")
                                 ->orWhere('email','like',"%{$request->search}%")
                                 ->orWhere('status','like',"%{$request->search}%") ;
                     })
+                    ->orderBy('status','asc')
+                    ->paginate(5)
+                    
+                    ;
+    
+        return view('users.index',compact('user'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+        }
+        
+    }
+
+    public function index(Request $request)
+    {
+        $request->search;
+        $user = User::whereNot('accesstype',"Leesee")
+                    ->orderBy('status','asc')
                     ->paginate(5);
     
         return view('users.index',compact('user'))
