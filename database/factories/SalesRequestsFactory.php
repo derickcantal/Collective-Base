@@ -29,7 +29,7 @@ class SalesRequestsFactory extends Factory
             'cabinetname' => Str::random(10),
             'totalsales' => Arr::random($rpamount),
             'totalcollected' => Arr::random($rpamount),
-            'avatarproof' => 'avatars/cash-default.png',
+            'avatarproof' => 'avatars/cash-default.jpg',
             'rnotes' => Str::random(10),
             'userid' => Arr::random([rand(1, 250)]),
             'firstname' => Str::random(1),

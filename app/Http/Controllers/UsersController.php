@@ -142,7 +142,6 @@ class UsersController extends Controller
      */
     public function update(UserUpdateTableRequest $request, User $user)
     {
-    
         $user->update($request->all());
     
         return redirect()->route('users.index')
@@ -157,21 +156,32 @@ class UsersController extends Controller
      */
     public function destroy(Request $request, User $user): RedirectResponse
     {
+        if($user->status == 'Active')
+        {
+            User::where('userid', $user->userid)
+            ->update([
+            'status' => 'Inactive'
+        ]);
 
-        $user->delete();
-        
         $user = User::wherenot('accesstype', 'Leesee')->get();
-        if ($user->isNotEmpty()) {
-            
-            return redirect()->route('users.index')
-            ->with('success','User deleted successfully');
-        }
-        else{
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
 
-            return Redirect('/');
+        return redirect()->route('users.index')
+            ->with('success','User Decativated successfully');
         }
+        elseif($user->status == 'Inactive')
+        {
+            User::where('userid', $user->userid)
+            ->update([
+            'status' => 'Active'
+        ]);
+
+        $user = User::wherenot('accesstype', 'Leesee')->get();
+
+        return redirect()->route('users.index')
+            ->with('success','User Activated successfully');
+        }
+        
+        
         
         
     }

@@ -108,8 +108,22 @@
                                                     <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('users.edit',$users->userid) }}">Modify</a>
                                                         @csrf
                                                         @method('DELETE')
-                                                        <x-danger-button class="ms-3">
-                                                            {{ __('Delete Account') }}
+                                                        @php
+                                                        $txtbutton = '';
+                                                        $colorbutton = '';
+                                                        
+                                                        if ($users->status == 'Active'):
+                                                            $txtbutton = 'Decativate';
+                                                            
+                                                        elseif ($users->status == 'Inactive'):
+                                                            $txtbutton = 'Activate';
+                                                            $colorbutton = 'dark:text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800';
+                                                        endif
+                                                        
+                                                        @endphp
+                                                        
+                                                        <x-danger-button class="ms-3 {{ $colorbutton }}">
+                                                            {{ $txtbutton }}
                                                         </x-danger-button>
                                                     </form>
                                                 </td>

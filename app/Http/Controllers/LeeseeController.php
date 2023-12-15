@@ -129,7 +129,6 @@ class LeeseeController extends Controller
      */
     public function update(UserUpdateTableRequest $request, User $user)
     {
-    
         $user->update($request->all());
     
         return redirect()->route('renters.index')
@@ -144,21 +143,33 @@ class LeeseeController extends Controller
      */
     public function destroy(Request $request, User $user): RedirectResponse
     {
+        dd($user->userid);
 
-        $user->delete();
-        
+        if($user->status == 'Active')
+        {
+            User::where('userid', $user->userid)
+            ->update([
+            'status' => 'Inactive'
+        ]);
+
         $user = User::wherenot('accesstype', 'Leesee')->get();
-        if ($user->isNotEmpty()) {
-            
-            return redirect()->route('renters.index')
-            ->with('success','User deleted successfully');
+        
+        return redirect()->route('renters.index')
+            ->with('success','User Deactivated successfully');
         }
-        else{
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+        elseif($user->status == 'Inactive')
+        {
+            User::where('userid', $user->userid)
+            ->update([
+            'status' => 'Active'
+        ]);
 
-            return Redirect('/');
+        $user = User::wherenot('accesstype', 'Leesee')->get();
+        
+        return redirect()->route('renters.index')
+            ->with('success','User Activated successfully');
         }
+        
         
         
     }
