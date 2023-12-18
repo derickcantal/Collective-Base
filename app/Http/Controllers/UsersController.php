@@ -23,7 +23,7 @@ class UsersController extends Controller
 
         if($svalue = "")
         {
-            $user = User::whereNot('accesstype',"Leesee")
+            $user = User::whereNot('accesstype',"Renters")
                     ->orderBy('status','asc')
                     ->paginate(5);
         return view('users.index',compact('user'))
@@ -32,7 +32,7 @@ class UsersController extends Controller
         }
         else
         {
-            $user = User::whereNot('accesstype',"Leesee")
+            $user = User::whereNot('accesstype',"Renters")
                     ->where(function(Builder $builder) use($request){
                         $builder->where('username','like',"%{$request->search}%")
                                 ->orWhere('firstname','like',"%{$request->search}%")
@@ -57,7 +57,7 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         $request->search;
-        $user = User::whereNot('accesstype',"Leesee")
+        $user = User::whereNot('accesstype',"Renters")
                     ->orderBy('status','asc')
                     ->paginate(5);
     
@@ -105,7 +105,7 @@ class UsersController extends Controller
                         ->with('success','User created successfully.');
         }else{
             return redirect()->route('users.create')
-                        ->with('success','User creation faild');
+                        ->with('success','User creation failed');
         }  
     }
 
@@ -163,7 +163,7 @@ class UsersController extends Controller
             'status' => 'Inactive'
         ]);
 
-        $user = User::wherenot('accesstype', 'Leesee')->get();
+        $user = User::wherenot('accesstype', 'Renters')->get();
 
         return redirect()->route('users.index')
             ->with('success','User Decativated successfully');
@@ -175,7 +175,7 @@ class UsersController extends Controller
             'status' => 'Active'
         ]);
 
-        $user = User::wherenot('accesstype', 'Leesee')->get();
+        $user = User::wherenot('accesstype', 'Renters')->get();
 
         return redirect()->route('users.index')
             ->with('success','User Activated successfully');
@@ -188,7 +188,7 @@ class UsersController extends Controller
 
      public function displayall()
     {
-        $user = User::wherenot('accesstype', 'Leesee')->get();
+        $user = User::wherenot('accesstype', 'Renters')->get();
         
         return view('users.index', ['user' => $user]);
     }

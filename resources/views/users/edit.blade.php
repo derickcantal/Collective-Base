@@ -176,7 +176,7 @@
                                                         $op2_a = 'selected = "selected"';
                                                     elseif ($user->accesstype == 'Cashier'):
                                                         $op3_a = 'selected = "selected"';
-                                                    elseif ($user->accesstype == 'Leesee'):
+                                                    elseif ($user->accesstype == 'Renters'):
                                                         $op4_a = 'selected = "selected"';
                                                     endif;
                                                     
@@ -188,7 +188,7 @@
                                                         <option value ="Administrator" {{ $op1_a; }}">Administrator</option>
                                                         <option value ="Supervisor" {{ $op2_a; }}">Supervisor</option>
                                                         <option value ="Cashier" {{ $op3_a; }}">Cashier</option>
-                                                        <option value ="Leesee" {{ $op4_a; }}">Leesee</option>
+                                                        <option value ="Leesee" {{ $op4_a; }}">Renters</option>
                                                     </select>
                                                     <x-input-error :messages="$errors->get('accesstype')" class="mt-2" />
                                                     

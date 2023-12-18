@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\UsersController;
-use App\Http\Controllers\LeeseeController;
+use App\Http\Controllers\RentersController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportsController;
 use Illuminate\Support\Facades\Route;
@@ -32,15 +32,15 @@ Route::middleware('auth')->group(function () {
 });
 Route::middleware('auth')->group(function () {
     Route::resource('users', UsersController::class);
-    Route::get('search/users', [UsersController::class, 'search'])->name('users.search');
-    Route::resource('renters', LeeseeController::class);
-    Route::get('search/renters', [LeeseeController::class, 'search'])->name('renters.search');
+    Route::get('users/search', [UsersController::class, 'search'])->name('users.search');
+    
     Route::resource('rentersrequests', SalesRequestsController::class);
-    Route::get('search/rentersrequest', [SalesRequestsController::class, 'search'])->name('rentersrequests.search');
+    Route::get('rentersrequests/search', [SalesRequestsController::class, 'search'])->name('rentersrequests.search');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/leesee', [LeeseeController::class, 'displayall'])->name('leesee.index');
+    Route::resource('renters', RentersController::class);
+    Route::get('renters/search', [RentersController::class, 'search'])->name('renters.search');
     
 });
 

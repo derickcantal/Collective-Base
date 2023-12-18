@@ -24,7 +24,7 @@ class UserFactory extends Factory
     {
         $branchname = ['CB Main', 'CB Annex', 'CB Complex', 'CB Plus 1', 'CB Plus 2', 'CB Plus 3'];
         $status = ['Active', 'Inactive'];
-        $atype = ['Administrator', 'Supervisor','Cashier','Leesee'];
+        $atype = ['Administrator', 'Supervisor','Cashier','Renters'];
 
         return [
             'remember_token' => Str::random(10),

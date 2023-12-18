@@ -147,7 +147,7 @@
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="accesstype" :value="__('Access Type')" />
                                                     <!-- <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" :value="old('accesstype')" required autofocus autocomplete="off" /> -->
-                                                    <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" :value="old('accesstype','Renters')" required autofocus disabled/>
+                                                    <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" value="Renters" autofocus disabled/> 
                                                     <x-input-error :messages="$errors->get('accesstype')" class="mt-2" />
                                                 </div>
                                             </div>
