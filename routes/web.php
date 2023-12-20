@@ -8,9 +8,8 @@ use App\Http\Controllers\ReportsController;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Counter;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\SalesController;
-use App\Http\Controllers\SalesRequestsController;
 use App\Http\Controllers\Profile\AvatarController;
+use App\Http\Controllers\RenterRequestsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,15 +31,15 @@ Route::middleware('auth')->group(function () {
 });
 Route::middleware('auth')->group(function () {
     Route::resource('users', UsersController::class);
-    Route::get('users/search', [UsersController::class, 'search'])->name('users.search');
+    Route::get('users.search', [UsersController::class, 'search'])->name('users.search');
     
-    Route::resource('rentersrequests', SalesRequestsController::class);
-    Route::get('rentersrequests/search', [SalesRequestsController::class, 'search'])->name('rentersrequests.search');
+    Route::resource('rentersrequests', RenterRequestsController::class);
+    Route::get('rentersrequests.search', [RenterRequestsController::class, 'search'])->name('rentersrequests.search');
 });
 
 Route::middleware('auth')->group(function () {
     Route::resource('renters', RentersController::class);
-    Route::get('renters/search', [RentersController::class, 'search'])->name('renters.search');
+    Route::get('renters.search', [RentersController::class, 'search'])->name('renters.search');
     
 });
 

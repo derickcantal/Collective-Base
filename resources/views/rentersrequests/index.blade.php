@@ -79,40 +79,40 @@
                                         </tr>
                                     </thead>
                                             
-                                            @forelse($SalesRequests as $sales_request) 
+                                            @forelse($RenterRequests as $RenterRequest) 
                                     <tbody>
                                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                             
                                             <th class="px-6 py-4">
-                                                <div class="text-base font-semibold"><x-input-label for="username" :value="$sales_request->username"/></div>
+                                                <div class="text-base font-semibold"><x-input-label for="username" :value="$RenterRequest->username"/></div>
                                                 <x-input-label>{{ ++$i }}</x-input-label>
                                             </th>
                                             <td class="px-6 py-4">
-                                                <x-input-label>{{ $sales_request->lastname }}, {{ $sales_request->firstname }} {{ $sales_request->middlename }}</x-input-label>
+                                                <x-input-label>{{ $RenterRequest->lastname }}, {{ $RenterRequest->firstname }} {{ $RenterRequest->middlename }}</x-input-label>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <x-input-label for="branchname" :value="$sales_request->branchname"/>
+                                                <x-input-label for="branchname" :value="$RenterRequest->branchname"/>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <x-input-label for="totalsales" :value="$sales_request->totalsales"/>
+                                                <x-input-label for="totalsales" :value="$RenterRequest->totalsales"/>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <x-input-label for="totalcollected" :value="$sales_request->totalcollected"/>
+                                                <x-input-label for="totalcollected" :value="$RenterRequest->totalcollected"/>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$sales_request->avatarproof") }}" alt="avatar">
+                                                <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$RenterRequest->avatarproof") }}" alt="avatar">
                                             </td>
                                             <td class="px-6 py-4">
-                                            <x-input-label for="updated_by" :value="$sales_request->updated_by"/>
+                                            <x-input-label for="updated_by" :value="$RenterRequest->updated_by"/>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <x-input-label for="status" :value="$sales_request->status"/>
+                                                <x-input-label for="status" :value="$RenterRequest->status"/>
                                             </td>
                                             <td class="px-6 py-4">
-                                                
-                                                <form action="{{ route('rentersrequests.destroy',$sales_request->userid) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
+                                                @php
+                                                @endphp
+                                                <form action="{{ route('rentersrequests.edit',$RenterRequest->salesrid) }}" method="PUT">
+                                                <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline mt-4" href="{{ route('rentersrequests.edit',$RenterRequest->salesrid) }}">Modify</a>
                                                     <x-primary-button class="ms-3 dark:text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" >
                                                         {{ __('Process') }}
                                                     </x-primary-button>
@@ -129,7 +129,7 @@
                                     </tbody>
                                 </table>
                                 <div class="mt-4">
-                                    {!! $SalesRequests->appends(request()->query())->links() !!}
+                                    {!! $RenterRequests->appends(request()->query())->links() !!}
                                 </div>
                                     
                                 </div>

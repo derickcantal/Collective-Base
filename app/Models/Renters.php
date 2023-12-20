@@ -11,7 +11,7 @@ class Renters extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $table = 'Users';  
+    protected $table = 'users';  
     /**
      * The attributes that are mass assignable.
      *

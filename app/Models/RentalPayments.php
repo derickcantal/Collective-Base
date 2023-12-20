@@ -10,7 +10,7 @@ class RentalPayments extends Model
 {
     use HasFactory;
 
-    protected $table = 'Rental_Payments';  
+    protected $table = 'rental_payments';  
 
     protected $fillable = [
         'userid',

@@ -2,28 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SalesRequestsSearchRequest;
-use Illuminate\Http\RedirectResponse;
+use App\Models\RenterRequests;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\DB;
-use App\Models\SalesRequests;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\SalesRequestsSearchRequest;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 
-
-class SalesRequestsController extends Controller
+class RenterRequestsController extends Controller
 {
     public function displayall()
     {
-        $SalesRequests = SalesRequests::all();
-        return view('dashboard.index',['SalesRequests' => $SalesRequests]);
+        $RenterRequests = RenterRequests::all();
+        return view('dashboard.index',['RenterRequests' => $RenterRequests]);
     }
 
     public function search(SalesRequestsSearchRequest $request)
     {
-        $SalesRequests = SalesRequests::orderBy('status','desc')
+        $RenterRequests = RenterRequests::orderBy('status','desc')
                     ->where(function(Builder $builder) use($request){
                         $builder->where('branchname','like',"%{$request->search}%")
                                 ->orWhere('totalsales','like',"%{$request->search}%")
@@ -38,54 +33,51 @@ class SalesRequestsController extends Controller
                     })
                     ->paginate(5);
     
-        return view('rentersrequests.index',compact('SalesRequests'))
+        return view('rentersrequests.index',compact('RenterRequests'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $RenterRequests = RenterRequests::orderBy('status','desc')
+        ->paginate(5);
+
+            return view('rentersrequests.index',compact('RenterRequests'))
+                ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
-    public function index(Request $request)
-    {
-        $SalesRequests = SalesRequests::orderBy('status','desc')
-                        ->paginate(5);
-    
-        return view('rentersrequests.index',compact('SalesRequests'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
-    }
-     
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create()
     {
         return view('rentersrequests.create');
     }
-    
+
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        
-        $SalesRequests = SalesRequests::create([
-            'avatar' => 'avatars/avatar-default.jpg',
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'firstname' => $request->firstname,
-            'middlename' => $request->middlename,
-            'lastname' => $request->lastname,
-            'birthdate' => $request->birthdate,
+        $RenterRequests = RenterRequests::create([
             'branchid' => '1',
             'branchname' => $request->branchname,
-            'accesstype' => $request->accesstype,
-            'status' => 'Active',
+            'cabinetid' => '1',
+            'cabinetname' => $request->cabinetname,
+            'totalsales' => $request->totalsales,
+            'totalcollected' => $request->totalcollected,
+            'avatarproof' => 'avatars/cash-default.jpg',
+            'rnotes' => $request->rnotes,
+            'userid' => '1',
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'updated_by' => 'user',
+            'status' => 'Pending',
         ]);
     
-        if ($SalesRequests) {
+        if ($RenterRequests) {
             //query successful
             return redirect()->route('rentersrequests.create')
                         ->with('success','Sales Request created successfully.');
@@ -95,59 +87,42 @@ class SalesRequestsController extends Controller
         }  
     }
 
-        
-     
     /**
      * Display the specified resource.
-     *
-     * @param  \App\User  $SalesRequests
-     * @return \Illuminate\Http\Response
      */
-    public function show(SalesRequests $SalesRequests)
+    public function show(RenterRequests $RenterRequests)
     {
-        return view('rentersrequests.show',['SalesRequests' => $SalesRequests]);
-    } 
-     
+        return view('rentersrequests.show',['RenterRequests' => $RenterRequests]);
+    }
+
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
      */
-    public function edit(Request $SalesRequests)
+    public function edit(RenterRequests $RenterRequests)
     {
-        return view('rentersrequests.edit',['SalesRequests' => $SalesRequests]);
+        return view('rentersrequests.edit',['RenterRequests' => $RenterRequests]);
     }
-    
+
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Request $SalesRequests)
+    public function update(Request $request, RenterRequests $RenterRequests)
     {
-    
-        $SalesRequests->update($request->all());
+        $RenterRequests->update($request->all());
     
         return redirect()->route('rentersrequests.index')
                         ->with('success','Sales Request updated successfully');
     }
-    
+
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, SalesRequests $SalesRequests): RedirectResponse
+    public function destroy(Request $request, RenterRequests $RenterRequests): RedirectResponse
     {
-
-        $SalesRequests->delete();
+        $RenterRequests->delete();
         
-        $SalesRequests = SalesRequests::wherenot('accesstype', 'Leesee')->get();
-        if ($SalesRequests->isNotEmpty()) {
+        $RenterRequests = RenterRequests::wherenot('accesstype', 'Leesee')->get();
+        if ($RenterRequests->isNotEmpty()) {
             
             return redirect()->route('rentersrequests.index')
             ->with('success','Sales Requests deleted successfully');
@@ -158,7 +133,5 @@ class SalesRequestsController extends Controller
 
             return Redirect('/');
         }
-        
-        
     }
 }

@@ -10,7 +10,7 @@ class SalesRequests extends Model
 {
     use HasFactory;
 
-        protected $table = 'Sales_Requests';  
+        protected $table = 'sales_requests';  
 
         protected $fillable = [
             'branchid',
