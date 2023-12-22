@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\SalesRequestsSearchRequest;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 class RenterRequestsController extends Controller
 {
@@ -98,17 +99,42 @@ class RenterRequestsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(RenterRequests $RenterRequests)
+    public function edit($id)
     {
+        $RenterRequests = RenterRequests::findOrFail($id);
         return view('rentersrequests.edit',['RenterRequests' => $RenterRequests]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, RenterRequests $RenterRequests)
+    public function update(Request $request, $id)
     {
-        $RenterRequests->update($request->all());
+        $path = Storage::disk('public')->put('rentersrequests',$request->file('avatarproof'));
+        // $path = $request->file('avatar')->store('avatars','public');
+        
+        if($oldavatar = $request->avatarproof){
+            Storage::disk('public')->delete($oldavatar);
+        }
+       
+
+        RenterRequests::where('salesrid', $id)->update([
+            'branchid' => '1',
+            'branchname' => $request->branchname,
+            'cabinetid' => '1',
+            'cabinetname' => $request->cabinetname,
+            'totalsales' => $request->totalsales,
+            'totalcollected' => $request->totalcollected,
+            'avatarproof' => $path,
+            'rnotes' => $request->rnotes,
+            'userid' => '1',
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'updated_by' => 'user',
+            'status' => 'Completed',
+        ]);
+
+        
     
         return redirect()->route('rentersrequests.index')
                         ->with('success','Sales Request updated successfully');

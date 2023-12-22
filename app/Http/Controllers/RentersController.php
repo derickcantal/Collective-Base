@@ -66,6 +66,8 @@ class RentersController extends Controller
             'birthdate' => $request->birthdate,
             'branchid' => '1',
             'branchname' => $request->branchname,
+            'cabid' => '1',
+            'cabinetname' => $request->cabinetname,
             'accesstype' => 'Renters',
             'status' => 'Active',
         ]);

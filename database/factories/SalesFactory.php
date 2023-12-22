@@ -27,8 +27,8 @@ class SalesFactory extends Factory
         return [
             'salesname' => Str::random(10),
             'salesavatar'=> 'avatars/product-default.png',
-            'cabinetid' => Arr::random([rand(1, 120)]),
-            'cabinetname' => Str::random(10),
+            'cabid' => Arr::random([rand(1, 120)]),
+            'cabinetname' => rand(0, 120),
             'productname' => Str::random(10),
             'qty' => Arr::random([rand(1, 250)]),
             'origprice' => Arr::random($rpamount),

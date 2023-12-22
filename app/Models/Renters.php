@@ -28,6 +28,8 @@ class Renters extends Model
         'birthdate',
         'branchid',
         'branchname',
+        'cabid',
+        'cabinetname',
         'accesstype',
         'status',
     ];

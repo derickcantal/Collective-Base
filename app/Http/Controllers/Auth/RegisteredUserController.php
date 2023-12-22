@@ -43,6 +43,8 @@ class RegisteredUserController extends Controller
             'birthdate' => $request->birthdate,
             'branchid' => '1',
             'branchname' => $request->branchname,
+            'cabid' => '1',
+            'cabinetname' => rand(0, 120),
             'accesstype' => $request->accesstype,
             'status' => 'Active',
         ]);

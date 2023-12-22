@@ -15,8 +15,8 @@ return new class extends Migration
             $table->increments('salesrid');
             $table->integer('branchid');
             $table->string('branchname');
-            $table->integer('cabinetid');
-            $table->string('cabinetname');
+            $table->integer('cabid');
+            $table->integer('cabinetname');
             $table->decimal('totalsales', $precision = 8, $scale = 2);
             $table->decimal('totalcollected', $precision = 8, $scale = 2);
             $table->string('avatarproof');

@@ -36,8 +36,10 @@ class RentalPaymentsFactory extends Factory
             'rpnotes' => Str::random(10),
             'branchid' => '1',
             'branchname' => Arr::random($branchname),
+            'cabid' => rand(0, 120),
+            'cabinetname' => rand(0, 120),
             'avatarproof' => 'avatars/cash-default.png' ,
-            'created_by' => Str::random(10),
+            'created_by' => fake()->name(),
             'status' => Arr::random($status),
         ];
     }

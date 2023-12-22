@@ -15,8 +15,8 @@ return new class extends Migration
             $table->increments('salesid');
             $table->string('salesname');
             $table->string('salesavatar');
-            $table->integer('cabinetid');
-            $table->string('cabinetname');
+            $table->integer('cabid');
+            $table->integer('cabinetname');
             $table->string('productname');
             $table->integer('qty');
             $table->decimal('origprice', $precision = 8, $scale = 2);

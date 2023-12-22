@@ -54,10 +54,10 @@
                                                     Profile
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
-                                                    Branch
+                                                    Cabinet No.
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
-                                                    Access Type
+                                                    Branch
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
                                                     Status
@@ -84,11 +84,12 @@
                                                         <x-input-label for="email" :value="$renters->email"/>
                                                 </th>
                                                 <td class="px-6 py-4">
-                                                    <x-input-label for="branchname" :value="$renters->branchname"/>
+                                                    <x-input-label for="cabinetname" :value="$renters->cabinetname"/>
                                                 </td>
                                                 <td class="px-6 py-4">
-                                                    <x-input-label for="accesstype" :value="$renters->accesstype"/>
+                                                    <x-input-label for="branchname" :value="$renters->branchname"/>
                                                 </td>
+                                                
                                                 <td class="px-6 py-4">
                                                     <div class="flex items-center">
                                                     @php

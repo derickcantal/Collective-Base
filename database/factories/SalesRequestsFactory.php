@@ -25,8 +25,8 @@ class SalesRequestsFactory extends Factory
         return [
             'branchid' => '1',
             'branchname' => Arr::random($branchname),
-            'cabinetid' => Arr::random([rand(1, 120)]),
-            'cabinetname' => Str::random(10),
+            'cabid' => Arr::random([rand(1, 120)]),
+            'cabinetname' => rand(0, 120),
             'totalsales' => Arr::random($rpamount),
             'totalcollected' => Arr::random($rpamount),
             'avatarproof' => 'avatars/cash-default.jpg',

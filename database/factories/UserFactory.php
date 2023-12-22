@@ -35,9 +35,11 @@ class UserFactory extends Factory
             'firstname' => Str::random(1),
             'middlename'=> Str::random(1),
             'lastname' => fake()->name(),
-            'birthdate' => Carbon::create('2000', '01', '01'),
+            'birthdate' => Carbon::today()->subDays(rand(0, 180)),
             'branchid' => '1',
             'branchname' => Arr::random($branchname),
+            'cabid' => rand(0, 120),
+            'cabinetname' => rand(0, 120),
             'accesstype' => Arr::random($atype),
             'status' => Arr::random($status),
         ];

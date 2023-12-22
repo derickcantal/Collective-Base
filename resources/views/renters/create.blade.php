@@ -143,6 +143,15 @@
                                                 </div>
                                             </div>
                                             <div class="col-span-2 sm:col-span-1">
+                                                <!-- cabinetnumber -->
+                                                <div class="form-group mt-4">
+                                                    <x-input-label for="cabinetname" :value="__('Cabinet No.')" />
+                                                    <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" :value="old('cabinetname')" required autofocus autocomplete="off" /> 
+                                                    
+                                                    <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
+                                                </div>
+                                            </div>
+                                            <div class="col-span-2 sm:col-span-1">
                                                 <!-- accesstype -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="accesstype" :value="__('Access Type')" />

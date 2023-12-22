@@ -33,6 +33,8 @@ class UserUpdateTableRequest extends FormRequest
                 'birthdate' => ['required', 'date', 'max:255'],
                 'branchid' => ['integer', 'max:255'],
                 'branchname' => ['required', 'string', 'max:255'],
+                'cabid' => ['integer', 'max:255'],
+                'cabinetname' => ['integer', 'max:255'],
                 'accesstype' => ['required', 'string', 'max:255'],
                 'status' => ['string', 'max:255'],
         ];

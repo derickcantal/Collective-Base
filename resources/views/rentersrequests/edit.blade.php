@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <u><a href="{{ route('renters.index') }}"> Renters Requests</a></u> / {{ __('Modify Renters') }} / {{ $RenterRequests->salesrid }}
+            <u><a href="{{ route('renters.index') }}"> Renters Requests</a></u> / {{ __('Process Renters Requests') }} / {{ $RenterRequests->cabinetname }}
         </h2>
     </x-slot>
     <section>
@@ -9,7 +9,7 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <form action="{{ route('rentersrequests.update',$RenterRequests->salesrid) }}" method="POST" class="p-4 md:p-5">
+                        <form action="{{ route('rentersrequests.update',$RenterRequests->salesrid) }}" enctype="multipart/form-data" method="POST" class="p-4 md:p-5">
                         @csrf
                         @method('PUT')   
                             <div class="relative p-4 w-full max-w-full max-h-full">
@@ -18,202 +18,92 @@
                                     <!-- Modal header -->
                                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                            Renters Request Information
+                                            Process Renters Request 
                                         </h3>
                                     </div>
-                                    <!-- Modal body -->
-                                    <img width="100" height="100" class="rounded-full mt-4" src="{{ asset("/storage/$SalesRequests->avatarproof") }}" alt="user avatar" />
-                                        <div class="grid gap-4 mb-4 grid-cols-2">
-                                            <div class="col-span-2 sm:col-span-2">
-                                                @if ($errors->any())
-                                                <div class="flex p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                                                <svg class="flex-shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                                                </svg>
-                                                <span class="sr-only">Danger</span>
-                                                <div>
-                                                    <span class="font-medium">Ensure that these requirements are met:</span>
-                                                    <ul class="mt-1.5 list-disc list-inside">
-                                                        @foreach ($errors->all() as $error)
-                                                        <li>{{ $error }}</li>
-                                                        @endforeach
-                                                    </ul>
-                                                </div>
-                                                @endif
+                                    
+                                    <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                                        <div class="max-w-xl">
+                                            <div>
+                                            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                                {{ __('Proof Receipt') }}
+                                            </h2>
 
-                                                @if ($message = Session::get('success'))
-                                                <div class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800" role="alert">
-                                                <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                                                </svg>
-                                                <span class="sr-only">Info</span>
-                                                <div>
-                                                    <span class="font-medium">Success!</span> {{ $message }}
+                                            <img width="100" height="100" class="rounded-full mt-4" src="{{ asset("/storage/$RenterRequests->avatarproof") }}" alt="proof avatar" />
+
+                                                <x-input-label for="name" value="Upload Receipt" />
+                                                <x-text-input id="avatarproof" name="avatarproof" type="file"  class="mt-1 block w-full mt-3" :value="old('avatarproof', $RenterRequests->avatarproof)" autofocus autocomplete="off" />
+                                                <x-input-error class="mt-2" :messages="$errors->get('avatarproof')" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Modal body -->
+                                    <div class="grid gap-4 mb-4 grid-cols-2">
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <!-- branchname -->
+                                                <div class="form-group mt-4">
+                                                    <x-input-label for="branchname" :value="__('Branch Name')" />
+                                                    <!-- <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname')" required autofocus autocomplete="off" /> -->
+                                                    <select id="branchname" name="branchname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('branchname')">
+                                                        <option value = "CB Main">CB Main</option>
+                                                        <option value = "CB Annex">CB Annex</option>
+                                                        <option value = "CB Complex">CB Complex</option>
+                                                        <option value = "CB Plus 1">CB Plus 1</option>
+                                                        <option value = "CB Plus 2">CB Plus 2</option>
+                                                        <option value = "CB Plus 3">CB Plus 3</option>
+                                                    </select>
+                                                    <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
                                                 </div>
-                                                </div>
-                                                @endif
                                             </div>
                                             <div class="col-span-2 sm:col-span-1 ">
-                                                <!-- username -->
+                                                <!-- cabname -->
                                                 <div class="form-group mt-4">
-                                                    <x-input-label for="username" :value="__('Username')" />
-                                                    <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username', $SalesRequests->username)" required autofocus />
-                                                    <x-input-error :messages="$errors->get('username')" class="mt-2" />
+                                                    <x-input-label for="cabinetname" :value="__('Cabinet No.')" />
+                                                    <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" :value="old('cabinetname', $RenterRequests->cabinetname)" required autofocus autocomplete="off" />
+                                                    <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
                                                 </div>
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- Email Address -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="email" :value="__('Email')" />
-                                                    <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $SalesRequests->email)" required />
-                                                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
-                                                </div>
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- Password -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="password" :value="__('Password')" />
-
-                                                    <x-text-input id="password" class="block mt-1 w-full"
-                                                                    type="password"
-                                                                    name="password"
-                                                                    required />
-
-                                                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                                                </div>
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- Confirm Password -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-                                                    <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                                                    type="password"
-                                                                    name="password_confirmation" required />
-
-                                                    <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-                                                </div>                    
                                             </div>
                                             <div class="col-span-2 sm:col-span-1">
                                                 <!-- firstname -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="firstname" :value="__('First Name')" />
-                                                    <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname', $SalesRequests->firstname)" required autofocus/>
+                                                    <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname', $RenterRequests->firstname)" required autofocus autocomplete="given-name" />
                                                     <x-input-error :messages="$errors->get('firstname')" class="mt-2" />
                                                 </div>
                                             </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- middlename -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="middlename" :value="__('Middle Name')" />
-                                                    <x-text-input id="middlename" class="block mt-1 w-full" type="text" name="middlename" :value="old('middlename', $SalesRequests->middlename)" required autofocus />
-                                                    <x-input-error :messages="$errors->get('username')" class="mt-2" />
-                                                </div>
-                                            </div>
+                                   
                                             <div class="col-span-2 sm:col-span-1">
                                                     <!-- lastname -->
                                                     <div class="form-group mt-4">
                                                     <x-input-label for="lastname" :value="__('Last Name')" />
-                                                    <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname', $SalesRequests->lastname)" required />
+                                                    <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname', $RenterRequests->lastname)" required autofocus autocomplete="family-name" />
                                                     <x-input-error :messages="$errors->get('lastname')" class="mt-2" />
                                                 </div>
                                             </div>
                                             <div class="col-span-2 sm:col-span-1">
-                                                <!-- birthdate -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="birthdate" :value="__('Birth Date')" />
-                                                    <x-text-input id="birthdate" class="block mt-1 w-full" type="date" name="birthdate" :value="date('Y-m-d',strtotime(old('birthdate', $SalesRequests->birthdate)))" required autofocus autocomplete="bday" />
-                                                    <x-input-error :messages="$errors->get('birthdate')" class="mt-2" />
+                                                    <!-- total sales -->
+                                                    <div class="form-group mt-4">
+                                                    <x-input-label for="totalsales" :value="__('Total Sales')" />
+                                                    <x-text-input id="totalsales" class="block mt-1 w-full" type="text" name="totalsales" :value="old('totalsales', $RenterRequests->totalsales)" required autofocus autocomplete="off" />
+                                                    <x-input-error :messages="$errors->get('totalsales')" class="mt-2" />
                                                 </div>
                                             </div>
                                             <div class="col-span-2 sm:col-span-1">
-                                                <!-- branchname -->
-                                                @php
-                                                    $op1_b = '';
-                                                    $op2_b = '';
-                                                    $op3_b = '';
-                                                    $op4_b = '';
-                                                    $op5_b = '';
-                                                    $op6_b = '';
-                                                    if ($SalesRequests->branchname == 'CB Main'):
-                                                        $op1_b = 'selected = "selected"';
-                                                    elseif ($SalesRequests->branchname == 'CB Annex'):
-                                                        $op2_b = 'selected = "selected"';
-                                                    elseif ($SalesRequests->branchname == 'CB Complex'):
-                                                        $op3_b = 'selected = "selected"';
-                                                    elseif ($SalesRequests->branchname == 'CB Plus 1'):
-                                                        $op4_b = 'selected = "selected"';
-                                                    elseif ($SalesRequests->branchname == 'CB Plus 2'):
-                                                        $op5_b = 'selected = "selected"';  
-                                                    elseif ($SalesRequests->branchname == 'CB Plus 3'):
-                                                        $op6_b = 'selected = "selected"'; 
-                                                    endif;
-                                                @endphp
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="branchname" :value="__('Branch Name')" />
-                                                    <!-- <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname')" required autofocus autocomplete="off" /> -->
-                                                    <select id="branchname" name="branchname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('branchname', $SalesRequests->branchname))">
-                                                        <option value = "CB Main" {{ $op1_b; }}">CB Main</option>
-                                                        <option value = "CB Annex" {{ $op2_b; }}">CB Annex</option>
-                                                        <option value = "CB Complex" {{ $op3_b; }}}">CB Complex</option>
-                                                        <option value = "CB Plus 1" {{ $op4_b; }}">CB Plus 1</option>
-                                                        <option value = "CB Plus 2" {{ $op5_b; }}">CB Plus 2</option>
-                                                        <option value = "CB Plus 3" {{ $op6_b; }}">CB Plus 3</option>
-                                                    </select>
-                                                    <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
+                                                    <!-- total collected -->
+                                                    <div class="form-group mt-4">
+                                                    <x-input-label for="totalcollected" :value="__('Total Collected')" />
+                                                    <x-text-input id="totalcollected" class="block mt-1 w-full" type="text" name="totalcollected" :value="old('totalcollected', $RenterRequests->totalcollected)" required autofocus autocomplete="off" />
+                                                    <x-input-error :messages="$errors->get('totalcollected')" class="mt-2" />
                                                 </div>
                                             </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- accesstype -->
-                                                @php
-                                                    $op1_a = '';
-                                                    $op2_a = '';
-                                                    $op3_a = '';
-                                                    $op4_a = '';
-                                                    if ($SalesRequests->accesstype == 'Administrator'):
-                                                        $op1_a = 'selected = "selected"';
-                                                    elseif ($SalesRequests->accesstype == 'Supervisor'):
-                                                        $op2_a = 'selected = "selected"';
-                                                    elseif ($SalesRequests->accesstype == 'Cashier'):
-                                                        $op3_a = 'selected = "selected"';
-                                                    elseif ($SalesRequests->accesstype == 'Renters'):
-                                                        $op4_a = 'selected = "selected"';
-                                                    endif;
-                                                    
-                                                @endphp
+
+                                            
+                                            <div class="col-span-2 sm:col-span-1 ">
+                                                <!-- Notes -->
                                                 <div class="form-group mt-4">
-                                                    <x-input-label for="accesstype" :value="__('Access Type')" />
-                                                    <!-- <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" :value="old('accesstype')" required autofocus autocomplete="off" /> -->
-                                                    <select id="accesstype" name="accesstype" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('accesstype', $SalesRequests->accesstype)">
-                                                        <option value ="Administrator" {{ $op1_a; }}">Administrator</option>
-                                                        <option value ="Supervisor" {{ $op2_a; }}">Supervisor</option>
-                                                        <option value ="Cashier" {{ $op3_a; }}">Cashier</option>
-                                                        <option value ="Renters" {{ $op4_a; }}">Renters</option>
-                                                    </select>
-                                                    <x-input-error :messages="$errors->get('accesstype')" class="mt-2" />
-                                                    
-                                                </div>
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- status -->
-                                                @php
-                                                
-                                                    $op1 = '';
-                                                    $op2 = '';
-                                                    if ($SalesRequests->status == 'Active'):
-                                                        $op1 = 'selected = "selected"';
-                                                    elseif ($SalesRequests->status == 'Inactive'):
-                                                        $op2 = 'selected = "selected"';
-                                                    endif;
-                                                @endphp
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="status" :value="__('Status')" />
-                                                    <!-- <x-text-input id="status" class="block mt-1 w-full" type="text" name="status" :value="old('status')" required autofocus autocomplete="off" /> -->
-                                                    <select id="status" name="status" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('status', $SalesRequests->status)">
-                                                        <option value ="Active"  {{ $op1; }}>Active</option>
-                                                        <option value ="Inactive"  {{ $op2; }}">Inactive</option>
-                                                    </select>
-                                                    <x-input-error :messages="$errors->get('status')" class="mt-2" />
+                                                    <x-input-label for="rnotes" :value="__('Notes')" />
+                                                    <x-text-input id="rnotes" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="textarea" name="rnotes" :value="old('rnotes', $RenterRequests->rnotes)" required autofocus autocomplete="off" />
+                                                    <x-input-error :messages="$errors->get('rnotes')" class="mt-2" />
                                                 </div>
                                             </div>
                                             <div class="flex items-center justify-between col-span-2 sm:col-span-2">

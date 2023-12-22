@@ -29,6 +29,8 @@ class User extends Authenticatable
         'birthdate',
         'branchid',
         'branchname',
+        'cabid',
+        'cabinetname',
         'accesstype',
         'status',
     ];

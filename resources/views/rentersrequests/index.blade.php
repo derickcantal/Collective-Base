@@ -52,7 +52,7 @@
                                                 SRID
                                             </th>
                                             <th scope="col" class="px-6 py-3">
-                                                Full Name
+                                                Profile
                                             </th>
                                             <th scope="col" class="px-6 py-3">
                                                 Branch
@@ -89,6 +89,7 @@
                                             </th>
                                             <td class="px-6 py-4">
                                                 <x-input-label>{{ $RenterRequest->lastname }}, {{ $RenterRequest->firstname }} {{ $RenterRequest->middlename }}</x-input-label>
+                                                <x-input-label>Cab. No.: <b>{{ $RenterRequest->cabinetname }}</b></x-input-label>
                                             </td>
                                             <td class="px-6 py-4">
                                                 <x-input-label for="branchname" :value="$RenterRequest->branchname"/>
@@ -110,11 +111,23 @@
                                             </td>
                                             <td class="px-6 py-4">
                                                 @php
+                                                    $btndis='';
+                                                    $btnlabel = '';
+                                                    $btncolor = '';
+
+                                                    if($RenterRequest->status == 'Pending'):
+                                                        $btndis = '';
+                                                        $btnlabel = 'Process';
+                                                        $btncolor = 'red';
+                                                    elseif($RenterRequest->status == 'Completed'):
+                                                        $btndis = 'disabled';
+                                                        $btnlabel = 'Completed';
+                                                        $btncolor = 'green';
+                                                    endif;
                                                 @endphp
                                                 <form action="{{ route('rentersrequests.edit',$RenterRequest->salesrid) }}" method="PUT">
-                                                <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline mt-4" href="{{ route('rentersrequests.edit',$RenterRequest->salesrid) }}">Modify</a>
-                                                    <x-primary-button class="ms-3 dark:text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" >
-                                                        {{ __('Process') }}
+                                                    <x-primary-button class="ms-3 dark:text-white bg-{{ $btncolor; }}-700 hover:bg-{{ $btncolor; }}-800 focus:outline-none focus:ring-4 focus:ring-{{ $btncolor; }}-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-{{ $btncolor; }}-600 dark:hover:bg-{{ $btncolor; }}-700 dark:focus:ring-{{ $btncolor; }}-800 ">
+                                                        {{ $btnlabel; }}
                                                     </x-primary-button>
                                                 </form>
                                             </td>

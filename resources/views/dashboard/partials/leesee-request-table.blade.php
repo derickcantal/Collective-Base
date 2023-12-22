@@ -7,94 +7,106 @@
             </div>
             
             <div class="max-w-7xl overflow-x-auto shadow-md sm:rounded-lg " >
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">
-                                Sales RID
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Branch Name
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Cabinet Name
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Total Sales
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Total Collected
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Notes
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Full Name
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Updated By
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Status
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @csrf
-                        @foreach($sales_requests as $sales_request) 
-                        
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                <x-input-label for="salesrid" :value="$sales_request->salesrid"/>
-                            </th>
-                            <td class="px-6 py-4">
-                                <x-input-label for="branchname" :value="$sales_request->branchname"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="cabinetname" :value="$sales_request->cabinetname"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="totalsales" :value="$sales_request->totalsales"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="totalcollected" :value="$sales_request->totalcollected"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="rnotes" :value="$sales_request->rnotes"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="lastname" :value="$sales_request->lastname"/>, <x-input-label for="firstname" :value="$sales_request->firstname"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="updated_by" :value="$sales_request->updated_by"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="status" :value="$sales_request->status"/>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                    @if(empty($sales_request))
-                    <td scope="row" class="px-6 py-4">
-                        No Records Found.
-                    </td>	
-                    @else
-                    <tfoot>
-                        <tr class="font-semibold text-gray-900 dark:text-white">
-                            <th scope="row" class="px-6 py-3 text-base"></th>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                        </tr>
-                    </tfoot>
-                    @endif
-                </table>
+            @csrf
+                                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3">
+                                                SRID
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Profile
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Branch
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Total Sales
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Total Collected
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Proof Image
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Updated By
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Status
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Action
+                                            </th>
+                                            
+                                        </tr>
+                                    </thead>
+                                            
+                                            @forelse($RenterRequests as $RenterRequest) 
+                                    <tbody>
+                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            
+                                            <th class="px-6 py-4">
+                                                <div class="text-base font-semibold"><x-input-label for="username" :value="$RenterRequest->username"/></div>
+                                                <x-input-label>{{ ++$i }}</x-input-label>
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                <x-input-label>{{ $RenterRequest->lastname }}, {{ $RenterRequest->firstname }} {{ $RenterRequest->middlename }}</x-input-label>
+                                                <x-input-label>Cab. No.: <b>{{ $RenterRequest->cabinetname }}</b></x-input-label>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <x-input-label for="branchname" :value="$RenterRequest->branchname"/>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <x-input-label for="totalsales" :value="$RenterRequest->totalsales"/>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <x-input-label for="totalcollected" :value="$RenterRequest->totalcollected"/>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$RenterRequest->avatarproof") }}" alt="avatar">
+                                            </td>
+                                            <td class="px-6 py-4">
+                                            <x-input-label for="updated_by" :value="$RenterRequest->updated_by"/>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <x-input-label for="status" :value="$RenterRequest->status"/>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                @php
+                                                    $btndis='';
+                                                    $btnlabel = '';
+                                                    $btncolor = '';
+
+                                                    if($RenterRequest->status == 'Pending'):
+                                                        $btndis = '';
+                                                        $btnlabel = 'Process';
+                                                        $btncolor = 'red';
+                                                    elseif($RenterRequest->status == 'Completed'):
+                                                        $btndis = 'disabled';
+                                                        $btnlabel = 'Completed';
+                                                        $btncolor = 'green';
+                                                    endif;
+                                                @endphp
+                                                <form action="{{ route('rentersrequests.edit',$RenterRequest->salesrid) }}" method="PUT">
+                                                    <x-primary-button class="ms-3 dark:text-white bg-{{ $btncolor; }}-700 hover:bg-{{ $btncolor; }}-800 focus:outline-none focus:ring-4 focus:ring-{{ $btncolor; }}-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-{{ $btncolor; }}-600 dark:hover:bg-{{ $btncolor; }}-700 dark:focus:ring-{{ $btncolor; }}-800 ">
+                                                        {{ $btnlabel; }}
+                                                    </x-primary-button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        
+                                        @empty
+                                        <td scope="row" class="px-6 py-4">
+                                            No Records Found.
+                                        </td>	
+                                        @endforelse
+                                            
+                                    </tbody>
+                                </table>
+                                <div class="mt-4">
+                                    {!! $RenterRequests->appends(request()->query())->links() !!}
+                                </div>
             </div>
         </div>
     </div>
