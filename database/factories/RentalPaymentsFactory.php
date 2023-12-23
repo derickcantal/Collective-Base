@@ -23,7 +23,8 @@ class RentalPaymentsFactory extends Factory
         $branchname = ['CB Main', 'CB Annex', 'CB Complex', 'CB Plus 1', 'CB Plus 2', 'CB Plus 3'];
         $status = ['Paid', 'Unpaid'];
         $rppaytype = ['Cash','Bank Transfer'];
-        $monthyear = ['January 2023','February 2023','March 2023','April 2023','May 2023','June 2023','July 2023','August 2023','September 2023','October 2023','November 2023','December 2023'];
+        $month = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+        $year = ['2023','2024','2025','2026','2027','2028','2029','2030','2031','2032'];
         
         return [
             'userid' => Arr::random([rand(1, 250)]),
@@ -32,7 +33,8 @@ class RentalPaymentsFactory extends Factory
             'lastname' => Str::random(1),
             'rpamount' => Arr::random($rpamount),
             'rppaytype' => Arr::random($rppaytype),
-            'rpmonthyear' => Arr::random($monthyear),
+            'rpmonth' => Arr::random($month),
+            'rpyear' => Arr::random($year),
             'rpnotes' => Str::random(10),
             'branchid' => '1',
             'branchname' => Arr::random($branchname),

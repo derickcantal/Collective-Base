@@ -11,103 +11,104 @@
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="px-6 py-3">
-                                RP ID
+                                SRID
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Username
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Full Name
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Amount Paid
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Payment Type
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Applicable Month
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Notes
+                                Profile
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Branch
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Created at
+                                Payment Mode
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Created by
+                                Total Due
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Applicable Month
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Proof Image
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Updated By
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Status
                             </th>
                         </tr>
                     </thead>
+                            
+                            @forelse($rentalpayments as $rentalpayment) 
                     <tbody>
-                        @csrf
-                        @foreach($rentalpayments as $rental) 
-                        
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                <x-input-label for="rpid" :value="$rental->rpid"/>
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            
+                            <th class="px-6 py-4">
+                                <x-input-label>{{ ++$i }}</x-input-label>
                             </th>
                             <td class="px-6 py-4">
-                                <x-input-label for="username" :value="$rental->username"/>
+                                <x-input-label>{{ $rentalpayment->lastname }}, {{ $rentalpayment->firstname }} {{ $rentalpayment->middlename }}</x-input-label>
+                                <x-input-label>Cab. No.: <b>{{ $rentalpayment->cabinetname }}</b></x-input-label>
                             </td>
                             <td class="px-6 py-4">
-                                <x-input-label for="lastname" :value="$rental->lastname"/>, <x-input-label for="firstname" :value="$rental->firstname"/>
+                                <x-input-label for="branchname" :value="$rentalpayment->branchname"/>
                             </td>
                             <td class="px-6 py-4">
-                                <x-input-label for="rpamount" :value="$rental->rpamount"/>
+                                <x-input-label for="branchname" :value="$rentalpayment->rppaytype"/>
                             </td>
                             <td class="px-6 py-4">
-                                <x-input-label for="rppaytype" :value="$rental->rppaytype"/>
+                                <x-input-label for="totalsales" :value="$rentalpayment->rpamount"/>
                             </td>
                             <td class="px-6 py-4">
-                                <x-input-label for="rpmonthyear" :value="$rental->rpmonthyear"/>
+                                <x-input-label for="totalcollected" :value="$rentalpayment->rpmonthyear"/>
                             </td>
                             <td class="px-6 py-4">
-                                <x-input-label for="rpnotes" :value="$rental->rpnotes"/>
+                                @php
+                                    if($rentalpayment->avatarproof == 'avatars/cash-default.jpg'):
+                                        echo "";
+                                    endif;
+                                @endphp
+                                <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$rentalpayment->avatarproof") }}" alt="avatar">
                             </td>
                             <td class="px-6 py-4">
-                                <x-input-label for="branchname" :value="$rental->branchname"/>
+                            <x-input-label for="updated_by" :value="$rentalpayment->updated_by"/>
                             </td>
                             <td class="px-6 py-4">
-                                <x-input-label for="created_at" :value="$rental->created_at"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="created_by" :value="$rental->created_by"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="status" :value="$rental->status"/>
+                                @php
+                                    $btndis='';
+                                    $btnlabel = '';
+                                    $btncolor = '';
+
+                                    if($rentalpayment->status == 'Unpaid'):
+                                        $btndis = '';
+                                        $btnlabel = 'Unpaid';
+                                        $btncolor = 'red';
+                                    elseif($rentalpayment->status == 'Paid'):
+                                        $btndis = 'disabled';
+                                        $btnlabel = 'Paid';
+                                        $btncolor = 'green';
+                                    endif;
+                                @endphp
+                                <form action="{{ route('rentalpayments.edit',$rentalpayment->rpid) }}" method="PUT">
+                                    <x-primary-button class="ms-3 dark:text-white bg-{{ $btncolor; }}-700 hover:bg-{{ $btncolor; }}-800 focus:outline-none focus:ring-4 focus:ring-{{ $btncolor; }}-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-{{ $btncolor; }}-600 dark:hover:bg-{{ $btncolor; }}-700 dark:focus:ring-{{ $btncolor; }}-800 ">
+                                        {{ $btnlabel; }}
+                                    </x-primary-button>
+                                </form>
                             </td>
                         </tr>
-                        @endforeach
+                        
+                        @empty
+                        <td scope="row" class="px-6 py-4">
+                            No Records Found.
+                        </td>	
+                        @endforelse
+                            
                     </tbody>
-                    @if(empty($rental))
-                    <td scope="row" class="px-6 py-4">
-                        No Records Found.
-                    </td>	
-                    @else
-                    <tfoot>
-                        <tr class="font-semibold text-gray-900 dark:text-white">
-                            <th scope="row" class="px-6 py-3 text-base"></th>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                        </tr>
-                    </tfoot>
-                    @endif
                 </table>
+                <div class="mt-4">
+                    {!! $rentalpayments->appends(request()->query())->links() !!}
+                </div>
             </div>
         </div>
     </div>

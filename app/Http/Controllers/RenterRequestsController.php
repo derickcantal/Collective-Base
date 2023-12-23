@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\RenterRequests;
 use Illuminate\Http\Request;
 use App\Http\Requests\SalesRequestsSearchRequest;
+use App\Models\Renters;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
@@ -74,7 +75,7 @@ class RenterRequestsController extends Controller
             'userid' => '1',
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
-            'updated_by' => 'user',
+            'created_by' => Auth()->user()->username,
             'status' => 'Pending',
         ]);
     
@@ -110,10 +111,15 @@ class RenterRequestsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $rentreq = RenterRequests::findOrFail($id);
         $path = Storage::disk('public')->put('rentersrequests',$request->file('avatarproof'));
         // $path = $request->file('avatar')->store('avatars','public');
         
-        if($oldavatar = $request->avatarproof){
+        $oldavatar = $rentreq->avatarproof;
+        
+        if($oldavatar == 'avatars/cash-default.jpg'){
+            
+        }else{
             Storage::disk('public')->delete($oldavatar);
         }
        
@@ -130,7 +136,7 @@ class RenterRequestsController extends Controller
             'userid' => '1',
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
-            'updated_by' => 'user',
+            'updated_by' => Auth()->user()->username,
             'status' => 'Completed',
         ]);
 

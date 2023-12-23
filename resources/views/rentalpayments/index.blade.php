@@ -75,14 +75,10 @@
                                             <th scope="col" class="px-6 py-3">
                                                 Status
                                             </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Action
-                                            </th>
-                                            
                                         </tr>
                                     </thead>
                                             
-                                            @forelse($rentalpayments as $rentalpayment) 
+                                            @forelse($rentalPayments as $rentalpayment) 
                                     <tbody>
                                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                             
@@ -106,13 +102,15 @@
                                                 <x-input-label for="totalcollected" :value="$rentalpayment->rpmonthyear"/>
                                             </td>
                                             <td class="px-6 py-4">
+                                                @php
+                                                    if($rentalpayment->avatarproof == 'avatars/cash-default.jpg'):
+                                                        echo "";
+                                                    endif;
+                                                @endphp
                                                 <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$rentalpayment->avatarproof") }}" alt="avatar">
                                             </td>
                                             <td class="px-6 py-4">
                                             <x-input-label for="updated_by" :value="$rentalpayment->updated_by"/>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <x-input-label for="status" :value="$rentalpayment->status"/>
                                             </td>
                                             <td class="px-6 py-4">
                                                 @php
@@ -147,7 +145,7 @@
                                     </tbody>
                                 </table>
                                 <div class="mt-4">
-                                    {!! $rentalpayments->appends(request()->query())->links() !!}
+                                    {!! $rentalPayments->appends(request()->query())->links() !!}
                                 </div>
                                     
                                 </div>
