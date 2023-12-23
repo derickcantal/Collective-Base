@@ -34,6 +34,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', UsersController::class);
     Route::get('users.search', [UsersController::class, 'search'])->name('users.search');
     
+    Route::resource('cashier', UsersController::class);
+
     Route::resource('rentersrequests', RenterRequestsController::class);
     Route::get('rentersrequests.search', [RenterRequestsController::class, 'search'])->name('rentersrequests.search');
 });
