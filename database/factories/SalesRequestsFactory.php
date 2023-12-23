@@ -34,7 +34,8 @@ class SalesRequestsFactory extends Factory
             'userid' => Arr::random([rand(1, 250)]),
             'firstname' => Str::random(1),
             'lastname' => fake()->name(),
-            'updated_by' => Str::random(10),
+            'created_by' => fake()->name(),
+            'updated_by' => fake()->name(),
             'status' => Arr::random($status),
         ];
     }

@@ -23,8 +23,11 @@ class RentalPayments extends Model
         'rpnotes',
         'branchid',
         'branchname',
+        'cabid',
+        'cabinetname',
         'avatarproof',
         'created_by',
+        'updated_by',
         'status',
     ];
 

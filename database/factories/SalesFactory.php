@@ -40,6 +40,8 @@ class SalesFactory extends Factory
             'accesstype' => Arr::random($atype) ,
             'branchid' => '1',
             'branchname' => Arr::random($branchname),
+            'created_by' => fake()->name(),
+            'updated_by' => fake()->name(),
             'collected_status' => Arr::random($collected_status),
             'status' => Arr::random($status),
         ];

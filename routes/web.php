@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\Counter;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Profile\AvatarController;
+use App\Http\Controllers\RentalPaymentsController;
 use App\Http\Controllers\RenterRequestsController;
 
 /*
@@ -41,6 +42,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('renters', RentersController::class);
     Route::get('renters.search', [RentersController::class, 'search'])->name('renters.search');
     
+    Route::resource('rentalpayments', RentalPaymentsController::class);
+    Route::get('rentalpayments.search', [RentalPaymentsController::class, 'search'])->name('rentalpayments.search');
 });
 
 Route::middleware('auth')->group(function () {

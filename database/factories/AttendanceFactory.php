@@ -30,6 +30,8 @@ class AttendanceFactory extends Factory
             'branchid' => '1',
             'branchname' => Arr::random($branchname),
             'attnotes' => Str::random(10),
+            'created_by' => fake()->name(),
+            'updated_by' => fake()->name(),
             'status' => Arr::random($status),
         ];
     }

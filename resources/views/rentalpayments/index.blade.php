@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <a href="{{ route('renters.index') }}"> Renters</a> | <u><a href="{{ route('rentersrequests.index') }}"> Renters Requests</a></u> | <a href="{{ route('rentalpayments.index') }}"> Rental Payments</a>
+            <a href="{{ route('renters.index') }}"> Renters</a> | <a href="{{ route('rentersrequests.index') }}"> Renters Requests</a> | <u><a href="{{ route('rentalpayments.index') }}"> Rental Payments</a></u>
         </h2>
     </x-slot>
     <section>
@@ -16,13 +16,13 @@
                                         <div class="col-span-2 sm:col-span-1">
                                             <div>
                                                 <x-primary-button class="ms-4">
-                                                    <a class="btn btn-primary" href="{{ route('rentersrequests.create') }}"> Create New Renters Request</a>
+                                                    <a class="btn btn-primary" href="{{ route('rentalpayments.create') }}"> Create New Rental Payments</a>
                                                 </x-primary-button>
                                             </div>
                                         </div>
                                         <div class="col-span-2 sm:col-span-1 flex justify-end">
-                                            <form action="{{ route('rentersrequests.search') }}" method="get">
-                                                    <input type="text" name="search" id="table-search-users" class=" text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for Renters Requests">
+                                            <form action="{{ route('rentalpayments.search') }}" method="get">
+                                                    <input type="text" name="search" id="table-search-users" class=" text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for Rental Payments">
                                                     <x-primary-button class="ms-4">
                                                      Search
                                                     </x-primary-button>
@@ -58,10 +58,13 @@
                                                 Branch
                                             </th>
                                             <th scope="col" class="px-6 py-3">
-                                                Total Sales
+                                                Payment Mode
                                             </th>
                                             <th scope="col" class="px-6 py-3">
-                                                Total Collected
+                                                Total Due
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Applicable Month
                                             </th>
                                             <th scope="col" class="px-6 py-3">
                                                 Proof Image
@@ -79,35 +82,37 @@
                                         </tr>
                                     </thead>
                                             
-                                            @forelse($RenterRequests as $RenterRequest) 
+                                            @forelse($rentalpayments as $rentalpayment) 
                                     <tbody>
                                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                             
                                             <th class="px-6 py-4">
-                                                <div class="text-base font-semibold"><x-input-label for="username" :value="$RenterRequest->username"/></div>
                                                 <x-input-label>{{ ++$i }}</x-input-label>
                                             </th>
                                             <td class="px-6 py-4">
-                                                <x-input-label>{{ $RenterRequest->lastname }}, {{ $RenterRequest->firstname }} {{ $RenterRequest->middlename }}</x-input-label>
-                                                <x-input-label>Cab. No.: <b>{{ $RenterRequest->cabinetname }}</b></x-input-label>
+                                                <x-input-label>{{ $rentalpayment->lastname }}, {{ $rentalpayment->firstname }} {{ $rentalpayment->middlename }}</x-input-label>
+                                                <x-input-label>Cab. No.: <b>{{ $rentalpayment->cabinetname }}</b></x-input-label>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <x-input-label for="branchname" :value="$RenterRequest->branchname"/>
+                                                <x-input-label for="branchname" :value="$rentalpayment->branchname"/>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <x-input-label for="totalsales" :value="$RenterRequest->totalsales"/>
+                                                <x-input-label for="branchname" :value="$rentalpayment->rppaytype"/>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <x-input-label for="totalcollected" :value="$RenterRequest->totalcollected"/>
+                                                <x-input-label for="totalsales" :value="$rentalpayment->rpamount"/>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$RenterRequest->avatarproof") }}" alt="avatar">
+                                                <x-input-label for="totalcollected" :value="$rentalpayment->rpmonthyear"/>
                                             </td>
                                             <td class="px-6 py-4">
-                                            <x-input-label for="updated_by" :value="$RenterRequest->updated_by"/>
+                                                <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$rentalpayment->avatarproof") }}" alt="avatar">
                                             </td>
                                             <td class="px-6 py-4">
-                                                <x-input-label for="status" :value="$RenterRequest->status"/>
+                                            <x-input-label for="updated_by" :value="$rentalpayment->updated_by"/>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <x-input-label for="status" :value="$rentalpayment->status"/>
                                             </td>
                                             <td class="px-6 py-4">
                                                 @php
@@ -115,17 +120,17 @@
                                                     $btnlabel = '';
                                                     $btncolor = '';
 
-                                                    if($RenterRequest->status == 'Pending'):
+                                                    if($rentalpayment->status == 'Unpaid'):
                                                         $btndis = '';
-                                                        $btnlabel = 'Process';
+                                                        $btnlabel = 'Unpaid';
                                                         $btncolor = 'red';
-                                                    elseif($RenterRequest->status == 'Completed'):
+                                                    elseif($rentalpayment->status == 'Paid'):
                                                         $btndis = 'disabled';
-                                                        $btnlabel = 'Completed';
+                                                        $btnlabel = 'Paid';
                                                         $btncolor = 'green';
                                                     endif;
                                                 @endphp
-                                                <form action="{{ route('rentersrequests.edit',$RenterRequest->salesrid) }}" method="PUT">
+                                                <form action="{{ route('rentalpayments.edit',$rentalpayment->rpid) }}" method="PUT">
                                                     <x-primary-button class="ms-3 dark:text-white bg-{{ $btncolor; }}-700 hover:bg-{{ $btncolor; }}-800 focus:outline-none focus:ring-4 focus:ring-{{ $btncolor; }}-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-{{ $btncolor; }}-600 dark:hover:bg-{{ $btncolor; }}-700 dark:focus:ring-{{ $btncolor; }}-800 ">
                                                         {{ $btnlabel; }}
                                                     </x-primary-button>
@@ -142,7 +147,7 @@
                                     </tbody>
                                 </table>
                                 <div class="mt-4">
-                                    {!! $RenterRequests->appends(request()->query())->links() !!}
+                                    {!! $rentalpayments->appends(request()->query())->links() !!}
                                 </div>
                                     
                                 </div>

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('cabinetcount');
             $table->timestamps();
             $table->string('created_by');
+            $table->string('updated_by');
             $table->string('status');
         });
     }

@@ -20,6 +20,8 @@ return new class extends Migration
             $table->decimal('totalsales', $precision = 8, $scale = 2);
             $table->date('sales_date');
             $table->timestamps();
+            $table->string('created_by');
+            $table->string('updated_by');
             $table->string('status');
 
         });

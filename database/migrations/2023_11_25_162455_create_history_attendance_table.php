@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('branchname');
             $table->string('attnotes');
             $table->timestamps();
+            $table->string('created_by');
+            $table->string('updated_by');
             $table->string('status');
         });
     }
