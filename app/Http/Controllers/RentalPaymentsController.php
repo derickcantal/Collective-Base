@@ -18,7 +18,8 @@ class RentalPaymentsController extends Controller
                                 ->orWhere('cabinetname','like',"%{$request->search}%")
                                 ->orWhere('rpamount','like',"%{$request->search}%")
                                 ->orWhere('rppaytype','like',"%{$request->search}%")
-                                ->orWhere('rpmonthyear','like',"%{$request->search}%")
+                                ->orWhere('rpmonth','like',"%{$request->search}%")
+                                ->orWhere('rpyear','like',"%{$request->search}%")
                                 ->orWhere('rpnotes','like',"%{$request->search}%")
                                 ->orWhere('firstname','like',"%{$request->search}%")
                                 ->orWhere('lastname','like',"%{$request->search}%")
@@ -63,14 +64,15 @@ class RentalPaymentsController extends Controller
             'cabinetname' => $request->cabinetname,
             'rppaytype' => $request->rppaytype,
             'rpamount' => $request->rpamount,
-            'rpmonthyear' => $request->rpmonthyear,
+            'rpmonth' => $request->rpmonth,
+            'rpyear' => $request->rpyear,
             'avatarproof' => 'avatars/cash-default.jpg',
             'rpnotes' => $request->rpnotes,
             'userid' => '1',
             'username' => $request->username,
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
-            'created_by' => Auth()->user()->username,
+            'created_by' => Auth()->user()->email,
             'status' => 'Pending',
         ]);
     
@@ -127,14 +129,15 @@ class RentalPaymentsController extends Controller
             'lastname' => $request->lastname,
             'rpamount' => $request->rpamount,
             'rppaytype' => $request->rppaytype,
-            'rpmonthyear' => $request->rpmonthyear,
+            'rpmonth' => $request->rpmonth,
+            'rpyear' => $request->rpyear,
             'rpnotes' => $request->rpnotes,
             'branchid' => '1',
             'branchname' => $request->branchname,
             'cabid' => '1',
             'cabinetname' => $request->cabinetname,
             'avatarproof' => $path,
-            'updated_by' => Auth()->user()->username,
+            'updated_by' => Auth()->user()->email,
             'status' => 'Paid',
         
 

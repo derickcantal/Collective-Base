@@ -75,7 +75,7 @@ class RenterRequestsController extends Controller
             'userid' => '1',
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
-            'created_by' => Auth()->user()->username,
+            'created_by' => Auth()->user()->email,
             'status' => 'Pending',
         ]);
     
@@ -136,7 +136,7 @@ class RenterRequestsController extends Controller
             'userid' => '1',
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
-            'updated_by' => Auth()->user()->username,
+            'updated_by' => Auth()->user()->email,
             'status' => 'Completed',
         ]);
 

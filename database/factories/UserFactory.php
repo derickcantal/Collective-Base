@@ -41,6 +41,8 @@ class UserFactory extends Factory
             'cabid' => rand(0, 120),
             'cabinetname' => rand(0, 120),
             'accesstype' => Arr::random($atype),
+            'created_by' => fake()->name(),
+            'updated_by' => fake()->name(),
             'status' => Arr::random($status),
         ];
     }

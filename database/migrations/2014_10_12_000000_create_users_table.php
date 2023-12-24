@@ -29,6 +29,8 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
             $table->string('accesstype');
+            $table->string('created_by');
+            $table->string('updated_by');
             $table->string('status');
         });
     }

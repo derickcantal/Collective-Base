@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('lastname');
             $table->decimal('rpamount', $precision = 8, $scale = 2);
             $table->string('rppaytype');
-            $table->int('rpmonth');
-            $table->int('rpyear');
+            $table->integer('rpmonth');
+            $table->integer('rpyear');
             $table->string('rpnotes');
             $table->integer('branchid');
             $table->string('branchname');
