@@ -10,7 +10,7 @@ use Illuminate\Support\Arr;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Attendance>
  */
-class AttendanceFactory extends Factory
+class attendanceFactory extends Factory
 {
     /**
      * Define the model's default state.

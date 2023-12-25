@@ -25,6 +25,7 @@ class history_sales_requests extends Model
         'userid',
         'firstname',
         'lastname',
+        'created_by',
         'updated_by',
         'status',
     ];

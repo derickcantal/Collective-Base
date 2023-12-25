@@ -32,6 +32,8 @@ class User extends Authenticatable
         'cabid',
         'cabinetname',
         'accesstype',
+        'created_by',
+        'updated_by',
         'status',
     ];
 

@@ -20,6 +20,8 @@ class attendance extends Model
         'branchid',
         'branchname',
         'attnotes',
+        'created_by',
+        'updated_by',
         'status',
     ];
 

@@ -73,7 +73,8 @@ class RentalPaymentsController extends Controller
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'created_by' => Auth()->user()->email,
-            'status' => 'Pending',
+            'updated_by' => Auth()->user()->email,
+            'status' => 'Unpaid',
         ]);
     
         if ($rentalpayments) {

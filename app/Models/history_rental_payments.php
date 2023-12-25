@@ -24,6 +24,8 @@ class history_rental_payments extends Model
         'branchid',
         'branchname',
         'avatarproof',
+        'created_by',
+        'updated_by',
         'status',
     ];
 

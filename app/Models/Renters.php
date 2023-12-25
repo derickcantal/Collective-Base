@@ -31,6 +31,8 @@ class Renters extends Model
         'cabid',
         'cabinetname',
         'accesstype',
+        'created_by',
+        'updated_by',
         'status',
     ];
 

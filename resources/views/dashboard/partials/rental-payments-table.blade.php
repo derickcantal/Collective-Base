@@ -55,13 +55,13 @@
                                 <x-input-label for="branchname" :value="$rentalpayment->branchname"/>
                             </td>
                             <td class="px-6 py-4">
-                                <x-input-label for="branchname" :value="$rentalpayment->rppaytype"/>
+                                <x-input-label for="rppaytype" :value="$rentalpayment->rppaytype"/>
                             </td>
                             <td class="px-6 py-4">
-                                <x-input-label for="totalsales" :value="$rentalpayment->rpamount"/>
+                                <x-input-label for="rpamount" :value="$rentalpayment->rpamount"/>
                             </td>
                             <td class="px-6 py-4">
-                                <x-input-label for="totalcollected" :value="$rentalpayment->rpmonthyear"/>
+                                <x-input-label for="rpmonthyear">{{ $rentalpayment->rpmonth }} - {{ $rentalpayment->rpyear }}</x-input-label>
                             </td>
                             <td class="px-6 py-4">
                                 @php
@@ -79,21 +79,24 @@
                                     $btndis='';
                                     $btnlabel = '';
                                     $btncolor = '';
+                                    $btntxtcolor = '';
 
                                     if($rentalpayment->status == 'Unpaid'):
                                         $btndis = '';
                                         $btnlabel = 'Unpaid';
-                                        $btncolor = 'red';
+                                        $btncolor = 'blue';
+                                        $btntxtcolor = 'white';
                                     elseif($rentalpayment->status == 'Paid'):
                                         $btndis = 'disabled';
                                         $btnlabel = 'Paid';
                                         $btncolor = 'green';
+                                        $btntxtcolor = 'white';
                                     endif;
                                 @endphp
                                 <form action="{{ route('rentalpayments.edit',$rentalpayment->rpid) }}" method="PUT">
-                                    <x-primary-button class="ms-3 dark:text-white bg-{{ $btncolor; }}-700 hover:bg-{{ $btncolor; }}-800 focus:outline-none focus:ring-4 focus:ring-{{ $btncolor; }}-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-{{ $btncolor; }}-600 dark:hover:bg-{{ $btncolor; }}-700 dark:focus:ring-{{ $btncolor; }}-800 ">
+                                    <x-danger-button class="ms-3 dark:text-{{ $btntxtcolor; }} bg-{{ $btncolor; }}-700 hover:bg-{{ $btncolor; }}-800 focus:outline-none focus:ring-4 focus:ring-{{ $btncolor; }}-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-{{ $btncolor; }}-600 dark:hover:bg-{{ $btncolor; }}-700 dark:focus:ring-{{ $btncolor; }}-800 ">
                                         {{ $btnlabel; }}
-                                    </x-primary-button>
+                                    </x-danger-button>
                                 </form>
                             </td>
                         </tr>

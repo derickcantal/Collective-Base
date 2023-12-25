@@ -46,6 +46,8 @@ class RegisteredUserController extends Controller
             'cabid' => '1',
             'cabinetname' => rand(0, 120),
             'accesstype' => $request->accesstype,
+            'created_by' =>$request->email,
+            'updated_by' => 'default', 
             'status' => 'Active',
         ]);
 
