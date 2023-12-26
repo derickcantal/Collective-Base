@@ -2,27 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\sales;
+use App\Models\attendance;
 use Illuminate\Http\Request;
 
-class SalesController extends Controller
+class AttendanceController extends Controller
 {
-    public function displayall()
-    {
-        $sales = sales::all();
-
-        return view('dashboard.index',['sales' => $sales]);
-    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $sales = sales::get()->toQuery()
+        $attendance = attendance::get()->toQuery()
         ->orderBy('status','asc')
         ->paginate(5);
 
-        return view('sales.index',compact('sales'))
+        return view('attendance.index',compact('attendance'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
@@ -45,7 +39,7 @@ class SalesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(sales $sales)
+    public function show(attendance $attendance)
     {
         //
     }
@@ -53,7 +47,7 @@ class SalesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(sales $sales)
+    public function edit(attendance $attendance)
     {
         //
     }
@@ -61,7 +55,7 @@ class SalesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, sales $sales)
+    public function update(Request $request, attendance $attendance)
     {
         //
     }
@@ -69,7 +63,7 @@ class SalesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(sales $sales)
+    public function destroy(attendance $attendance)
     {
         //
     }

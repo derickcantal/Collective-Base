@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RentersController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Profile\AvatarController;
 use App\Http\Controllers\RentalPaymentsController;
 use App\Http\Controllers\RenterRequestsController;
+use App\Http\Controllers\SalesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +36,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', UsersController::class);
     Route::get('users.search', [UsersController::class, 'search'])->name('users.search');
     
-    Route::resource('cashier', UsersController::class);
+    Route::resource('sales', SalesController::class);
+    Route::get('sales.search', [SalesController::class, 'search'])->name('sales.search');
+
+    Route::resource('attendance', AttendanceController::class);
+    Route::get('attendance.search', [AttendanceController::class, 'search'])->name('attendance.search');
 
     Route::resource('rentersrequests', RenterRequestsController::class);
     Route::get('rentersrequests.search', [RenterRequestsController::class, 'search'])->name('rentersrequests.search');
@@ -46,6 +52,9 @@ Route::middleware('auth')->group(function () {
     
     Route::resource('rentalpayments', RentalPaymentsController::class);
     Route::get('rentalpayments.search', [RentalPaymentsController::class, 'search'])->name('rentalpayments.search');
+    Route::get('rentalpayments.selectrbc', [RentalPaymentsController::class, 'selectrbc'])->name('rentalpayments.selectrbc');
+    Route::get('rentalpayments.searchrbc', [RentalPaymentsController::class, 'searchrbc'])->name('rentalpayments.searchrbc');
+    Route::put('rentalpayments.putrbc/{renters}', [RentalPaymentsController::class, 'putrbc'])->name('rentalpayments.sputrbc');
 });
 
 Route::middleware('auth')->group(function () {

@@ -14,10 +14,17 @@
 							<thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
 								<tr>
 									<th scope="col" class="px-6 py-3">
-										Sales ID
+										SID
 									</th>
 									<th scope="col" class="px-6 py-3">
-										Product Name
+										Product
+									</th>
+									
+									<th scope="col" class="px-6 py-3">
+										Branch
+									</th>
+									<th scope="col" class="px-6 py-3">
+										Image
 									</th>
 									<th scope="col" class="px-6 py-3">
 										Qty
@@ -28,30 +35,39 @@
 									<th scope="col" class="px-6 py-3">
 										Total
 									</th>
-									<th scope="col" class="px-6 py-3">
-										Grand Total
-									</th>
-									<th scope="col" class="px-6 py-3">
-										Branch
-									</th>
+									
 									<th scope="col" class="px-6 py-3">
 										Cashier
 									</th>
 									<th scope="col" class="px-6 py-3">
-										Sold At
+										Time Sold
 									</th>
+									
 								</tr>
 							</thead>
+									
+									@forelse($sales as $sale) 
 							<tbody>
-								@csrf
-								@foreach($sales as $sale) 
-								
-								<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-									<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-										<x-input-label for="salesid" :value="$sale->salesid"/>
+								<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+									
+									<th class="px-6 py-4">
+										<x-input-label>{{ ++$i }}</x-input-label>
 									</th>
 									<td class="px-6 py-4">
-										<x-input-label for="productname" :value="$sale->productname"/>
+										<x-input-label>{{ $sale->productname }}</x-input-label>
+										<x-input-label>Cab. No.: <b>{{ $sale->cabinetname }}</b></x-input-label>
+									</td>
+									
+									<td class="px-6 py-4">
+										<x-input-label for="branchname" :value="$sale->branchname"/>
+									</td>
+									<td class="px-6 py-4">
+										@php
+											if($sale->avatarproof == 'avatars/cash-default.jpg'):
+												echo "";
+											endif;
+										@endphp
+										<img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$sale->salesavatar") }}" alt="avatar">
 									</td>
 									<td class="px-6 py-4">
 										<x-input-label for="qty" :value="$sale->qty"/>
@@ -60,44 +76,29 @@
 										<x-input-label for="srp" :value="$sale->srp"/>
 									</td>
 									<td class="px-6 py-4">
-										<x-input-label for="total" :value="$sale->total"/>
+										<x-input-label for="total">{{ $sale->total }}</x-input-label>
 									</td>
+									
 									<td class="px-6 py-4">
-										<x-input-label for="grandtotal" :value="$sale->grandtotal"/>
-									</td>
-									<td class="px-6 py-4">
-										<x-input-label for="branchname" :value="$sale->branchname"/>
-									</td>
-									<td class="px-6 py-4">
-										<x-input-label for="username" :value="$sale->username"/>
+										<x-input-label for="created_by" :value="$sale->created_by"/>
 									</td>
 									<td class="px-6 py-4">
 										<x-input-label for="created_at" :value="$sale->created_at"/>
 									</td>
+									
 								</tr>
-								@endforeach
+								
+								@empty
+								<td scope="row" class="px-6 py-4">
+									No Records Found.
+								</td>	
+								@endforelse
+									
 							</tbody>
-							@if(empty($sale))
-							<td scope="row" class="px-6 py-4">
-								No Records Found.
-							</td>	
-							@else
-							<tfoot>
-								<tr class="font-semibold text-gray-900 dark:text-white">
-									<th scope="row" class="px-6 py-3 text-base"></th>
-									<td class="px-6 py-3"></td>
-									<td class="px-6 py-3"></td>
-									<td class="px-6 py-3"></td>
-									<td class="px-6 py-3"></td>
-									<td class="px-6 py-3"></td>
-									<td class="px-6 py-3"></td>
-									<td class="px-6 py-3"></td>
-									<td class="px-6 py-3"></td>
-									<td class="px-6 py-3"></td>
-								</tr>
-							</tfoot>
-							@endif
 						</table>
+						<div class="mt-4">
+							{!! $sales->appends(request()->query())->links() !!}
+						</div>
 					</div>
 				</div>
 			</div>

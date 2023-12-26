@@ -21,14 +21,15 @@
                                                 Branch
                                             </th>
                                             <th scope="col" class="px-6 py-3">
+                                                Proof Image
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
                                                 Total Sales
                                             </th>
                                             <th scope="col" class="px-6 py-3">
                                                 Total Collected
                                             </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Proof Image
-                                            </th>
+                                            
                                             <th scope="col" class="px-6 py-3">
                                                 Updated By
                                             </th>
@@ -58,14 +59,15 @@
                                                 <x-input-label for="branchname" :value="$RenterRequest->branchname"/>
                                             </td>
                                             <td class="px-6 py-4">
+                                                <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$RenterRequest->avatarproof") }}" alt="avatar">
+                                            </td>
+                                            <td class="px-6 py-4">
                                                 <x-input-label for="totalsales" :value="$RenterRequest->totalsales"/>
                                             </td>
                                             <td class="px-6 py-4">
                                                 <x-input-label for="totalcollected" :value="$RenterRequest->totalcollected"/>
                                             </td>
-                                            <td class="px-6 py-4">
-                                                <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$RenterRequest->avatarproof") }}" alt="avatar">
-                                            </td>
+                                            
                                             <td class="px-6 py-4">
                                             <x-input-label for="updated_by" :value="$RenterRequest->updated_by"/>
                                             </td>

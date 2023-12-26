@@ -20,6 +20,9 @@
                                 Branch
                             </th>
                             <th scope="col" class="px-6 py-3">
+                                Proof Image
+                            </th>
+                            <th scope="col" class="px-6 py-3">
                                 Payment Mode
                             </th>
                             <th scope="col" class="px-6 py-3">
@@ -28,9 +31,7 @@
                             <th scope="col" class="px-6 py-3">
                                 Applicable Month
                             </th>
-                            <th scope="col" class="px-6 py-3">
-                                Proof Image
-                            </th>
+                            
                             <th scope="col" class="px-6 py-3">
                                 Updated By
                             </th>
@@ -55,6 +56,14 @@
                                 <x-input-label for="branchname" :value="$rentalpayment->branchname"/>
                             </td>
                             <td class="px-6 py-4">
+                                @php
+                                    if($rentalpayment->avatarproof == 'avatars/cash-default.jpg'):
+                                        echo "";
+                                    endif;
+                                @endphp
+                                <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$rentalpayment->avatarproof") }}" alt="avatar">
+                            </td>
+                            <td class="px-6 py-4">
                                 <x-input-label for="rppaytype" :value="$rentalpayment->rppaytype"/>
                             </td>
                             <td class="px-6 py-4">
@@ -63,14 +72,7 @@
                             <td class="px-6 py-4">
                                 <x-input-label for="rpmonthyear">{{ $rentalpayment->rpmonth }} - {{ $rentalpayment->rpyear }}</x-input-label>
                             </td>
-                            <td class="px-6 py-4">
-                                @php
-                                    if($rentalpayment->avatarproof == 'avatars/cash-default.jpg'):
-                                        echo "";
-                                    endif;
-                                @endphp
-                                <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$rentalpayment->avatarproof") }}" alt="avatar">
-                            </td>
+                            
                             <td class="px-6 py-4">
                             <x-input-label for="updated_by" :value="$rentalpayment->updated_by"/>
                             </td>

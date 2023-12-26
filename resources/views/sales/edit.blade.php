@@ -41,10 +41,38 @@
                                     <div class="grid gap-4 mb-4 grid-cols-2">
                                         <div class="col-span-2 sm:col-span-1">
                                                 <!-- branchname -->
-                                                
+                                                @php
+                                                    $op1_b = '';
+                                                    $op2_b = '';
+                                                    $op3_b = '';
+                                                    $op4_b = '';
+                                                    $op5_b = '';
+                                                    $op6_b = '';
+                                                    if ($rentalPayments->branchname == 'CB Main'):
+                                                        $op1_b = 'selected = "selected"';
+                                                    elseif ($rentalPayments->branchname == 'CB Annex'):
+                                                        $op2_b = 'selected = "selected"';
+                                                    elseif ($rentalPayments->branchname == 'CB Complex'):
+                                                        $op3_b = 'selected = "selected"';
+                                                    elseif ($rentalPayments->branchname == 'CB Plus 1'):
+                                                        $op4_b = 'selected = "selected"';
+                                                    elseif ($rentalPayments->branchname == 'CB Plus 2'):
+                                                        $op5_b = 'selected = "selected"';  
+                                                    elseif ($rentalPayments->branchname == 'CB Plus 3'):
+                                                        $op6_b = 'selected = "selected"'; 
+                                                    endif;
+                                                @endphp
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="branchname" :value="__('Branch Name')" />
-                                                    <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname', $rentalPayments->branchname)" required autofocus autocomplete="off" readonly/> 
+                                                    <!-- <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname')" required autofocus autocomplete="off" /> -->
+                                                    <select id="branchname" name="branchname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('branchname', $rentalPayments->branchname))">
+                                                        <option value = "CB Main" {{ $op1_b; }}">CB Main</option>
+                                                        <option value = "CB Annex" {{ $op2_b; }}">CB Annex</option>
+                                                        <option value = "CB Complex" {{ $op3_b; }}}">CB Complex</option>
+                                                        <option value = "CB Plus 1" {{ $op4_b; }}">CB Plus 1</option>
+                                                        <option value = "CB Plus 2" {{ $op5_b; }}">CB Plus 2</option>
+                                                        <option value = "CB Plus 3" {{ $op6_b; }}">CB Plus 3</option>
+                                                    </select>
                                                     <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -52,7 +80,7 @@
                                                 <!-- cabname -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="cabinetname" :value="__('Cabinet No.')" />
-                                                    <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" :value="old('cabinetname', $rentalPayments->cabinetname)" required autofocus autocomplete="off" readonly/>
+                                                    <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" :value="old('cabinetname', $rentalPayments->cabinetname)" required autofocus autocomplete="off" />
                                                     <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -60,7 +88,7 @@
                                                 <!-- username -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="username" :value="__('User Name')" />
-                                                    <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username', $rentalPayments->username)" required autofocus autocomplete="off" readonly/>
+                                                    <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username', $rentalPayments->username)" required autofocus autocomplete="off" />
                                                     <x-input-error :messages="$errors->get('username')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -68,7 +96,7 @@
                                                 <!-- firstname -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="firstname" :value="__('First Name')" />
-                                                    <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname', $rentalPayments->firstname)" required autofocus autocomplete="given-name" readonly/>
+                                                    <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname', $rentalPayments->firstname)" required autofocus autocomplete="given-name" />
                                                     <x-input-error :messages="$errors->get('firstname')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -77,26 +105,8 @@
                                                     <!-- lastname -->
                                                     <div class="form-group mt-4">
                                                     <x-input-label for="lastname" :value="__('Last Name')" />
-                                                    <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname', $rentalPayments->lastname)" required autofocus autocomplete="family-name" readonly/>
+                                                    <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname', $rentalPayments->lastname)" required autofocus autocomplete="family-name" />
                                                     <x-input-error :messages="$errors->get('lastname')" class="mt-2" />
-                                                </div>
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                    <!-- rpmonth -->
-                                                    <div class="form-group mt-4">
-                                                    <x-input-label for="rpmonth" :value="__('Applicable Month (Month - Year)')" />
-                                                    <x-text-input id="rpmonth" class=" mt-1" type="text" name="rpmonth" :value="old('rpmonth', $rentalPayments->rpmonth)" required autofocus autocomplete="off" readonly/> -
-                                                    <x-text-input id="rpyear" class=" mt-1" type="text" name="rpyear" :value="old('rpmonth', $rentalPayments->rpyear)" required autofocus autocomplete="off" readonly/>
-                                                    <x-input-error :messages="$errors->get('rpyear')" class="mt-2" />
-                                                    <x-input-error :messages="$errors->get('rpmonth')" class="mt-2" />
-                                                </div>
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                    <!-- rpamount -->
-                                                    <div class="form-group mt-4">
-                                                    <x-input-label for="rpamount" :value="__('Rental Amount')" />
-                                                    <x-text-input id="rpamount" class="block mt-1 w-full" type="text" name="rpamount" :value="old('rpamount', $rentalPayments->rpamount)" required autofocus autocomplete="off" />
-                                                    <x-input-error :messages="$errors->get('rpamount')" class="mt-2" />
                                                 </div>
                                             </div>
                                             <div class="col-span-2 sm:col-span-1">
@@ -113,7 +123,7 @@
                                                 @endphp
                                                     <div class="form-group mt-4">
                                                     <x-input-label for="rppaytype" :value="__('Payment Mode')" />
-                                                    <select id="rppaytype" name="rppaytype" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('rppaytype', $rentalPayments->rppaytype))" >
+                                                    <select id="rppaytype" name="rppaytype" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('rppaytype', $rentalPayments->rppaytype))">
                                                         <option value = "Cash" {{ $op1_c; }}">Cash</option>
                                                         <option value = "Bank Transfer" {{ $op2_c; }}">Bank Transfer</option>
                                                     </select>
@@ -121,8 +131,48 @@
                                                     <x-input-error :messages="$errors->get('rppaytype')" class="mt-2" />
                                                 </div>
                                             </div>
-                                            
-                                            
+                                            <div class="col-span-2 sm:col-span-1">
+                                                    <!-- rpamount -->
+                                                    <div class="form-group mt-4">
+                                                    <x-input-label for="rpamount" :value="__('Rental Amount')" />
+                                                    <x-text-input id="rpamount" class="block mt-1 w-full" type="text" name="rpamount" :value="old('rpamount', $rentalPayments->rpamount)" required autofocus autocomplete="off" />
+                                                    <x-input-error :messages="$errors->get('rpamount')" class="mt-2" />
+                                                </div>
+                                            </div>
+                                            <div class="col-span-2 sm:col-span-1">
+                                                    <!-- rpmonthyear -->
+                                                    <div class="form-group mt-4">
+                                                    <x-input-label for="rpmonthyear" :value="__('Applicable Month')" />
+                                                    <select id="rpmonthyear" name="rpmonthyear" class="form-select mt-1  border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('rpmonthyear', $rentalPayments->rpmonthyear))">
+                                                        <option value = "01" {{ $op1_c; }}">01</option>
+                                                        <option value = "02" {{ $op2_c; }}">02</option>
+                                                        <option value = "03" {{ $op2_c; }}">03</option>
+                                                        <option value = "04" {{ $op2_c; }}">04</option>
+                                                        <option value = "05" {{ $op2_c; }}">05</option>
+                                                        <option value = "06" {{ $op2_c; }}">06</option>
+                                                        <option value = "07" {{ $op2_c; }}">07</option>
+                                                        <option value = "08" {{ $op2_c; }}">08</option>
+                                                        <option value = "09" {{ $op2_c; }}">09</option>
+                                                        <option value = "10" {{ $op2_c; }}">10</option>
+                                                        <option value = "11" {{ $op2_c; }}">11</option>
+                                                        <option value = "12" {{ $op2_c; }}">12</option>
+
+                                                    </select>
+                                                    <select id="rpmonthyear" name="rpmonthyear" class="form-select mt-1  border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('rpmonthyear', $rentalPayments->rpmonthyear))">
+                                                        <option value = "2023" {{ $op1_c; }}">2023</option>
+                                                        <option value = "2024" {{ $op2_c; }}">2024</option>
+                                                        <option value = "2025" {{ $op2_c; }}">2025</option>
+                                                        <option value = "2026" {{ $op2_c; }}">2026</option>
+                                                        <option value = "2027" {{ $op2_c; }}">2027</option>
+                                                        <option value = "2028" {{ $op2_c; }}">2028</option>
+                                                        <option value = "2029" {{ $op2_c; }}">2029</option>
+                                                        <option value = "2030" {{ $op2_c; }}">2030</option>
+                                                        <option value = "2031" {{ $op2_c; }}">2031</option>
+                                                        <option value = "2032" {{ $op2_c; }}">2032</option>
+                                                    </select>
+                                                    <x-input-error :messages="$errors->get('rpmonthyear')" class="mt-2" />
+                                                </div>
+                                            </div>
                                             <div class="col-span-2 sm:col-span-1 ">
                                                 <!-- rpnotes -->
                                                 <div class="form-group mt-4">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\RentalPayments;
+use App\Models\Renters;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -10,6 +11,42 @@ use Illuminate\Support\Facades\Storage;
 
 class RentalPaymentsController extends Controller
 {
+    public function searchrbc(Request $request)
+    {
+        $renter = Renters::where('accesstype',"Renters")->where('status',"Active")
+                    ->where(function(Builder $builder) use($request){
+                        $builder
+                                ->where('username','like',"%{$request->searchrbc}%")
+                                ->orWhere('firstname','like',"%{$request->searchrbc}%")
+                                ->orWhere('lastname','like',"%{$request->searchrbc}%")
+                                ->orWhere('middlename','like',"%{$request->searchrbc}%")
+                                ->orWhere('branchname','like',"%{$request->searchrbc}%")
+                                ->orWhere('cabinetname','like',"%{$request->searchrbc}%")
+                                ->orWhere('email','like',"%{$request->searchrbc}%")
+                                ->orWhere('status','like',"%{$request->searchrbc}%") 
+                                ->orderBy('status','asc');
+                    })
+                    ->paginate(5);
+
+                    return view('rentalpayments.create-select-rbc',compact('renter'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+    public function selectrbc()
+    {
+        $renter = Renters::where('accesstype',"Renters")
+                    
+                    ->where(function(Builder $builder){
+                        $builder->where('status',"Active")
+                                ->orderBy('status','asc')
+                                
+                                ;
+                    })
+                    ->paginate(5);
+    
+        return view('rentalpayments.create-select-rbc',compact('renter'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+            
+    }
     public function search(Request $request)
     {
         $rentalPayments = RentalPayments::orderBy('status','desc')
@@ -44,11 +81,14 @@ class RentalPaymentsController extends Controller
                                         ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
+    
     /**
      * Show the form for creating a new resource.
      */
+
     public function create()
     {
+        
         return view('rentalpayments.create');
     }
 
@@ -57,6 +97,8 @@ class RentalPaymentsController extends Controller
      */
     public function store(Request $request)
     {
+        
+
         $rentalpayments = RentalPayments::create([
             'branchid' => '1',
             'branchname' => $request->branchname,
@@ -79,10 +121,10 @@ class RentalPaymentsController extends Controller
     
         if ($rentalpayments) {
             //query successful
-            return redirect()->route('rentalpayments.create')
+            return redirect()->route('rentalpayments.index')
                         ->with('success','Sales Request created successfully.');
         }else{
-            return redirect()->route('rentalpayments.create')
+            return redirect()->route('rentalpayments.index')
                         ->with('success','Sales Request creation failed');
         }  
     }
@@ -90,11 +132,18 @@ class RentalPaymentsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(RentalPayments $rentalPayments)
+    public function show($renters)
     {
-        return view('rentalpayments.show',['$rentalPayments' => $rentalPayments]);
+        $renters = Renters::findOrFail($renters);
+        return view('rentalpayments.show',['$renters' => $renters]);
     }
-
+    public function putrbc($renters)
+    {
+        
+        $renter = Renters::findOrFail($renters);
+        return view('rentalpayments.create-put',['renters' => $renter]);
+    }
+    
     /**
      * Show the form for editing the specified resource.
      */
