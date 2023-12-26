@@ -158,45 +158,47 @@ class RentalPaymentsController extends Controller
      */
     public function update(Request $request, $rentalPayments)
     {
+
         $rentalPayment = RentalPayments::findOrFail($rentalPayments);
-        
-        $path = Storage::disk('public')->put('rentalPayments',$request->file('avatarproof'));
-        // $path = $request->file('avatar')->store('avatars','public');
-        
-        $oldavatar = $rentalPayment->avatarproof;
-        
-        if($oldavatar == 'avatars/cash-default.jpg'){
+        if($rentalPayment->status == 'Paid'){
+            return redirect()->route('rentalpayments.index')
+                            ->with('failed','Already Paid. Modifications Not Allowed');
+        }elseif($rentalPayment->status == 'Unpaid'){
+            $path = Storage::disk('public')->put('rentalPayments',$request->file('avatarproof'));
+            // $path = $request->file('avatar')->store('avatars','public');
             
-        }else{
-            Storage::disk('public')->delete($oldavatar);
+            $oldavatar = $rentalPayment->avatarproof;
+            
+            if($oldavatar == 'avatars/cash-default.jpg'){
+                
+            }else{
+                Storage::disk('public')->delete($oldavatar);
+            }
+        
+
+            RentalPayments::where('rpid', $rentalPayments)->update([
+                'userid' => '1',
+                'username' => $request->username,
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
+                'rpamount' => $request->rpamount,
+                'rppaytype' => $request->rppaytype,
+                'rpmonth' => $request->rpmonth,
+                'rpyear' => $request->rpyear,
+                'rpnotes' => $request->rpnotes,
+                'branchid' => '1',
+                'branchname' => $request->branchname,
+                'cabid' => '1',
+                'cabinetname' => $request->cabinetname,
+                'avatarproof' => $path,
+                'updated_by' => Auth()->user()->email,
+                'status' => 'Paid',
+            ]);
+
+            return redirect()->route('rentalpayments.index')
+                            ->with('success','Rental Payment updated successfully');
         }
-       
-
-        RentalPayments::where('rpid', $rentalPayments)->update([
-            'userid' => '1',
-            'username' => $request->username,
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'rpamount' => $request->rpamount,
-            'rppaytype' => $request->rppaytype,
-            'rpmonth' => $request->rpmonth,
-            'rpyear' => $request->rpyear,
-            'rpnotes' => $request->rpnotes,
-            'branchid' => '1',
-            'branchname' => $request->branchname,
-            'cabid' => '1',
-            'cabinetname' => $request->cabinetname,
-            'avatarproof' => $path,
-            'updated_by' => Auth()->user()->email,
-            'status' => 'Paid',
         
-
-        ]);
-
-        
-    
-        return redirect()->route('rentalpayments.index')
-                        ->with('success','Rental Payment updated successfully');
     }
 
     /**

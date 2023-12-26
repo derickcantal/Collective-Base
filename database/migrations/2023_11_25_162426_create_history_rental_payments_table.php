@@ -25,7 +25,7 @@ return new class extends Migration
             $table->integer('branchid');
             $table->string('branchname');
             $table->integer('cabid');
-            $table->integer('cabinetname');
+            $table->string('cabinetname');
             $table->string('avatarproof');
             $table->timestamps();
             $table->string('created_by');

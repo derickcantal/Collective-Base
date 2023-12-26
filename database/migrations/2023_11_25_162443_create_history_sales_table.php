@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('salesname');
             $table->string('salesavatar');
             $table->integer('cabid');
-            $table->integer('cabinetname');
+            $table->string('cabinetname');
             $table->string('productname');
             $table->integer('qty');
             $table->decimal('origprice', $precision = 8, $scale = 2);

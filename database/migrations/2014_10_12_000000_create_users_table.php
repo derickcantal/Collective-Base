@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('branchid');
             $table->string('branchname');
             $table->integer('cabid');
-            $table->integer('cabinetname');
+            $table->string('cabinetname');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

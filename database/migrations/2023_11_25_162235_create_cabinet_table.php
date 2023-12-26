@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cabinet', function (Blueprint $table) {
             $table->increments('cabid');
-            $table->integer('cabinetname');
+            $table->string('cabinetname');
             $table->integer('branchid');
             $table->string('branchname');
             $table->timestamps();
