@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
     
     Route::resource('sales', SalesController::class);
     Route::get('sales.search', [SalesController::class, 'search'])->name('sales.search');
+    Route::get('sales.calc', [SalesController::class, 'salescalc'])->name('sales.calc');
 
     Route::resource('attendance', AttendanceController::class);
     Route::get('attendance.search', [AttendanceController::class, 'search'])->name('attendance.search');

@@ -31,7 +31,7 @@ class SalesController extends Controller
      */
     public function create()
     {
-        //
+        return view('sales.create');
     }
 
     /**
@@ -55,7 +55,7 @@ class SalesController extends Controller
      */
     public function edit(sales $sales)
     {
-        //
+        return view('sales.edit',['sales' => $sales]);
     }
 
     /**
