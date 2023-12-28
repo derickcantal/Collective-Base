@@ -21,6 +21,7 @@ class attendanceFactory extends Factory
     {
         $status = ['Active', 'Inactive'];
         $branchname = ['CB Main', 'CB Annex', 'CB Complex', 'CB Plus 1', 'CB Plus 2', 'CB Plus 3'];
+        $yn = ['Y','N'];
 
         return [
             'userid' => Arr::random([rand(1, 250)]),
@@ -32,6 +33,7 @@ class attendanceFactory extends Factory
             'attnotes' => Str::random(10),
             'created_by' => fake()->name(),
             'updated_by' => fake()->name(),
+            'posted' => Arr::random($yn),
             'status' => Arr::random($status),
         ];
     }

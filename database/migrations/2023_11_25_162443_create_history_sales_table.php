@@ -29,9 +29,12 @@ return new class extends Migration
             $table->integer('branchid');
             $table->string('branchname');
             $table->timestamps();
+            $table->string('collected_status');
+            $table->string('returned');
+            $table->string('snotes');
+            $table->string('posted');
             $table->string('created_by');
             $table->string('updated_by');
-            $table->string('collected_status');
             $table->string('status');
         });
     }

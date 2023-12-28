@@ -22,7 +22,8 @@ class SalesFactory extends Factory
         $atype = ['Administrator', 'Supervisor','Cashier','Leesee'];
         $branchname = ['CB Main', 'CB Annex', 'CB Complex', 'CB Plus 1', 'CB Plus 2', 'CB Plus 3'];
         $collected_status = ['Collected','Pending'];
-        $status = ['Active', 'Inactive'];
+        $status = ['Posted', 'Unposted'];
+        $yn = ['Y','N'];
 
         return [
             'salesname' => Str::random(10),
@@ -40,9 +41,12 @@ class SalesFactory extends Factory
             'accesstype' => Arr::random($atype) ,
             'branchid' => '1',
             'branchname' => Arr::random($branchname),
+            'collected_status' => Arr::random($collected_status),
+            'returned' => Arr::random($yn),
+            'snotes' => Str::random(10),
             'created_by' => fake()->name(),
             'updated_by' => fake()->name(),
-            'collected_status' => Arr::random($collected_status),
+            'posted' => Arr::random($yn),
             'status' => Arr::random($status),
         ];
     }

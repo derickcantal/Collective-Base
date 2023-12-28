@@ -21,6 +21,7 @@ class SalesRequestsFactory extends Factory
         $branchname = ['CB Main', 'CB Annex', 'CB Complex', 'CB Plus 1', 'CB Plus 2', 'CB Plus 3'];
         $rpamount = ['10.00','20.00','30.00','40.00','50.00','100.00','200.00','1000.00'];
         $status = ['Completed', 'Pending'];
+        $yn = ['Y','N'];
 
         return [
             'branchid' => '1',
@@ -36,6 +37,7 @@ class SalesRequestsFactory extends Factory
             'lastname' => fake()->name(),
             'created_by' => fake()->name(),
             'updated_by' => fake()->name(),
+            'posted' => Arr::random($yn),
             'status' => Arr::random($status),
         ];
     }

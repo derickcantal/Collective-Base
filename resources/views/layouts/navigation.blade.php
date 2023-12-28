@@ -63,23 +63,33 @@
                         <x-dropdown-link :href="route('renters.index')" :active="request()->routeIs('renters.index')">
                             {{ __('Renters') }}
                         </x-dropdown-link>
+                        <x-dropdown-link :href="route('sales.index')" :active="request()->routeIs('sales.index')">
+                            {{ __('Cashier') }}
+                        </x-dropdown-link>
                         <x-dropdown-link :href="route('reports.index')" :active="request()->routeIs('reports.index')">
                             {{ __('Reports') }}
                         </x-dropdown-link>
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                        <div class="pt-1 pb-1 border-t border-gray-200 dark:border-gray-600">
+                        
+                            <x-dropdown-link :href="route('profile.edit')">
+                                {{ __('Profile') }}
                             </x-dropdown-link>
-                        </form>
+
+                            <x-dropdown-link :href="route('settings.index')">
+                                {{ __('Settings') }}
+                            </x-dropdown-link>
+
+                            <!-- Authentication -->
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+
+                                <x-dropdown-link :href="route('logout')"
+                                        onclick="event.preventDefault();
+                                                    this.closest('form').submit();">
+                                    {{ __('Log Out') }}
+                                </x-dropdown-link>
+                            </form>
+                        </div>
                     </x-slot>
                 </x-dropdown>
             </div>
@@ -111,6 +121,11 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('renters.index')" :active="request()->routeIs('renters.index')">
                 {{ __('Renters') }}
+            </x-responsive-nav-link>
+        </div>
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('sales.index')" :active="request()->routeIs('sales.index')">
+                {{ __('Cashier') }}
             </x-responsive-nav-link>
         </div>
         <div class="pt-2 pb-3 space-y-1">

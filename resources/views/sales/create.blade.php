@@ -122,9 +122,6 @@
                                             </div>
                                         </div>
                                         <div class="flex items-center justify-between col-span-2 sm:col-span-1">
-                                            <x-secondary-button class="ms-4">
-                                                <a class="btn btn-secondary" href="{{ route('sales.calc') }}"> Calculate</a>
-                                            </x-secondary-button>
                                             <x-primary-button class="ms-4">
                                                 <a class="btn btn-primary" > Save</a>
                                             </x-primary-button>

@@ -13,6 +13,11 @@ class SalesController extends Controller
 
         return view('dashboard.index',['sales' => $sales]);
     }
+    public function salescalc(Request $request)
+    {
+       
+    }
+
     /**
      * Display a listing of the resource.
      */
