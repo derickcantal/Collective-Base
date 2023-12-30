@@ -20,7 +20,7 @@ class Sales extends Model
     protected $fillable = [
         'salesname',
         'salesavatar',
-        'cabinetid',
+        'cabid',
         'cabinetname',
         'productname',
         'qty',
@@ -34,6 +34,7 @@ class Sales extends Model
         'branchid',
         'branchname',
         'collected_status',
+        'returned',
         'snotes',
         'created_by',
         'updated_by',

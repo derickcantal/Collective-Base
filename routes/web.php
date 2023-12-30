@@ -42,6 +42,9 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('attendance', AttendanceController::class);
     Route::get('attendance.search', [AttendanceController::class, 'search'])->name('attendance.search');
+    Route::get('attendance.selectemp', [AttendanceController::class, 'selectemp'])->name('attendance.selectemp');
+    Route::get('attendance.searchemp', [AttendanceController::class, 'searchemp'])->name('attendance.searchemp');
+    Route::put('attendance.putemp/{users}', [AttendanceController::class, 'putemp'])->name('attendance.putemp');
 
     Route::resource('cabinet', AttendanceController::class);
     Route::get('cabinet.search', [AttendanceController::class, 'search'])->name('cabinet.search');

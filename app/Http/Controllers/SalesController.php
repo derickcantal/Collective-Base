@@ -19,17 +19,17 @@ class SalesController extends Controller
 
     public function search(Request $request)
     {
-        $renter = sales::where('accesstype',"Renters")->where('status',"Active")
+        $sales = sales::query()
                     ->where(function(Builder $builder) use($request){
                         $builder
-                                ->where('username','like',"%{$request->searchrbc}%")
-                                ->orWhere('firstname','like',"%{$request->searchrbc}%")
-                                ->orWhere('lastname','like',"%{$request->searchrbc}%")
-                                ->orWhere('middlename','like',"%{$request->searchrbc}%")
-                                ->orWhere('branchname','like',"%{$request->searchrbc}%")
-                                ->orWhere('cabinetname','like',"%{$request->searchrbc}%")
-                                ->orWhere('email','like',"%{$request->searchrbc}%")
-                                ->orWhere('status','like',"%{$request->searchrbc}%") 
+                                ->where('cabinetname','like',"%{$request->search}%")
+                                ->orWhere('productname','like',"%{$request->search}%")
+                                ->orWhere('qty','like',"%{$request->search}%")
+                                ->orWhere('srp','like',"%{$request->search}%")
+                                ->orWhere('total','like',"%{$request->search}%")
+                                ->orWhere('username','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('snotes','like',"%{$request->search}%") 
                                 ->orderBy('status','asc');
                     })
                     ->paginate(5);
@@ -71,7 +71,42 @@ class SalesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $path = Storage::disk('public')->put('sales',$request->file('salesavatar'));
+            
+        $sales = sales::create([
+            'salesavatar' => $path,
+            'salesname' => 'Null',
+            'cabid' => 1,
+            'cabinetname' => $request->cabinetname,
+            'productname' => $request->productname,
+            'qty' => $request->qty,
+            'origprice' => 0,
+            'srp' => $request->srp,
+            'total' => $request->qty * $request->srp,
+            'grandtotal' => 0,
+            'userid' => auth()->user()->userid,
+            'username' => auth()->user()->username,
+            'accesstype' => auth()->user()->accesstype,
+            'branchid' => '1',
+            'branchname' => auth()->user()->branchname,
+            'collected_status' => 'Pending',
+            'returned' => 'N',
+            'snotes' => $request->snotes,
+            'posted' => 'N',
+            'mod' => 0,
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'status' => 'Unposted',
+        ]);
+    
+        if ($sales) {
+            //query successful
+            return redirect()->route('sales.index')
+                        ->with('success','User created successfully.');
+        }else{
+            return redirect()->route('sales.index')
+                        ->with('failed','User creation failed');
+        }  
     }
 
     /**
@@ -95,13 +130,15 @@ class SalesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, sales $sales)
+    public function update(Request $request, $sales)
     {
         $sales = sales::findOrFail($sales);
-        if($sales->status == 'Paid'){
+        $mod = 0;
+        $mod = $sales->mod;
+        if($sales->mod == '1'){
             return redirect()->route('sales.index')
-                            ->with('failed','Already Paid. Modifications Not Allowed');
-        }elseif($sales->status == 'Unpaid'){
+                            ->with('failed','Transaction completed. Modifications Not Allowed');
+        }elseif($sales->mod == '0'){
             $path = Storage::disk('public')->put('sales',$request->file('salesavatar'));
             // $path = $request->file('avatar')->store('avatars','public');
             
@@ -112,25 +149,31 @@ class SalesController extends Controller
             }else{
                 Storage::disk('public')->delete($oldavatar);
             }
-        
+            
 
-            sales::where('rpid', $sales)->update([
-                'userid' => '1',
-                'username' => $request->username,
-                'firstname' => $request->firstname,
-                'lastname' => $request->lastname,
-                'rpamount' => $request->rpamount,
-                'rppaytype' => $request->rppaytype,
-                'rpmonth' => $request->rpmonth,
-                'rpyear' => $request->rpyear,
-                'rpnotes' => $request->rpnotes,
-                'branchid' => '1',
-                'branchname' => $request->branchname,
-                'cabid' => '1',
-                'cabinetname' => $request->cabinetname,
+            sales::where('salesid', $sales->salesid)->update([
                 'salesavatar' => $path,
-                'updated_by' => Auth()->user()->email,
-                'status' => 'Paid',
+                'salesname' => 'Null',
+                'cabid' => 1,
+                'cabinetname' => $request->cabinetname,
+                'productname' => $request->productname,
+                'qty' => $request->qty,
+                'origprice' => 0,
+                'srp' => $request->srp,
+                'total' => $request->qty * $request->srp,
+                'grandtotal' => 0,
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'accesstype' => auth()->user()->accesstype,
+                'branchid' => '1',
+                'branchname' => auth()->user()->branchname,
+                'collected_status' => 'Pending',
+                'returned' => 'N',
+                'snotes' => $request->snotes,
+                'posted' => 'N',
+                'mod' => $mod + 1,
+                'updated_by' => auth()->user()->email,
+                'status' => 'Unposted',
             ]);
 
             return redirect()->route('sales.index')

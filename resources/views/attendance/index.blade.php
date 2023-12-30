@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <a href="{{ route('sales.index') }}"> Sales</a> | <a href="{{ route('attendance.index') }}"> Attendance</a> 
+            <a href="{{ route('sales.index') }}"> Sales</a> | <u> <a href="{{ route('attendance.index') }}"> Attendance</a> </u>
         </h2>
     </x-slot>
     <section>
@@ -16,12 +16,12 @@
                                         <div class="col-span-2 sm:col-span-1">
                                             <div>
                                                 <x-primary-button class="ms-4">
-                                                    <a class="btn btn-primary" href="{{ route('attendance.create') }}"> Add Employee</a>
+                                                    <a class="btn btn-primary" href="{{ route('attendance.selectemp') }}"> Add Employee</a>
                                                 </x-primary-button>
                                             </div>
                                         </div>
                                         <div class="col-span-2 sm:col-span-1 flex justify-end">
-                                            <form action="{{ route('sales.search') }}" method="get">
+                                            <form action="{{ route('attendance.search') }}" method="get">
                                                     <input type="text" name="search" id="table-search-users" class=" text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for Employee">
                                                     <x-primary-button class="ms-4">
                                                      Search
@@ -42,7 +42,19 @@
                                     </div>
                                     </div>
                                     @endif
-                                </div>    
+
+                                    @if ($message = Session::get('failed'))
+                                    <div class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
+                                        <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                        </svg>
+                                        <span class="sr-only">Info</span>
+                                        <div>
+                                            <span class="font-medium">Failed!</span> {{ $message }}
+                                        </div>
+                                    </div>
+                                    @endif
+                            </div>    
 
                                 @csrf
                                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
