@@ -33,6 +33,7 @@ class Renters extends Model
         'accesstype',
         'created_by',
         'updated_by',
+        'mod',
         'status',
     ];
 

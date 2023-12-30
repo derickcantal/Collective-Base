@@ -52,7 +52,7 @@
                                         </h3>
                                     </div>
                                     <!-- Modal body -->
-                                    <div class="grid gap-4 mb-4 grid-cols-2">
+                                    <div class="grid gap-4 mb-4 grid-cols-2" x-data="{ srp: 0, qty: 0,  total: 0}" x-effect="total = qty * srp">
                                         <div class="col-span-2 sm:col-span-1">
                                             <!-- avatar -->
                                             <div class="form-group mt-4">
@@ -74,7 +74,11 @@
                                             <!-- cabname -->
                                             <div class="form-group mt-4">
                                                 <x-input-label for="cabinetname" :value="__('Cabinet No.')" />
-                                                <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" :value="old('cabinetname')" required autofocus autocomplete="off" />
+                                                <select id="cabinetname" name="cabinetname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('cabinetname')">
+                                                    @foreach($cabinet as $cabinets)    
+                                                        <option value = "{{ $cabinets->cabinetname}}">{{ $cabinets->cabinetname}}</option>
+                                                    @endforeach
+                                                </select>
                                                 <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
                                             </div>
                                         </div>
@@ -86,33 +90,32 @@
                                                 <x-input-error :messages="$errors->get('productname')" class="mt-2" />
                                             </div>
                                         </div>
-                                        <div class="col-span-2 sm:col-span-1">
-                                            <!-- qty -->
-                                            <div class="form-group mt-4">
-                                                <x-input-label for="qty" :value="__('QTY')" />
-                                                <x-text-input id="qty" class="block mt-1 w-full" type="text" name="qty" :value="old('qty')" required autofocus autocomplete="off" />
-                                                <x-input-error :messages="$errors->get('qty')" class="mt-2" />
-                                            </div>
-                                        </div>
-                                
+                                           
                                         <div class="col-span-2 sm:col-span-1">
                                                 <!-- srp -->
                                             <div class="form-group mt-4">
                                                 <x-input-label for="srp" :value="__('Price')" />
-                                                <x-text-input id="srp" class="block mt-1 w-full" type="text" name="srp" :value="old('srp')" required autofocus autocomplete="off" />
+                                                <x-text-input id="srp" x-model.number="srp " class="block mt-1 w-full" type="number" name="srp" :value="old('srp')" required autofocus autocomplete="off" />
                                                 <x-input-error :messages="$errors->get('srp')" class="mt-2" />
                                             </div>
                                         </div>
-                                        
+                                        <div class="col-span-2 sm:col-span-1">
+                                            <!-- qty -->
+                                            <div class="form-group mt-4">
+                                                <x-input-label for="qty" :value="__('QTY')" />
+                                                <x-text-input id="qty" x-model.number="qty" class="block mt-1 w-full" type="number" name="qty" :value="old('qty')" required autofocus autocomplete="off" />
+                                                <x-input-error :messages="$errors->get('qty')" class="mt-2" />
+                                            </div>
+                                        </div>
                                         <div class="col-span-2 sm:col-span-1">
                                                 <!-- total -->
                                             <div class="form-group mt-4">
                                                 <x-input-label for="total" :value="__('Total Amount')" />
-                                                <x-text-input id="total" class="block mt-1 w-full" type="text" name="total" :value="old('total')" required autofocus autocomplete="off" />
+                                                <x-text-input id="total" x-model.number="total" class="block mt-1 w-full" type="text" name="total" :value="old('total')" required autofocus autocomplete="off" readonly/>
                                                 <x-input-error :messages="$errors->get('total')" class="mt-2" />
                                             </div>
                                         </div>
-                                        
+                                         
                                         <div class="col-span-2 sm:col-span-1 ">
                                             <!-- rpnotes -->
                                             <div class="form-group mt-4">

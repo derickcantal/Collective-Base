@@ -12,9 +12,8 @@
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         <form action="{{ route('renters.store') }}" method="POST" class="p-4 md:p-5">
                         @csrf   
-                            <div class="relative p-4 w-full max-w-full max-h-full">
-                                <!-- Error & Success Notification -->        
-                                <div>
+                            <!-- Error & Success Notification -->        
+                            <div>
                                     @if ($errors->any())
                                     <div class="flex p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
                                     <svg class="flex-shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -43,6 +42,8 @@
                                     </div>
                                     @endif
                                 </div>
+                            <div class="relative p-4 w-full max-w-full max-h-full">
+                                
                                 <!-- Modal content -->
                                 <div class="relative bg-white rounded-lg dark:bg-gray-800">
                                     <!-- Modal header -->
@@ -132,12 +133,9 @@
                                                     <x-input-label for="branchname" :value="__('Branch Name')" />
                                                     <!-- <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname')" required autofocus autocomplete="off" /> -->
                                                     <select id="branchname" name="branchname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('branchname')">
-                                                        <option value = "CB Main">CB Main</option>
-                                                        <option value = "CB Annex">CB Annex</option>
-                                                        <option value = "CB Complex">CB Complex</option>
-                                                        <option value = "CB Plus 1">CB Plus 1</option>
-                                                        <option value = "CB Plus 2">CB Plus 2</option>
-                                                        <option value = "CB Plus 3">CB Plus 3</option>
+                                                        @foreach($branch as $branches)    
+                                                            <option value = "{{ $branches->branchname}}">{{ $branches->branchname}}</option>
+                                                            @endforeach
                                                     </select>
                                                     <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
                                                 </div>
@@ -146,8 +144,12 @@
                                                 <!-- cabinetnumber -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="cabinetname" :value="__('Cabinet No.')" />
-                                                    <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" :value="old('cabinetname')" required autofocus autocomplete="off" /> 
-                                                    
+                                                    <!-- <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" :value="old('cabinetname')" required autofocus autocomplete="off" /> -->
+                                                    <select id="cabinetname" name="cabinetname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('cabinetname')">
+                                                        @foreach($cabinet as $cabinets)    
+                                                            <option value = "{{ $cabinets->cabinetname}}">{{ $cabinets->cabinetname}}</option>
+                                                        @endforeach
+                                                    </select>
                                                     <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
                                                 </div>
                                             </div>

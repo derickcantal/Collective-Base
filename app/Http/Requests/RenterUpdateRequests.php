@@ -26,7 +26,6 @@ class RenterUpdateRequests extends FormRequest
             'avatar' => ['string', 'max:255'],
                 'username' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
-                'password' => ['required', 'confirmed', Rules\Password::defaults()],
                 'firstname' => ['required', 'string', 'max:255'],
                 'middlename' => ['required', 'string', 'max:255'],
                 'lastname' => ['required', 'string', 'max:255'],

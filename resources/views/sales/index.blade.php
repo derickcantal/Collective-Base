@@ -95,6 +95,7 @@
                                             </td>
                                             <td class="px-6 py-4">
                                                 @php
+                                                
                                                     if($sale->avatarproof == 'avatars/cash-default.jpg'):
                                                         echo "";
                                                     endif;
@@ -126,11 +127,11 @@
                                                     $btnlabel = '';
                                                     $btncolor = '';
 
-                                                    if($sale->status == 'Inactive'):
+                                                    if($sale->status == 'Unposted'):
                                                         $btndis = '';
                                                         $btnlabel = 'Modify';
                                                         $btncolor = 'green';
-                                                    elseif($sale->status == 'Active'):
+                                                    elseif($sale->status == 'Posted'):
                                                         $btndis = 'disabled';
                                                         $btnlabel = 'Modify';
                                                         $btncolor = 'green';

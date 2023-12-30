@@ -77,7 +77,7 @@
                                                     <x-text-input id="password" class="block mt-1 w-full"
                                                                     type="password"
                                                                     name="password"
-                                                                    required />
+                                                                     />
 
                                                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                                                 </div>
@@ -89,7 +89,7 @@
 
                                                     <x-text-input id="password_confirmation" class="block mt-1 w-full"
                                                                     type="password"
-                                                                    name="password_confirmation" required />
+                                                                    name="password_confirmation"  />
 
                                                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                                                 </div>                    
@@ -126,41 +126,50 @@
                                                     <x-input-error :messages="$errors->get('birthdate')" class="mt-2" />
                                                 </div>
                                             </div>
+                                        
                                             <div class="col-span-2 sm:col-span-1">
                                                 <!-- branchname -->
-                                                @php
-                                                    $op1_b = '';
-                                                    $op2_b = '';
-                                                    $op3_b = '';
-                                                    $op4_b = '';
-                                                    $op5_b = '';
-                                                    $op6_b = '';
-                                                    if ($renter->branchname == 'CB Main'):
-                                                        $op1_b = 'selected = "selected"';
-                                                    elseif ($renter->branchname == 'CB Annex'):
-                                                        $op2_b = 'selected = "selected"';
-                                                    elseif ($renter->branchname == 'CB Complex'):
-                                                        $op3_b = 'selected = "selected"';
-                                                    elseif ($renter->branchname == 'CB Plus 1'):
-                                                        $op4_b = 'selected = "selected"';
-                                                    elseif ($renter->branchname == 'CB Plus 2'):
-                                                        $op5_b = 'selected = "selected"';  
-                                                    elseif ($renter->branchname == 'CB Plus 3'):
-                                                        $op6_b = 'selected = "selected"'; 
-                                                    endif;
-                                                @endphp
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="branchname" :value="__('Branch Name')" />
-                                                    <!-- <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname')" required autofocus autocomplete="off" /> -->
-                                                    <select id="branchname" name="branchname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('branchname', $renter->branchname))">
-                                                        <option value = "CB Main" {{ $op1_b; }}">CB Main</option>
-                                                        <option value = "CB Annex" {{ $op2_b; }}">CB Annex</option>
-                                                        <option value = "CB Complex" {{ $op3_b; }}}">CB Complex</option>
-                                                        <option value = "CB Plus 1" {{ $op4_b; }}">CB Plus 1</option>
-                                                        <option value = "CB Plus 2" {{ $op5_b; }}">CB Plus 2</option>
-                                                        <option value = "CB Plus 3" {{ $op6_b; }}">CB Plus 3</option>
+                                                    <select id="branchname" name="branchname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('branchname', $renter->branchname)">
+                                                        @foreach($branch as $branches)
+                                                        @php
+                                                            $sel = '';
+                                                            if($branches->branchname == $renter->branchname):
+                                                                $sel = 'selected="selected"';
+                                                            endif;
+                                                            
+                                                        @endphp 
+                                                            <option value = "{{ $branches->branchname}}"  
+                                                                {{ $sel; }}
+                                                            >{{ $branches->branchname}}</option>
+                                                        @endforeach
                                                     </select>
+                                                    
                                                     <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
+                                                </div>
+                                                @php
+                                                @endphp
+                                            </div>
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <!-- cabinetnumber -->
+                                                <div class="form-group mt-4">
+                                                    <x-input-label for="cabinetname" :value="__('Cabinet No.')" />
+                                                     <select id="cabinetname" name="cabinetname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('cabinetname', $renter->cabinetname)">
+                                                        @foreach($cabinet as $cabinets)
+                                                        @php
+                                                            $sel = '';
+                                                            if($cabinets->cabinetname == $renter->cabinetname):
+                                                                $sel = 'selected="selected"';
+                                                            endif;
+                                                            
+                                                        @endphp 
+                                                            <option value = "{{ $cabinets->cabinetname}}"  
+                                                                {{ $sel; }}
+                                                            >{{ $cabinets->cabinetname}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
                                                 </div>
                                             </div>
                                             <div class="col-span-2 sm:col-span-1">
@@ -168,7 +177,7 @@
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="accesstype" :value="__('Access Type')" />
                                                     <!-- <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" :value="old('accesstype')" required autofocus autocomplete="off" /> -->
-                                                    <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" :value="old('accesstype','Renters')" required autofocus disabled/>
+                                                    <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" :value="old('accesstype','Renters')" required autofocus readonly/>
                                                     <x-input-error :messages="$errors->get('accesstype')" class="mt-2" />
                                                     
                                                 </div>
@@ -176,7 +185,6 @@
                                             <div class="col-span-2 sm:col-span-1">
                                                 <!-- status -->
                                                 @php
-                                                
                                                     $op1 = '';
                                                     $op2 = '';
                                                     if ($renter->status == 'Active'):

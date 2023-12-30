@@ -27,6 +27,8 @@ class history_sales_requests extends Model
         'lastname',
         'created_by',
         'updated_by',
+        'posted',
+        'mod',
         'status',
     ];
 

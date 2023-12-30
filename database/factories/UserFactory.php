@@ -43,6 +43,7 @@ class UserFactory extends Factory
             'accesstype' => Arr::random($atype),
             'created_by' => fake()->name(),
             'updated_by' => fake()->name(),
+            'mod' => '0',
             'status' => Arr::random($status),
         ];
     }

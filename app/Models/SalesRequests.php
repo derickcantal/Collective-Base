@@ -26,6 +26,8 @@ class SalesRequests extends Model
             'lastname',
             'created_by',
             'updated_by',
+            'posted',
+            'mod',
             'status',
         ];
     

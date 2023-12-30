@@ -29,6 +29,8 @@ class RentalPayments extends Model
         'avatarproof',
         'created_by',
         'updated_by',
+        'posted',
+        'mod',
         'status',
     ];
 

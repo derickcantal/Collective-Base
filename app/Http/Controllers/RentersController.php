@@ -6,6 +6,8 @@ use App\Http\Requests\RenterCreateRequests;
 use App\Http\Requests\RenterSearchRequests;
 use App\Http\Requests\RenterUpdateRequests;
 use App\Models\Renters;
+use App\Models\branch;
+use App\Models\cabinet;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
@@ -34,6 +36,7 @@ class RentersController extends Controller
      */
     public function index()
     {
+
         $renter = Renters::where('accesstype',"Renters")
                     ->orderBy('status','asc')
                     ->paginate(5);
@@ -47,7 +50,11 @@ class RentersController extends Controller
      */
     public function create()
     {
-        return view('renters.create');
+        $cabinet = cabinet::all();
+        $branch = branch::all();
+                    
+
+        return view('renters.create',['cabinet' => $cabinet])->with(['branch' => $branch]);
     }
 
     /**
@@ -69,6 +76,9 @@ class RentersController extends Controller
             'cabid' => '1',
             'cabinetname' => $request->cabinetname,
             'accesstype' => 'Renters',
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'mod' => 0,
             'status' => 'Active',
         ]);
     
@@ -96,7 +106,11 @@ class RentersController extends Controller
      */
     public function edit(Renters $renter)
     {
-        return view('renters.edit',['renter' => $renter]);
+        $cabinet = cabinet::all();
+        $branch = branch::all();
+        return view('renters.edit',['renter' => $renter])
+                        ->with(['cabinet' => $cabinet])
+                        ->with(['branch' => $branch]);
     }
 
     /**
@@ -104,10 +118,55 @@ class RentersController extends Controller
      */
     public function update(RenterUpdateRequests $request, Renters $renter)
     {
-        $renter->update($request->all());
         
-        return redirect()->route('renters.index')
+        $mod = 0;
+        $mod = $renter->mod;
+        if($request->password == null){
+            $renter =Renters::where('userid',$renter->userid)->update([
+                'username' => $request->username,
+                'email' => $request->email,
+                'firstname' => $request->firstname,
+                'middlename' => $request->middlename,
+                'lastname' => $request->lastname,
+                'birthdate' => $request->birthdate,
+                'branchid' => '1',
+                'branchname' => $request->branchname,
+                'cabid' => '1',
+                'cabinetname' => $request->cabinetname,
+                'accesstype' => $request->accesstype,
+                'updated_by' => auth()->user()->email,
+                'mod' => $mod + 1,
+                'status' => $request->status,
+            ]);
+        }else{
+            $renter =Renters::where('userid',$renter->userid)->update([
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'firstname' => $request->firstname,
+                'middlename' => $request->middlename,
+                'lastname' => $request->lastname,
+                'birthdate' => $request->birthdate,
+                'branchid' => '1',
+                'branchname' => $request->branchname,
+                'cabid' => '1',
+                'cabinetname' => $request->cabinetname,
+                'accesstype' => $request->accesstype,
+                'updated_by' => auth()->user()->email,
+                'mod' => $mod + 1,
+                'status' => $request->status,
+            ]);
+        }
+        
+        if($renter){
+            return redirect()->route('renters.index')
                         ->with('success','Renter updated successfully');
+        }else{
+            return redirect()->route('renters.index')
+                        ->with('failed','Renter update failed');
+        }
+
+        
     }
 
     /**

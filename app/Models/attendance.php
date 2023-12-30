@@ -22,6 +22,8 @@ class attendance extends Model
         'attnotes',
         'created_by',
         'updated_by',
+        'posted',
+        'mod',
         'status',
     ];
 

@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('accesstype');
             $table->string('created_by');
             $table->string('updated_by');
+            $table->integer('mod');
             $table->string('status');
         });
     }

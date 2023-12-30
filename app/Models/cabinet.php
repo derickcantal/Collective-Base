@@ -21,6 +21,7 @@ class cabinet extends Model
         'created_by',
         'updated_by',
         'posted',
+        'mod',
         'status',
     ];
 }

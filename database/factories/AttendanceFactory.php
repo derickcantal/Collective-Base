@@ -34,6 +34,7 @@ class attendanceFactory extends Factory
             'created_by' => fake()->name(),
             'updated_by' => fake()->name(),
             'posted' => Arr::random($yn),
+            'mod' => '0',
             'status' => Arr::random($status),
         ];
     }

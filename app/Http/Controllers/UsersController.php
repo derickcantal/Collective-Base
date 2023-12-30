@@ -95,17 +95,22 @@ class UsersController extends Controller
             'birthdate' => $request->birthdate,
             'branchid' => '1',
             'branchname' => $request->branchname,
+            'cabid' => '1',
+            'cabinetname' => 'Null',
             'accesstype' => $request->accesstype,
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'mod' => 0,
             'status' => 'Active',
         ]);
     
         if ($user) {
             //query successful
-            return redirect()->route('users.create')
+            return redirect()->route('users.index')
                         ->with('success','User created successfully.');
         }else{
-            return redirect()->route('users.create')
-                        ->with('success','User creation failed');
+            return redirect()->route('users.index')
+                        ->with('failed','User creation failed');
         }  
     }
 
@@ -140,12 +145,35 @@ class UsersController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(UserUpdateTableRequest $request, User $user)
+    public function update(Request $request, User $user)
     {
-        $user->update($request->all());
-    
-        return redirect()->route('users.index')
+        
+        $mod = 0;
+        $mod = $user->mod;
+      
+        $user =User::where('userid',$user->userid)->update([
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'firstname' => $request->firstname,
+            'middlename' => $request->middlename,
+            'lastname' => $request->lastname,
+            'birthdate' => $request->birthdate,
+            'branchid' => '1',
+            'branchname' => $request->branchname,
+            'accesstype' => $request->accesstype,
+            'updated_by' => auth()->user()->email,
+            'mod' => $mod + 1,
+            'status' => $request->status,
+        ]);
+        if($user){
+            return redirect()->route('users.index')
                         ->with('success','User updated successfully');
+        }else{
+            return redirect()->route('users.index')
+                        ->with('failed','User update failed');
+        }
+        
     }
     
     /**

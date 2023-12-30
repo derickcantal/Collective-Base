@@ -29,8 +29,11 @@ class history_sales extends Model
         'branchid',
         'branchname',
         'collected_status',
+        'snotes',
         'created_by',
         'updated_by',
+        'posted',
+        'mod',
         'status',
     ];
 

@@ -25,6 +25,8 @@ class RenterRequests extends Model
         'lastname',
         'created_by',
         'updated_by',
+        'posted',
+        'mod',
         'status',
     ];
 

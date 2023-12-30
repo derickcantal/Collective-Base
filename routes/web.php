@@ -40,14 +40,14 @@ Route::middleware('auth')->group(function () {
     Route::get('sales.search', [SalesController::class, 'search'])->name('sales.search');
     Route::get('sales.calc', [SalesController::class, 'salescalc'])->name('sales.calc');
 
+    Route::resource('attendance', AttendanceController::class);
+    Route::get('attendance.search', [AttendanceController::class, 'search'])->name('attendance.search');
+
     Route::resource('cabinet', AttendanceController::class);
     Route::get('cabinet.search', [AttendanceController::class, 'search'])->name('cabinet.search');
 
     Route::resource('branch', AttendanceController::class);
     Route::get('branch.search', [AttendanceController::class, 'search'])->name('branch.search');
-
-    Route::resource('settings', AttendanceController::class);
-    Route::get('settings.search', [AttendanceController::class, 'search'])->name('settings.search');
 
     Route::resource('rentersrequests', RenterRequestsController::class);
     Route::get('rentersrequests.search', [RenterRequestsController::class, 'search'])->name('rentersrequests.search');

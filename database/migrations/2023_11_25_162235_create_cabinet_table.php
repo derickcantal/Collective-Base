@@ -16,10 +16,13 @@ return new class extends Migration
             $table->string('cabinetname');
             $table->integer('branchid');
             $table->string('branchname');
+            $table->integer('userid');
+            $table->string('email');
             $table->timestamps();
             $table->string('created_by');
             $table->string('updated_by');
             $table->string('posted');
+            $table->integer('mod');
             $table->string('status');
         });
     }

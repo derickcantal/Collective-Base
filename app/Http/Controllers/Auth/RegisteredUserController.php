@@ -48,6 +48,7 @@ class RegisteredUserController extends Controller
             'accesstype' => $request->accesstype,
             'created_by' =>$request->email,
             'updated_by' => 'default', 
+            'mod' => 0,
             'status' => 'Active',
         ]);
 

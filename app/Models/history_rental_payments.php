@@ -26,6 +26,8 @@ class history_rental_payments extends Model
         'avatarproof',
         'created_by',
         'updated_by',
+        'posted',
+        'mod',
         'status',
     ];
 

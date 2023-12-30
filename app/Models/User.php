@@ -34,6 +34,7 @@ class User extends Authenticatable
         'accesstype',
         'created_by',
         'updated_by',
+        'mod',
         'status',
     ];
 
