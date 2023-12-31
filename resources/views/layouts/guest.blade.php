@@ -14,7 +14,7 @@
         <!-- Scripts -->
 
         <link rel="stylesheet" href="{{ asset("build/assets/app-3b6fce21.css") }}">
-        <script src="{{ asset("build/assets/app-b1941ff8.js") }}"></script>
+        <script src="{{ asset("build/assets/app-f1cc9399.js") }}"></script>
         
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>

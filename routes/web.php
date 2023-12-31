@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RentersController;
 use App\Http\Controllers\ProfileController;
@@ -49,8 +50,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('cabinet', AttendanceController::class);
     Route::get('cabinet.search', [AttendanceController::class, 'search'])->name('cabinet.search');
 
-    Route::resource('branch', AttendanceController::class);
-    Route::get('branch.search', [AttendanceController::class, 'search'])->name('branch.search');
+    Route::resource('branch', BranchController::class);
+    Route::get('branch.search', [BranchController::class, 'search'])->name('branch.search');
 
     Route::resource('rentersrequests', RenterRequestsController::class);
     Route::get('rentersrequests.search', [RenterRequestsController::class, 'search'])->name('rentersrequests.search');

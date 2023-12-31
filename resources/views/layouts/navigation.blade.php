@@ -75,7 +75,7 @@
                                 {{ __('Profile') }}
                             </x-dropdown-link>
 
-                            <x-dropdown-link :href="route('sales.index')">
+                            <x-dropdown-link :href="route('branch.index')">
                                 {{ __('Settings') }}
                             </x-dropdown-link>
 
