@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateCabinetRequest;
+use App\Models\cabinet;
 use App\Models\branch;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
-class BranchController extends Controller
+class CabinetController extends Controller
 {
     public function search(Request $request)
     {
-        $branches = branch::query()
+        $cabinets = cabinet::query()
                     ->where(function(Builder $builder) use($request){
-                        $builder->where('branchname','like',"%{$request->search}%")
-                                ->orWhere('branchaddress','like',"%{$request->search}%")
-                                ->orWhere('branchcontact','like',"%{$request->search}%")
-                                ->orWhere('branchemail','like',"%{$request->search}%")
-                                ->orWhere('cabinetcount','like',"%{$request->search}%")
+                        $builder->where('cabinetname','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('userid','like',"%{$request->search}%")
+                                ->orWhere('email','like',"%{$request->search}%")
                                 ->orWhere('created_by','like',"%{$request->search}%")
                                 ->orWhere('updated_by','like',"%{$request->search}%")
                                 ->orWhere('status','like',"%{$request->search}%") 
@@ -24,7 +25,7 @@ class BranchController extends Controller
                     })
                     ->paginate(5);
     
-        return view('branch.index',compact('branches'))
+        return view('cabinet.index',compact('cabinets'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
     /**
@@ -33,11 +34,11 @@ class BranchController extends Controller
     public function index(Request $request)
     {
         $request->search;
-        $branches = branch::query()
+        $cabinets = cabinet::query()
                     ->orderBy('status','asc')
                     ->paginate(5);
     
-        return view('branch.index',compact('branches'))
+        return view('cabinet.index',compact('cabinets'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
@@ -46,20 +47,21 @@ class BranchController extends Controller
      */
     public function create()
     {
-        return view('branch.create');
+        $branches = branch::all();
+        return view('cabinet.create',['branches' => $branches]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateCabinetRequest $request)
     {
-        $branches = branch::create([
+        $cabinets = cabinet::create([
+            'cabinetname' => $request->cabinetname,
+            'branchid' => '1',
             'branchname' => $request->branchname,
-            'branchaddress' => $request->branchaddress,
-            'branchcontact' => $request->branchcontact,
-            'branchemail' => $request->branchemail,
-            'cabinetcount' => $request->cabinetcount,
+            'userid' => auth()->user()->userid,
+            'email' => auth()->user()->email,
             'created_by' => auth()->user()->email,
             'updated_by' => 'Null',
             'posted' => 'N',
@@ -67,20 +69,20 @@ class BranchController extends Controller
             'status' => 'Active',
         ]);
     
-        if ($branches) {
+        if ($cabinets) {
             //query successful
-            return redirect()->route('branch.index')
-                        ->with('success','Branch created successfully.');
+            return redirect()->route('cabinet.index')
+                        ->with('success','Cabinet created successfully.');
         }else{
-            return redirect()->route('branch.index')
-                        ->with('failed','Branch creation failed');
+            return redirect()->route('cabinet.index')
+                        ->with('failed','Cabinet creation failed');
         }  
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(branch $branch)
+    public function show(cabinet $cabinet)
     {
         //
     }
@@ -88,21 +90,21 @@ class BranchController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($branch)
+    public function edit(cabinet $cabinet)
     {
-        $branch = branch::findOrFail($branch);
-        return view('branch.edit',['branch' => $branch]);
+        $cabinet = cabinet::findOrFail($cabinet);
+        return view('cabinet.edit',['cabinet' => $cabinet]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $branch)
+    public function update(Request $request, $cabinet)
     {
-        $branch = branch::findOrFail($branch);
+        $cabinet = cabinet::findOrFail($cabinet);
         $mod = 0;
-        $mod = $branch->mod;
-        branch::where('branchid', $branch->branchid)->update([
+        $mod = $cabinet->mod;
+        cabinet::where('cabid', $cabinet->cabid)->update([
                 'branchname' => $request->branchname,
                 'branchaddress' => $request->branchaddress,
                 'branchcontact' => $request->branchcontact,
@@ -114,7 +116,7 @@ class BranchController extends Controller
                 'status' => 'Active',
             ]);
 
-            return redirect()->route('branch.index')
+            return redirect()->route('cabinet.index')
                             ->with('success','Branch updated successfully');
         
     }
@@ -122,7 +124,7 @@ class BranchController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(branch $branch)
+    public function destroy(cabinet $cabinet)
     {
         //
     }
