@@ -56,6 +56,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('rentersrequests', RenterRequestsController::class);
     Route::get('rentersrequests.search', [RenterRequestsController::class, 'search'])->name('rentersrequests.search');
+    Route::get('rentersrequests.selectbranch', [RenterRequestsController::class, 'selectbranch'])->name('rentersrequests.selectbranch');
+    Route::put('rentersrequests.selectcabinet/{branch}', [RenterRequestsController::class, 'selectcabinet'])->name('rentersrequests.selectcabinet');
 });
 
 Route::middleware('auth')->group(function () {
@@ -66,7 +68,7 @@ Route::middleware('auth')->group(function () {
     Route::get('rentalpayments.search', [RentalPaymentsController::class, 'search'])->name('rentalpayments.search');
     Route::get('rentalpayments.selectrbc', [RentalPaymentsController::class, 'selectrbc'])->name('rentalpayments.selectrbc');
     Route::get('rentalpayments.searchrbc', [RentalPaymentsController::class, 'searchrbc'])->name('rentalpayments.searchrbc');
-    Route::put('rentalpayments.putrbc/{renters}', [RentalPaymentsController::class, 'putrbc'])->name('rentalpayments.sputrbc');
+    Route::put('rentalpayments.putrbc/{renters}', [RentalPaymentsController::class, 'putrbc'])->name('rentalpayments.putrbc');
 });
 
 Route::middleware('auth')->group(function () {

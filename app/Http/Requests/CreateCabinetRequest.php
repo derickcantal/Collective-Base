@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\cabinet;
+use Illuminate\Validation\Rules;
 
 class CreateCabinetRequest extends FormRequest
 {
@@ -23,7 +24,11 @@ class CreateCabinetRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cabinetname' => ['required', 'string', 'uppercase', 'max:255', 'unique:'.cabinet::class],
+            'cabinetname' => ['required', 'string', 'uppercase', 'max:255'.
+            Rule::unique('people', 'firstName')->where(function ($query) use ($lastName) {
+                return $query->where('lastName', $lastName);
+            })
+        ],
             'branchname' => ['required', 'string', 'max:255'],
         ];
     }

@@ -137,7 +137,7 @@ class RentalPaymentsController extends Controller
         $renters = Renters::findOrFail($renters);
         return view('rentalpayments.show',['$renters' => $renters]);
     }
-    public function putemp($renters)
+    public function putrbc($renters)
     {
         $renter = Renters::findOrFail($renters);
         return view('rentalpayments.create-put',['renters' => $renter]);

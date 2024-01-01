@@ -22,7 +22,7 @@ class RenterSearchRequests extends FormRequest
     public function rules(): array
     {
         return [
-            'search' => ['string', 'max:255']
+            'search' => ['sometimes','string', 'max:255'],
         ];
     }
 }

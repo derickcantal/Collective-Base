@@ -6,6 +6,9 @@ use App\Models\RenterRequests;
 use Illuminate\Http\Request;
 use App\Http\Requests\SalesRequestsSearchRequest;
 use App\Models\Renters;
+use App\Models\branch;
+use App\Models\cabinet;
+use App\Models\sales;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +21,18 @@ class RenterRequestsController extends Controller
         return view('dashboard.index',['RenterRequests' => $RenterRequests]);
     }
 
-    public function search(SalesRequestsSearchRequest $request)
+    public function selectbranch(){
+        $branches = branch::query()->paginate(5);;
+        return view('rentersrequests.select-branch',['branches' => $branches])
+                        ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+    public function selectcabinet(Request $request,$branch){
+        
+        $branches = branch::query()->where('branchid',$branch)->first();
+        $cabinet = cabinet::query()->where('branchname',$branches->branchname)->get();
+        return view('rentersrequests.select-cabinet',['cabinet' => $cabinet])->with(['branchname'=> $branches->branchname]);
+    }
+    public function search(Request $request)
     {
         $RenterRequests = RenterRequests::orderBy('status','desc')
                     ->where(function(Builder $builder) use($request){
@@ -41,10 +55,12 @@ class RenterRequestsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $RenterRequests = RenterRequests::orderBy('status','desc')
-        ->paginate(5);
+        
+        $RenterRequests = RenterRequests::query()
+                            ->orderBy('status','asc')
+                            ->paginate(5);
 
             return view('rentersrequests.index',compact('RenterRequests'))
                 ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -55,7 +71,11 @@ class RenterRequestsController extends Controller
      */
     public function create()
     {
-        return view('rentersrequests.create');
+        $cabinet = cabinet::all();
+        $branch = branch::all();
+        
+        return view('rentersrequests.create',['cabinet' => $cabinet])
+                                        ->with(['branch' => $branch]);
     }
 
     /**

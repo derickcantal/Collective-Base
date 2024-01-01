@@ -1,7 +1,8 @@
+  
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <a href="{{ route('rentalpayments.index') }}"> Rental Payments</a> / <u>{{ __('Select Renter') }}</u>
+            <u><a href="{{ route('rentersrequests.index') }}"> Renters Requests</a></u> / {{ __('Create New Renters') }}
         </h2>
     </x-slot>
     <section>
@@ -9,7 +10,6 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        
                             <div class="relative p-4 w-full max-w-full max-h-full">
                                 <!-- Error & Success Notification -->        
                                 <div>
@@ -41,25 +41,7 @@
                                     </div>
                                     @endif
                                 </div>
-                                <!-- Modal content -->
-                                <div class="relative bg-white rounded-lg dark:bg-gray-800">
-                                    <!-- Modal header -->
-                                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                            Select Renter
-                                        </h3>
-                                        <div class="col-span-2 sm:col-span-1 flex justify-end">
-                                            <form action="{{ route('rentalpayments.searchrbc') }}" method="get">
-                                                <input type="text" name="searchrbc" id="table-search-users" class=" text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for Renters">
-                                                    <x-primary-button class="ms-4">
-                                                         Search
-                                                    </x-primary-button>
-                                                
-                                            </form>
-                                        </div>
-                                    </div>
-                                    
-                                    
+                                @csrf
                                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                             <tr>
@@ -67,14 +49,9 @@
                                                     No
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
-                                                    Profile
-                                                </th>
-                                                <th scope="col" class="px-6 py-3">
-                                                    Cabinet No.
-                                                </th>
-                                                <th scope="col" class="px-6 py-3">
                                                     Branch
                                                 </th>
+                                                
                                                 <th scope="col" class="px-6 py-3">
                                                     Status
                                                 </th>
@@ -84,7 +61,7 @@
                                                 
                                             </tr>
                                         </thead>
-                                             @forelse ($renter as $renters)
+                                             @forelse ($branches as $branch)
                                              
                                         <tbody>
                                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -92,37 +69,26 @@
                                                 <td class="px-6 py-4">
                                                     <x-input-label>{{ ++$i }}</x-input-label>
                                                 </td>
-                                                <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                                                    <img class="w-10 h-10 rounded-full" src="{{ asset("/storage/$renters->avatar") }}" alt="avatar">
-                                                    <div class="ps-3">
-                                                        <div class="text-base font-semibold"><x-input-label for="username" :value="$renters->username"/></div>
-                                                        <x-input-label>{{ $renters->lastname }}, {{ $renters->firstname }} {{ $renters->middlename }}</x-input-label>
-                                                        <x-input-label for="email" :value="$renters->email"/>
-                                                </th>
                                                 <td class="px-6 py-4">
-                                                    <x-input-label for="cabinetname" :value="$renters->cabinetname"/>
+                                                    <x-input-label for="branchname" :value="$branch->branchname"/>
                                                 </td>
-                                                <td class="px-6 py-4">
-                                                    <x-input-label for="branchname" :value="$renters->branchname"/>
-                                                </td>
-                                                
                                                 <td class="px-6 py-4">
                                                     <div class="flex items-center">
                                                     @php
                                                         $color = '';
-                                                        if ($renters->status == 'Active'):
+                                                        if ($branch->status == 'Active'):
                                                             $color = 'green';
-                                                        elseif ($renters->status == 'Inactive'):
+                                                        elseif ($branch->status == 'Inactive'):
                                                             $color = 'red';
                                                         endif;
                                                     @endphp
-                                                            <div class="h-2.5 w-2.5 rounded-full bg-{{ $color; }}-500 me-2"></div> <x-input-label for="status" :value="$renters->status"/>
+                                                            <div class="h-2.5 w-2.5 rounded-full bg-{{ $color; }}-500 me-2"></div> <x-input-label for="status" :value="$branch->status"/>
                                                     </div>
                                                 </td>
                                                 <td class="px-6 py-4">
                                                     @php
                                                     @endphp
-                                                    <form action="{{ route('rentalpayments.putrbc',  ['renters' => $renters->userid]) }}" enctype="multipart/form-data" method="POST">
+                                                    <form action="{{ route('rentersrequests.selectcabinet', ['branch' => $branch->branchid]) }}" enctype="multipart/form-data" method="POST">
                                                         @csrf
                                                         @method('PUT')
                                                         @php
@@ -130,11 +96,11 @@
                                                         $btnlabel = '';
                                                         $btncolor = '';
                                                         
-                                                        if ($renters->status == 'Active'):
+                                                        if ($branch->status == 'Active'):
                                                             $btndis = '';
                                                             $btnlabel = 'SELECT';
                                                             $btncolor = 'blue';
-                                                        elseif ($renters->status == 'Inactive'):
+                                                        elseif ($branch->status == 'Inactive'):
                                                             $btndis = '';
                                                             $btnlabel = 'SELECT';
                                                             $btncolor = 'blue';
@@ -157,20 +123,15 @@
                                         </tbody>
                                     </table>
                                     <div class="mt-4">
-                                        {!! $renter->appends(request()->query())->links() !!}
+                                        {!! $branches->appends(request()->query())->links() !!}
                                     </div>
-                                        
-                                    
-                                </div>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
                                 
                             </div>
-                        
                     </div>
                 </div>
             </div>
         </div>
     </section>
 </x-app-layout>
-   
