@@ -68,6 +68,9 @@
                                                     Branch
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
+                                                    Renter
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
                                                     Created by
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
@@ -92,6 +95,9 @@
                                                 </td>
                                                 <td class="px-6 py-4">
                                                     <x-input-label for="branchname" :value="$cabinet->branchname"/>
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <x-input-label for="email" :value="$cabinet->email"/>
                                                 </td>
                                                 <td class="px-6 py-4">
                                                     <x-input-label for="created_by" :value="$cabinet->created_by"/>

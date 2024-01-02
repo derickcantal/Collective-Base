@@ -74,6 +74,19 @@
                                                     <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
                                                 </div>
                                             </div>
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <!-- branchname -->
+                                                <div class="form-group mt-4">
+                                                    <x-input-label for="renters" :value="__('Renter')" />
+                                                    <select id="renters" name="renters" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('renters')">
+                                                        <option value = "Vacant">Vacant</option>
+                                                        @foreach($rent as $rents)    
+                                                            <option value = "{{ $rents->userid}}">{{ $rents->lastname }}, {{ $rents->firstname }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
+                                                </div>
+                                            </div>
                                             <div class="flex items-center justify-between col-span-2 sm:col-span-2">
                                                 
                                                 <x-primary-button class="ms-4">

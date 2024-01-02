@@ -13,6 +13,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 
+
 class RenterRequestsController extends Controller
 {
     public function displayall()

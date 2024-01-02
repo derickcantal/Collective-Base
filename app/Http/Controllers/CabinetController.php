@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateCabinetRequest;
 use App\Models\cabinet;
 use App\Models\branch;
+use App\Models\Renters;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
@@ -47,8 +48,15 @@ class CabinetController extends Controller
      */
     public function create()
     {
+        $rent = Renters::where('accesstype','Renters')
+        ->where(function(Builder $builder){
+            $builder->where('status','Active')
+                    ->orderBy('lastname','asc')
+                    ;
+        })->get();
+       
         $branches = branch::all();
-        return view('cabinet.create',['branches' => $branches]);
+        return view('cabinet.create',['branches' => $branches])->with(['rent' => $rent]);
     }
 
     /**
@@ -56,27 +64,40 @@ class CabinetController extends Controller
      */
     public function store(CreateCabinetRequest $request)
     {
-        $cabinets = cabinet::create([
-            'cabinetname' => $request->cabinetname,
-            'branchid' => '1',
-            'branchname' => $request->branchname,
-            'userid' => auth()->user()->userid,
-            'email' => auth()->user()->email,
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'posted' => 'N',
-            'mod' => 0,
-            'status' => 'Active',
-        ]);
-    
-        if ($cabinets) {
-            //query successful
-            return redirect()->route('cabinet.index')
-                        ->with('success','Cabinet created successfully.');
+        $cabn = cabinet::where('cabinetname',$request->cabinetname)
+        ->where(function(Builder $builder) use($request){
+            $builder->where('branchname',$request->branchname);
+        })->first();
+        if(empty($cabn->cabid)){
+            $cabinets = cabinet::create([
+                'cabinetname' => $request->cabinetname,
+                'branchid' => '1',
+                'branchname' => $request->branchname,
+                'userid' => auth()->user()->userid,
+                'email' => auth()->user()->email,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'posted' => 'N',
+                'mod' => 0,
+                'status' => 'Active',
+            ]);
+        
+            if ($cabinets) {
+                //query successful
+                return redirect()->route('cabinet.index')
+                            ->with('success','Cabinet created successfully.');
+            }else{
+                return redirect()->route('cabinet.index')
+                            ->with('failed','Cabinet creation failed');
+            }  
         }else{
             return redirect()->route('cabinet.index')
-                        ->with('failed','Cabinet creation failed');
-        }  
+                            ->with('failed','Already Exists.');
+            
+        }
+        
+
+        
     }
 
     /**
