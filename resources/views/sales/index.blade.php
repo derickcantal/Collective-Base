@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <u> <a href="{{ route('sales.index') }}"> Sales</a> </u> | <a href="{{ route('attendance.index') }}"> Attendance</a> 
+            <u> <a href="{{ route('sales.index') }}"> Sales</a></u> | <a href="{{ route('attendance.index') }}"> Attendance</a> 
         </h2>
     </x-slot>
     <section>

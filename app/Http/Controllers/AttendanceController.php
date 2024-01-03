@@ -9,6 +9,52 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class AttendanceController extends Controller
 {
+    public function loaddata(){
+        $attendance = attendance::get()->toQuery()
+        ->orderBy('status','asc')
+        ->paginate(5);
+
+        return view('attendance.index',compact('attendance'))
+        ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+    
+    public function storedata($request){
+        $users = User::findOrFail($request->userid);
+
+        $attendance = attendance::create([
+            'userid' => $users->userid,
+            'username' =>  $users->username,
+            'email' =>  $users->email,
+            'firstname' => $users->firstname,
+            'lastname' => $users->lastname,
+            'branchid' => '1',
+            'branchname' => $users->branchname,
+            'attnotes' => $request->attnotes,
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'posted' => 'N',
+            'mod' => 0,
+            'status' => 'Active',
+        ]);
+    
+        if ($attendance) {
+            //query successful
+            return redirect()->route('attendance.index')
+                        ->with('success','Attendance added successfully.');
+        }else{
+            return redirect()->route('attendance.index')
+                        ->with('failed','Attendance add failed');
+        }  
+    }
+    
+    public function updatedata(){
+    
+    }
+    
+    public function destroydata(){
+    
+    }
+
     public function search(Request $request)
     {
         $attendance = attendance::where('branchname',auth()->user()->branchname)->where('status',"Active")
@@ -74,12 +120,19 @@ class AttendanceController extends Controller
      */
     public function index()
     {
-        $attendance = attendance::get()->toQuery()
-        ->orderBy('status','asc')
-        ->paginate(5);
-
-        return view('attendance.index',compact('attendance'))
-        ->with('i', (request()->input('page', 1) - 1) * 5);
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->loaddata();
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->loaddata();
+            }
+        }else{
+            return view('welcome');
+        }
     }
 
     /**
@@ -95,33 +148,20 @@ class AttendanceController extends Controller
      */
     public function store(Request $request)
     {
-    
-        $users = User::findOrFail($request->userid);
-
-        $attendance = attendance::create([
-            'userid' => $users->userid,
-            'username' =>  $users->username,
-            'email' =>  $users->email,
-            'firstname' => $users->firstname,
-            'lastname' => $users->lastname,
-            'branchid' => '1',
-            'branchname' => $users->branchname,
-            'attnotes' => $request->attnotes,
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'posted' => 'N',
-            'mod' => 0,
-            'status' => 'Active',
-        ]);
-    
-        if ($attendance) {
-            //query successful
-            return redirect()->route('attendance.index')
-                        ->with('success','Attendance added successfully.');
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->storedata($request);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->storedata($request);
+            }
         }else{
-            return redirect()->route('attendance.index')
-                        ->with('failed','Attendance add failed');
-        }  
+            return view('welcome');
+        }
+      
     }
 
     /**
@@ -145,7 +185,19 @@ class AttendanceController extends Controller
      */
     public function update(Request $request, attendance $attendance)
     {
-        //
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->updatedata($request,$attendance);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->updatedata($request,$attendance);
+            }
+        }else{
+            return view('welcome');
+        }
     }
 
     /**
@@ -153,6 +205,18 @@ class AttendanceController extends Controller
      */
     public function destroy(attendance $attendance)
     {
-        //
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                
+            }elseif(auth()->user()->accesstype =='Renters'){
+                
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                
+            }
+        }else{
+            return view('welcome');
+        }
     }
 }

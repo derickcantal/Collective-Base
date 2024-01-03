@@ -10,44 +10,8 @@ use App\Models\cabinet;
 
 class SalesController extends Controller
 {
-    public function displayall()
-    {
-        $sales = sales::all();
 
-        return view('dashboard.index',['sales' => $sales]);
-    }
-
-    public function search(Request $request)
-    {
-        $sales = sales::query()
-                    ->where(function(Builder $builder) use($request){
-                        $builder
-                                ->where('cabinetname','like',"%{$request->search}%")
-                                ->orWhere('productname','like',"%{$request->search}%")
-                                ->orWhere('qty','like',"%{$request->search}%")
-                                ->orWhere('srp','like',"%{$request->search}%")
-                                ->orWhere('total','like',"%{$request->search}%")
-                                ->orWhere('username','like',"%{$request->search}%")
-                                ->orWhere('branchname','like',"%{$request->search}%")
-                                ->orWhere('snotes','like',"%{$request->search}%") 
-                                ->orderBy('status','asc');
-                    })
-                    ->paginate(5);
-
-                    return view('sales.index',compact('sales'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
-    } 
-
-    public function salescalc(Request $request)
-    {
-       
-    }
-
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
+    public function loaddata(){
         $sales = sales::get()->toQuery()
         ->orderBy('status','asc')
         ->paginate(5);
@@ -55,22 +19,8 @@ class SalesController extends Controller
         return view('sales.index',compact('sales'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $cabinet = cabinet::where('branchname',auth()->user()->branchname)->get();
-
-        return view('sales.create',['cabinet' => $cabinet]);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
+    
+    public function storedata($request){
         $path = Storage::disk('public')->put('sales',$request->file('salesavatar'));
             
         $sales = sales::create([
@@ -108,30 +58,8 @@ class SalesController extends Controller
                         ->with('failed','User creation failed');
         }  
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show($sales)
-    {
-        $sales = Sales::findOrFail($sales);
-        return view('sales.show',['sales' => $sales]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($sales)
-    {
-        $sales = Sales::findOrFail($sales);
-        return view('sales.edit',['sales' => $sales]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $sales)
-    {
+    
+    public function updatedata($request,$sales){
         $sales = sales::findOrFail($sales);
         $mod = 0;
         $mod = $sales->mod;
@@ -149,7 +77,6 @@ class SalesController extends Controller
             }else{
                 Storage::disk('public')->delete($oldavatar);
             }
-            
 
             sales::where('salesid', $sales->salesid)->update([
                 'salesavatar' => $path,
@@ -180,12 +107,146 @@ class SalesController extends Controller
                             ->with('success','Sales Payment updated successfully');
         }
     }
+    
+    public function destroydata(){
+    
+    }
+
+
+    public function displayall()
+    {
+        $sales = sales::all();
+
+        return view('dashboard.index',['sales' => $sales]);
+    }
+
+    public function search(Request $request)
+    {
+        $sales = sales::query()
+                    ->where(function(Builder $builder) use($request){
+                        $builder
+                                ->where('cabinetname','like',"%{$request->search}%")
+                                ->orWhere('productname','like',"%{$request->search}%")
+                                ->orWhere('qty','like',"%{$request->search}%")
+                                ->orWhere('srp','like',"%{$request->search}%")
+                                ->orWhere('total','like',"%{$request->search}%")
+                                ->orWhere('username','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('snotes','like',"%{$request->search}%") 
+                                ->orderBy('status','asc');
+                    })
+                    ->paginate(5);
+
+                    return view('sales.index',compact('sales'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+    } 
+
+     /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->loaddata();
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->loaddata();
+            }
+        }else{
+            return view('welcome');
+        }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $cabinet = cabinet::where('branchname',auth()->user()->branchname)->get();
+
+        return view('sales.create',['cabinet' => $cabinet]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return $this->storedata($request); 
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->storedata($request);         
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->storedata($request); 
+            }
+        }else{
+            return view('welcome');
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show($sales)
+    {
+        $sales = Sales::findOrFail($sales);
+        return view('sales.show',['sales' => $sales]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($sales)
+    {
+        $sales = Sales::findOrFail($sales);
+        return view('sales.edit',['sales' => $sales]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $sales)
+    {
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return $this->updatedata($request, $sales);
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->updatedata($request, $sales);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->updatedata($request, $sales);
+            }
+            
+        }else{
+            return view('welcome');
+        }
+    }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(sales $sales)
     {
-        //
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return $this->destroydata($sales);
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->destroydata($sales);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->destroydata($sales);
+            }
+        }else{
+            return view('welcome');
+        }
     }
 }

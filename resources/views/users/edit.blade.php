@@ -77,7 +77,7 @@
                                                     <x-text-input id="password" class="block mt-1 w-full"
                                                                     type="password"
                                                                     name="password"
-                                                                    required />
+                                                                     />
 
                                                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                                                 </div>
@@ -89,7 +89,7 @@
 
                                                     <x-text-input id="password_confirmation" class="block mt-1 w-full"
                                                                     type="password"
-                                                                    name="password_confirmation" required />
+                                                                    name="password_confirmation"  />
 
                                                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                                                 </div>                    
@@ -169,15 +169,13 @@
                                                     $op1_a = '';
                                                     $op2_a = '';
                                                     $op3_a = '';
-                                                    $op4_a = '';
                                                     if ($user->accesstype == 'Administrator'):
                                                         $op1_a = 'selected = "selected"';
                                                     elseif ($user->accesstype == 'Supervisor'):
                                                         $op2_a = 'selected = "selected"';
                                                     elseif ($user->accesstype == 'Cashier'):
                                                         $op3_a = 'selected = "selected"';
-                                                    elseif ($user->accesstype == 'Renters'):
-                                                        $op4_a = 'selected = "selected"';
+                                                    
                                                     endif;
                                                     
                                                 @endphp
@@ -188,7 +186,6 @@
                                                         <option value ="Administrator" {{ $op1_a; }}">Administrator</option>
                                                         <option value ="Supervisor" {{ $op2_a; }}">Supervisor</option>
                                                         <option value ="Cashier" {{ $op3_a; }}">Cashier</option>
-                                                        <option value ="Leesee" {{ $op4_a; }}">Renters</option>
                                                     </select>
                                                     <x-input-error :messages="$errors->get('accesstype')" class="mt-2" />
                                                     

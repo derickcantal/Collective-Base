@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\branch;
 use App\Models\cabinet;
 use App\Models\RentalPayments;
 use App\Models\Renters;
@@ -12,105 +13,27 @@ use Illuminate\Support\Facades\Storage;
 
 class RentalPaymentsController extends Controller
 {
-    public function searchrbc(Request $request)
-    {
-        $renter = Renters::where('accesstype',"Renters")->where('status',"Active")
-                    ->where(function(Builder $builder) use($request){
-                        $builder
-                                ->where('username','like',"%{$request->searchrbc}%")
-                                ->orWhere('firstname','like',"%{$request->searchrbc}%")
-                                ->orWhere('lastname','like',"%{$request->searchrbc}%")
-                                ->orWhere('middlename','like',"%{$request->searchrbc}%")
-                                ->orWhere('branchname','like',"%{$request->searchrbc}%")
-                                ->orWhere('cabinetname','like',"%{$request->searchrbc}%")
-                                ->orWhere('email','like',"%{$request->searchrbc}%")
-                                ->orWhere('status','like',"%{$request->searchrbc}%") 
-                                ->orderBy('status','asc');
-                    })
-                    ->paginate(5);
-
-                    return view('rentalpayments.create-select-rbc',compact('renter'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
-    }
-    public function selectrbc()
-    {
-        $renter = Renters::where('accesstype',"Renters")
-                    
-                    ->where(function(Builder $builder){
-                        $builder->where('status',"Active")
-                                    
-                                
-                                ;
-                    })
-                    ->paginate(5);
-    
-        return view('rentalpayments.create-select-rbc',compact('renter'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
-            
-    }
-    public function search(Request $request)
-    {
+    public function loaddata(){
         $rentalPayments = RentalPayments::orderBy('status','desc')
-                    ->where(function(Builder $builder) use($request){
-                        $builder->where('branchname','like',"%{$request->search}%")
-                                ->orWhere('cabinetname','like',"%{$request->search}%")
-                                ->orWhere('rpamount','like',"%{$request->search}%")
-                                ->orWhere('rppaytype','like',"%{$request->search}%")
-                                ->orWhere('rpmonth','like',"%{$request->search}%")
-                                ->orWhere('rpyear','like',"%{$request->search}%")
-                                ->orWhere('rpnotes','like',"%{$request->search}%")
-                                ->orWhere('firstname','like',"%{$request->search}%")
-                                ->orWhere('lastname','like',"%{$request->search}%")
-                                ->orWhere('created_at','like',"%{$request->search}%")
-                                ->orWhere('updated_by','like',"%{$request->search}%")
-                                ->orWhere('status','like',"%{$request->search}%")
-                                ->orderBy('branchname','asc')
-                                ->orderBy('lastname','asc')
-                                ->orderBy('cabinetname','asc')
-                                ;
-                    })
-                    ->paginate(5);
-    
-        return view('rentalpayments.index',compact('rentalPayments'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
-    }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $rentalPayments = RentalPayments::orderBy('status','desc')
-                                        ->orderBy('branchname','asc')
-                                        ->orderBy('lastname','asc')
-                                        ->orderBy('cabinetname','asc')
-                                        ->paginate(5);
+                                            ->orderBy('branchname','asc')
+                                            ->orderBy('lastname','asc')
+                                            ->orderBy('cabinetname','asc')
+                                            ->paginate(5);
 
-        return view('rentalpayments.index')->with(['rentalPayments' => $rentalPayments])
-                                        ->with('i', (request()->input('page', 1) - 1) * 5);
+                return view('rentalpayments.index')->with(['rentalPayments' => $rentalPayments])
+                                            ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
-    
-    /**
-     * Show the form for creating a new resource.
-     */
-
-    public function create()
-    {
-        
-        return view('rentalpayments.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
+    public function storedata($request){
         $rent = Renters::where('username',$request->username)->first();
-        $br = Renters::where('branchname',$request->branchname)->first();
+
+        $br = branch::where('branchname',$request->branchname)->first();
+
         $cab = cabinet::where('cabinetname',$request->cabinetname)
         ->where(function(Builder $builder) use($request){
             $builder->where('branchname',$request->branchname);
         })->first();
+
         $rentp = RentalPayments::where('rpmonth',$request->rpmonth)
         ->where(function(Builder $builder) use($request){
             $builder->where('rpyear',$request->rpyear)
@@ -152,40 +75,9 @@ class RentalPaymentsController extends Controller
             return redirect()->route('rentalpayments.index')
                             ->with('failed','Already Exists.');
         }
-        
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($renters)
-    {
-        $renters = Renters::findOrFail($renters);
-        return view('rentalpayments.show',['$renters' => $renters]);
-    }
-    public function putrbc($renters)
-    {
-        $renter = Renters::findOrFail($renters);
-        return view('rentalpayments.create-put',['renters' => $renter]);
-    }
-    
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($rentalPayments)
-    {
-        $rentalPayments = RentalPayments::findOrFail($rentalPayments);
-        return view('rentalpayments.edit',['rentalPayments' => $rentalPayments]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $rentalPayments)
-    {
-
-        
-
+    public function updatedata($request,$rentalPayments){
         $rent = Renters::where('username',$request->username)->first();
         $br = Renters::where('branchname',$request->branchname)->first();
         $cab = cabinet::where('cabinetname',$request->cabinetname)
@@ -235,14 +127,9 @@ class RentalPaymentsController extends Controller
             return redirect()->route('rentalpayments.index')
                             ->with('success','Rental Payment updated successfully');
         }
-        
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Request $request, RentalPayments $rentalPayments): RedirectResponse
-    {
+    public function destroydata($request,$rentalPayments){
         $rentalPayments->delete();
         
         $rentalPayments = RentalPayments::wherenot('accesstype', 'Renters')->get();
@@ -257,5 +144,182 @@ class RentalPaymentsController extends Controller
 
             return Redirect('/');
         }
+    }
+    public function searchrbc(Request $request)
+    {
+        
+        $renter = Renters::where('accesstype',"Renters")->where('status',"Active")
+                    ->where(function(Builder $builder) use($request){
+                        $builder
+                                ->where('username','like',"%{$request->searchrbc}%")
+                                ->orWhere('firstname','like',"%{$request->searchrbc}%")
+                                ->orWhere('lastname','like',"%{$request->searchrbc}%")
+                                ->orWhere('middlename','like',"%{$request->searchrbc}%")
+                                ->orWhere('branchname','like',"%{$request->searchrbc}%")
+                                ->orWhere('cabinetname','like',"%{$request->searchrbc}%")
+                                ->orWhere('email','like',"%{$request->searchrbc}%")
+                                ->orWhere('status','like',"%{$request->searchrbc}%") 
+                                ->orderBy('status','asc');
+                    })
+                    ->paginate(5);
+
+                    return view('rentalpayments.create-select-rbc',compact('renter'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+    public function selectrbc()
+    {
+        $renter = Renters::where('accesstype',"Renters")
+                    
+                    ->where(function(Builder $builder){
+                        $builder->where('status',"Active");
+                    })
+                    ->paginate(5);
+    
+        return view('rentalpayments.create-select-rbc',compact('renter'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+            
+    }
+    public function search(Request $request)
+    {
+        $rentalPayments = RentalPayments::orderBy('status','desc')
+                        ->where(function(Builder $builder) use($request){
+                            $builder->where('branchname','like',"%{$request->search}%")
+                                    ->orWhere('cabinetname','like',"%{$request->search}%")
+                                    ->orWhere('rpamount','like',"%{$request->search}%")
+                                    ->orWhere('rppaytype','like',"%{$request->search}%")
+                                    ->orWhere('rpmonth','like',"%{$request->search}%")
+                                    ->orWhere('rpyear','like',"%{$request->search}%")
+                                    ->orWhere('rpnotes','like',"%{$request->search}%")
+                                    ->orWhere('firstname','like',"%{$request->search}%")
+                                    ->orWhere('lastname','like',"%{$request->search}%")
+                                    ->orWhere('created_at','like',"%{$request->search}%")
+                                    ->orWhere('updated_by','like',"%{$request->search}%")
+                                    ->orWhere('status','like',"%{$request->search}%")
+                                    ->orderBy('branchname','asc')
+                                    ->orderBy('lastname','asc')
+                                    ->orderBy('cabinetname','asc')
+                                    ;
+                        })
+                        ->paginate(5);
+        
+            return view('rentalpayments.index',compact('rentalPayments'))
+                ->with('i', (request()->input('page', 1) - 1) * 5);
+        
+    }
+    /**
+     * Display a listing of the resource.
+     */
+    
+    public function index()
+    {
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->loaddata();
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->loaddata();
+            }
+        }else{
+            return view('welcome');
+        }
+    }
+    
+    /**
+     * Show the form for creating a new resource.
+     */
+
+    public function create()
+    {
+        return view('rentalpayments.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->storedata();         
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->storedata(); 
+            }
+        }else{
+            return view('welcome');
+        }
+        
+    }
+    /**
+     * Display the specified resource.
+     */
+    public function show($renters)
+    {
+        $renters = Renters::findOrFail($renters);
+        return view('rentalpayments.show',['$renters' => $renters]);
+    }
+    public function putrbc($renters)
+    {
+        $renter = Renters::findOrFail($renters);
+        return view('rentalpayments.create-put',['renters' => $renter]);
+    }
+    
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($rentalPayments)
+    {
+        $rentalPayments = RentalPayments::findOrFail($rentalPayments);
+        return view('rentalpayments.edit',['rentalPayments' => $rentalPayments]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $rentalPayments)
+    {
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->updatedata($request,$rentalPayments);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->updatedata($request,$rentalPayments);
+            }
+            
+        }else{
+            return view('welcome');
+        }
+        
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Request $request, RentalPayments $rentalPayments): RedirectResponse
+    {
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->destroydata($request,$rentalPayments);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->destroydata($request,$rentalPayments);
+            }
+        }else{
+            return view('welcome');
+        }
+           
+        
     }
 }

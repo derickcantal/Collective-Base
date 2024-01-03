@@ -2,58 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateBranchRequest;
 use App\Models\branch;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class BranchController extends Controller
 {
-    public function search(Request $request)
-    {
-        $branches = branch::query()
-                    ->where(function(Builder $builder) use($request){
-                        $builder->where('branchname','like',"%{$request->search}%")
-                                ->orWhere('branchaddress','like',"%{$request->search}%")
-                                ->orWhere('branchcontact','like',"%{$request->search}%")
-                                ->orWhere('branchemail','like',"%{$request->search}%")
-                                ->orWhere('cabinetcount','like',"%{$request->search}%")
-                                ->orWhere('created_by','like',"%{$request->search}%")
-                                ->orWhere('updated_by','like',"%{$request->search}%")
-                                ->orWhere('status','like',"%{$request->search}%") 
-                                ->orderBy('status','asc');
-                    })
-                    ->paginate(5);
-    
-        return view('branch.index',compact('branches'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
-    }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
-    {
-        $request->search;
+    public function loaddata(){
         $branches = branch::query()
                     ->orderBy('status','asc')
+                    ->orderBy('branchname','asc')
                     ->paginate(5);
     
         return view('branch.index',compact('branches'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('branch.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
+    
+    public function storedata($request){
         $branches = branch::create([
             'branchname' => $request->branchname,
             'branchaddress' => $request->branchaddress,
@@ -75,6 +41,100 @@ class BranchController extends Controller
             return redirect()->route('branch.index')
                         ->with('failed','Branch creation failed');
         }  
+    }
+    
+    public function updatedata($request, $branch){
+        $branch = branch::findOrFail($branch);
+        $mod = 0;
+        $mod = $branch->mod;
+        branch::where('branchid', $branch->branchid)->update([
+                'branchname' => $request->branchname,
+                'branchaddress' => $request->branchaddress,
+                'branchcontact' => $request->branchcontact,
+                'branchemail' => $request->branchemail,
+                'cabinetcount' => $request->cabinetcount,
+                'updated_by' => auth()->user()->email,
+                'posted' => 'N',
+                'mod' => $mod + 1,
+                'status' => 'Active',
+            ]);
+
+            return redirect()->route('branch.index')
+                            ->with('success','Branch updated successfully');
+    }
+    
+    public function destroydata(){
+    
+    }
+
+    public function search(Request $request)
+    {
+        $branches = branch::query()
+                    ->where(function(Builder $builder) use($request){
+                        $builder->where('branchname','like',"%{$request->search}%")
+                                ->orWhere('branchaddress','like',"%{$request->search}%")
+                                ->orWhere('branchcontact','like',"%{$request->search}%")
+                                ->orWhere('branchemail','like',"%{$request->search}%")
+                                ->orWhere('cabinetcount','like',"%{$request->search}%")
+                                ->orWhere('created_by','like',"%{$request->search}%")
+                                ->orWhere('updated_by','like',"%{$request->search}%")
+                                ->orWhere('status','like',"%{$request->search}%") 
+                                ->orderBy('branchname','asc')
+                                ->orderBy('status','asc');
+                    })
+                    ->paginate(5);
+    
+        return view('branch.index',compact('branches'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {   
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->loaddata();
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->loaddata();
+            }
+        }else{
+            return view('welcome');
+        }
+        
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('branch.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(CreateBranchRequest $request)
+    {
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->storedata($request);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->storedata($request);
+            }
+        }else{
+            return view('welcome');
+        }
+        
     }
 
     /**
@@ -99,23 +159,20 @@ class BranchController extends Controller
      */
     public function update(Request $request, $branch)
     {
-        $branch = branch::findOrFail($branch);
-        $mod = 0;
-        $mod = $branch->mod;
-        branch::where('branchid', $branch->branchid)->update([
-                'branchname' => $request->branchname,
-                'branchaddress' => $request->branchaddress,
-                'branchcontact' => $request->branchcontact,
-                'branchemail' => $request->branchemail,
-                'cabinetcount' => $request->cabinetcount,
-                'updated_by' => auth()->user()->email,
-                'posted' => 'N',
-                'mod' => $mod + 1,
-                'status' => 'Active',
-            ]);
-
-            return redirect()->route('branch.index')
-                            ->with('success','Branch updated successfully');
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->updatedata($request, $branch);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->updatedata($request, $branch);
+            }
+        }else{
+            return view('welcome');
+        }
+        
         
     }
 
@@ -124,6 +181,18 @@ class BranchController extends Controller
      */
     public function destroy(branch $branch)
     {
-        //
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                
+            }elseif(auth()->user()->accesstype =='Renters'){
+                
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                
+            }
+        }else{
+            return view('welcome');
+        }
     }
 }

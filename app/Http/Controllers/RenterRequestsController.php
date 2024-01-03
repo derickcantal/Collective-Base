@@ -60,7 +60,7 @@ class RenterRequestsController extends Controller
     {
         
         $RenterRequests = RenterRequests::query()
-                            ->orderBy('status','asc')
+                            ->orderBy('status','desc')
                             ->paginate(5);
 
             return view('rentersrequests.index',compact('RenterRequests'))
@@ -84,19 +84,30 @@ class RenterRequestsController extends Controller
      */
     public function store(Request $request)
     {
+        $rent = Renters::where('username',$request->username)->first();
+
+        $br = branch::where('branchname',$request->branchname)->first();
+
+        $cab = cabinet::where('cabinetname',$request->cabinetname)
+        ->where(function(Builder $builder) use($request){
+            $builder->where('branchname',$request->branchname);
+        })->first();
+
         $RenterRequests = RenterRequests::create([
-            'branchid' => '1',
+            'branchid' => $br->branchid,
             'branchname' => $request->branchname,
-            'cabinetid' => '1',
+            'cabinetid' => $cab->cabid,
             'cabinetname' => $request->cabinetname,
             'totalsales' => $request->totalsales,
             'totalcollected' => $request->totalcollected,
             'avatarproof' => 'avatars/cash-default.jpg',
             'rnotes' => $request->rnotes,
-            'userid' => '1',
+            'userid' => $rent->userid,
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'created_by' => Auth()->user()->email,
+            'mod' => 0,
+            'posted' => 'N',
             'status' => 'Pending',
         ]);
     

@@ -11,6 +11,118 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class CabinetController extends Controller
 {
+    public function loaddata(){
+        $cabinets = cabinet::query()
+                    ->orderBy('status','asc')
+                    ->orderBy('branchname','asc')
+                    ->orderBy('cabinetname','asc')
+                    ->paginate(5);
+    
+        return view('cabinet.index',compact('cabinets'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+    
+    public function storedata($request){
+        $cabcount = cabinet::where('branchname',$request->branchname)->count();
+        
+
+        $br = branch::where('branchname',$request->branchname)->first();
+
+        $cabn = cabinet::where('cabinetname',$request->cabinetname)
+        ->where(function(Builder $builder) use($request){
+            $builder->where('branchname',$request->branchname);
+        })->first();
+
+        
+        if($br->cabinetcount >= $cabcount){
+            if($request->renters == 'Vacant'){
+                if(empty($cabn->cabid)){
+                    $cabinets = cabinet::create([
+                        'cabinetname' => $request->cabinetname,
+                        'branchid' => $br->branchid,
+                        'branchname' => $br->branchname,
+                        'userid' => 0,
+                        'email' => $request->renters,
+                        'created_by' => auth()->user()->email,
+                        'updated_by' => 'Null',
+                        'posted' => 'N',
+                        'mod' => 0,
+                        'status' => 'Active',
+                    ]);
+                
+                    if ($cabinets) {
+                        //query successful
+                        return redirect()->route('cabinet.index')
+                                    ->with('success','Cabinet created successfully.');
+                    }else{
+                        return redirect()->route('cabinet.create')
+                                    ->with('failed','Cabinet creation failed');
+                    }
+                }else{
+                    return redirect()->route('cabinet.create')
+                                    ->with('failed','Already Exists.');
+                    
+                }  
+            }else{
+                $rent = Renters::where('userid',$request->renters)->first();
+
+                if(empty($cabn->cabid)){
+                    $cabinets = cabinet::create([
+                        'cabinetname' => $request->cabinetname,
+                        'branchid' => $br->branchid,
+                        'branchname' => $br->branchname,
+                        'userid' => $rent->userid,
+                        'email' => $rent->email,
+                        'created_by' => auth()->user()->email,
+                        'updated_by' => 'Null',
+                        'posted' => 'N',
+                        'mod' => 0,
+                        'status' => 'Active',
+                    ]);
+                
+                    if ($cabinets) {
+                        //query successful
+                        return redirect()->route('cabinet.index')
+                                    ->with('success','Cabinet created successfully.');
+                    }else{
+                        return redirect()->route('cabinet.create')
+                                    ->with('failed','Cabinet creation failed');
+                    }  
+                }else{
+                    return redirect()->route('cabinet.create')
+                                    ->with('failed','Already Exists.');
+                }
+            }
+        }else{
+            return redirect()->route('cabinet.create')
+                                    ->with('failed','Branch Maximum Cabinet Capacity Reached');
+        }
+    }
+    
+    public function updatedata($request,$cabinet){
+        $cabinet = cabinet::findOrFail($cabinet);
+        $mod = 0;
+        $mod = $cabinet->mod;
+        cabinet::where('cabid', $cabinet->cabid)->update([
+                'branchname' => $request->branchname,
+                'branchaddress' => $request->branchaddress,
+                'branchcontact' => $request->branchcontact,
+                'branchemail' => $request->branchemail,
+                'cabinetcount' => $request->cabinetcount,
+                'updated_by' => auth()->user()->email,
+                'posted' => 'N',
+                'mod' => $mod + 1,
+                'status' => 'Active',
+            ]);
+
+            return redirect()->route('cabinet.index')
+                            ->with('success','Branch updated successfully');
+    }
+    
+    public function destroydata(){
+    
+    }
+
     public function search(Request $request)
     {
         $cabinets = cabinet::query()
@@ -22,7 +134,9 @@ class CabinetController extends Controller
                                 ->orWhere('created_by','like',"%{$request->search}%")
                                 ->orWhere('updated_by','like',"%{$request->search}%")
                                 ->orWhere('status','like',"%{$request->search}%") 
-                                ->orderBy('status','asc');
+                                ->orderBy('status','asc')
+                                ->orderBy('branchname','asc')
+                                ->orderBy('cabinetname','asc');
                     })
                     ->paginate(5);
     
@@ -34,13 +148,19 @@ class CabinetController extends Controller
      */
     public function index(Request $request)
     {
-        $request->search;
-        $cabinets = cabinet::query()
-                    ->orderBy('status','asc')
-                    ->paginate(5);
-    
-        return view('cabinet.index',compact('cabinets'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->loaddata();
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->loaddata();
+            }
+        }else{
+            return view('welcome');
+        }
     }
 
     /**
@@ -64,40 +184,21 @@ class CabinetController extends Controller
      */
     public function store(CreateCabinetRequest $request)
     {
-        $cabn = cabinet::where('cabinetname',$request->cabinetname)
-        ->where(function(Builder $builder) use($request){
-            $builder->where('branchname',$request->branchname);
-        })->first();
-        if(empty($cabn->cabid)){
-            $cabinets = cabinet::create([
-                'cabinetname' => $request->cabinetname,
-                'branchid' => '1',
-                'branchname' => $request->branchname,
-                'userid' => auth()->user()->userid,
-                'email' => auth()->user()->email,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'posted' => 'N',
-                'mod' => 0,
-                'status' => 'Active',
-            ]);
-        
-            if ($cabinets) {
-                //query successful
-                return redirect()->route('cabinet.index')
-                            ->with('success','Cabinet created successfully.');
-            }else{
-                return redirect()->route('cabinet.index')
-                            ->with('failed','Cabinet creation failed');
-            }  
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->storedata($request);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->storedata($request);
+            }
         }else{
-            return redirect()->route('cabinet.index')
-                            ->with('failed','Already Exists.');
-            
+            return view('welcome');
         }
-        
+            
 
-        
     }
 
     /**
@@ -122,23 +223,19 @@ class CabinetController extends Controller
      */
     public function update(Request $request, $cabinet)
     {
-        $cabinet = cabinet::findOrFail($cabinet);
-        $mod = 0;
-        $mod = $cabinet->mod;
-        cabinet::where('cabid', $cabinet->cabid)->update([
-                'branchname' => $request->branchname,
-                'branchaddress' => $request->branchaddress,
-                'branchcontact' => $request->branchcontact,
-                'branchemail' => $request->branchemail,
-                'cabinetcount' => $request->cabinetcount,
-                'updated_by' => auth()->user()->email,
-                'posted' => 'N',
-                'mod' => $mod + 1,
-                'status' => 'Active',
-            ]);
-
-            return redirect()->route('cabinet.index')
-                            ->with('success','Branch updated successfully');
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->updatedata($request, $cabinet);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->updatedata($request, $cabinet);
+            }
+        }else{
+            return view('welcome');
+        }
         
     }
 
@@ -147,6 +244,18 @@ class CabinetController extends Controller
      */
     public function destroy(cabinet $cabinet)
     {
-        //
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('welcome');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                
+            }
+        }else{
+            return view('welcome');
+        }
     }
 }
