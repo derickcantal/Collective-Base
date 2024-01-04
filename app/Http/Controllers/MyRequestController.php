@@ -137,7 +137,8 @@ class MyRequestController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $RenterRequests = RenterRequests::findOrFail($id);
+        return view('myrequest.edit',['RenterRequests' => $RenterRequests]);
     }
 
     /**

@@ -80,7 +80,7 @@ class RenterRequestsController extends Controller
         RenterRequests::where('salesrid', $id)->update([
             'branchid' => '1',
             'branchname' => $request->branchname,
-            'cabinetid' => '1',
+            'cabid' => '1',
             'cabinetname' => $request->cabinetname,
             'totalsales' => $request->totalsales,
             'totalcollected' => $request->totalcollected,
@@ -94,9 +94,14 @@ class RenterRequestsController extends Controller
         ]);
 
         
-    
-        return redirect()->route('rentersrequests.index')
+        if(auth()->user()->accesstype = 'Cashier'){
+            return redirect()->route('dashboard.index')
                         ->with('success','Sales Request updated successfully');
+        }elseif(auth()->user()->accesstype = 'Administrator' or auth()->user()->accesstype = 'Supervisor'){
+            return redirect()->route('rentersrequests.index')
+                        ->with('success','Sales Request updated successfully');
+        }
+        
     }
     
     public function destroydata($request,$RenterRequests){
@@ -242,7 +247,7 @@ class RenterRequestsController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return $this->updatedata($request,$id);
             }elseif(auth()->user()->accesstype =='Renters'){
                 return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){

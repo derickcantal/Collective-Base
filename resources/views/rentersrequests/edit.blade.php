@@ -1,7 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <u><a href="{{ route('renters.index') }}"> Renters Requests</a></u> / {{ __('Process Renters Requests') }} / {{ $RenterRequests->cabinetname }}
+            @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
+            <u><a href="{{ route('renters.index') }}"> Renters Requests</a></u>  / @endif{{ __('Process Renters Requests') }} / Cabinet: {{ $RenterRequests->cabinetname }}
         </h2>
     </x-slot>
     <section>

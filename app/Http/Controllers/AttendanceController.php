@@ -23,7 +23,7 @@ class AttendanceController extends Controller
     public function loaddata_cashier(){
         $attendance = attendance::where('branchname',auth()->user()->branchname)
                                 ->where(function(Builder $builder){
-                                    $builder->where('status','Pending')
+                                    $builder->where('status','Active')
                                         ->orderBy('status','asc');
                                     })->paginate(5);
 
@@ -110,27 +110,28 @@ class AttendanceController extends Controller
 
     public function selectemp()
     {
+        $attendance = DB::table('attendance')
+                ->select(DB::raw(1))
+                ->whereColumn('attendance.userid', 'users.userid');
+ 
+        $lists = DB::table('users')
+                            ->where('status', "Active")
+                            ->where('accesstype',auth()->user()->accesstype)
+                            ->where('branchname',auth()->user()->branchname)
+                            ->whereExists($attendance)
+                            ->orderBy('status','asc')
+                            ->get();
+                            
+     
 
-        $activeUsers = DB::table('users')
-                        ->select('userid')
-                        ->where('status1', "Active")
-                        ->where('accesstype',auth()->user()->accesstype)
+            $users = User::where('accesstype',auth()->user()->accesstype)
+            ->where(function(Builder $builder){
+                $builder->where('status',"Active")
                         ->where('branchname',auth()->user()->branchname)
                         ->orderBy('status','asc');
- 
-        $sample = DB::table('attendance')
-                            ->whereIn('userid', $activeUsers)
-                            ->get();
+            })
+            ->paginate(5);
        
-        dd($sample);
-
-        $busers = User::where('accesstype',auth()->user()->accesstype)
-                    ->where(function(Builder $builder){
-                        $builder->where('status',"Active")
-                                ->where('branchname',auth()->user()->branchname)
-                                ->orderBy('status','asc');
-                    })
-                    ->get();
 
         return view('attendance.create-select-emp',compact('users'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -138,8 +139,21 @@ class AttendanceController extends Controller
     }
     public function putemp($user)
     {
-        $users = User::findOrFail($user);
-        return view('attendance.create-put',['users' => $users]);
+        $attendance = attendance::where('userid', $user)
+                                ->where(function(Builder $builder){
+                        $builder->where('status',"Active")
+                                ->where('branchname',auth()->user()->branchname);
+                            })->first();
+        $users = User::findOrFail($user);                    
+        if(empty($attendance->userid)){
+            return view('attendance.create-put',['users' => $users]);
+        }else{
+            return redirect()->route('attendance.index')
+                        ->with('failed','Employee Already Added to Attendance');
+        }
+        
+
+        
     }
     /**
      * Display a listing of the resource.

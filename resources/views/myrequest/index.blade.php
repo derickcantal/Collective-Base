@@ -73,6 +73,9 @@
                                             <th scope="col" class="px-6 py-3">
                                                 Status
                                             </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Action
+                                            </th>
                                         </tr>
                                     </thead>
                                             
@@ -123,7 +126,7 @@
                                                     endif;
                                                     
                                                 @endphp
-                                                <form action="{{ route('rentersrequests.edit',$RenterRequest->salesrid) }}" method="PUT">
+                                                <form action="{{ route('myrequest.edit',$RenterRequest->salesrid) }}" method="PUT">
                                                     <x-danger-button class="ms-3 dark:text-red bg-{{ $btncolor; }}-700 hover:bg-{{ $btncolor; }}-800 focus:outline-none focus:ring-4 focus:ring-{{ $btncolor; }}-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-{{ $btncolor; }}-600 dark:hover:bg-{{ $btncolor; }}-700 dark:focus:ring-{{ $btncolor; }}-800 ">
                                                         {{ $btnlabel; }}
                                                     </x-danger-button>
