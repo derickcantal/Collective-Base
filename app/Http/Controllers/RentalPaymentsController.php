@@ -214,16 +214,16 @@ class RentalPaymentsController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->loaddata();
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->loaddata();
             }
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
     }
     
@@ -247,12 +247,12 @@ class RentalPaymentsController extends Controller
             }elseif(auth()->user()->accesstype =='Renters'){
                 return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return $this->storedata();         
+                return $this->storedata($request);         
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return $this->storedata(); 
+                return $this->storedata($request); 
             }
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
         
     }
@@ -286,9 +286,9 @@ class RentalPaymentsController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->updatedata($request,$rentalPayments);
             }elseif(auth()->user()->accesstype =='Administrator'){
@@ -296,7 +296,7 @@ class RentalPaymentsController extends Controller
             }
             
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
         
     }
@@ -308,16 +308,16 @@ class RentalPaymentsController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->destroydata($request,$rentalPayments);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->destroydata($request,$rentalPayments);
             }
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
            
         

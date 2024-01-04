@@ -94,16 +94,16 @@ class BranchController extends Controller
     {   
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->loaddata();
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->loaddata();
             }
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
         
     }
@@ -123,16 +123,16 @@ class BranchController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->storedata($request);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->storedata($request);
             }
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
         
     }
@@ -161,16 +161,16 @@ class BranchController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->updatedata($request, $branch);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->updatedata($request, $branch);
             }
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
         
         
@@ -192,7 +192,7 @@ class BranchController extends Controller
                 
             }
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
     }
 }

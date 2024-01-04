@@ -12,7 +12,15 @@ class SalesController extends Controller
 {
 
     public function loaddata(){
-        $sales = sales::get()->toQuery()
+        $sales = sales::orderBy('status','asc')
+        ->paginate(5);
+
+        return view('sales.index',compact('sales'))
+        ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+
+    public function loaddata_cashier(){
+        $sales = sales::where('branchname',auth()->user()->branchname)
         ->orderBy('status','asc')
         ->paginate(5);
 
@@ -148,16 +156,16 @@ class SalesController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('welcome');
+                return $this->loaddata_cashier();
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->loaddata();
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->loaddata();
             }
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
     }
 
@@ -187,7 +195,7 @@ class SalesController extends Controller
                 return $this->storedata($request); 
             }
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
     }
 
@@ -218,7 +226,7 @@ class SalesController extends Controller
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->updatedata($request, $sales);
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->updatedata($request, $sales);
             }elseif(auth()->user()->accesstype =='Administrator'){
@@ -226,7 +234,7 @@ class SalesController extends Controller
             }
             
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
     }
 
@@ -239,14 +247,14 @@ class SalesController extends Controller
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->destroydata($sales);
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->destroydata($sales);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->destroydata($sales);
             }
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
     }
 }

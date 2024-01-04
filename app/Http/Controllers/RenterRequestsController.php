@@ -16,6 +16,106 @@ use Illuminate\Support\Facades\Storage;
 
 class RenterRequestsController extends Controller
 {
+
+    public function loaddata(){
+        $RenterRequests = RenterRequests::query()
+                            ->orderBy('status','desc')
+                            ->paginate(5);
+
+            return view('rentersrequests.index',compact('RenterRequests'))
+                ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+    
+    public function storedata($request){
+        $rent = Renters::where('username',$request->username)->first();
+
+        $br = branch::where('branchname',$request->branchname)->first();
+
+        $cab = cabinet::where('cabinetname',$request->cabinetname)
+        ->where(function(Builder $builder) use($request){
+            $builder->where('branchname',$request->branchname);
+        })->first();
+
+        $RenterRequests = RenterRequests::create([
+            'branchid' => $br->branchid,
+            'branchname' => $request->branchname,
+            'cabid' => $cab->cabid,
+            'cabinetname' => $request->cabinetname,
+            'totalsales' => $request->totalsales,
+            'totalcollected' => $request->totalcollected,
+            'avatarproof' => 'avatars/cash-default.jpg',
+            'rnotes' => $request->rnotes,
+            'userid' => $rent->userid,
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'created_by' => Auth()->user()->email,
+            'mod' => 0,
+            'posted' => 'N',
+            'status' => 'Pending',
+        ]);
+    
+        if ($RenterRequests) {
+            //query successful
+            return redirect()->route('rentersrequests.create')
+                        ->with('success','Sales Request created successfully.');
+        }else{
+            return redirect()->route('rentersrequests.create')
+                        ->with('success','Sales Request creation failed');
+        }  
+    }
+    
+    public function updatedata($request,$id){
+        $rentreq = RenterRequests::findOrFail($id);
+        $path = Storage::disk('public')->put('rentersrequests',$request->file('avatarproof'));
+        // $path = $request->file('avatar')->store('avatars','public');
+        
+        $oldavatar = $rentreq->avatarproof;
+        
+        if($oldavatar == 'avatars/cash-default.jpg'){
+            
+        }else{
+            Storage::disk('public')->delete($oldavatar);
+        }
+
+        RenterRequests::where('salesrid', $id)->update([
+            'branchid' => '1',
+            'branchname' => $request->branchname,
+            'cabinetid' => '1',
+            'cabinetname' => $request->cabinetname,
+            'totalsales' => $request->totalsales,
+            'totalcollected' => $request->totalcollected,
+            'avatarproof' => $path,
+            'rnotes' => $request->rnotes,
+            'userid' => '1',
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'updated_by' => Auth()->user()->email,
+            'status' => 'Completed',
+        ]);
+
+        
+    
+        return redirect()->route('rentersrequests.index')
+                        ->with('success','Sales Request updated successfully');
+    }
+    
+    public function destroydata($request,$RenterRequests){
+        $RenterRequests->delete();
+        
+        $RenterRequests = RenterRequests::wherenot('accesstype', 'Renters')->get();
+        if ($RenterRequests->isNotEmpty()) {
+            
+            return redirect()->route('rentersrequests.index')
+            ->with('success','Sales Requests deleted successfully');
+        }
+        else{
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return Redirect('/');
+        }
+    }
+
     public function displayall()
     {
         $RenterRequests = RenterRequests::all();
@@ -58,13 +158,20 @@ class RenterRequestsController extends Controller
      */
     public function index(Request $request)
     {
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->loaddata();
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->loaddata();
+            }
+        }else{
+            return view('dashboard.index');
+        }
         
-        $RenterRequests = RenterRequests::query()
-                            ->orderBy('status','desc')
-                            ->paginate(5);
-
-            return view('rentersrequests.index',compact('RenterRequests'))
-                ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**
@@ -74,9 +181,21 @@ class RenterRequestsController extends Controller
     {
         $cabinet = cabinet::all();
         $branch = branch::all();
-        
-        return view('rentersrequests.create',['cabinet' => $cabinet])
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return view('rentersrequests.create',['cabinet' => $cabinet])
                                         ->with(['branch' => $branch]);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return view('rentersrequests.create',['cabinet' => $cabinet])
+                                        ->with(['branch' => $branch]);
+            }
+        }else{
+            return view('dashboard.index');
+        }
     }
 
     /**
@@ -84,41 +203,19 @@ class RenterRequestsController extends Controller
      */
     public function store(Request $request)
     {
-        $rent = Renters::where('username',$request->username)->first();
-
-        $br = branch::where('branchname',$request->branchname)->first();
-
-        $cab = cabinet::where('cabinetname',$request->cabinetname)
-        ->where(function(Builder $builder) use($request){
-            $builder->where('branchname',$request->branchname);
-        })->first();
-
-        $RenterRequests = RenterRequests::create([
-            'branchid' => $br->branchid,
-            'branchname' => $request->branchname,
-            'cabinetid' => $cab->cabid,
-            'cabinetname' => $request->cabinetname,
-            'totalsales' => $request->totalsales,
-            'totalcollected' => $request->totalcollected,
-            'avatarproof' => 'avatars/cash-default.jpg',
-            'rnotes' => $request->rnotes,
-            'userid' => $rent->userid,
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'created_by' => Auth()->user()->email,
-            'mod' => 0,
-            'posted' => 'N',
-            'status' => 'Pending',
-        ]);
-    
-        if ($RenterRequests) {
-            //query successful
-            return redirect()->route('rentersrequests.create')
-                        ->with('success','Sales Request created successfully.');
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->storedata($request);         
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->storedata($request); 
+            }
         }else{
-            return redirect()->route('rentersrequests.create')
-                        ->with('success','Sales Request creation failed');
-        }  
+            return view('dashboard.index');
+        }
     }
 
     /**
@@ -143,39 +240,20 @@ class RenterRequestsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rentreq = RenterRequests::findOrFail($id);
-        $path = Storage::disk('public')->put('rentersrequests',$request->file('avatarproof'));
-        // $path = $request->file('avatar')->store('avatars','public');
-        
-        $oldavatar = $rentreq->avatarproof;
-        
-        if($oldavatar == 'avatars/cash-default.jpg'){
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->updatedata($request,$id);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->updatedata($request,$id);
+            }
             
         }else{
-            Storage::disk('public')->delete($oldavatar);
+            return view('dashboard.index');
         }
-       
-
-        RenterRequests::where('salesrid', $id)->update([
-            'branchid' => '1',
-            'branchname' => $request->branchname,
-            'cabinetid' => '1',
-            'cabinetname' => $request->cabinetname,
-            'totalsales' => $request->totalsales,
-            'totalcollected' => $request->totalcollected,
-            'avatarproof' => $path,
-            'rnotes' => $request->rnotes,
-            'userid' => '1',
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'updated_by' => Auth()->user()->email,
-            'status' => 'Completed',
-        ]);
-
-        
-    
-        return redirect()->route('rentersrequests.index')
-                        ->with('success','Sales Request updated successfully');
     }
 
     /**
@@ -183,19 +261,18 @@ class RenterRequestsController extends Controller
      */
     public function destroy(Request $request, RenterRequests $RenterRequests): RedirectResponse
     {
-        $RenterRequests->delete();
-        
-        $RenterRequests = RenterRequests::wherenot('accesstype', 'Leesee')->get();
-        if ($RenterRequests->isNotEmpty()) {
-            
-            return redirect()->route('rentersrequests.index')
-            ->with('success','Sales Requests deleted successfully');
-        }
-        else{
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-
-            return Redirect('/');
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->destroydata($request,$RenterRequests);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->destroydata($request, $RenterRequests);
+            }
+        }else{
+            return view('dashboard.index');
         }
     }
 }

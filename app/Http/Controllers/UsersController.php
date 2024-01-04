@@ -161,16 +161,16 @@ class UsersController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->loaddata();
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->loaddata();
             }
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
     }
      
@@ -181,7 +181,20 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return view('users.create');       
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return view('users.create');
+            }
+        }else{
+            return view('dashboard.index');
+        }
+        
     }
     
     /**
@@ -203,7 +216,7 @@ class UsersController extends Controller
                 return $this->storedata($request); 
             }
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
        
     }
@@ -243,9 +256,9 @@ class UsersController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->updatedata($request,$user);
             }elseif(auth()->user()->accesstype =='Administrator'){
@@ -253,7 +266,7 @@ class UsersController extends Controller
             }
             
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
     }
     
@@ -267,16 +280,16 @@ class UsersController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->destroydata($request,$user);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->destroydata($request,$user);
             }
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
     }
 

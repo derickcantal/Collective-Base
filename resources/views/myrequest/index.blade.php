@@ -1,13 +1,51 @@
-<section>
-<div class="py-4">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 text-gray-900 dark:text-gray-100">
-                {{ __("Requests") }}
-            </div>
-            
-            <div class="max-w-7xl overflow-x-auto shadow-md sm:rounded-lg " >
-            @csrf
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            <u><a href="{{ route('myrequest.index') }}"> Request</a></u> | <a href="{{ route('myrental.index') }}"> Rental </a> 
+        </h2>
+    </x-slot>
+    <section>
+        <div class="py-8">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="py-8">
+                        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                                
+                                <div class="grid gap-4 mb-4 grid-cols-2">  
+                                        <div class="col-span-2 sm:col-span-1">
+                                            <div>
+                                                <x-primary-button class="ms-4">
+                                                    <a class="btn btn-primary" href="{{ route('myrequest.create') }}"> Create New Request</a>
+                                                </x-primary-button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-span-2 sm:col-span-1 flex justify-end">
+                                            <form action="{{ route('myrequest.search') }}" method="get">
+                                                <input type="text" name="search" id="table-search-users" class="text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for Requests">
+                                                <x-primary-button class="ms-4">
+                                                    Search
+                                                </x-primary-button>
+                                                
+                                            </form>
+                                        </div>
+                                </div>
+                        
+                                    @if ($message = Session::get('success'))
+                                    <div class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800" role="alert">
+                                    <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                    </svg>
+                                    <span class="sr-only">Info</span>
+                                    <div>
+                                        <span class="font-medium">Success!</span> {{ $message }}
+                                    </div>
+                                    </div>
+                                    @endif
+                                </div>    
+
+                                @csrf
                                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                         <tr>
@@ -21,26 +59,20 @@
                                                 Branch
                                             </th>
                                             <th scope="col" class="px-6 py-3">
-                                                Proof Image
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
                                                 Total Sales
                                             </th>
                                             <th scope="col" class="px-6 py-3">
                                                 Total Collected
                                             </th>
-                                            
+                                            <th scope="col" class="px-6 py-3">
+                                                Proof Image
+                                            </th>
                                             <th scope="col" class="px-6 py-3">
                                                 Updated By
                                             </th>
                                             <th scope="col" class="px-6 py-3">
                                                 Status
                                             </th>
-                                            @if(auth()->user()->accesstype != 'Renters')
-                                            <th scope="col" class="px-6 py-3">
-                                                Action
-                                            </th>
-                                            @endif
                                         </tr>
                                     </thead>
                                             
@@ -60,48 +92,43 @@
                                                 <x-input-label for="branchname" :value="$RenterRequest->branchname"/>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$RenterRequest->avatarproof") }}" alt="avatar">
-                                            </td>
-                                            <td class="px-6 py-4">
                                                 <x-input-label for="totalsales" :value="$RenterRequest->totalsales"/>
                                             </td>
                                             <td class="px-6 py-4">
                                                 <x-input-label for="totalcollected" :value="$RenterRequest->totalcollected"/>
                                             </td>
-                                            
+                                            <td class="px-6 py-4">
+                                                <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$RenterRequest->avatarproof") }}" alt="avatar">
+                                            </td>
                                             <td class="px-6 py-4">
                                             <x-input-label for="updated_by" :value="$RenterRequest->updated_by"/>
                                             </td>
                                             <td class="px-6 py-4">
                                                 <x-input-label for="status" :value="$RenterRequest->status"/>
                                             </td>
-                                            @if(auth()->user()->accesstype != 'Renters')
                                             <td class="px-6 py-4">
                                                 @php
                                                     $btndis='';
                                                     $btnlabel = '';
                                                     $btncolor = '';
-                                                    $btntxtcolor = '';
 
                                                     if($RenterRequest->status == 'Pending'):
                                                         $btndis = '';
                                                         $btnlabel = 'Process';
                                                         $btncolor = 'blue';
-                                                        $btntxtcolor = 'white';
                                                     elseif($RenterRequest->status == 'Completed'):
                                                         $btndis = 'disabled';
                                                         $btnlabel = 'Completed';
                                                         $btncolor = 'green';
-                                                        $btntxtcolor = 'white';
                                                     endif;
+                                                    
                                                 @endphp
                                                 <form action="{{ route('rentersrequests.edit',$RenterRequest->salesrid) }}" method="PUT">
-                                                    <x-danger-button class="ms-3 dark:text-{{ $btntxtcolor; }} bg-{{ $btncolor; }}-700 hover:bg-{{ $btncolor; }}-800 focus:outline-none focus:ring-4 focus:ring-{{ $btncolor; }}-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-{{ $btncolor; }}-600 dark:hover:bg-{{ $btncolor; }}-700 dark:focus:ring-{{ $btncolor; }}-800 ">
+                                                    <x-danger-button class="ms-3 dark:text-red bg-{{ $btncolor; }}-700 hover:bg-{{ $btncolor; }}-800 focus:outline-none focus:ring-4 focus:ring-{{ $btncolor; }}-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-{{ $btncolor; }}-600 dark:hover:bg-{{ $btncolor; }}-700 dark:focus:ring-{{ $btncolor; }}-800 ">
                                                         {{ $btnlabel; }}
                                                     </x-danger-button>
                                                 </form>
                                             </td>
-                                            @endif
                                         </tr>
                                         
                                         @empty
@@ -115,8 +142,24 @@
                                 <div class="mt-4">
                                     {!! $RenterRequests->appends(request()->query())->links() !!}
                                 </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="py-4">
+                        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>	
-</section>
+    </section>
+
+</x-app-layout>
+
+
+    

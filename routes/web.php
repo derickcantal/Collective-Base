@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AttendanceController;
-use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\CabinetController;
 use App\Http\Controllers\UsersController;
@@ -11,6 +10,8 @@ use App\Http\Controllers\ReportsController;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Counter;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MyRentalController;
+use App\Http\Controllers\MyRequestController;
 use App\Http\Controllers\Profile\AvatarController;
 use App\Http\Controllers\RentalPaymentsController;
 use App\Http\Controllers\RenterRequestsController;
@@ -58,6 +59,12 @@ Route::middleware('auth')->group(function () {
     Route::get('rentersrequests.search', [RenterRequestsController::class, 'search'])->name('rentersrequests.search');
     Route::get('rentersrequests.selectbranch', [RenterRequestsController::class, 'selectbranch'])->name('rentersrequests.selectbranch');
     Route::put('rentersrequests.selectcabinet/{branch}', [RenterRequestsController::class, 'selectcabinet'])->name('rentersrequests.selectcabinet');
+
+    Route::resource('myrequest', MyRequestController::class);
+    Route::get('myrequest.search', [MyRequestController::class, 'search'])->name('myrequest.search');
+    
+    Route::resource('myrental', MyRentalController::class);
+    Route::get('myrental.search', [MyRequestController::class, 'search'])->name('myrental.search');
 });
 
 Route::middleware('auth')->group(function () {

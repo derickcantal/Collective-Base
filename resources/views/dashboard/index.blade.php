@@ -26,6 +26,7 @@
             </div>
         </div>
     </div>
+    @if(auth()->user()->accesstype != 'Renters')
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -33,6 +34,7 @@
             </div>
         </div>
     </div>
+    @endif
 
     
 </x-app-layout>

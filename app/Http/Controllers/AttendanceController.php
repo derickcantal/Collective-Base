@@ -6,6 +6,8 @@ use App\Models\attendance;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
+
 
 class AttendanceController extends Controller
 {
@@ -13,6 +15,17 @@ class AttendanceController extends Controller
         $attendance = attendance::get()->toQuery()
         ->orderBy('status','asc')
         ->paginate(5);
+
+        return view('attendance.index',compact('attendance'))
+        ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+
+    public function loaddata_cashier(){
+        $attendance = attendance::where('branchname',auth()->user()->branchname)
+                                ->where(function(Builder $builder){
+                                    $builder->where('status','Pending')
+                                        ->orderBy('status','asc');
+                                    })->paginate(5);
 
         return view('attendance.index',compact('attendance'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -48,7 +61,7 @@ class AttendanceController extends Controller
     }
     
     public function updatedata(){
-    
+        
     }
     
     public function destroydata(){
@@ -97,15 +110,28 @@ class AttendanceController extends Controller
 
     public function selectemp()
     {
-        $users = User::where('branchname',auth()->user()->branchname)
+
+        $activeUsers = DB::table('users')
+                        ->select('userid')
+                        ->where('status1', "Active")
+                        ->where('accesstype',auth()->user()->accesstype)
+                        ->where('branchname',auth()->user()->branchname)
+                        ->orderBy('status','asc');
+ 
+        $sample = DB::table('attendance')
+                            ->whereIn('userid', $activeUsers)
+                            ->get();
+       
+        dd($sample);
+
+        $busers = User::where('accesstype',auth()->user()->accesstype)
                     ->where(function(Builder $builder){
                         $builder->where('status',"Active")
-                                ->orderBy('status','asc')
-                                
-                                ;
+                                ->where('branchname',auth()->user()->branchname)
+                                ->orderBy('status','asc');
                     })
-                    ->paginate(5);
-    
+                    ->get();
+
         return view('attendance.create-select-emp',compact('users'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
             
@@ -122,16 +148,16 @@ class AttendanceController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('welcome');
+                return $this->loaddata_cashier();
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->loaddata();
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->loaddata();
             }
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
     }
 
@@ -150,16 +176,16 @@ class AttendanceController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('welcome');
+                return $this->storedata($request);
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->storedata($request);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->storedata($request);
             }
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
       
     }
@@ -177,7 +203,19 @@ class AttendanceController extends Controller
      */
     public function edit(attendance $attendance)
     {
-        //
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('attendance.edit');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return view('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return view('attendance.edit');
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return view('attendance.edit');
+            }
+        }else{
+            return view('dashboard.index');
+        }
     }
 
     /**
@@ -187,16 +225,16 @@ class AttendanceController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('welcome');
+                return $this->updatedata($request,$attendance);
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('welcome');
+                return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->updatedata($request,$attendance);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->updatedata($request,$attendance);
             }
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
     }
 
@@ -216,7 +254,7 @@ class AttendanceController extends Controller
                 
             }
         }else{
-            return view('welcome');
+            return view('dashboard.index');
         }
     }
 }

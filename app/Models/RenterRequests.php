@@ -14,7 +14,7 @@ class RenterRequests extends Model
     protected $fillable = [
         'branchid',
         'branchname',
-        'cabinetid',
+        'cabid',
         'cabinetname',
         'totalsales',
         'totalcollected',

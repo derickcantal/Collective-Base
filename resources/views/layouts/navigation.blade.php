@@ -16,6 +16,7 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+                @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
                         {{ __('Users') }}
@@ -26,11 +27,21 @@
                         {{ __('Renters') }}
                     </x-nav-link>
                 </div>
+                @endif
+                @if(auth()->user()->accesstype == 'Renters')
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('myrequest.index')" :active="request()->routeIs('myrequest.index')">
+                        {{ __('My Account') }}
+                    </x-nav-link>
+                </div>
+                @endif
+                @if(auth()->user()->accesstype != 'Renters')
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('sales.index')" :active="request()->routeIs('sales.index')">
                         {{ __('Cashier') }}
                     </x-nav-link>
                 </div>
+                @endif
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.index')">
                         {{ __('Reports') }}
@@ -57,15 +68,24 @@
                         <x-dropdown-link :href="route('dashboard.index')" :active="request()->routeIs('dashboard.index')">
                             {{ __('Dashboard') }}
                         </x-dropdown-link>
+                        @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
                         <x-dropdown-link :href="route('users.index')" :active="request()->routeIs('users.index')">
                             {{ __('Users') }}
                         </x-dropdown-link>
                         <x-dropdown-link :href="route('renters.index')" :active="request()->routeIs('renters.index')">
                             {{ __('Renters') }}
                         </x-dropdown-link>
+                        @endif
+                        @if(auth()->user()->accesstype == 'Renters')
+                        <x-dropdown-link :href="route('myrequest.index')" :active="request()->routeIs('myrequest.index')">
+                            {{ __('My Account') }}
+                        </x-dropdown-link>
+                        @endif
+                        @if(auth()->user()->accesstype != 'Renters')
                         <x-dropdown-link :href="route('sales.index')" :active="request()->routeIs('sales.index')">
                             {{ __('Cashier') }}
                         </x-dropdown-link>
+                        @endif
                         <x-dropdown-link :href="route('reports.index')" :active="request()->routeIs('reports.index')">
                             {{ __('Reports') }}
                         </x-dropdown-link>
@@ -74,11 +94,11 @@
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Profile') }}
                             </x-dropdown-link>
-
+                            @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
                             <x-dropdown-link :href="route('branch.index')">
                                 {{ __('Settings') }}
                             </x-dropdown-link>
-
+                            @endif
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -113,6 +133,7 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
+        @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
                 {{ __('Users') }}
@@ -123,11 +144,21 @@
                 {{ __('Renters') }}
             </x-responsive-nav-link>
         </div>
+        @endif
+        @if(auth()->user()->accesstype == 'Renters')
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('myrequest.index')" :active="request()->routeIs('myrequest.index')">
+                {{ __('My Account') }}
+            </x-responsive-nav-link>
+        </div>
+        @endif
+        @if(auth()->user()->accesstype != 'Renters')
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('sales.index')" :active="request()->routeIs('sales.index')">
                 {{ __('Cashier') }}
             </x-responsive-nav-link>
         </div>
+        @endif
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.index')">
                 {{ __('Reports') }}

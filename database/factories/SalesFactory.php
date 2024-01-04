@@ -19,7 +19,7 @@ class SalesFactory extends Factory
     public function definition(): array
     {
         $rpamount = ['10.00','20.00','30.00','40.00','50.00','100.00','200.00','1000.00'];
-        $atype = ['Administrator', 'Supervisor','Cashier','Leesee'];
+        $atype = ['Administrator', 'Supervisor','Cashier','Renters'];
         $branchname = ['CB Main', 'CB Annex', 'CB Complex', 'CB Plus 1', 'CB Plus 2', 'CB Plus 3'];
         $collected_status = ['Collected','Pending'];
         $status = ['Posted', 'Unposted'];

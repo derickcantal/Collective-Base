@@ -11,10 +11,12 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 class DashboardController extends Controller
 {
     public function administrator(){
-        $sales = sales::get()->toQuery()->paginate(5);
+        $sales = sales::paginate(5);
         $RenterRequests = RenterRequests::where('status','Pending')->orderBy('status','desc')->paginate(5);
-        $attendance = attendance::get()->toQuery()->paginate(5);
+        
         $rentalpayments = RentalPayments::where('status','Unpaid')->orderBy('status','desc')->paginate(5);
+
+        $attendance = attendance::paginate(5);
 
         return view('dashboard.index')->with(['sales' => $sales])
                                         ->with(['RenterRequests' => $RenterRequests])
@@ -24,11 +26,50 @@ class DashboardController extends Controller
     }
 
     public function renters(){
+        $sales = Sales::where('cabinetname',auth()->user()->cabinetname)
+                    ->where(function(Builder $builder){
+                        $builder->where('branchname',auth()->user()->branchname)
+                                ->where('collected_status','Pending');
+                    })->paginate(5);
+        $RenterRequests = RenterRequests::where('cabinetname',auth()->user()->cabinetname)
+                    ->where(function(Builder $builder){
+                        $builder->where('branchname',auth()->user()->branchname)
+                                ->orderBy('status','desc');
+                    })->paginate(5);
 
+        $rentalpayments = RentalPayments::where('cabinetname',auth()->user()->cabinetname)
+                    ->where(function(Builder $builder){
+                        $builder->where('branchname',auth()->user()->branchname)
+                                ->where('status','Pending');
+                    })->paginate(5);
+
+        $attendance = attendance::where('status','Renters')->paginate(5);
+
+        return view('dashboard.index')->with(['sales' => $sales])
+                                        ->with(['RenterRequests' => $RenterRequests])
+                                        ->with(['rentalpayments' => $rentalpayments])
+                                        ->with(['attendance' => $attendance])
+                                        ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     public function cashier(){
+        $sales = sales::where('branchname',auth()->user()->branchname)
+                    ->paginate(5);
+        $RenterRequests = RenterRequests::where('branchname',auth()->user()->branchname)
+                    ->paginate(5);
 
+        $rentalpayments = rentalpayments::where('branchname',auth()->user()->branchname)
+                    ->where(function(Builder $builder){
+                        $builder->where('status','Pending');
+                    })->paginate(5);
+
+        $attendance = attendance::where('branchname',auth()->user()->branchname)->paginate(5);
+
+        return view('dashboard.index')->with(['sales' => $sales])
+                    ->with(['RenterRequests' => $RenterRequests])
+                    ->with(['rentalpayments' => $rentalpayments])
+                    ->with(['attendance' => $attendance])
+                    ->with('i', (request()->input('page', 1) - 1) * 5);             
     }
     public function displayall()
     {
