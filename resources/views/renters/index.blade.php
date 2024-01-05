@@ -16,7 +16,7 @@
                                         <div class="col-span-2 sm:col-span-1">
                                             <div>
                                                 <x-primary-button class="ms-4">
-                                                    <a class="btn btn-primary" href="{{ route('renters.create') }}"> Create New Renter</a>
+                                                    <a class="btn btn-primary" href="{{ route('renters.selectbranch') }}"> Create New Renter</a>
                                                 </x-primary-button>
                                             </div>
                                         </div>

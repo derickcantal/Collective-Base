@@ -70,27 +70,40 @@ class CabinetController extends Controller
     }
     
     public function updatedata($request,$cabinet){
+        
+    }
+    
+    public function destroydata($request ,$cabinet){
         $cabinet = cabinet::findOrFail($cabinet);
         $mod = 0;
         $mod = $cabinet->mod;
-        cabinet::where('cabid', $cabinet->cabid)->update([
-                'branchname' => $request->branchname,
-                'branchaddress' => $request->branchaddress,
-                'branchcontact' => $request->branchcontact,
-                'branchemail' => $request->branchemail,
-                'cabinetcount' => $request->cabinetcount,
-                'updated_by' => auth()->user()->email,
-                'posted' => 'N',
-                'mod' => $mod + 1,
-                'status' => 'Active',
-            ]);
 
-            return redirect()->route('cabinet.index')
-                            ->with('success','Branch updated successfully');
-    }
-    
-    public function destroydata(){
-    
+        if($cabinet->status == 'Active')
+        {
+            cabinet::where('cabid', $cabinet->cabid)
+            ->update([
+            'status' => 'Inactive',
+            'updated_by' => auth()->user()->email,
+            'mod' => $mod + 1,
+        ]);
+
+
+        return redirect()->route('cabinet.index')
+                            ->with('success','Cabinet Deactivated successfully');
+        }
+        elseif($cabinet->status == 'Inactive')
+        {
+            cabinet::where('cabid', $cabinet->cabid)
+            ->update([
+            'status' => 'Active',
+            'updated_by' => auth()->user()->email,
+            'mod' => $mod + 1,
+        ]);
+
+
+        return redirect()->route('cabinet.index')
+                            ->with('success','Cabinet Activated successfully');
+        }
     }
 
     public function search(Request $request)
@@ -184,9 +197,7 @@ class CabinetController extends Controller
      */
     public function edit($cabinet)
     {
-        $branches = branch::all();
-        $cabinet = cabinet::findOrFail($cabinet);
-        return view('cabinet.edit',['cabinet' => $cabinet])->with(['branches' => $branches]);
+        
     }
 
     /**
@@ -213,7 +224,7 @@ class CabinetController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(cabinet $cabinet)
+    public function destroy(Request $request, $cabinet)
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
@@ -221,9 +232,9 @@ class CabinetController extends Controller
             }elseif(auth()->user()->accesstype =='Renters'){
                 return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                
+                return $this->destroydata($request, $cabinet);
             }elseif(auth()->user()->accesstype =='Administrator'){
-                
+                return $this->destroydata($request, $cabinet);
             }
         }else{
             return view('dashboard.index');

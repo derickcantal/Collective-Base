@@ -118,7 +118,6 @@
                                                 <td class="px-6 py-4">
                                                     
                                                     <form action="{{ route('cabinet.destroy',$cabinet->cabid) }}" method="POST">
-                                                    <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('cabinet.edit',$cabinet->cabid) }}">Modify</a>
                                                         @csrf
                                                         @method('DELETE')
                                                         @php
@@ -127,7 +126,7 @@
                                                         
                                                         if ($cabinet->status == 'Active'):
                                                             $txtbutton = 'Decativate';
-                                                            
+                                                            $colorbutton = 'dark:text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800';
                                                         elseif ($cabinet->status == 'Inactive'):
                                                             $txtbutton = 'Activate';
                                                             $colorbutton = 'dark:text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800';

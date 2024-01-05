@@ -8,6 +8,8 @@ use App\Http\Requests\UserSearchRequest;
 use App\Http\Requests\UserTableRequest;
 use App\Http\Requests\UserUpdateTableRequest;
 use App\Models\User;
+use App\Models\branch;
+use App\Models\cabinet;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -26,6 +28,13 @@ class UsersController extends Controller
     }
     
     public function storedata($request){
+        $br = branch::where('branchname',$request->branchname)->first();
+
+        $cabn = cabinet::where('cabinetname',$request->cabinetname)
+        ->where(function(Builder $builder) use($request){
+            $builder->where('branchname',$request->branchname);
+        })->first();
+
         $user = User::create([
             'avatar' => 'avatars/avatar-default.jpg',
             'username' => $request->username,
@@ -35,9 +44,9 @@ class UsersController extends Controller
             'middlename' => $request->middlename,
             'lastname' => $request->lastname,
             'birthdate' => $request->birthdate,
-            'branchid' => '1',
-            'branchname' => $request->branchname,
-            'cabid' => '1',
+            'branchid' => $br->branchid,
+            'branchname' => $br->branchname,
+            'cabid' => 0,
             'cabinetname' => 'Null',
             'accesstype' => $request->accesstype,
             'created_by' => auth()->user()->email,
@@ -57,6 +66,7 @@ class UsersController extends Controller
     }
     
     public function updatedata($request,$user){
+
         $mod = 0;
         $mod = $user->mod;
 
@@ -108,7 +118,7 @@ class UsersController extends Controller
         }
     }
     
-    public function destroydata(){
+    public function destroydata($request,$user){
         if($user->status == 'Active')
         {
             User::where('userid', $user->userid)
@@ -181,15 +191,16 @@ class UsersController extends Controller
      */
     public function create()
     {
+        $branch = branch::orderBy('branchname', 'asc')->get();
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
                 return view('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return view('users.create');       
+                return view('users.create',['branch' => $branch]);       
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return view('users.create');
+                return view('users.create',['branch' => $branch]);
             }
         }else{
             return view('dashboard.index');

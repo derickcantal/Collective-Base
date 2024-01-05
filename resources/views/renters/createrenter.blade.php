@@ -2,7 +2,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <a href="{{ route('users.index') }}"> Users</a> /<u> {{ __('Create New User') }}</u>
+            <u><a href="{{ route('renters.index') }}"> Renters</a></u> / {{ __('Create New Renters') }}
         </h2>
     </x-slot>
     <section>
@@ -10,11 +10,10 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <form action="{{ route('users.store') }}" method="POST" class="p-4 md:p-5">
+                        <form action="{{ route('renters.store') }}" method="POST" class="p-4 md:p-5">
                         @csrf   
-                            <div class="relative p-4 w-full max-w-full max-h-full">
-                                <!-- Error & Success Notification -->        
-                                <div>
+                            <!-- Error & Success Notification -->        
+                            <div>
                                     @if ($errors->any())
                                     <div class="flex p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
                                     <svg class="flex-shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -43,17 +42,17 @@
                                     </div>
                                     @endif
                                 </div>
+                            <div class="relative p-4 w-full max-w-full max-h-full">
+                                
                                 <!-- Modal content -->
                                 <div class="relative bg-white rounded-lg dark:bg-gray-800">
                                     <!-- Modal header -->
                                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                            User Profile Information
+                                            Renters Information
                                         </h3>
                                     </div>
                                     <!-- Modal body -->
-                                    
-
                                         <div class="grid gap-4 mb-4 grid-cols-2">
                                             <div class="col-span-2 sm:col-span-1 ">
                                                 <!-- username -->
@@ -142,15 +141,24 @@
                                                 </div>
                                             </div>
                                             <div class="col-span-2 sm:col-span-1">
+                                                <!-- cabinetnumber -->
+                                                <div class="form-group mt-4">
+                                                    <x-input-label for="cabinetname" :value="__('Cabinet No.')" />
+                                                    <!-- <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" :value="old('cabinetname')" required autofocus autocomplete="off" /> -->
+                                                    <select id="cabinetname" name="cabinetname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('cabinetname')">
+                                                        @foreach($cabinet as $cabinets)    
+                                                            <option value = "{{ $cabinets->cabinetname}}" >{{ $cabinets->cabinetname}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
+                                                </div>
+                                            </div>
+                                            <div class="col-span-2 sm:col-span-1">
                                                 <!-- accesstype -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="accesstype" :value="__('Access Type')" />
                                                     <!-- <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" :value="old('accesstype')" required autofocus autocomplete="off" /> -->
-                                                    <select id="accesstype" name="accesstype" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('accesstype')">
-                                                        <option value ="Administrator">Administrator</option>
-                                                        <option value ="Supervisor">Supervisor</option>
-                                                        <option value ="Cashier">Cashier</option>
-                                                    </select>
+                                                    <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" value="Renters" autofocus disabled/> 
                                                     <x-input-error :messages="$errors->get('accesstype')" class="mt-2" />
                                                 </div>
                                             </div>

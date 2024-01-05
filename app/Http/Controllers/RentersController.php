@@ -42,13 +42,23 @@ class RentersController extends Controller
             'lastname' => $request->lastname,
             'birthdate' => $request->birthdate,
             'branchid' => $br->branchid,
-            'branchname' => $request->branchname,
+            'branchname' => $br->branchname,
             'cabid' => $cabn->cabid,
-            'cabinetname' => $request->cabinetname,
+            'cabinetname' => $cabn->cabinetname,
             'accesstype' => 'Renters',
             'created_by' => auth()->user()->email,
             'updated_by' => 'Null',
             'mod' => 0,
+            'status' => 'Active',
+        ]);
+
+        cabinet::where('cabid', $cabn->cabid)->update([
+            'branchcontact' => $request->branchcontact,
+            'branchemail' => $request->branchemail,
+            'cabinetcount' => $request->cabinetcount,
+            'updated_by' => auth()->user()->email,
+            'posted' => 'N',
+            'mod' => $mod + 1,
             'status' => 'Active',
         ]);
     
@@ -180,13 +190,33 @@ class RentersController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        $cabinet = cabinet::all();
-        $branch = branch::all();
-                    
+    public function selectbranch(){
+        $branch = branch::orderBy('branchname', 'asc')->paginate(5);
 
-        return view('renters.create',['cabinet' => $cabinet])->with(['branch' => $branch]);
+        return view('renters.create-selectbranch',['branch' => $branch])
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+
+    public function createrenter($branches)
+    {
+        $branch = branch::where('branchid',$branches)
+                        ->orderBy('branchname', 'asc')->first();
+        $cabinet = cabinet::where('branchid',$branches)
+                    ->where(function(Builder $builder){
+                        $builder->where('email','Vacant')
+                        ->orderBy('cabinetname', 'asc');
+                    })->get();
+       
+
+        return view('renters.create',['cabinet' => $cabinet],['branch' => $branch]);
+    }
+    public function create(Request $request, $branch)
+    {
+        
+        $cabinet = cabinet::where('branchname',$request->branchname)
+                        ->orderBy('cabinetname', 'asc')->get();
+
+        return view('renters.create',['cabinet' => $cabinet]);
     }
 
     /**

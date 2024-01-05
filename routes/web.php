@@ -70,6 +70,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::resource('renters', RentersController::class);
     Route::get('renters.search', [RentersController::class, 'search'])->name('renters.search');
+    Route::get('renters.selectbranch', [RentersController::class, 'selectbranch'])->name('renters.selectbranch');
+    Route::put('renters.createrenter/{branchid}', [RentersController::class, 'createrenter'])->name('renters.createrenter');
     
     Route::resource('rentalpayments', RentalPaymentsController::class);
     Route::get('rentalpayments.search', [RentalPaymentsController::class, 'search'])->name('rentalpayments.search');

@@ -49,7 +49,7 @@
                                     <!-- Modal header -->
                                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                            Rental Payment Information
+                                            Renters Information
                                         </h3>
                                     </div>
                                     <!-- Modal body -->
@@ -131,12 +131,8 @@
                                                 <!-- branchname -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="branchname" :value="__('Branch Name')" />
-                                                    <!-- <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname')" required autofocus autocomplete="off" /> -->
-                                                    <select id="branchname" name="branchname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('branchname')">
-                                                        @foreach($branch as $branches)    
-                                                            <option value = "{{ $branches->branchname}}">{{ $branches->branchname}}</option>
-                                                            @endforeach
-                                                    </select>
+                                                    <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname',$branch->branchname)" required autofocus autocomplete="off" readonly/>
+                                                    
                                                     <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -147,7 +143,7 @@
                                                     <!-- <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" :value="old('cabinetname')" required autofocus autocomplete="off" /> -->
                                                     <select id="cabinetname" name="cabinetname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('cabinetname')">
                                                         @foreach($cabinet as $cabinets)    
-                                                            <option value = "{{ $cabinets->cabinetname}}">{{ $cabinets->cabinetname}}</option>
+                                                            <option value = "{{ $cabinets->cabinetname}}" >{{ $cabinets->cabinetname}}</option>
                                                         @endforeach
                                                     </select>
                                                     <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
