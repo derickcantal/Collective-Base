@@ -11,24 +11,24 @@
                     <div class="py-8">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                                
                                 <div class="grid gap-4 mb-4 grid-cols-2">  
-                                        <div class="col-span-2 sm:col-span-1">
-                                            <div>
+                                    <div class="col-span-2 sm:col-span-1">
+                                        <div>
+                                            @if(auth()->user()->accesstype == 'Cashier')
+                                            <x-primary-button class="ms-4">
+                                                <a class="btn btn-primary" href="{{ route('attendance.selectemp') }}"> Add Employee</a>
+                                            </x-primary-button>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-span-2 sm:col-span-1 flex justify-end">
+                                        <form action="{{ route('attendance.search') }}" method="get">
+                                                <input type="text" name="search" id="table-search-users" class=" text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for Employee">
                                                 <x-primary-button class="ms-4">
-                                                    <a class="btn btn-primary" href="{{ route('attendance.selectemp') }}"> Add Employee</a>
+                                                    Search
                                                 </x-primary-button>
-                                            </div>
-                                        </div>
-                                        <div class="col-span-2 sm:col-span-1 flex justify-end">
-                                            <form action="{{ route('attendance.search') }}" method="get">
-                                                    <input type="text" name="search" id="table-search-users" class=" text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for Employee">
-                                                    <x-primary-button class="ms-4">
-                                                     Search
-                                                    </x-primary-button>
-                                                
-                                            </form>
-                                        </div>
+                                        </form>
+                                    </div>
                                 </div>
                         
                                     @if ($message = Session::get('success'))

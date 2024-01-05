@@ -35,64 +35,34 @@ class CabinetController extends Controller
 
         
         if($br->cabinetcount >= $cabcount){
-            if($request->renters == 'Vacant'){
-                if(empty($cabn->cabid)){
-                    $cabinets = cabinet::create([
-                        'cabinetname' => $request->cabinetname,
-                        'branchid' => $br->branchid,
-                        'branchname' => $br->branchname,
-                        'userid' => 0,
-                        'email' => $request->renters,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'posted' => 'N',
-                        'mod' => 0,
-                        'status' => 'Active',
-                    ]);
-                
-                    if ($cabinets) {
-                        //query successful
-                        return redirect()->route('cabinet.index')
-                                    ->with('success','Cabinet created successfully.');
-                    }else{
-                        return redirect()->route('cabinet.create')
-                                    ->with('failed','Cabinet creation failed');
-                    }
+            if(empty($cabn->cabid)){      
+                $cabinets = cabinet::create([
+                    'cabinetname' => $request->cabinetname,
+                    'branchid' => $br->branchid,
+                    'branchname' => $br->branchname,
+                    'userid' => 0,
+                    'email' => 'Vacant',
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'posted' => 'N',
+                    'mod' => 0,
+                    'status' => 'Active',
+                ]);
+            
+                if ($cabinets) {
+                    //query successful
+                    return redirect()->route('cabinet.index')
+                                ->with('success','Cabinet created successfully.');
                 }else{
                     return redirect()->route('cabinet.create')
-                                    ->with('failed','Already Exists.');
-                    
-                }  
-            }else{
-                $rent = Renters::where('userid',$request->renters)->first();
-
-                if(empty($cabn->cabid)){
-                    $cabinets = cabinet::create([
-                        'cabinetname' => $request->cabinetname,
-                        'branchid' => $br->branchid,
-                        'branchname' => $br->branchname,
-                        'userid' => $rent->userid,
-                        'email' => $rent->email,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'posted' => 'N',
-                        'mod' => 0,
-                        'status' => 'Active',
-                    ]);
-                
-                    if ($cabinets) {
-                        //query successful
-                        return redirect()->route('cabinet.index')
-                                    ->with('success','Cabinet created successfully.');
-                    }else{
-                        return redirect()->route('cabinet.create')
-                                    ->with('failed','Cabinet creation failed');
-                    }  
-                }else{
-                    return redirect()->route('cabinet.create')
-                                    ->with('failed','Already Exists.');
+                                ->with('failed','Cabinet creation failed');
                 }
-            }
+            }else{
+                return redirect()->route('cabinet.create')
+                                ->with('failed','Already Exists.');
+                
+            }  
+            
         }else{
             return redirect()->route('cabinet.create')
                                     ->with('failed','Branch Maximum Cabinet Capacity Reached');
@@ -212,10 +182,11 @@ class CabinetController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(cabinet $cabinet)
+    public function edit($cabinet)
     {
+        $branches = branch::all();
         $cabinet = cabinet::findOrFail($cabinet);
-        return view('cabinet.edit',['cabinet' => $cabinet]);
+        return view('cabinet.edit',['cabinet' => $cabinet])->with(['branches' => $branches]);
     }
 
     /**

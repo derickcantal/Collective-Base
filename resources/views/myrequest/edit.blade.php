@@ -106,6 +106,7 @@
                                                     <x-input-error :messages="$errors->get('status')" class="mt-2" />
                                                 </div>
                                             </div>
+                                            
                                             @if(auth()->user()->accesstype != 'Renters')
                                             <div class="flex items-center justify-between col-span-2 sm:col-span-2">
                                                 

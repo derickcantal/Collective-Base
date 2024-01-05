@@ -25,6 +25,13 @@ class RentersController extends Controller
     }
     
     public function storedata($request){
+        $br = branch::where('branchname',$request->branchname)->first();
+
+        $cabn = cabinet::where('cabinetname',$request->cabinetname)
+        ->where(function(Builder $builder) use($request){
+            $builder->where('branchname',$request->branchname);
+        })->first();
+
         $renter = Renters::create([
             'avatar' => 'avatars/avatar-default.jpg',
             'username' => $request->username,
@@ -34,9 +41,9 @@ class RentersController extends Controller
             'middlename' => $request->middlename,
             'lastname' => $request->lastname,
             'birthdate' => $request->birthdate,
-            'branchid' => '1',
+            'branchid' => $br->branchid,
             'branchname' => $request->branchname,
-            'cabid' => '1',
+            'cabid' => $cabn->cabid,
             'cabinetname' => $request->cabinetname,
             'accesstype' => 'Renters',
             'created_by' => auth()->user()->email,
