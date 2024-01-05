@@ -4,18 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\RentalPayments;
+use App\Models\cabinet;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class MyRentalController extends Controller
 {
     public function loaddata(){
-        $RentalPayments = RentalPayments::where('cabinetname','==',"{auth()->user()->cabinetname}")
+        $RentalPayments = RentalPayments::where('cabinetname',auth()->user()->cabinetname)
                     ->where(function(Builder $builder){
-                        $builder->where('branchname',auth()->user()->branchname);
+                        $builder->where('branchname',auth()->user()->branchname)
+                                ->where('userid',auth()->user()->userid);
                                 
                     })->paginate(5);
-
-            return view('myrental.index',compact('RentalPayments'))
+            return view('myrental.index',['RentalPayments' => $RentalPayments])
                 ->with('i', (request()->input('page', 1) - 1) * 5);
     }
     
@@ -55,7 +56,8 @@ class MyRentalController extends Controller
      */
     public function create()
     {
-        //
+
+        return view('myrental.create');
     }
 
     /**

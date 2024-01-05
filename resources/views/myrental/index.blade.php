@@ -16,7 +16,7 @@
                                         <div class="col-span-2 sm:col-span-1">
                                             <div>
                                                 <x-primary-button class="ms-4">
-                                                    <a class="btn btn-primary" href="{{ route('rentersrequests.selectbranch') }}"> Create New Renters Request</a>
+                                                    <a class="btn btn-primary" href="{{ route('myrental.create') }}"> Create New Renters Request</a>
                                                 </x-primary-button>
                                             </div>
                                         </div>
@@ -80,35 +80,35 @@
                                         </tr>
                                     </thead>
                                             
-                                            @forelse($RenterRequests as $RenterRequest) 
+                                            @forelse($RentalPayments as $RentalPayments) 
                                     <tbody>
                                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                             
                                             <th class="px-6 py-4">
-                                                <div class="text-base font-semibold"><x-input-label for="username" :value="$RenterRequest->username"/></div>
+                                                <div class="text-base font-semibold"><x-input-label for="username" :value="$RentalPayments->username"/></div>
                                                 <x-input-label>{{ ++$i }}</x-input-label>
                                             </th>
                                             <td class="px-6 py-4">
-                                                <x-input-label>{{ $RenterRequest->lastname }}, {{ $RenterRequest->firstname }} {{ $RenterRequest->middlename }}</x-input-label>
-                                                <x-input-label>Cab. No.: <b>{{ $RenterRequest->cabinetname }}</b></x-input-label>
+                                                <x-input-label>{{ $RentalPayments->lastname }}, {{ $RentalPayments->firstname }} {{ $RentalPayments->middlename }}</x-input-label>
+                                                <x-input-label>Cab. No.: <b>{{ $RentalPayments->cabinetname }}</b></x-input-label>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <x-input-label for="branchname" :value="$RenterRequest->branchname"/>
+                                                <x-input-label for="branchname" :value="$RentalPayments->branchname"/>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <x-input-label for="totalsales" :value="$RenterRequest->totalsales"/>
+                                                <x-input-label for="totalsales" :value="$RentalPayments->totalsales"/>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <x-input-label for="totalcollected" :value="$RenterRequest->totalcollected"/>
+                                                <x-input-label for="totalcollected" :value="$RentalPayments->totalcollected"/>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$RenterRequest->avatarproof") }}" alt="avatar">
+                                                <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$RentalPayments->avatarproof") }}" alt="avatar">
                                             </td>
                                             <td class="px-6 py-4">
-                                            <x-input-label for="updated_by" :value="$RenterRequest->updated_by"/>
+                                            <x-input-label for="updated_by" :value="$RentalPayments->updated_by"/>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <x-input-label for="status" :value="$RenterRequest->status"/>
+                                                <x-input-label for="status" :value="$RentalPayments->status"/>
                                             </td>
                                             <td class="px-6 py-4">
                                                 @php
@@ -116,18 +116,18 @@
                                                     $btnlabel = '';
                                                     $btncolor = '';
 
-                                                    if($RenterRequest->status == 'Pending'):
+                                                    if($RentalPayments->status == 'Pending'):
                                                         $btndis = '';
                                                         $btnlabel = 'Process';
                                                         $btncolor = 'blue';
-                                                    elseif($RenterRequest->status == 'Completed'):
+                                                    elseif($RentalPayments->status == 'Completed'):
                                                         $btndis = 'disabled';
                                                         $btnlabel = 'Completed';
                                                         $btncolor = 'green';
                                                     endif;
                                                     
                                                 @endphp
-                                                <form action="{{ route('rentersrequests.edit',$RenterRequest->salesrid) }}" method="PUT">
+                                                <form action="{{ route('myrental.edit',$RentalPayments->rpid) }}" method="PUT">
                                                     <x-danger-button class="ms-3 dark:text-red bg-{{ $btncolor; }}-700 hover:bg-{{ $btncolor; }}-800 focus:outline-none focus:ring-4 focus:ring-{{ $btncolor; }}-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-{{ $btncolor; }}-600 dark:hover:bg-{{ $btncolor; }}-700 dark:focus:ring-{{ $btncolor; }}-800 ">
                                                         {{ $btnlabel; }}
                                                     </x-danger-button>
@@ -144,7 +144,7 @@
                                     </tbody>
                                 </table>
                                 <div class="mt-4">
-                                    {!! $RenterRequests->appends(request()->query())->links() !!}
+                                    {!! $RentalPayments->appends(request()->query())->links() !!}
                                 </div>
                                     
                                 </div>
