@@ -24,7 +24,7 @@ class RentersController extends Controller
         ->with('i', (request()->input('page', 1) - 1) * 5);
     }
     
-    public function storedata($request){
+    public function storedata(Request $request){
         $br = branch::where('branchname',$request->branchname)->first();
 
         $cabn = cabinet::where('cabinetname',$request->cabinetname)
@@ -51,23 +51,21 @@ class RentersController extends Controller
             'mod' => 0,
             'status' => 'Active',
         ]);
-
-        cabinet::where('cabid', $cabn->cabid)->update([
-            'branchcontact' => $request->branchcontact,
-            'branchemail' => $request->branchemail,
-            'cabinetcount' => $request->cabinetcount,
-            'updated_by' => auth()->user()->email,
-            'posted' => 'N',
-            'mod' => $mod + 1,
-            'status' => 'Active',
-        ]);
-    
+        
+        $rent = Renters::where('email',$request->email)->first();
+        
+        $cabu = cabinet::where('cabid',$cabn->cabid)
+                    ->update([
+                        'userid' => $rent->userid,
+                        'email' => $request->email,
+                    ]);
+        
         if ($renter) {
             //query successful
-            return redirect()->route('renters.create')
+            return redirect()->route('renters.index')
                         ->with('success','User created successfully.');
         }else{
-            return redirect()->route('renters.create')
+            return redirect()->route('renters.index')
                         ->with('success','User creation failed');
         }  
     }
@@ -208,9 +206,10 @@ class RentersController extends Controller
                     })->get();
        
 
-        return view('renters.create',['cabinet' => $cabinet],['branch' => $branch]);
+        return view('renters.create',['cabinet' => $cabinet])
+                            ->with(['branch' => $branch]);
     }
-    public function create(Request $request, $branch)
+    public function create()
     {
         
         $cabinet = cabinet::where('branchname',$request->branchname)

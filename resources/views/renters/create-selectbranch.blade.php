@@ -99,7 +99,7 @@
                                                 <td class="px-6 py-4">
                                                     @php
                                                     @endphp
-                                                    <form action="{{ route('renters.createrenter',$branches->branchid) }}" enctype="multipart/form-data" method="POST">
+                                                    <form action="{{ route('renters.createrenter', $branches->branchid) }}" enctype="multipart/form-data" method="POST">
                                                         @csrf
                                                         @method('PUT')
                                                         @php

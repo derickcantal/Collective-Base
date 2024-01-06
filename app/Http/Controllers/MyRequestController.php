@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\RenterRequests;
-use App\Models\sales;
+use App\Models\Sales;
 use App\Models\Renters;
 use App\Models\branch;
 use App\Models\cabinet;
@@ -94,7 +94,7 @@ class MyRequestController extends Controller
      */
     public function create()
     {
-        $sales = sales::where('branchname',auth()->user()->branchname)
+        $sales = Sales::where('branchname',auth()->user()->branchname)
                     ->where(function(Builder $builder){
                         $builder->where('cabinetname', auth()->user()->cabinetname)
                                 ->where('collected_status', "Pending");

@@ -11,7 +11,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 class DashboardController extends Controller
 {
     public function administrator(){
-        $sales = sales::paginate(5);
+        $sales = Sales::paginate(5);
         $RenterRequests = RenterRequests::where('status','Pending')->orderBy('status','desc')->paginate(5);
         
         $rentalpayments = RentalPayments::where('status','Unpaid')->orderBy('status','desc')->paginate(5);
@@ -53,7 +53,7 @@ class DashboardController extends Controller
     }
 
     public function cashier(){
-        $sales = sales::where('branchname',auth()->user()->branchname)
+        $sales = Sales::where('branchname',auth()->user()->branchname)
                     ->paginate(5);
         $RenterRequests = RenterRequests::where('branchname',auth()->user()->branchname)
                     ->paginate(5);

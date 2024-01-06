@@ -28,7 +28,6 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
-            $table->bigInteger('role_id');
             $table->string('accesstype');
             $table->string('created_by');
             $table->string('updated_by');

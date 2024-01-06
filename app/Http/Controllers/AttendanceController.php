@@ -12,8 +12,7 @@ use Illuminate\Support\Facades\DB;
 class AttendanceController extends Controller
 {
     public function loaddata(){
-        $attendance = attendance::get()->toQuery()
-        ->orderBy('status','asc')
+        $attendance = attendance::orderBy('status','asc')
         ->paginate(5);
 
         return view('attendance.index',compact('attendance'))

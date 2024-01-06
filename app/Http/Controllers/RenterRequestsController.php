@@ -8,7 +8,7 @@ use App\Http\Requests\SalesRequestsSearchRequest;
 use App\Models\Renters;
 use App\Models\branch;
 use App\Models\cabinet;
-use App\Models\sales;
+use App\Models\Sales;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;

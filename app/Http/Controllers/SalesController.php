@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\sales;
+use App\Models\Sales;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -12,7 +12,7 @@ class SalesController extends Controller
 {
 
     public function loaddata(){
-        $sales = sales::orderBy('status','asc')
+        $sales = Sales::orderBy('status','asc')
         ->paginate(5);
 
         return view('sales.index',compact('sales'))
@@ -20,7 +20,7 @@ class SalesController extends Controller
     }
 
     public function loaddata_cashier(){
-        $sales = sales::where('branchname',auth()->user()->branchname)
+        $sales = Sales::where('branchname',auth()->user()->branchname)
         ->orderBy('status','asc')
         ->paginate(5);
 
@@ -31,7 +31,7 @@ class SalesController extends Controller
     public function storedata($request){
         $path = Storage::disk('public')->put('sales',$request->file('salesavatar'));
             
-        $sales = sales::create([
+        $sales = Sales::create([
             'salesavatar' => $path,
             'salesname' => 'Null',
             'cabid' => 1,
@@ -68,7 +68,7 @@ class SalesController extends Controller
     }
     
     public function updatedata($request,$sales){
-        $sales = sales::findOrFail($sales);
+        $sales = Sales::findOrFail($sales);
         $mod = 0;
         $mod = $sales->mod;
         if($sales->mod == '1'){
@@ -86,7 +86,7 @@ class SalesController extends Controller
                 Storage::disk('public')->delete($oldavatar);
             }
 
-            sales::where('salesid', $sales->salesid)->update([
+            Sales::where('salesid', $sales->salesid)->update([
                 'salesavatar' => $path,
                 'salesname' => 'Null',
                 'cabid' => 1,
@@ -123,14 +123,14 @@ class SalesController extends Controller
 
     public function displayall()
     {
-        $sales = sales::all();
+        $sales = Sales::all();
 
         return view('dashboard.index',['sales' => $sales]);
     }
 
     public function search(Request $request)
     {
-        $sales = sales::query()
+        $sales = Sales::query()
                     ->where(function(Builder $builder) use($request){
                         $builder
                                 ->where('cabinetname','like',"%{$request->search}%")
