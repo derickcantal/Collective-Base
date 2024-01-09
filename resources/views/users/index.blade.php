@@ -147,13 +147,17 @@
                                             @endforelse
                                             	
                                         </tbody>
+                                        
                                     </table>
                                     <div class="mt-4">
-                                        {!! $user->appends(request()->query())->links() !!}
+                                    {{ $user->appends(request()->query())->links() }}
+                                        
                                     </div>
                                     
                                 </div>
+                                
                             </div>
+                            
                         </div>
                     </div>
                 </div>

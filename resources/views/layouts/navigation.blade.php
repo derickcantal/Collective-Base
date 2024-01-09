@@ -90,19 +90,22 @@
                             {{ __('Reports') }}
                         </x-dropdown-link>
                         <div class="pt-1 pb-1 border-t border-gray-200 dark:border-gray-600">
-                        
-                            <x-dropdown-link :href="route('profile.edit')">
-                                {{ __('Profile') }}
+                            @if(auth()->user()->accesstype != 'Renters')
+                            <x-dropdown-link :href="route('saleseod.index')">
+                                {{ __('EOD') }}
                             </x-dropdown-link>
+                            @endif
                             @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
                             <x-dropdown-link :href="route('branch.index')">
                                 {{ __('Settings') }}
                             </x-dropdown-link>
                             @endif
+                            <x-dropdown-link :href="route('profile.edit')">
+                                {{ __('Profile') }}
+                            </x-dropdown-link>
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-
                                 <x-dropdown-link :href="route('logout')"
                                         onclick="event.preventDefault();
                                                     this.closest('form').submit();">
@@ -173,6 +176,16 @@
             </div>
 
             <div class="mt-3 space-y-1">
+                @if(auth()->user()->accesstype != 'Renters')
+                    <x-responsive-nav-link :href="route('saleseod.index')">
+                        {{ __('EOD') }}
+                    </x-responsive-nav-link>
+                @endif
+                @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
+                <x-responsive-nav-link :href="route('branch.index')">
+                    {{ __('Settings') }}
+                </x-responsive-nav-link>
+                @endif
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>

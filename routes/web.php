@@ -16,6 +16,7 @@ use App\Http\Controllers\Profile\AvatarController;
 use App\Http\Controllers\RentalPaymentsController;
 use App\Http\Controllers\RenterRequestsController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\SalesEODController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +66,9 @@ Route::middleware('auth')->group(function () {
     
     Route::resource('myrental', MyRentalController::class);
     Route::get('myrental.search', [MyRequestController::class, 'search'])->name('myrental.search');
+
+    Route::resource('saleseod', SalesEODController::class);
+
 });
 
 Route::middleware('auth')->group(function () {

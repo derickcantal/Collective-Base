@@ -12,14 +12,14 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         
         <!-- Scripts -->
+        <script src={{ asset("build/assets/flowbite/dist/flowbite.min.js") }}"></script>
 
-        <link rel="stylesheet" href="{{ asset("build/assets/app-91694f47.css") }}">
-        <script src="{{ asset("build/assets/app-ba89b203.js") }}"></script>
+        <link rel="stylesheet" href="{{ asset("build/assets/app-be73590f.css") }}" type='text/css'>
+        <script src="{{ asset("build/assets/app-73b80cb8.js") }}"></script>
         
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
             <div>
                 <a href="/">

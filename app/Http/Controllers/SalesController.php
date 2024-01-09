@@ -29,41 +29,72 @@ class SalesController extends Controller
     }
     
     public function storedata($request){
-        $path = Storage::disk('public')->put('sales',$request->file('salesavatar'));
+        if(empty($request->snotes)){
+            $path = Storage::disk('public')->put('sales',$request->file('salesavatar'));
             
-        $sales = Sales::create([
-            'salesavatar' => $path,
-            'salesname' => 'Null',
-            'cabid' => 1,
-            'cabinetname' => $request->cabinetname,
-            'productname' => $request->productname,
-            'qty' => $request->qty,
-            'origprice' => 0,
-            'srp' => $request->srp,
-            'total' => $request->qty * $request->srp,
-            'grandtotal' => 0,
-            'userid' => auth()->user()->userid,
-            'username' => auth()->user()->username,
-            'accesstype' => auth()->user()->accesstype,
-            'branchid' => '1',
-            'branchname' => auth()->user()->branchname,
-            'collected_status' => 'Pending',
-            'returned' => 'N',
-            'snotes' => $request->snotes,
-            'posted' => 'N',
-            'mod' => 0,
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'status' => 'Unposted',
-        ]);
+            $sales = Sales::create([
+                'salesavatar' => $path,
+                'salesname' => 'Null',
+                'cabid' => 1,
+                'cabinetname' => $request->cabinetname,
+                'productname' => $request->productname,
+                'qty' => $request->qty,
+                'origprice' => 0,
+                'srp' => $request->srp,
+                'total' => $request->qty * $request->srp,
+                'grandtotal' => 0,
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'accesstype' => auth()->user()->accesstype,
+                'branchid' => '1',
+                'branchname' => auth()->user()->branchname,
+                'collected_status' => 'Pending',
+                'returned' => 'N',
+                'snotes' => 'Null',
+                'posted' => 'N',
+                'mod' => 0,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'status' => 'Unposted',
+            ]);
+        }else{
+            $path = Storage::disk('public')->put('sales',$request->file('salesavatar'));
+            
+            $sales = Sales::create([
+                'salesavatar' => $path,
+                'salesname' => 'Null',
+                'cabid' => 1,
+                'cabinetname' => $request->cabinetname,
+                'productname' => $request->productname,
+                'qty' => $request->qty,
+                'origprice' => 0,
+                'srp' => $request->srp,
+                'total' => $request->qty * $request->srp,
+                'grandtotal' => 0,
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'accesstype' => auth()->user()->accesstype,
+                'branchid' => '1',
+                'branchname' => auth()->user()->branchname,
+                'collected_status' => 'Pending',
+                'returned' => 'N',
+                'snotes' => $request->snotes,
+                'posted' => 'N',
+                'mod' => 0,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'status' => 'Unposted',
+            ]);
+        }
+        
     
         if ($sales) {
             //query successful
             return redirect()->route('sales.index')
-                        ->with('success','User created successfully.');
+                        ->with('success','Sales created successfully.');
         }else{
             return redirect()->route('sales.index')
-                        ->with('failed','User creation failed');
+                        ->with('failed','Sales creation failed');
         }  
     }
     

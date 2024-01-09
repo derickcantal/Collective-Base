@@ -132,7 +132,7 @@
                                             <!-- rpnotes -->
                                             <div class="form-group mt-4">
                                                 <x-input-label for="snotes" :value="__('Remarks')" />
-                                                <x-text-input id="snotes" class="block mt-1 w-full" type="text" name="snotes" :value="old('snotes')" required autofocus autocomplete="off" />
+                                                <x-text-input id="snotes" class="block mt-1 w-full" type="text" name="snotes" :value="old('snotes')" autofocus autocomplete="off" />
                                                 <x-input-error :messages="$errors->get('snotes')" class="mt-2" />
                                             </div>
                                         </div>
