@@ -20,6 +20,7 @@ class cabinet extends Model
         'email',
         'created_by',
         'updated_by',
+        'timerecorded',
         'posted',
         'mod',
         'status',

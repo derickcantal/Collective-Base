@@ -11,23 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attendance', function (Blueprint $table) {
-            $table->increments('attid');
-            $table->integer('userid');
-            $table->string('username');
-            $table->string('avatarproof');
-            $table->string('firstname');
-            $table->string('lastname');
+        Schema::create('sales_eod', function (Blueprint $table) {
+            $table->increments('seodid');
             $table->integer('branchid');
             $table->string('branchname');
-            $table->string('attnotes');
-            $table->timestamps();
+            $table->decimal('totalsales', $precision = 8, $scale = 2);
+            $table->decimal('rentalpayments', $precision = 8, $scale = 2);
+            $table->decimal('requestpayments', $precision = 8, $scale = 2);
+            $table->decimal('otherexpenses', $precision = 8, $scale = 2);
+            $table->decimal('totalcash', $precision = 8, $scale = 2);
+            $table->string('notes');
             $table->string('created_by');
             $table->string('updated_by');
             $table->string('timerecorded');
             $table->string('posted');
-            $table->integer('mod');
-            $table->string('status');
+            $table->timestamps();
         });
     }
 
@@ -36,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attendance');
+        Schema::dropIfExists('sales_eod');
     }
 };

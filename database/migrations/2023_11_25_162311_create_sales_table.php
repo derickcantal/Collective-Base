@@ -36,6 +36,7 @@ return new class extends Migration
             $table->integer('mod');
             $table->string('created_by');
             $table->string('updated_by');
+            $table->string('timerecorded');
             $table->string('status');
         });
     }

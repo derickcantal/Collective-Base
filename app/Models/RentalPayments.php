@@ -11,6 +11,7 @@ class RentalPayments extends Model
     use HasFactory;
 
     protected $table = 'rental_payments';  
+    protected $primaryKey = 'rpid';
 
     protected $fillable = [
         'userid',
@@ -29,10 +30,10 @@ class RentalPayments extends Model
         'avatarproof',
         'created_by',
         'updated_by',
+        'timerecorded',
         'posted',
         'mod',
         'status',
     ];
 
-    protected $primaryKey = 'rpid';
 }

@@ -11,6 +11,7 @@ use App\Models\history_Sales;
 use App\Models\history_Sales_Requests;
 use App\Models\history_attendance;
 use App\Models\history_Rental_Payment;
+use \Carbon\Carbon;
 
 class ReportsController extends Controller
 {

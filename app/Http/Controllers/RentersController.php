@@ -11,6 +11,7 @@ use App\Models\cabinet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use \Carbon\Carbon;
 
 class RentersController extends Controller
 {
@@ -25,12 +26,8 @@ class RentersController extends Controller
     }
     
     public function storedata(Request $request){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
         $br = branch::where('branchname',$request->branchname)->first();
-
-        $cabn = cabinet::where('cabinetname',$request->cabinetname)
-        ->where(function(Builder $builder) use($request){
-            $builder->where('branchname',$request->branchname);
-        })->first();
 
         $renter = Renters::create([
             'avatar' => 'avatars/avatar-default.jpg',
@@ -43,22 +40,15 @@ class RentersController extends Controller
             'birthdate' => $request->birthdate,
             'branchid' => $br->branchid,
             'branchname' => $br->branchname,
-            'cabid' => $cabn->cabid,
-            'cabinetname' => $cabn->cabinetname,
+            'cabid' => 0,
+            'cabinetname' => 'Null',
             'accesstype' => 'Renters',
             'created_by' => auth()->user()->email,
             'updated_by' => 'Null',
+            'timerecorded' => $timenow,
             'mod' => 0,
             'status' => 'Active',
         ]);
-        
-        $rent = Renters::where('email',$request->email)->first();
-        
-        $cabu = cabinet::where('cabid',$cabn->cabid)
-                    ->update([
-                        'userid' => $rent->userid,
-                        'email' => $request->email,
-                    ]);
         
         if ($renter) {
             //query successful
@@ -73,6 +63,8 @@ class RentersController extends Controller
     public function updatedata($request,$renter){
         $mod = 0;
         $mod = $renter->mod;
+        $br = branch::where('branchname',$request->branchname)->first();
+
         if($request->password == null){
             $renter =Renters::where('userid',$renter->userid)->update([
                 'username' => $request->username,
@@ -81,10 +73,8 @@ class RentersController extends Controller
                 'middlename' => $request->middlename,
                 'lastname' => $request->lastname,
                 'birthdate' => $request->birthdate,
-                'branchid' => '1',
-                'branchname' => $request->branchname,
-                'cabid' => '1',
-                'cabinetname' => $request->cabinetname,
+                'branchid' => $br->branchid,
+                'branchname' => $br->branchname,
                 'accesstype' => $request->accesstype,
                 'updated_by' => auth()->user()->email,
                 'mod' => $mod + 1,
@@ -99,10 +89,8 @@ class RentersController extends Controller
                 'middlename' => $request->middlename,
                 'lastname' => $request->lastname,
                 'birthdate' => $request->birthdate,
-                'branchid' => '1',
-                'branchname' => $request->branchname,
-                'cabid' => '1',
-                'cabinetname' => $request->cabinetname,
+                'branchid' => $br->branchid,
+                'branchname' => $br->branchname,
                 'accesstype' => $request->accesstype,
                 'updated_by' => auth()->user()->email,
                 'mod' => $mod + 1,
@@ -171,16 +159,16 @@ class RentersController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->loaddata();
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->loaddata();
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
        
     }
@@ -212,10 +200,9 @@ class RentersController extends Controller
     public function create()
     {
         
-        $cabinet = cabinet::where('branchname',$request->branchname)
-                        ->orderBy('cabinetname', 'asc')->get();
+        $branch = branch::orderBy('branchname', 'asc')->get();
 
-        return view('renters.create',['cabinet' => $cabinet]);
+        return view('renters.create',['branch' => $branch]);
     }
 
     /**
@@ -225,16 +212,16 @@ class RentersController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->storedata($request);         
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->storedata($request); 
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 
@@ -265,9 +252,9 @@ class RentersController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->updatedata($request,$renter);
             }elseif(auth()->user()->accesstype =='Administrator'){
@@ -275,7 +262,7 @@ class RentersController extends Controller
             }
             
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 
@@ -286,16 +273,16 @@ class RentersController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->destroydata($renter);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->destroydata($renter);
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Requests\CreateBranchRequest;
 use App\Models\branch;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use \Carbon\Carbon;
 
 class BranchController extends Controller
 {
@@ -20,6 +21,7 @@ class BranchController extends Controller
     }
     
     public function storedata($request){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
         $branches = branch::create([
             'branchname' => $request->branchname,
             'branchaddress' => $request->branchaddress,
@@ -28,6 +30,7 @@ class BranchController extends Controller
             'cabinetcount' => $request->cabinetcount,
             'created_by' => auth()->user()->email,
             'updated_by' => 'Null',
+            'timerecorded' => $timenow,
             'posted' => 'N',
             'mod' => 0,
             'status' => 'Active',
@@ -94,16 +97,16 @@ class BranchController extends Controller
     {   
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->loaddata();
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->loaddata();
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
         
     }
@@ -123,16 +126,16 @@ class BranchController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->storedata($request);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->storedata($request);
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
         
     }
@@ -161,16 +164,16 @@ class BranchController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->updatedata($request, $branch);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->updatedata($request, $branch);
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
         
         
@@ -192,7 +195,7 @@ class BranchController extends Controller
                 
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 }

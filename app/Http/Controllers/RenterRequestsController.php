@@ -12,6 +12,7 @@ use App\Models\Sales;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
+use \Carbon\Carbon;
 
 
 class RenterRequestsController extends Controller
@@ -27,6 +28,7 @@ class RenterRequestsController extends Controller
     }
     
     public function storedata($request){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
         $rent = Renters::where('username',$request->username)->first();
 
         $br = branch::where('branchname',$request->branchname)->first();
@@ -49,6 +51,8 @@ class RenterRequestsController extends Controller
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'created_by' => Auth()->user()->email,
+            'updated_by' => 'Null',
+            'timerecorded' => $timenow,
             'mod' => 0,
             'posted' => 'N',
             'status' => 'Pending',
@@ -165,16 +169,16 @@ class RenterRequestsController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->loaddata();
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->loaddata();
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
         
     }
@@ -188,9 +192,9 @@ class RenterRequestsController extends Controller
         $branch = branch::all();
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return view('rentersrequests.create',['cabinet' => $cabinet])
                                         ->with(['branch' => $branch]);
@@ -199,7 +203,7 @@ class RenterRequestsController extends Controller
                                         ->with(['branch' => $branch]);
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 
@@ -210,16 +214,16 @@ class RenterRequestsController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->storedata($request);         
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->storedata($request); 
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 
@@ -249,7 +253,7 @@ class RenterRequestsController extends Controller
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->updatedata($request,$id);
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->updatedata($request,$id);
             }elseif(auth()->user()->accesstype =='Administrator'){
@@ -257,7 +261,7 @@ class RenterRequestsController extends Controller
             }
             
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 
@@ -268,16 +272,16 @@ class RenterRequestsController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->destroydata($request,$RenterRequests);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->destroydata($request, $RenterRequests);
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 }

@@ -48,7 +48,7 @@
                                     <!-- Modal body -->
                                     <form action="{{ route('saleseod.store') }}" method="POST" class="p-4 md:p-5">
                                     @csrf 
-                                        <div class="grid gap-4 mb-4 grid-cols-2">
+                                        <div class="grid gap-4 mb-4 grid-cols-2" x-data="{ totalsales: 0, rentalpay: 0,  requests: 0, expenses: 0, totalcash: 0}" x-effect="totalcash = (totalsales + rentalpay) - (requests + expenses)">
                                             <div class="col-span-2 sm:col-span-1">
                                                 <!-- branchname -->
                                                 <div class="form-group mt-4">
@@ -63,25 +63,59 @@
                                                 <!-- productname -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="totalsales" :value="__('TOTAL SALES')" />
-                                                    <x-text-input id="totalsales" class="block mt-1 w-full" type="number" name="totalsales" value="{{ $totalsales }}" required autofocus autocomplete="off" readonly />
+                                                    <x-text-input id="totalsales" x-model.number="totalsales" class="block mt-1 w-full" type="number" name="totalsales" value="{{ $totalsales }}" required autofocus autocomplete="off" readonly />
                                                     <x-input-error :messages="$errors->get('totalsales')" class="mt-2" />
                                                 </div>
                                             </div>
-                                                <!-- rpnotes -->
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <!-- productname -->
                                                 <div class="form-group mt-4">
-                                                    <x-input-label for="snotes" :value="__('Remarks')" />
-                                                    <x-text-input id="snotes" class="block mt-1 w-full" type="text" name="snotes" :value="old('snotes')" autofocus autocomplete="off" />
-                                                    <x-input-error :messages="$errors->get('snotes')" class="mt-2" />
+                                                    <x-input-label for="rentalpayments" :value="__('TOTAL RENTAL PAYMENTS')" />
+                                                    <x-text-input id="rentalpayments" x-model.number="rentalpay" class="block mt-1 w-full" type="number" name="rentalpayments" value="{{ $totalsales }}" required autofocus autocomplete="off" readonly />
+                                                    <x-input-error :messages="$errors->get('rentalpayments')" class="mt-2" />
                                                 </div>
                                             </div>
-                                            <div class="col-span-2 sm:col-span-1 ">
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <!-- productname -->
+                                                <div class="form-group mt-4">
+                                                    <x-input-label for="requestpayments" :value="__('TOTAL REQUESTS PAYMENTS')" />
+                                                    <x-text-input id="requestpayments" x-model.number="requests" class="block mt-1 w-full" type="number" name="requestpayments" value="{{ $totalsales }}" required autofocus autocomplete="off" readonly />
+                                                    <x-input-error :messages="$errors->get('requestpayments')" class="mt-2" />
+                                                </div>
+                                            </div>
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <!-- productname -->
+                                                <div class="form-group mt-4">
+                                                    <x-input-label for="otherexpenses" :value="__('EXPENSES')" />
+                                                    <x-text-input id="otherexpenses" x-model.number="expenses" class="block mt-1 w-full" type="number" name="otherexpenses" value="{{ $totalsales }}" required autofocus autocomplete="off"  />
+                                                    <x-input-error :messages="$errors->get('otherexpenses')" class="mt-2" />
+                                                </div>
+                                            </div>
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <!-- productname -->
+                                                <div class="form-group mt-4">
+                                                    <x-input-label for="totalcash" :value="__('TOTAL CASH')" />
+                                                    <x-text-input id="totalcash" x-model.number="totalcash" class="block mt-1 w-full" type="number" name="totalcash" value="{{ $totalsales }}" required autofocus autocomplete="off"  readonly/>
+                                                    <x-input-error :messages="$errors->get('totalcash')" class="mt-2" />
+                                                </div>
+                                            </div>
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <!-- rpnotes -->
+                                                <div class="form-group mt-4">
+                                                    <x-input-label for="notes" :value="__('Remarks')" />
+                                                    <x-text-input id="notes" class="block mt-1 w-full" type="text" name="notes" :value="old('snotes')" autofocus autocomplete="off" />
+                                                    <x-input-error :messages="$errors->get('notes')" class="mt-2" />
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="col-span-2 sm:col-span-1 ">
                                                 <div class="flex items-center justify-between col-span-2 sm:col-span-1">
                                                     <x-danger-button class="ms-4">
                                                         <a class="btn btn-primary" > Save</a>
                                                     </x-danger-button>
                                                 </div>
                                             </div>
-                                        </div>
                                     </form>
                                 </div>
 

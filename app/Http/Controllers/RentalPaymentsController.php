@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
+use \Carbon\Carbon;
 
 class RentalPaymentsController extends Controller
 {
@@ -25,6 +26,7 @@ class RentalPaymentsController extends Controller
     }
 
     public function storedata($request){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
         $rent = Renters::where('username',$request->username)->first();
 
         $br = branch::where('branchname',$request->branchname)->first();
@@ -58,6 +60,7 @@ class RentalPaymentsController extends Controller
                 'lastname' => $request->lastname,
                 'created_by' => Auth()->user()->email,
                 'updated_by' => Auth()->user()->email,
+                'timerecorded' => $timenow,
                 'posted' => 'N',
                 'mod' => 0,
                 'status' => 'Unpaid',
@@ -214,16 +217,16 @@ class RentalPaymentsController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->loaddata();
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->loaddata();
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
     
@@ -243,16 +246,16 @@ class RentalPaymentsController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->storedata($request);         
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->storedata($request); 
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
         
     }
@@ -286,9 +289,9 @@ class RentalPaymentsController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->updatedata($request,$rentalPayments);
             }elseif(auth()->user()->accesstype =='Administrator'){
@@ -296,7 +299,7 @@ class RentalPaymentsController extends Controller
             }
             
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
         
     }
@@ -308,16 +311,16 @@ class RentalPaymentsController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->destroydata($request,$rentalPayments);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->destroydata($request,$rentalPayments);
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
            
         

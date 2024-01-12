@@ -7,10 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use App\Models\cabinet;
+use \Carbon\Carbon;
 
 class SalesController extends Controller
 {
-
     public function loaddata(){
         $sales = Sales::orderBy('status','asc')
         ->paginate(5);
@@ -29,12 +29,17 @@ class SalesController extends Controller
     }
     
     public function storedata($request){
+        
+        $validated = $request->validate([
+            'salesavatar'=>'required|mimes:jpeg,png,jpg,gif,svg',
+        ]);
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
         if(empty($request->snotes)){
             $path = Storage::disk('public')->put('sales',$request->file('salesavatar'));
             
             $sales = Sales::create([
                 'salesavatar' => $path,
-                'salesname' => 'Null',
+                'salesname' => $timenow,
                 'cabid' => 1,
                 'cabinetname' => $request->cabinetname,
                 'productname' => $request->productname,
@@ -55,6 +60,7 @@ class SalesController extends Controller
                 'mod' => 0,
                 'created_by' => auth()->user()->email,
                 'updated_by' => 'Null',
+                'timerecorded' => $timenow,
                 'status' => 'Unposted',
             ]);
         }else{
@@ -62,7 +68,7 @@ class SalesController extends Controller
             
             $sales = Sales::create([
                 'salesavatar' => $path,
-                'salesname' => 'Null',
+                'salesname' => $timenow,
                 'cabid' => 1,
                 'cabinetname' => $request->cabinetname,
                 'productname' => $request->productname,
@@ -99,6 +105,8 @@ class SalesController extends Controller
     }
     
     public function updatedata($request,$sales){
+
+
         $sales = Sales::findOrFail($sales);
         $mod = 0;
         $mod = $sales->mod;
@@ -119,7 +127,6 @@ class SalesController extends Controller
 
             Sales::where('salesid', $sales->salesid)->update([
                 'salesavatar' => $path,
-                'salesname' => 'Null',
                 'cabid' => 1,
                 'cabinetname' => $request->cabinetname,
                 'productname' => $request->productname,
@@ -159,25 +166,63 @@ class SalesController extends Controller
         return view('dashboard.index',['sales' => $sales]);
     }
 
-    public function search(Request $request)
+    public function searchall($request)
     {
         $sales = Sales::query()
-                    ->where(function(Builder $builder) use($request){
-                        $builder
-                                ->where('cabinetname','like',"%{$request->search}%")
-                                ->orWhere('productname','like',"%{$request->search}%")
-                                ->orWhere('qty','like',"%{$request->search}%")
-                                ->orWhere('srp','like',"%{$request->search}%")
-                                ->orWhere('total','like',"%{$request->search}%")
-                                ->orWhere('username','like',"%{$request->search}%")
-                                ->orWhere('branchname','like',"%{$request->search}%")
-                                ->orWhere('snotes','like',"%{$request->search}%") 
-                                ->orderBy('status','asc');
-                    })
-                    ->paginate(5);
+        ->where(function(Builder $builder) use($request){
+            $builder
+                    ->where('cabinetname','like',"%{$request->search}%")
+                    ->orWhere('productname','like',"%{$request->search}%")
+                    ->orWhere('qty','like',"%{$request->search}%")
+                    ->orWhere('srp','like',"%{$request->search}%")
+                    ->orWhere('total','like',"%{$request->search}%")
+                    ->orWhere('username','like',"%{$request->search}%")
+                    ->orWhere('branchname','like',"%{$request->search}%")
+                    ->orWhere('snotes','like',"%{$request->search}%") 
+                    ->orderBy('status','asc');
+        })
+        ->paginate(5);
 
-                    return view('sales.index',compact('sales'))
+        return view('sales.index',compact('sales'))
+                ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+    
+    public function searchbybranch($request)
+    {
+        $sales = Sales::where('branchname',auth()->user()->branchname)
+        ->where(function(Builder $builder) use($request){
+            $builder
+                    ->where('cabinetname','like',"%{$request->search}%")
+                    ->orWhere('productname','like',"%{$request->search}%")
+                    ->orWhere('qty','like',"%{$request->search}%")
+                    ->orWhere('srp','like',"%{$request->search}%")
+                    ->orWhere('total','like',"%{$request->search}%")
+                    ->orWhere('username','like',"%{$request->search}%")
+                    ->orWhere('branchname','like',"%{$request->search}%")
+                    ->orWhere('snotes','like',"%{$request->search}%") 
+                    ->orderBy('status','asc');
+        })
+        ->paginate(5);
+
+        return view('sales.index',compact('sales'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+
+    public function search(Request $request)
+    {
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return $this->searchbybranch($request);
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->searchall($request);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->searchall($request);
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     } 
 
      /**
@@ -189,14 +234,14 @@ class SalesController extends Controller
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->loaddata_cashier();
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->loaddata();
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->loaddata();
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 
@@ -219,14 +264,14 @@ class SalesController extends Controller
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->storedata($request); 
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->storedata($request);         
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->storedata($request); 
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 
@@ -257,7 +302,7 @@ class SalesController extends Controller
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->updatedata($request, $sales);
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->updatedata($request, $sales);
             }elseif(auth()->user()->accesstype =='Administrator'){
@@ -265,7 +310,7 @@ class SalesController extends Controller
             }
             
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 
@@ -278,14 +323,14 @@ class SalesController extends Controller
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->destroydata($sales);
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->destroydata($sales);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->destroydata($sales);
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 }

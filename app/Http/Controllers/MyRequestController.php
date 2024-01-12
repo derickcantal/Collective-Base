@@ -9,6 +9,7 @@ use App\Models\Renters;
 use App\Models\branch;
 use App\Models\cabinet;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use \Carbon\Carbon;
 
 class MyRequestController extends Controller
 {
@@ -24,6 +25,7 @@ class MyRequestController extends Controller
     }
     
     public function storedata($request){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
         $rent = Renters::where('username',auth()->user()->username)->first();
 
         $br = branch::where('branchname',auth()->user()->branchname)->first();
@@ -47,6 +49,7 @@ class MyRequestController extends Controller
             'lastname' => $request->lastname,
             'created_by' => Auth()->user()->email,
             'updated_by' => 'Null',
+            'timerecorded' => $timenow,
             'mod' => 0,
             'posted' => 'N',
             'status' => 'Pending',
@@ -76,16 +79,16 @@ class MyRequestController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
                 return $this->loaddata();
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 
@@ -111,16 +114,16 @@ class MyRequestController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
                 return $this->storedata($request);
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 

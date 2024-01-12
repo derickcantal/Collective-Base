@@ -8,14 +8,15 @@ use App\Models\branch;
 use App\Models\Renters;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use \Carbon\Carbon;
 
 class CabinetController extends Controller
 {
     public function loaddata(){
         $cabinets = cabinet::query()
                     ->orderBy('status','asc')
+                    ->orderBy('cabid','asc')
                     ->orderBy('branchname','asc')
-                    ->orderBy('cabinetname','asc')
                     ->paginate(5);
     
         return view('cabinet.index',compact('cabinets'))
@@ -23,8 +24,8 @@ class CabinetController extends Controller
     }
     
     public function storedata($request){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
         $cabcount = cabinet::where('branchname',$request->branchname)->count();
-        
 
         $br = branch::where('branchname',$request->branchname)->first();
 
@@ -44,6 +45,7 @@ class CabinetController extends Controller
                     'email' => 'Vacant',
                     'created_by' => auth()->user()->email,
                     'updated_by' => 'Null',
+                    'timerecorded' => $timenow,
                     'posted' => 'N',
                     'mod' => 0,
                     'status' => 'Active',
@@ -133,16 +135,16 @@ class CabinetController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->loaddata();
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->loaddata();
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 
@@ -169,16 +171,16 @@ class CabinetController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->storedata($request);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->storedata($request);
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
             
 
@@ -207,16 +209,16 @@ class CabinetController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->updatedata($request, $cabinet);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->updatedata($request, $cabinet);
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
         
     }
@@ -228,16 +230,16 @@ class CabinetController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->destroydata($request, $cabinet);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->destroydata($request, $cabinet);
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 }

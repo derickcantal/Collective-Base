@@ -11,9 +11,11 @@ class attendance extends Model
     use HasFactory;
 
     protected $table = 'attendance';
+    protected $primaryKey = 'attid';
     
     protected $fillable = [
         'userid',
+        'avatarproof',
         'username',
         'firstname',
         'lastname',
@@ -22,11 +24,11 @@ class attendance extends Model
         'attnotes',
         'created_by',
         'updated_by',
+        'timerecorded',
         'posted',
         'mod',
         'status',
     ];
 
-    protected $primaryKey = 'attid';
 
 }

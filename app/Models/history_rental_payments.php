@@ -11,6 +11,7 @@ class history_rental_payments extends Model
     use HasFactory;
 
     protected $table = 'history_rental_payments';
+    protected $primaryKey = 'rpid';
 
     protected $fillable = [
         'userid',
@@ -26,10 +27,10 @@ class history_rental_payments extends Model
         'avatarproof',
         'created_by',
         'updated_by',
+        'timerecorded',
         'posted',
         'mod',
         'status',
     ];
 
-    protected $primaryKey = 'rpid';
 }

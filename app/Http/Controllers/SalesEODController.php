@@ -4,16 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Sales;
+use App\Models\sales_eod;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use \Carbon\Carbon;
 
 class SalesEODController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-
+    public function loaddata(){
         $sales = Sales::where('branchname',auth()->user()->branchname)
                     ->where(function(Builder $builder){
                         $builder->where('posted', "N");
@@ -24,21 +21,10 @@ class SalesEODController extends Controller
         return view('saleseod.index')
         ->with('totalsales',$totalsales);
     }
+    
+    public function storedata($request){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        
         $sales = Sales::where('branchname',auth()->user()->branchname)
         ->where(function(Builder $builder){
             $builder->where('posted', "N");
@@ -58,10 +44,117 @@ class SalesEODController extends Controller
                 $newRecord->save();
                 $oldRecord->delete();
             });
+            
+        if($request->filled('notes')){
+            $saleseod = sales_eod::create([
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'totalsales' => $request->totalsales,
+                'rentalpayments' => $request->rentalpayments,
+                'requestpayments' => $request->requestpayments,
+                'otherexpenses' => $request->otherexpenses,
+                'totalcash' => $request->totalcash,
+                'notes' => $request->notes,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'timerecorded' => $timenow,
+                'posted' => 'N',
+            ]); 
 
+            
+        }else{
+            $saleseod = sales_eod::create([
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'totalsales' => $request->totalsales,
+                'rentalpayments' => $request->rentalpayments,
+                'requestpayments' => $request->requestpayments,
+                'otherexpenses' => $request->otherexpenses,
+                'totalcash' => $request->totalcash,
+                'notes' => 'Null',
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'timerecorded' => $timenow,
+                'posted' => 'N',
+            ]); 
 
-        return redirect()->route('saleseod.index')
+            
+        } 
+
+        if($saleseod){
+            return redirect()->route('saleseod.index')
                             ->with('success','EOD Succesful');
+        }
+       
+        
+    }
+    
+    public function updatedata(){
+    
+    }
+    
+    public function destroydata(){
+    
+    }
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return $this->loaddata();  
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->loaddata();
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+        
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return redirect()->route('dashboard.index');
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                $this->storedata($request);
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                $this->storedata($request);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                $this->storedata($request);
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
 
     /**
@@ -69,7 +162,19 @@ class SalesEODController extends Controller
      */
     public function show(string $id)
     {
-        //
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return redirect()->route('dashboard.index');
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
 
     /**
@@ -77,7 +182,19 @@ class SalesEODController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return redirect()->route('dashboard.index');
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
 
     /**
@@ -85,7 +202,19 @@ class SalesEODController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return redirect()->route('dashboard.index');
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
 
     /**
@@ -93,6 +222,18 @@ class SalesEODController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return redirect()->route('dashboard.index');
+            }
+        }else{
+            return redirect()->route('dashboard.index');;
+        }
     }
 }

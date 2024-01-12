@@ -11,6 +11,7 @@ class SalesRequests extends Model
     use HasFactory;
 
         protected $table = 'sales_requests';  
+        protected $primaryKey = 'salesrid';
 
         protected $fillable = [
             'branchid',
@@ -26,10 +27,10 @@ class SalesRequests extends Model
             'lastname',
             'created_by',
             'updated_by',
+            'timerecorded',
             'posted',
             'mod',
             'status',
         ];
     
-        protected $primaryKey = 'salesrid';
 }

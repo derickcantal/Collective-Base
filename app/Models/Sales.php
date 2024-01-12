@@ -11,6 +11,7 @@ class Sales extends Model
     use HasFactory;
 
     protected $table = 'sales';  
+    protected $primaryKey = 'salesid';
 
     /**
      * The attributes that are mass assignable.
@@ -38,10 +39,10 @@ class Sales extends Model
         'snotes',
         'created_by',
         'updated_by',
+        'timerecorded',
         'posted',
         'mod',
         'status',
     ];
 
-    protected $primaryKey = 'salesid';
 }

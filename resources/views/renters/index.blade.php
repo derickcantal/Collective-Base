@@ -16,7 +16,7 @@
                                         <div class="col-span-2 sm:col-span-1">
                                             <div>
                                                 <x-primary-button class="ms-4">
-                                                    <a class="btn btn-primary" href="{{ route('renters.selectbranch') }}"> Create New Renter</a>
+                                                    <a class="btn btn-primary" href="{{ route('renters.create') }}"> Create New Renter</a>
                                                 </x-primary-button>
                                             </div>
                                         </div>
@@ -65,7 +65,7 @@
                                                     Profile
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
-                                                    Cabinet No.
+                                                    Cabinet Owned
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
                                                     Branch
@@ -95,7 +95,7 @@
                                                         <x-input-label for="email" :value="$renters->email"/>
                                                 </th>
                                                 <td class="px-6 py-4">
-                                                    <x-input-label for="cabinetname" :value="$renters->cabinetname"/>
+                                                    <x-input-label for="cabid" :value="$renters->cabid"/>
                                                 </td>
                                                 <td class="px-6 py-4">
                                                     <x-input-label for="branchname" :value="$renters->branchname"/>

@@ -13,6 +13,8 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'users';  
+    protected $primaryKey = 'userid';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -34,6 +36,7 @@ class User extends Authenticatable
         'accesstype',
         'created_by',
         'updated_by',
+        'timerecorded',
         'mod',
         'status',
     ];
@@ -59,5 +62,4 @@ class User extends Authenticatable
         'birthdate' => 'date',
     ];
 
-    protected $primaryKey = 'userid';
 }

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use \Carbon\Carbon;
 
 class RegisteredUserController extends Controller
 {
@@ -31,7 +32,7 @@ class RegisteredUserController extends Controller
      */
     public function store(UserTableRequest $request): RedirectResponse
     {
-
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
         $user = User::create([
             'avatar' => 'avatars/avatar-default.jpg',
             'username' => $request->username,
@@ -47,7 +48,8 @@ class RegisteredUserController extends Controller
             'cabinetname' => rand(0, 120),
             'accesstype' => $request->accesstype,
             'created_by' =>$request->email,
-            'updated_by' => 'default', 
+            'updated_by' => 'Null', 
+            'timerecorded' => $timenow,
             'mod' => 0,
             'status' => 'Active',
         ]);

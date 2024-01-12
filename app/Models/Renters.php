@@ -12,6 +12,8 @@ class Renters extends Model
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'users';  
+    protected $primaryKey = 'userid';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -33,6 +35,7 @@ class Renters extends Model
         'accesstype',
         'created_by',
         'updated_by',
+        'timerecorded',
         'mod',
         'status',
     ];
@@ -58,5 +61,4 @@ class Renters extends Model
         'birthdate' => 'date',
     ];
 
-    protected $primaryKey = 'userid';
 }

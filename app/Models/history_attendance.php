@@ -11,6 +11,7 @@ class history_attendance extends Model
     use HasFactory;
 
     protected $table = 'history_attendance';
+    protected $primaryKey = 'attid';
 
     protected $fillable = [
         'userid',
@@ -22,10 +23,10 @@ class history_attendance extends Model
         'attnotes',
         'created_by',
         'updated_by',
+        'timerecorded',
         'posted',
         'mod',
         'status',
     ];
 
-    protected $primaryKey = 'attid';
 }

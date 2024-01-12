@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\RentalPayments;
 use App\Models\cabinet;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use \Carbon\Carbon;
 
 class MyRentalController extends Controller
 {
@@ -21,6 +22,7 @@ class MyRentalController extends Controller
     }
     
     public function storedata(){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
     
     }
     
@@ -38,16 +40,16 @@ class MyRentalController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
                 return $this->loaddata();
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 

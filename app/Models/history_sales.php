@@ -10,7 +10,8 @@ class history_sales extends Model
 {
     use HasFactory;
 
-    protected $table = 'history_sales';      
+    protected $table = 'history_sales';  
+    protected $primaryKey = 'salesid';
 
     protected $fillable = [
         'salesname',
@@ -32,10 +33,10 @@ class history_sales extends Model
         'snotes',
         'created_by',
         'updated_by',
+        'timerecorded',
         'posted',
         'mod',
         'status',
     ];
 
-    protected $primaryKey = 'salesid';
 }

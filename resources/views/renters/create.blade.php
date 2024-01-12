@@ -131,24 +131,15 @@
                                                 <!-- branchname -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="branchname" :value="__('Branch Name')" />
-                                                    <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname',$branch->branchname)" required autofocus autocomplete="off" readonly/>
-                                                    
+                                                    <select id="branchname" name="branchname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('branchname')">
+                                                        @foreach($branch as $branches)    
+                                                            <option value = "{{ $branches->branchname}}" >{{ $branches->branchname}}</option>
+                                                        @endforeach
+                                                    </select>
                                                     <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
                                                 </div>
                                             </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- cabinetnumber -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="cabinetname" :value="__('Cabinet No.')" />
-                                                    <!-- <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" :value="old('cabinetname')" required autofocus autocomplete="off" /> -->
-                                                    <select id="cabinetname" name="cabinetname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('cabinetname')">
-                                                        @foreach($cabinet as $cabinets)    
-                                                            <option value = "{{ $cabinets->cabinetname}}" >{{ $cabinets->cabinetname}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
-                                                </div>
-                                            </div>
+                                            
                                             <div class="col-span-2 sm:col-span-1">
                                                 <!-- accesstype -->
                                                 <div class="form-group mt-4">

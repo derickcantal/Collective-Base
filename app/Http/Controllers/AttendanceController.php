@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use \Carbon\Carbon;
 
 
 class AttendanceController extends Controller
@@ -31,6 +32,7 @@ class AttendanceController extends Controller
     }
     
     public function storedata($request){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
         $users = User::findOrFail($request->userid);
 
         $attendance = attendance::create([
@@ -44,6 +46,7 @@ class AttendanceController extends Controller
             'attnotes' => $request->attnotes,
             'created_by' => auth()->user()->email,
             'updated_by' => 'Null',
+            'timerecorded' => $timenow,
             'posted' => 'N',
             'mod' => 0,
             'status' => 'Active',
@@ -67,6 +70,7 @@ class AttendanceController extends Controller
     
     }
 
+
     public function search(Request $request)
     {
         $attendance = attendance::where('branchname',auth()->user()->branchname)->where('status',"Active")
@@ -88,9 +92,9 @@ class AttendanceController extends Controller
 
     public function searchemp(Request $request)
     {
-        $users = User::where('branchname',auth()->user()->branchname)->where('status',"Active")
+        $users = User::where('branchname',auth()->user()->branchname)->where('accesstype',"Cashier")
                     ->where(function(Builder $builder) use($request){
-                        $builder
+                        $builder->where('status',"Active")
                                 ->where('username','like',"%{$request->searchemp}%")
                                 ->orWhere('firstname','like',"%{$request->searchemp}%")
                                 ->orWhere('lastname','like',"%{$request->searchemp}%")
@@ -163,14 +167,14 @@ class AttendanceController extends Controller
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->loaddata_cashier();
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->loaddata();
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->loaddata();
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 
@@ -191,14 +195,14 @@ class AttendanceController extends Controller
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->storedata($request);
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->storedata($request);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->storedata($request);
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
       
     }
@@ -220,14 +224,14 @@ class AttendanceController extends Controller
             if(auth()->user()->accesstype =='Cashier'){
                 return view('attendance.edit');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return view('attendance.edit');
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return view('attendance.edit');
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 
@@ -240,14 +244,14 @@ class AttendanceController extends Controller
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->updatedata($request,$attendance);
             }elseif(auth()->user()->accesstype =='Renters'){
-                return view('dashboard.index');
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->updatedata($request,$attendance);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->updatedata($request,$attendance);
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 
@@ -267,7 +271,7 @@ class AttendanceController extends Controller
                 
             }
         }else{
-            return view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
     }
 }
