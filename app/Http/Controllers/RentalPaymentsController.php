@@ -47,7 +47,7 @@ class RentalPaymentsController extends Controller
                 'branchid' => $br->branchid,
                 'branchname' => $request->branchname,
                 'cabid' => $cab->cabid,
-                'cabinetname' => $request->cabinetname,
+                'cabinetname' => $cab->cabinetname,
                 'rppaytype' => $request->rppaytype,
                 'rpamount' => $request->rpamount,
                 'rpmonth' => $request->rpmonth,

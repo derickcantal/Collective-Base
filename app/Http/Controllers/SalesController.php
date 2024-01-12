@@ -33,25 +33,30 @@ class SalesController extends Controller
         $validated = $request->validate([
             'salesavatar'=>'required|mimes:jpeg,png,jpg,gif,svg',
         ]);
+
+        $cabn = cabinet::where('cabinetname',$request->cabinetname)
+        ->where(function(Builder $builder) use($request){
+            $builder->where('branchname',$request->branchname);
+        })->first();
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
         if(empty($request->snotes)){
             $path = Storage::disk('public')->put('sales',$request->file('salesavatar'));
             
             $sales = Sales::create([
                 'salesavatar' => $path,
-                'salesname' => $timenow,
-                'cabid' => 1,
-                'cabinetname' => $request->cabinetname,
+                'salesname' => 'Null',
+                'cabid' => $cabn->cabid,
+                'cabinetname' => $cabn->cabinetname,
                 'productname' => $request->productname,
                 'qty' => $request->qty,
                 'origprice' => 0,
                 'srp' => $request->srp,
                 'total' => $request->qty * $request->srp,
                 'grandtotal' => 0,
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
+                'userid' => $cabn->userid,
+                'username' => $cabn->email,
                 'accesstype' => auth()->user()->accesstype,
-                'branchid' => '1',
+                'branchid' => $cabn->branchid,
                 'branchname' => auth()->user()->branchname,
                 'collected_status' => 'Pending',
                 'returned' => 'N',
@@ -69,16 +74,16 @@ class SalesController extends Controller
             $sales = Sales::create([
                 'salesavatar' => $path,
                 'salesname' => $timenow,
-                'cabid' => 1,
-                'cabinetname' => $request->cabinetname,
+                'cabid' => $cabn->cabid,
+                'cabinetname' => $cabn->cabinetname,
                 'productname' => $request->productname,
                 'qty' => $request->qty,
                 'origprice' => 0,
                 'srp' => $request->srp,
                 'total' => $request->qty * $request->srp,
                 'grandtotal' => 0,
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
+                'userid' => $cabn->userid,
+                'username' => $cabn->email,
                 'accesstype' => auth()->user()->accesstype,
                 'branchid' => '1',
                 'branchname' => auth()->user()->branchname,
@@ -89,6 +94,7 @@ class SalesController extends Controller
                 'mod' => 0,
                 'created_by' => auth()->user()->email,
                 'updated_by' => 'Null',
+                'timerecorded' => $timenow,
                 'status' => 'Unposted',
             ]);
         }
@@ -106,6 +112,10 @@ class SalesController extends Controller
     
     public function updatedata($request,$sales){
 
+        $cabn = cabinet::where('cabinetname',$request->cabinetname)
+        ->where(function(Builder $builder) use($request){
+            $builder->where('branchname',$request->branchname);
+        })->first();
 
         $sales = Sales::findOrFail($sales);
         $mod = 0;
@@ -127,16 +137,16 @@ class SalesController extends Controller
 
             Sales::where('salesid', $sales->salesid)->update([
                 'salesavatar' => $path,
-                'cabid' => 1,
-                'cabinetname' => $request->cabinetname,
+                'cabid' => $cabn->cabid,
+                'cabinetname' => $cabn->cabinetname,
                 'productname' => $request->productname,
                 'qty' => $request->qty,
                 'origprice' => 0,
                 'srp' => $request->srp,
                 'total' => $request->qty * $request->srp,
                 'grandtotal' => 0,
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
+                'userid' => $cabn->userid,
+                'username' => $cabn->email,
                 'accesstype' => auth()->user()->accesstype,
                 'branchid' => '1',
                 'branchname' => auth()->user()->branchname,
@@ -290,7 +300,9 @@ class SalesController extends Controller
     public function edit($sales)
     {
         $sales = Sales::findOrFail($sales);
-        return view('sales.edit',['sales' => $sales]);
+        $cabinet = cabinet::where('branchname',auth()->user()->branchname)->get();
+
+        return view('sales.edit',['sales' => $sales])->with(['cabinet' => $cabinet]);
     }
 
     /**

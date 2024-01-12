@@ -48,7 +48,7 @@
                                     <!-- Modal body -->
                                     <form action="{{ route('saleseod.store') }}" method="POST" class="p-4 md:p-5">
                                     @csrf 
-                                        <div class="grid gap-4 mb-4 grid-cols-2" x-data="{ totalsales: 0, rentalpay: 0,  requests: 0, expenses: 0, totalcash: 0}" x-effect="totalcash = (totalsales + rentalpay) - (requests + expenses)">
+                                        <div class="grid gap-4 mb-4 grid-cols-2" x-data="{ totalsales: {{ $totalsales }}, rentalpay: {{ $totalrentpay }},  requests: {{ $totalrequests }}, expenses: 0, totalcash: 0}" x-effect="totalcash = (totalsales + rentalpay) - (requests + expenses)">
                                             <div class="col-span-2 sm:col-span-1">
                                                 <!-- branchname -->
                                                 <div class="form-group mt-4">
