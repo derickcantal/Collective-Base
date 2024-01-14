@@ -32,7 +32,12 @@
 									<th scope="col" class="px-6 py-3">
 										Total
 									</th>
-									
+									<th scope="col" class="px-6 py-3">
+                                        Payment Proof
+									</th>
+									<th scope="col" class="px-6 py-3">
+										Payment Mode
+									</th>
 									<th scope="col" class="px-6 py-3">
 										Cashier
 									</th>
@@ -74,6 +79,17 @@
 									</td>
 									<td class="px-6 py-4">
 										<x-input-label for="total">{{ $sale->total }}</x-input-label>
+									</td>
+									<td class="px-6 py-4">
+										@php
+											if($sale->payavatar == 'avatars/cash-default.jpg'):
+												echo "";
+											endif;
+										@endphp
+										<img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$sale->payavatar") }}" alt="avatar">
+									</td>
+									<td class="px-6 py-4">
+										<x-input-label for="paytype">{{ $sale->paytype }}</x-input-label>
 									</td>
 									<td class="px-6 py-4">
 										<x-input-label for="created_by" :value="$sale->created_by"/>

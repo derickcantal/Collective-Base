@@ -23,6 +23,9 @@ return new class extends Migration
             $table->decimal('srp', $precision = 8, $scale = 2);
             $table->decimal('total', $precision = 8, $scale = 2);
             $table->decimal('grandtotal', $precision = 8, $scale = 2);
+            $table->string('payavatar');
+            $table->string('paytype');
+            $table->string('payref');
             $table->integer('userid');
             $table->string('username');
             $table->string('accesstype');

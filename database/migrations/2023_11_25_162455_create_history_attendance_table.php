@@ -15,6 +15,7 @@ return new class extends Migration
             $table->increments('attid');
             $table->integer('userid');
             $table->string('username');
+            $table->string('avatarproof');
             $table->string('firstname');
             $table->string('lastname');
             $table->integer('branchid');

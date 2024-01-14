@@ -29,6 +29,12 @@
 										Total
 									</th>
 									<th scope="col" class="px-6 py-3">
+										Payment Mode
+									</th>
+									<th scope="col" class="px-6 py-3">
+										Payment Ref
+									</th>
+									<th scope="col" class="px-6 py-3">
 										Branch
 									</th>
 									<th scope="col" class="px-6 py-3">
@@ -58,6 +64,12 @@
 									</td>
 									<td class="px-6 py-4">
 										<x-input-label for="total" :value="$sale->total"/>
+									</td>
+									<td class="px-6 py-4">
+										<x-input-label for="paytype" :value="$sale->paytype"/>
+									</td>
+									<td class="px-6 py-4">
+										<x-input-label for="payref" :value="$sale->payref"/>
 									</td>
 									<td class="px-6 py-4">
 										<x-input-label for="branchname" :value="$sale->branchname"/>

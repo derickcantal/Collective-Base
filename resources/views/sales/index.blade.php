@@ -11,24 +11,23 @@
                     <div class="py-8">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                                
                                 <div class="grid gap-4 mb-4 grid-cols-2">  
-                                        <div class="col-span-2 sm:col-span-1">
-                                            <div>
+                                    <div class="col-span-2 sm:col-span-1">
+                                        <div>
+                                            <x-primary-button class="ms-4">
+                                                <a class="btn btn-primary" href="{{ route('sales.create') }}"> Create New Sales</a>
+                                            </x-primary-button>
+                                        </div>
+                                    </div>
+                                    <div class="col-span-2 sm:col-span-1 flex justify-end">
+                                        <form action="{{ route('sales.search') }}" method="get">
+                                                <input type="text" name="search" id="table-search-users" class=" text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for Sales">
                                                 <x-primary-button class="ms-4">
-                                                    <a class="btn btn-primary" href="{{ route('sales.create') }}"> Create New Sales</a>
+                                                    Search
                                                 </x-primary-button>
-                                            </div>
-                                        </div>
-                                        <div class="col-span-2 sm:col-span-1 flex justify-end">
-                                            <form action="{{ route('sales.search') }}" method="get">
-                                                    <input type="text" name="search" id="table-search-users" class=" text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for Sales">
-                                                    <x-primary-button class="ms-4">
-                                                     Search
-                                                    </x-primary-button>
-                                                
-                                            </form>
-                                        </div>
+                                            
+                                        </form>
+                                    </div>
                                 </div>
                         
                                     @if ($message = Session::get('success'))
@@ -54,7 +53,6 @@
                                         </div>
                                     </div>
                                     @endif
-                                </div>    
 
                                 @csrf
                                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -82,7 +80,13 @@
                                                 Total
                                             </th>
                                             <th scope="col" class="px-6 py-3">
-                                                Cashier
+                                                Payment Proof
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Payment Mode
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Payment Ref 
                                             </th>
                                             <th scope="col" class="px-6 py-3">
                                                 Time Sold
@@ -106,7 +110,6 @@
                                             </td>
                                             <td class="px-6 py-4">
                                                 @php
-                                                
                                                     if($sale->avatarproof == 'avatars/cash-default.jpg'):
                                                         echo "";
                                                     endif;
@@ -125,9 +128,19 @@
                                             <td class="px-6 py-4">
                                                 <x-input-label for="total">{{ $sale->total }}</x-input-label>
                                             </td>
-                                           
                                             <td class="px-6 py-4">
-                                                <x-input-label for="created_by" :value="$sale->created_by"/>
+                                                @php
+                                                    if($sale->payavatar == 'avatars/cash-default.jpg'):
+                                                        echo "";
+                                                    endif;
+                                                @endphp
+                                                <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$sale->payavatar") }}" alt="avatar">
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <x-input-label for="paytype">{{ $sale->paytype }}</x-input-label>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <x-input-label for="payref" :value="$sale->payref"/>
                                             </td>
                                             <td class="px-6 py-4">
                                                 <x-input-label for="created_at" :value="$sale->created_at"/>
@@ -168,14 +181,6 @@
                                     {!! $sales->appends(request()->query())->links() !!}
                                 </div>
                                     
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="py-4">
-                        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                                
                             </div>
                         </div>
                     </div>
