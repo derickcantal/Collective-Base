@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('cabinet', function (Blueprint $table) {
             $table->increments('cabid');
             $table->string('cabinetname');
+            $table->integer('cabinetprice');
             $table->integer('branchid');
             $table->string('branchname');
             $table->integer('userid');

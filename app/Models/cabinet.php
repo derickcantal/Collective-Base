@@ -14,6 +14,7 @@ class cabinet extends Model
 
     protected $fillable = [
         'cabinetname',
+        'cabinetprice',
         'branchid',
         'branchname',
         'userid',

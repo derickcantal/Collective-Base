@@ -72,7 +72,67 @@ class CabinetController extends Controller
     }
     
     public function updatedata($request,$cabinet){
+        $rent = Renters::where('userid',$request->renter)->first();
         
+        $cabinet = cabinet::findOrFail($cabinet);
+        $mod = 0;
+        $mod = $cabinet->mod;
+
+        
+
+        if($cabinet->status == 'Active')
+        {
+            if($request->renter != 'Vacant'){
+                $cabrenter = cabinet::where('userid', $rent->userid)->get();
+        
+                $totalcabown = count($cabrenter);
+
+                Renters::where('userid',$rent->userid)
+                ->update([
+                    'cabid' => $totalcabown,
+                ]);
+                
+                $cabinets = cabinet::where('cabid', $cabinet->cabid)
+                ->update([
+                'userid' => $rent->userid,
+                'email' => $rent->email,
+                'cabinetprice' => $request->cabinetprice,
+                'updated_by' => auth()->user()->email,
+                'mod' => $mod + 1,
+                ]);
+
+                if ($cabinets) {
+                    //query successful
+                    return redirect()->route('cabinet.index')
+                                ->with('success','Cabinet updated successfully.');
+                }else{
+                    return redirect()->route('cabinet.update')
+                                ->with('failed','Cabinet update failed');
+                }
+            }else{
+                $cabinets = cabinet::where('cabid', $cabinet->cabid)
+                ->update([
+                'userid' => 0,
+                'email' => 'Vacant',
+                'cabinetprice' => $request->cabinetprice,
+                'updated_by' => auth()->user()->email,
+                'mod' => $mod + 1,
+                ]);
+
+                if ($cabinets) {
+                    //query successful
+                    return redirect()->route('cabinet.index')
+                                ->with('success','Cabinet updated successfully.');
+                }else{
+                    return redirect()->route('cabinet.update')
+                                ->with('failed','Cabinet update failed');
+                }
+            }
+            
+        }else{
+            return redirect()->route('cabinet.index')
+                            ->with('failed','Cabinet Inactive');
+        }
     }
     
     public function destroydata($request ,$cabinet){
@@ -199,7 +259,20 @@ class CabinetController extends Controller
      */
     public function edit($cabinet)
     {
+        $cab = cabinet::where('cabinetname',$cabinet)->where('branchname',auth()->user()->branchname)->first();
+
+        $rent = Renters::where('accesstype','Renters')
+        ->where(function(Builder $builder){
+            $builder->where('status','Active')
+                    ->orderBy('lastname','asc')
+                    ;
+        })->get();
+       
+        $branches = branch::all();
         
+        return view('cabinet.edit',['branches' => $branches])
+                            ->with(['rent' => $rent])
+                            ->with(['cabinet' => $cab]);
     }
 
     /**

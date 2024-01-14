@@ -16,7 +16,7 @@ class DashboardController extends Controller
         
         $rentalpayments = RentalPayments::where('status','Unpaid')->orderBy('status','desc')->paginate(5);
 
-        $attendance = attendance::paginate(5);
+        $attendance = attendance::paginate(5); 
 
         return view('dashboard.index')->with(['sales' => $sales])
                                         ->with(['RenterRequests' => $RenterRequests])

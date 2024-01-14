@@ -29,9 +29,6 @@
 										Total
 									</th>
 									<th scope="col" class="px-6 py-3">
-										Grand Total
-									</th>
-									<th scope="col" class="px-6 py-3">
 										Branch
 									</th>
 									<th scope="col" class="px-6 py-3">
@@ -63,13 +60,10 @@
 										<x-input-label for="total" :value="$sale->total"/>
 									</td>
 									<td class="px-6 py-4">
-										<x-input-label for="grandtotal" :value="$sale->grandtotal"/>
-									</td>
-									<td class="px-6 py-4">
 										<x-input-label for="branchname" :value="$sale->branchname"/>
 									</td>
 									<td class="px-6 py-4">
-										<x-input-label for="username" :value="$sale->username"/>
+										<x-input-label for="created_by" :value="$sale->created_by"/>
 									</td>
 									<td class="px-6 py-4">
 										<x-input-label for="created_at" :value="$sale->created_at"/>
@@ -93,11 +87,13 @@
 									<td class="px-6 py-3"></td>
 									<td class="px-6 py-3"></td>
 									<td class="px-6 py-3"></td>
-									<td class="px-6 py-3"></td>
 								</tr>
 							</tfoot>
 							@endif
 						</table>
+						<div class="mt-4">
+							{!! $sales->appends(request()->query())->links() !!}
+						</div>
 					</div>
 				</div>
 			</div>

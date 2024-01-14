@@ -75,7 +75,6 @@
 									<td class="px-6 py-4">
 										<x-input-label for="total">{{ $sale->total }}</x-input-label>
 									</td>
-									
 									<td class="px-6 py-4">
 										<x-input-label for="created_by" :value="$sale->created_by"/>
 									</td>

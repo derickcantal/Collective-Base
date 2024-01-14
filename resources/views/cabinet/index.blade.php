@@ -65,6 +65,9 @@
                                                     Cabinet No.
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
+                                                    Rent Price
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
                                                     Branch
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
@@ -94,6 +97,9 @@
                                                     <x-input-label for="cabinetname" :value="$cabinet->cabinetname"/>
                                                 </td>
                                                 <td class="px-6 py-4">
+                                                    <x-input-label for="cabinetprice" :value="$cabinet->cabinetprice"/>
+                                                </td>
+                                                <td class="px-6 py-4">
                                                     <x-input-label for="branchname" :value="$cabinet->branchname"/>
                                                 </td>
                                                 <td class="px-6 py-4">
@@ -118,6 +124,7 @@
                                                 <td class="px-6 py-4">
                                                     
                                                     <form action="{{ route('cabinet.destroy',$cabinet->cabid) }}" method="POST">
+                                                    <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('cabinet.edit',$cabinet->cabid) }}">Modify</a>
                                                         @csrf
                                                         @method('DELETE')
                                                         @php

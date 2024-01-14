@@ -81,6 +81,9 @@
                     </tfoot>
                     @endif
                 </table>
+                <div class="mt-4">
+                    {!! $attendance->appends(request()->query())->links() !!}
+                </div>
             </div>
         </div>
     </div>

@@ -95,6 +95,9 @@
                     </tfoot>
                     @endif
                 </table>
+                <div class="mt-4">
+                    {!! $sales_requests->appends(request()->query())->links() !!}
+                </div>
             </div>
         </div>
     </div>

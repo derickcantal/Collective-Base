@@ -7,6 +7,7 @@ use App\Models\Sales;
 use App\Models\sales_eod;
 use App\Models\RentalPayments;
 use App\Models\RenterRequests;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use \Carbon\Carbon;
 use Redirect;
@@ -14,36 +15,10 @@ use Redirect;
 class SalesEODController extends Controller
 {
     public function loaddata(){
-        $sales = Sales::where('branchname',auth()->user()->branchname)
-                    ->where(function(Builder $builder){
-                        $builder->where('posted', "N");
-                    })->get();
-                   
-        $totalsales = collect($sales)->sum('total');
-
-        $totalitem = collect($sales)->sum('qty');
-        if(empty($totalitem)){
-            $totalitem = 0;
-        }
-        $RentalPayments = RentalPayments::where('branchname',auth()->user()->branchname)
-                    ->where(function(Builder $builder){
-                        $builder->where('posted', "N");
-                    })->get();
-
-        $totalrentpay = collect($RentalPayments)->sum('rpamount');
-
-        $RenterRequests = RenterRequests::where('branchname',auth()->user()->branchname)
-                    ->where(function(Builder $builder){
-                        $builder->where('posted', "N");
-                    })->get();            
         
-        $totalrequests = collect($RenterRequests)->sum('totalcollected');
         
         return view('saleseod.index')
-        ->with('totalsales',$totalsales)
-        ->with('totalitem',$totalitem)
-        ->with('totalrentpay',$totalrentpay)
-        ->with('totalrequests',$totalrequests);
+        ;
     }
     
     public function storedata($request){
@@ -57,7 +32,6 @@ class SalesEODController extends Controller
                 'status' => "Posted",
             ]);
         
-
             RenterRequests::where('branchname',auth()->user()->branchname)
             ->where(function(Builder $builder){
                 $builder->where('posted', "N");
@@ -71,6 +45,7 @@ class SalesEODController extends Controller
             })->update([
                 'posted' => "Y",
             ]);
+            
 
             Sales::query()
             ->where('branchname',auth()->user()->branchname)
@@ -83,7 +58,7 @@ class SalesEODController extends Controller
                 $newRecord->save();
                 $oldRecord->delete();
             });
-        
+
             RentalPayments::query()
             ->where('branchname',auth()->user()->branchname)
             ->where(function(Builder $builder){
@@ -109,6 +84,8 @@ class SalesEODController extends Controller
             });
            
             if($request->filled('notes')){
+           
+
                 $saleseod = sales_eod::create([
                     'branchid' => auth()->user()->branchid,
                     'branchname' => auth()->user()->branchname,
@@ -123,7 +100,16 @@ class SalesEODController extends Controller
                     'timerecorded' => $timenow,
                     'posted' => 'N',
                 ]); 
-    
+                
+                if($saleseod){
+            
+                    return redirect()->route('dashboard.index')
+                                    ->with('success','EOD Succesful');
+                }else{
+                   
+                    return redirect()->route('dashboard.index')
+                                    ->with('failed','EOD Error.');
+                }
                 
             }else{
                 $saleseod = sales_eod::create([
@@ -140,17 +126,28 @@ class SalesEODController extends Controller
                     'timerecorded' => $timenow,
                     'posted' => 'N',
                 ]); 
-    
+                
+                if($saleseod){
+            
+                    return redirect()->route('dashboard.index')
+                                    ->with('success','EOD Succesful');
+                }else{
+                   
+                    return redirect()->route('dashboard.index')
+                                    ->with('failed','EOD Error.');
+                }
                 
             } 
         } catch(Exception $e) {
             dd($e);
         }
-
+        
         if($saleseod){
+            
             return redirect()->route('dashboard.index')
                             ->with('success','EOD Succesful');
         }else{
+           
             return redirect()->route('dashboard.index')
                             ->with('failed','EOD Error.');
         }
@@ -189,20 +186,38 @@ class SalesEODController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        if(auth()->user()->status =='Active'){
-            if(auth()->user()->accesstype =='Cashier'){
-                
-            }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
-            }elseif(auth()->user()->accesstype =='Supervisor'){
-                return redirect()->route('dashboard.index');
-            }elseif(auth()->user()->accesstype =='Administrator'){
-                return redirect()->route('dashboard.index');
-            }
+        if(Hash::check($request->password, auth()->user()->password)){
+            $sales = Sales::where('branchname',auth()->user()->branchname)
+            ->where(function(Builder $builder){
+                $builder->where('posted', "N");
+            })->get();
+           
+            $totalsales = collect($sales)->sum('total');
+
+            $totalitem = collect($sales)->sum('qty');
+           
+            $RentalPayments = RentalPayments::where('branchname',auth()->user()->branchname)
+                        ->where(function(Builder $builder){
+                            $builder->where('posted', "N");
+                        })->get();
+
+            $totalrentpay = collect($RentalPayments)->sum('rpamount');
+
+            $RenterRequests = RenterRequests::where('branchname',auth()->user()->branchname)
+                        ->where(function(Builder $builder){
+                            $builder->where('posted', "N");
+                        })->get();            
+
+            $totalrequests = collect($RenterRequests)->sum('totalcollected');
+            return view('saleseod.create')
+                ->with('totalsales',$totalsales)
+                ->with('totalitem',$totalitem)
+                ->with('totalrentpay',$totalrentpay)
+                ->with('totalrequests',$totalrequests);
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('saleseod.index')->with('failed','Incorrect Password.');
         }
     }
 
@@ -231,6 +246,7 @@ class SalesEODController extends Controller
      */
     public function show(string $id)
     {
+        dd('show here');
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 
@@ -251,6 +267,7 @@ class SalesEODController extends Controller
      */
     public function edit(string $id)
     {
+        dd('edit here');
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 
