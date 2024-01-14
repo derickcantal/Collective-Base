@@ -17,7 +17,7 @@ class ReportsController extends Controller
 {
     public function displayall()
     {
-        $sales = DB::table('history_sales')->get();
+        $sales = DB::table('history_sales')->latest()->get();
         $sales_requests = DB::table('history_sales_requests')->get();
         $attendance = DB::table('history_attendance')->get();
         $rentalpayments = DB::table('history_rental_payments')->get();

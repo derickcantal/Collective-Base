@@ -10,9 +10,7 @@ module.exports = {
     "./resources/**/*.js",
     "./resources/**/*.vue",
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/flowbite/**/*.js",
-    
-
+    "./node_modules/flowbite/**/*.js"
   ],
   theme: {
     extend: {},

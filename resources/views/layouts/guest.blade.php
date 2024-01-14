@@ -14,7 +14,7 @@
         <!-- Scripts -->
         <script src={{ asset("build/assets/flowbite/dist/flowbite.min.js") }}"></script>
 
-        <link rel="stylesheet" href="{{ asset("build/assets/app-be73590f.css") }}" type='text/css'>
+        <link rel="stylesheet" href="{{ asset("build/assets/app-6f907c47.css") }}" type='text/css'>
         <script src="{{ asset("build/assets/app-afdd846a.js") }}"></script>
         
         @vite(['resources/css/app.css', 'resources/js/app.js'])

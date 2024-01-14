@@ -186,7 +186,7 @@ class RenterRequestsController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($RenterRequests)
     {
         $cabinet = cabinet::all();
         $branch = branch::all();
@@ -232,7 +232,7 @@ class RenterRequestsController extends Controller
      */
     public function show(RenterRequests $RenterRequests)
     {
-        return view('rentersrequests.show',['RenterRequests' => $RenterRequests]);
+        dd("Show Record");
     }
 
     /**

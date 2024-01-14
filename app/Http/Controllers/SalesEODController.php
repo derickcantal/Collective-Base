@@ -9,6 +9,7 @@ use App\Models\RentalPayments;
 use App\Models\RenterRequests;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use \Carbon\Carbon;
+use Redirect;
 
 class SalesEODController extends Controller
 {
@@ -20,6 +21,10 @@ class SalesEODController extends Controller
                    
         $totalsales = collect($sales)->sum('total');
 
+        $totalitem = collect($sales)->sum('qty');
+        if(empty($totalitem)){
+            $totalitem = 0;
+        }
         $RentalPayments = RentalPayments::where('branchname',auth()->user()->branchname)
                     ->where(function(Builder $builder){
                         $builder->where('posted', "N");
@@ -36,110 +41,118 @@ class SalesEODController extends Controller
         
         return view('saleseod.index')
         ->with('totalsales',$totalsales)
+        ->with('totalitem',$totalitem)
         ->with('totalrentpay',$totalrentpay)
         ->with('totalrequests',$totalrequests);
     }
     
     public function storedata($request){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
+        try{
+            Sales::where('branchname',auth()->user()->branchname)
+            ->where(function(Builder $builder){
+                $builder->where('posted', "N");
+            })->update([
+                'posted' => "Y",
+                'status' => "Posted",
+            ]);
+        
 
-        Sales::where('branchname',auth()->user()->branchname)
-        ->where(function(Builder $builder){
-            $builder->where('posted', "N");
-        })->update([
-            'posted' => "Y",
-            'status' => "Posted",
-        ]);
+            RenterRequests::where('branchname',auth()->user()->branchname)
+            ->where(function(Builder $builder){
+                $builder->where('posted', "N");
+            })->update([
+                'posted' => "Y",
+            ]);
 
-        RenterRequests::where('branchname',auth()->user()->branchname)
-        ->where(function(Builder $builder){
-            $builder->where('posted', "N");
-        })->update([
-            'posted' => "Y",
-        ]);
+            RentalPayments::where('branchname',auth()->user()->branchname)
+            ->where(function(Builder $builder){
+                $builder->where('posted', "N");
+            })->update([
+                'posted' => "Y",
+            ]);
 
-        RentalPayments::where('branchname',auth()->user()->branchname)
-        ->where(function(Builder $builder){
-            $builder->where('posted', "N");
-        })->update([
-            'posted' => "Y",
-        ]);
+            Sales::query()
+            ->where('branchname',auth()->user()->branchname)
+            ->where(function(Builder $builder){
+                $builder->where('posted', "Y");
+            })
+            ->each(function ($oldRecord) {
+                $newRecord = $oldRecord->replicate();
+                $newRecord->setTable('history_sales');
+                $newRecord->save();
+                $oldRecord->delete();
+            });
+        
+            RentalPayments::query()
+            ->where('branchname',auth()->user()->branchname)
+            ->where(function(Builder $builder){
+                $builder->where('posted', "Y");
+            })
+            ->each(function ($oldRecord) {
+                $newRecord = $oldRecord->replicate();
+                $newRecord->setTable('history_rental_payments');
+                $newRecord->save();
+                $oldRecord->delete();
+            });
 
-        RenterRequests::query()
-        ->where('branchname',auth()->user()->branchname)
-        ->where(function(Builder $builder){
-            $builder->where('posted', "Y");
-        })
-        ->each(function ($oldRecord) {
-            $newRecord = $oldRecord->replicate();
-            $newRecord->setTable('history_sales');
-            $newRecord->save();
-            $oldRecord->delete();
-        });
+            RenterRequests::query()
+            ->where('branchname',auth()->user()->branchname)
+            ->where(function(Builder $builder){
+                $builder->where('posted', "Y");
+            })
+            ->each(function ($oldRecord) {
+                $newRecord = $oldRecord->replicate();
+                $newRecord->setTable('history_sales_requests');
+                $newRecord->save();
+                $oldRecord->delete();
+            });
+           
+            if($request->filled('notes')){
+                $saleseod = sales_eod::create([
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'totalsales' => $request->totalsales,
+                    'rentalpayments' => $request->rentalpayments,
+                    'requestpayments' => $request->requestpayments,
+                    'otherexpenses' => $request->otherexpenses,
+                    'totalcash' => $request->totalcash,
+                    'notes' => $request->notes,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'timerecorded' => $timenow,
+                    'posted' => 'N',
+                ]); 
     
-        RentalPayments::query()
-        ->where('branchname',auth()->user()->branchname)
-        ->where(function(Builder $builder){
-            $builder->where('posted', "Y");
-        })
-        ->each(function ($oldRecord) {
-            $newRecord = $oldRecord->replicate();
-            $newRecord->setTable('history_sales');
-            $newRecord->save();
-            $oldRecord->delete();
-        });
-
-        Sales::query()
-        ->where('branchname',auth()->user()->branchname)
-        ->where(function(Builder $builder){
-            $builder->where('posted', "Y");
-        })
-        ->each(function ($oldRecord) {
-            $newRecord = $oldRecord->replicate();
-            $newRecord->setTable('history_sales');
-            $newRecord->save();
-            $oldRecord->delete();
-        });
-            
-        if($request->filled('notes')){
-            $saleseod = sales_eod::create([
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'totalsales' => $request->totalsales,
-                'rentalpayments' => $request->rentalpayments,
-                'requestpayments' => $request->requestpayments,
-                'otherexpenses' => $request->otherexpenses,
-                'totalcash' => $request->totalcash,
-                'notes' => $request->notes,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'timerecorded' => $timenow,
-                'posted' => 'N',
-            ]); 
-
-            
-        }else{
-            $saleseod = sales_eod::create([
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'totalsales' => $request->totalsales,
-                'rentalpayments' => $request->rentalpayments,
-                'requestpayments' => $request->requestpayments,
-                'otherexpenses' => $request->otherexpenses,
-                'totalcash' => $request->totalcash,
-                'notes' => 'Null',
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'timerecorded' => $timenow,
-                'posted' => 'N',
-            ]); 
-
-            
-        } 
+                
+            }else{
+                $saleseod = sales_eod::create([
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'totalsales' => $request->totalsales,
+                    'rentalpayments' => $request->rentalpayments,
+                    'requestpayments' => $request->requestpayments,
+                    'otherexpenses' => $request->otherexpenses,
+                    'totalcash' => $request->totalcash,
+                    'notes' => 'Null',
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'timerecorded' => $timenow,
+                    'posted' => 'N',
+                ]); 
+    
+                
+            } 
+        } catch(Exception $e) {
+            dd($e);
+        }
 
         if($saleseod){
-            return redirect()->route('saleseod.index')
+            return redirect()->route('dashboard.index')
                             ->with('success','EOD Succesful');
+        }else{
+            return redirect()->route('dashboard.index')
+                            ->with('failed','EOD Error.');
         }
        
         

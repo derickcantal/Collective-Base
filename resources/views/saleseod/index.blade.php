@@ -48,7 +48,7 @@
                                     <!-- Modal body -->
                                     <form action="{{ route('saleseod.store') }}" method="POST" class="p-4 md:p-5">
                                     @csrf 
-                                        <div class="grid gap-4 mb-4 grid-cols-2" x-data="{ totalsales: {{ $totalsales }}, rentalpay: {{ $totalrentpay }},  requests: {{ $totalrequests }}, expenses: 0, totalcash: 0}" x-effect="totalcash = (totalsales + rentalpay) - (requests + expenses)">
+                                        <div class="grid gap-4 mb-4 grid-cols-2" x-data="{ totalitem: {{ $totalitem }},totalsales: {{ $totalsales }}, rentalpay: {{ $totalrentpay }},  requests: {{ $totalrequests }}, expenses: 0, totalcash: 0}" x-effect="totalcash = (totalsales + rentalpay) - (requests + expenses)">
                                             <div class="col-span-2 sm:col-span-1">
                                                 <!-- branchname -->
                                                 <div class="form-group mt-4">
@@ -58,7 +58,14 @@
                                                     <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
                                                 </div>
                                             </div>
-                                            
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <!-- productname -->
+                                                <div class="form-group mt-4">
+                                                    <x-input-label for="totalitem" :value="__('TOTAL ITEM SOLD')" />
+                                                    <x-text-input id="totalitem" x-model.number="totalitem" class="block mt-1 w-full" type="number" name="totalitem" value="{{ $totalitem }}" required autofocus autocomplete="off" readonly />
+                                                    <x-input-error :messages="$errors->get('totalitem')" class="mt-2" />
+                                                </div>
+                                            </div>
                                             <div class="col-span-2 sm:col-span-1">
                                                 <!-- productname -->
                                                 <div class="form-group mt-4">
@@ -71,7 +78,7 @@
                                                 <!-- productname -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="rentalpayments" :value="__('TOTAL RENTAL PAYMENTS')" />
-                                                    <x-text-input id="rentalpayments" x-model.number="rentalpay" class="block mt-1 w-full" type="number" name="rentalpayments" value="{{ $totalsales }}" required autofocus autocomplete="off" readonly />
+                                                    <x-text-input id="rentalpayments" x-model.number="rentalpay" class="block mt-1 w-full" type="number" name="rentalpayments" value="{{ $totalrentpay }}" required autofocus autocomplete="off" readonly />
                                                     <x-input-error :messages="$errors->get('rentalpayments')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -79,7 +86,7 @@
                                                 <!-- productname -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="requestpayments" :value="__('TOTAL REQUESTS PAYMENTS')" />
-                                                    <x-text-input id="requestpayments" x-model.number="requests" class="block mt-1 w-full" type="number" name="requestpayments" value="{{ $totalsales }}" required autofocus autocomplete="off" readonly />
+                                                    <x-text-input id="requestpayments" x-model.number="requests" class="block mt-1 w-full" type="number" name="requestpayments" value="{{ $totalrequests }}" required autofocus autocomplete="off" readonly />
                                                     <x-input-error :messages="$errors->get('requestpayments')" class="mt-2" />
                                                 </div>
                                             </div>
