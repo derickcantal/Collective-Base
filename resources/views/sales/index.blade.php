@@ -14,7 +14,7 @@
                                 <div class="grid gap-4 mb-4 grid-cols-2">  
                                     <div class="col-span-2 sm:col-span-1">
                                         <div>
-                                            <x-primary-button class="ms-4">
+                                            <x-primary-button class="ms-4 mt-4">
                                                 <a class="btn btn-primary" href="{{ route('sales.create') }}"> Create New Sales</a>
                                             </x-primary-button>
                                         </div>
@@ -22,7 +22,7 @@
                                     <div class="col-span-2 sm:col-span-1 flex justify-end">
                                         <form action="{{ route('sales.search') }}" method="get">
                                                 <input type="text" name="search" id="table-search-users" class=" text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for Sales">
-                                                <x-primary-button class="ms-4">
+                                                <x-primary-button class="ms-4 mt-4">
                                                     Search
                                                 </x-primary-button>
                                             
