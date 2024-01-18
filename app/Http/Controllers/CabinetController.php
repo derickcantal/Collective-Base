@@ -91,7 +91,6 @@ class CabinetController extends Controller
                 ->update([
                     'cabid' => $totalcabown,
                 ]);
-                
                 $cabinets = cabinet::where('cabid', $cabinet->cabid)
                 ->update([
                 'userid' => $rent->userid,

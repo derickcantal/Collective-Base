@@ -7,17 +7,12 @@
 						{{ __("Sales") }}
 					</div>
 					<div class="grid gap-4 mb-4 grid-cols-2">  
-						<div class="col-span-2 sm:col-span-1">
-							<div>
-								<x-primary-button class="ms-4 mt-4">
-									<a class="btn btn-primary" href="{{ route('sales.create') }}"> Create New Sales</a>
-								</x-primary-button>
-							</div>
-						</div>
-						<div class="col-span-2 sm:col-span-1 flex justify-end">
-							<form action="{{ route('sales.search') }}" method="get">
-									<input type="text" name="search" id="table-search-users" class=" text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for Sales">
-									<x-primary-button class="ms-4 mt-4">
+						<div class="col-span-2 sm:col-span-1 flex">
+							<form action="#" method="get">
+									<select id="search" name="search" class="form-select mt-1 w-auto border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('search')" required>
+											<option value = "Top 10">Top 10 </option>
+									</select>
+									<x-primary-button class="mt-4">
 										Search
 									</x-primary-button>
 								
@@ -32,14 +27,10 @@
 										SID
 									</th>
 									<th scope="col" class="px-6 py-3">
-										Product
-									</th>
-									
-									<th scope="col" class="px-6 py-3">
-										Branch
-									</th>
-									<th scope="col" class="px-6 py-3">
 										Image
+									</th>
+									<th scope="col" class="px-6 py-3">
+										Product
 									</th>
 									<th scope="col" class="px-6 py-3">
 										Qty
@@ -57,7 +48,7 @@
 										Payment Mode
 									</th>
 									<th scope="col" class="px-6 py-3">
-										Cashier
+										Branch
 									</th>
 									<th scope="col" class="px-6 py-3">
 										Time Sold
@@ -70,17 +61,9 @@
 							<tbody>
 								<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
 									
-									<th class="px-6 py-4">
+									<th class="px-6 py-3">
 										<x-input-label>{{ ++$i }}</x-input-label>
 									</th>
-									<td class="px-6 py-4">
-										<x-input-label>{{ $sale->productname }}</x-input-label>
-										<x-input-label>Cab. No.: <b>{{ $sale->cabinetname }}</b></x-input-label>
-									</td>
-									
-									<td class="px-6 py-4">
-										<x-input-label for="branchname" :value="$sale->branchname"/>
-									</td>
 									<td class="px-6 py-4">
 										@php
 											if($sale->avatarproof == 'avatars/cash-default.jpg'):
@@ -89,6 +72,12 @@
 										@endphp
 										<img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$sale->salesavatar") }}" alt="avatar">
 									</td>
+									<td class="px-6 py-4">
+										<x-input-label>{{ $sale->productname }}</x-input-label>
+										<x-input-label>Cab. No.: <b>{{ $sale->cabinetname }}</b></x-input-label>
+									</td>
+								
+									
 									<td class="px-6 py-4">
 										<x-input-label for="qty" :value="$sale->qty"/>
 									</td>
@@ -109,10 +98,12 @@
 									<td class="px-6 py-4">
 										<x-input-label for="paytype">{{ $sale->paytype }}</x-input-label>
 									</td>
+										
 									<td class="px-6 py-4">
-										<x-input-label for="created_by" :value="$sale->created_by"/>
+										<x-input-label for="branchname" :value="$sale->branchname"/>
 									</td>
 									<td class="px-6 py-4">
+										<x-input-label for="created_by" :value="$sale->created_by"/>
 										<x-input-label for="created_at" :value="$sale->created_at"/>
 									</td>
 									
