@@ -7,22 +7,65 @@
 					<div class="p-6 text-gray-900 dark:text-gray-100">
 						{{ __("Sales") }}
 					</div>
-					<div class="grid gap-4 mb-4 grid-cols-2">  
-						<div class="col-span-2 sm:col-span-1">
-							<div>
-								
-							</div>
+					@if ($message = Session::get('success'))
+					<div class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800" role="alert">
+					<svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+						<path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+					</svg>
+					<span class="sr-only">Info</span>
+					<div>
+						<span class="font-medium">Success!</span> {{ $message }}
+					</div>
+					</div>
+					@endif
+					
+					@if ($message = Session::get('failed'))
+					<div class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
+						<svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+							<path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+						</svg>
+						<span class="sr-only">Info</span>
+						<div>
+							<span class="font-medium">Failed!</span> {{ $message }}
 						</div>
-						<div class="col-span-2 sm:col-span-1 flex justify-end">
-							<form action="reports.search" method="get">
-								<input type="text" name="search" id="search" class=" text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for Sales">
+					</div>
+					@endif
+					<form action="reports.search" method="get">
+						<div class="grid gap-4 mb-4 grid-cols-4">  
+							<div>
+								<div class="relative max-w-sm">
+									<div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+										<svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+											<path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+										</svg>
+									</div>
+									<input datepicker datepicker-autohide name="startdate" id="startdate" type="text" :value="old('startdate')" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2" placeholder="Start Date">
+								</div>
+							</div>
+							<div>
+								<div class="relative max-w-sm">
+									<div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+										<svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+											<path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+										</svg>
+									</div>
+									<input datepicker datepicker-autohide name="enddate" id="enddate" type="text" :value="old('enddate')" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2" placeholder="End Date">
+								</div>
+							</div>
+							<div>
+								<div class="relative max-w-sm">
+									<input type="text" name="search" id="search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2" placeholder="Search for Sales">
+								</div>
+							</div>
+							<div>
+								<div class="relative max-w-sm">
 									<x-primary-button class="mt-4">
 										Search
 									</x-primary-button>
-								
-							</form>
+								</div>
+							</div>
 						</div>
-					</div>
+					</form>
 					
 					<div class="max-w-7xl overflow-x-auto shadow-md sm:rounded-lg " >
 						<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -47,13 +90,10 @@
 										Total
 									</th>
 									<th scope="col" class="px-6 py-3">
-                                        Payment Proof
+                                        Pay Img
 									</th>
 									<th scope="col" class="px-6 py-3">
-										Payment Mode
-									</th>
-									<th scope="col" class="px-6 py-3">
-										Branch
+										Mode
 									</th>
 									<th scope="col" class="px-6 py-3">
 										Sold At
@@ -103,10 +143,8 @@
 									</td>
 									<td class="px-6 py-4">
 										<x-input-label for="branchname" :value="$sale->branchname"/>
-									</td>
-									<td class="px-6 py-4">
 										<x-input-label for="created_by" :value="$sale->created_by"/>
-										<x-input-label for="created_at" :value="$sale->created_at"/>
+										<x-input-label for="timerecorded" :value="$sale->timerecorded"/>
 									</td>
 								</tr>
 								@endforeach
@@ -130,11 +168,18 @@
 								</tr>
 							</tfoot>
 							@endif
+							<td class="px-6 py-3"></td>
+									<td class="px-6 py-3"></td>
+									<td class="px-6 py-3">TOTAL:</td>
+									<td class="px-6 py-3">{{ $totalqty }}</td>
+									<td class="px-6 py-3"></td>
+							<td scope="row" class="px-6 py-4"> {{ $totalsales }}</td>
 						</table>
+					</div>
 						<div class="mt-4">
 							{!! $sales->appends(request()->query())->links() !!}
 						</div>
-					</div>
+					
 				</div>
 			</div>
 		</div>

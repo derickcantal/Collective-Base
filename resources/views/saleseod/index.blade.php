@@ -65,7 +65,7 @@
                                         <div class="col-span-2 sm:col-span-1 ">
                                                 <div class="flex items-center justify-between col-span-2 sm:col-span-1">
                                                     <x-primary-button class="ms-4">
-                                                        <a class="btn btn-primary" > Confirm EOD</a>
+                                                        <a class="btn btn-primary" > Confirm Password</a>
                                                     </x-primary-button>
                                                 </div>
                                         </div>

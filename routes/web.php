@@ -68,7 +68,6 @@ Route::middleware('auth')->group(function () {
     Route::get('myrental.search', [MyRequestController::class, 'search'])->name('myrental.search');
 
     Route::resource('saleseod', SalesEODController::class);
-
 });
 
 Route::middleware('auth')->group(function () {

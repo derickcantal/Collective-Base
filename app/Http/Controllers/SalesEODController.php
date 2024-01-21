@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Sales;
+use App\Models\attendance;
 use App\Models\sales_eod;
 use App\Models\RentalPayments;
 use App\Models\RenterRequests;
@@ -22,9 +23,18 @@ class SalesEODController extends Controller
     }
     
     public function storedata($request){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        
         try{
             Sales::where('branchname',auth()->user()->branchname)
+            ->where(function(Builder $builder){
+                $builder->where('posted', "N");
+            })->update([
+                'posted' => "Y",
+                'status' => "Posted",
+            ]);
+
+            attendance::where('branchname',auth()->user()->branchname)
             ->where(function(Builder $builder){
                 $builder->where('posted', "N");
             })->update([
@@ -59,6 +69,18 @@ class SalesEODController extends Controller
                 $oldRecord->delete();
             });
 
+            attendance::query()
+            ->where('branchname',auth()->user()->branchname)
+            ->where(function(Builder $builder){
+                $builder->where('posted', "Y");
+            })
+            ->each(function ($oldRecord) {
+                $newRecord = $oldRecord->replicate();
+                $newRecord->setTable('history_attendance');
+                $newRecord->save();
+                $oldRecord->delete();
+            });
+
             RentalPayments::query()
             ->where('branchname',auth()->user()->branchname)
             ->where(function(Builder $builder){
@@ -84,8 +106,6 @@ class SalesEODController extends Controller
             });
            
             if($request->filled('notes')){
-           
-
                 $saleseod = sales_eod::create([
                     'branchid' => auth()->user()->branchid,
                     'branchname' => auth()->user()->branchname,

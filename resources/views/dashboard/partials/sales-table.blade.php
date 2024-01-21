@@ -6,19 +6,6 @@
 					<div class="p-6 text-gray-900 dark:text-gray-100">
 						{{ __("Sales") }}
 					</div>
-					<div class="grid gap-4 mb-4 grid-cols-2">  
-						<div class="col-span-2 sm:col-span-1 flex">
-							<form action="#" method="get">
-									<select id="search" name="search" class="form-select mt-1 w-auto border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('search')" required>
-											<option value = "Top 10">Top 10 </option>
-									</select>
-									<x-primary-button class="mt-4">
-										Search
-									</x-primary-button>
-								
-							</form>
-						</div>
-					</div>
 					<div class="max-w-7xl overflow-x-auto shadow-md sm:rounded-lg " >
 						<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
 							<thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -29,7 +16,7 @@
 									<th scope="col" class="px-6 py-3">
 										Image
 									</th>
-									<th scope="col" class="px-6 py-3">
+									<th scope="col" class="px-6 py-4">
 										Product
 									</th>
 									<th scope="col" class="px-6 py-3">
@@ -42,18 +29,14 @@
 										Total
 									</th>
 									<th scope="col" class="px-6 py-3">
-                                        Payment Proof
+                                        Pay IMG 
 									</th>
 									<th scope="col" class="px-6 py-3">
-										Payment Mode
+										Mode
 									</th>
 									<th scope="col" class="px-6 py-3">
-										Branch
+										Sold At
 									</th>
-									<th scope="col" class="px-6 py-3">
-										Time Sold
-									</th>
-									
 								</tr>
 							</thead>
 									
@@ -98,13 +81,10 @@
 									<td class="px-6 py-4">
 										<x-input-label for="paytype">{{ $sale->paytype }}</x-input-label>
 									</td>
-										
 									<td class="px-6 py-4">
 										<x-input-label for="branchname" :value="$sale->branchname"/>
-									</td>
-									<td class="px-6 py-4">
 										<x-input-label for="created_by" :value="$sale->created_by"/>
-										<x-input-label for="created_at" :value="$sale->created_at"/>
+										<x-input-label for="timerecorded" :value="$sale->timerecorded"/>
 									</td>
 									
 								</tr>
@@ -117,10 +97,11 @@
 									
 							</tbody>
 						</table>
+					</div>
 						<div class="mt-4">
 							{!! $sales->appends(request()->query())->links() !!}
 						</div>
-					</div>
+					
 				</div>
 			</div>
 		</div>

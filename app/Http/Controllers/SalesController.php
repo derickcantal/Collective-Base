@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use App\Models\cabinet;
 use \Carbon\Carbon;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Imagick\Driver;
 
 class SalesController extends Controller
 {
@@ -34,16 +32,7 @@ class SalesController extends Controller
         
         $validated = $request->validate([
             'salesavatar'=>'required|image|file',
-            'payavatar'=>'image|file',
         ]);
-
-        $manager = ImageManager::imagick();
-        $name_gen = hexdec(uniqid()).'.'.$request->file('salesavatar')->getClientOriginalExtension();
-        
-        $image = $manager->read($request->file('salesavatar'));
-        $encoded = $image->toWebp()->save(storage_path('app/public/sales/'.$name_gen.'.webp'));
-        $path = 'sales/'.$name_gen.'.webp';
-        
 
         $cabn = cabinet::where('cabinetname',$request->cabinetname)
         ->where(function(Builder $builder) use($request){
@@ -51,6 +40,7 @@ class SalesController extends Controller
         })->first();
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
         if(empty($request->snotes)){
+            $path = Storage::disk('public')->put('sales',$request->file('salesavatar'));
             if(empty($request->payavatar)){
                 $sales = Sales::create([
                     'salesavatar' => $path,

@@ -24,7 +24,7 @@ class CabinetController extends Controller
     }
     
     public function storedata($request){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $cabcount = cabinet::where('branchname',$request->branchname)->count();
 
         $br = branch::where('branchname',$request->branchname)->first();

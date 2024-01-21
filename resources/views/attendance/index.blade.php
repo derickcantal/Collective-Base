@@ -64,48 +64,51 @@
                                                 ID
                                             </th>
                                             <th scope="col" class="px-6 py-3">
-                                                Profile
+                                                Image
                                             </th>
                                             <th scope="col" class="px-6 py-3">
-                                                Branch
+                                                Profile
                                             </th>
                                             <th scope="col" class="px-6 py-3">
                                                 Notes
                                             </th>
                                             <th scope="col" class="px-6 py-3">
-                                                Added By
+                                                Info
                                             </th>
                                             <th scope="col" class="px-6 py-3">
-                                                Time
+                                                Action
                                             </th>
-                                           
                                         </tr>
                                     </thead>
-                                            
                                             @forelse($attendance as $att) 
                                     <tbody>
                                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                            
                                             <th class="px-6 py-4">
                                                 <x-input-label>{{ ++$i }}</x-input-label>
                                             </th>
+                                            <td class="px-6 py-4">
+                                                    @php
+                                                        if($att->avatarproof == 'avatars/cash-default.jpg'):
+                                                            echo "";
+                                                        endif;
+                                                    @endphp
+                                                    <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$att->avatarproof") }}" alt="avatar">
+                                            </td>
                                             <td class="px-6 py-4">
                                                 <x-input-label>{{ $att->lastname }}, {{ $att->firstname }}</x-input-label>
                                                 <x-input-label>{{ $att->username }}</x-input-label>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <x-input-label for="branchname" :value="$att->branchname"/>
-                                            </td>
-                                            <td class="px-6 py-4">
                                                 <x-input-label for="attnotes" :value="$att->attnotes"/>
                                             </td>
                                             <td class="px-6 py-4">
+                                                <x-input-label for="branchname" :value="$att->branchname"/>
                                                 <x-input-label for="created_by" :value="$att->created_by"/>
-                                            </td>
-                                            <td class="px-6 py-4">
                                                 <x-input-label for="created_at" :value="$att->created_at"/>
                                             </td>
-                                            
+                                            <td class="px-6 py-4">
+                                                <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('attendance.edit',$att->attid) }}">Modify</a>
+                                            </td> 
                                         </tr>
                                         
                                         @empty

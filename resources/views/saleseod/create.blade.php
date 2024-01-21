@@ -50,7 +50,7 @@
                                         </h3>
                                     </div>
                                     <!-- Modal body -->
-                                    <form action="{{ route('saleseod.store') }}" method="POST" class="p-4 md:p-5">
+                                    <form action="{{ route('saleseod.store') }}" enctype="multipart/form-data" method="POST" class="p-4 md:p-5">
                                     @csrf 
                                         <div class="grid gap-4 mb-4 grid-cols-2" x-data="{ totalitem: {{ $totalitem }},totalsales: {{ $totalsales }}, rentalpay: {{ $totalrentpay }},  requests: {{ $totalrequests }}, expenses: 0, totalcash: 0}" x-effect="totalcash = (totalsales + rentalpay) - (requests + expenses)">
                                             <div class="col-span-2 sm:col-span-1">
@@ -118,15 +118,12 @@
                                                     <x-input-error :messages="$errors->get('notes')" class="mt-2" />
                                                 </div>
                                             </div>
-                                            
-                                        </div>
-                                            <div class="col-span-2 sm:col-span-1 ">
-                                                <div class="flex items-center justify-between col-span-2 sm:col-span-1">
-                                                    <x-danger-button class="ms-4">
-                                                        <a class="btn btn-primary" > Save</a>
-                                                    </x-danger-button>
-                                                </div>
+                                            <div class="flex items-center justify-between col-span-2 sm:col-span-1">
+                                                <x-primary-button class="ms-4">
+                                                    <a class="btn btn-primary" > Save</a>
+                                                </x-primary-button>
                                             </div>
+                                        </div>
                                     </form>
                                 </div>
                             </div>

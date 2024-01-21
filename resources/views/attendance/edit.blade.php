@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <u><a href="{{ route('rentalpayments.index') }}"> Rental Payments</a></u> / {{ __('Process Rental Payments') }} / {{ $rentalPayments->cabinetname }}
+            <a href="{{ route('attendance.index') }}">Attendance</a> | Edit
         </h2>
     </x-slot>
     <section>
@@ -9,7 +9,7 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <form action="{{ route('rentalpayments.update',$rentalPayments->rpid) }}" enctype="multipart/form-data" method="POST" class="p-4 md:p-5">
+                        <form action="{{ route('attendance.update',$attendance->attid) }}" enctype="multipart/form-data" method="POST" class="p-4 md:p-5">
                         @csrf
                         @method('PUT')   
                             <div class="relative p-4 w-full max-w-full max-h-full">
@@ -18,7 +18,7 @@
                                     <!-- Modal header -->
                                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                            Process Rental Payments 
+                                            Edit Attendance Details
                                         </h3>
                                     </div>
                                     
@@ -26,13 +26,13 @@
                                         <div class="max-w-xl">
                                             <div>
                                             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                                {{ __('Proof Receipt') }}
+                                                {{ __('Attendance Information') }}
                                             </h2>
 
-                                            <img width="100" height="100" class="rounded-full mt-4" src="{{ asset("/storage/$rentalPayments->avatarproof") }}" alt="proof avatar" />
+                                            <img width="100" height="100" class="rounded-full mt-4" src="{{ asset("/storage/$attendance->avatarproof") }}" alt="proof avatar" />
 
                                                 <x-input-label for="name" value="Upload Receipt" />
-                                                <x-text-input id="avatarproof" name="avatarproof" type="file"  class="mt-1 block w-full mt-3" :value="old('avatarproof', $rentalPayments->avatarproof)" autofocus autocomplete="off" required/>
+                                                <x-text-input id="avatarproof" name="avatarproof" type="file"  class="mt-1 block w-full mt-3" :value="old('avatarproof', $attendance->avatarproof)" autofocus autocomplete="off"/>
                                                 <x-input-error class="mt-2" :messages="$errors->get('avatarproof')" />
                                             </div>
                                         </div>
@@ -41,54 +41,26 @@
                                     <div class="grid gap-4 mb-4 grid-cols-2">
                                         <div class="col-span-2 sm:col-span-1">
                                                 <!-- branchname -->
-                                                @php
-                                                    $op1_b = '';
-                                                    $op2_b = '';
-                                                    $op3_b = '';
-                                                    $op4_b = '';
-                                                    $op5_b = '';
-                                                    $op6_b = '';
-                                                    if ($rentalPayments->branchname == 'CB Main'):
-                                                        $op1_b = 'selected = "selected"';
-                                                    elseif ($rentalPayments->branchname == 'CB Annex'):
-                                                        $op2_b = 'selected = "selected"';
-                                                    elseif ($rentalPayments->branchname == 'CB Complex'):
-                                                        $op3_b = 'selected = "selected"';
-                                                    elseif ($rentalPayments->branchname == 'CB Plus 1'):
-                                                        $op4_b = 'selected = "selected"';
-                                                    elseif ($rentalPayments->branchname == 'CB Plus 2'):
-                                                        $op5_b = 'selected = "selected"';  
-                                                    elseif ($rentalPayments->branchname == 'CB Plus 3'):
-                                                        $op6_b = 'selected = "selected"'; 
-                                                    endif;
-                                                @endphp
+                                               
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="branchname" :value="__('Branch Name')" />
-                                                    <!-- <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname')" required autofocus autocomplete="off" /> -->
-                                                    <select id="branchname" name="branchname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('branchname', $rentalPayments->branchname))">
-                                                        <option value = "CB Main" {{ $op1_b; }}">CB Main</option>
-                                                        <option value = "CB Annex" {{ $op2_b; }}">CB Annex</option>
-                                                        <option value = "CB Complex" {{ $op3_b; }}}">CB Complex</option>
-                                                        <option value = "CB Plus 1" {{ $op4_b; }}">CB Plus 1</option>
-                                                        <option value = "CB Plus 2" {{ $op5_b; }}">CB Plus 2</option>
-                                                        <option value = "CB Plus 3" {{ $op6_b; }}">CB Plus 3</option>
-                                                    </select>
+                                                    <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname', $attendance->branchname)" required autofocus autocomplete="off" readonly/> 
                                                     <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
                                                 </div>
                                             </div>
-                                            <div class="col-span-2 sm:col-span-1 ">
-                                                <!-- cabname -->
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <!-- i -->
                                                 <div class="form-group mt-4">
-                                                    <x-input-label for="cabinetname" :value="__('Cabinet No.')" />
-                                                    <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" :value="old('cabinetname', $rentalPayments->cabinetname)" required autofocus autocomplete="off" />
-                                                    <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
+                                                    <x-input-label for="userid" :value="__('User ID')" />
+                                                    <x-text-input id="userid" class="block mt-1 w-full" type="text" name="userid" :value="old('userid', $attendance->userid)" required autofocus autocomplete="off" readonly/>
+                                                    <x-input-error :messages="$errors->get('userid')" class="mt-2" />
                                                 </div>
                                             </div>
                                             <div class="col-span-2 sm:col-span-1">
                                                 <!-- username -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="username" :value="__('User Name')" />
-                                                    <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username', $rentalPayments->username)" required autofocus autocomplete="off" />
+                                                    <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username', $attendance->username)" required autofocus autocomplete="off" readonly/>
                                                     <x-input-error :messages="$errors->get('username')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -96,7 +68,7 @@
                                                 <!-- firstname -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="firstname" :value="__('First Name')" />
-                                                    <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname', $rentalPayments->firstname)" required autofocus autocomplete="given-name" />
+                                                    <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname', $attendance->firstname)" required autofocus autocomplete="given-name" readonly/>
                                                     <x-input-error :messages="$errors->get('firstname')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -105,80 +77,17 @@
                                                     <!-- lastname -->
                                                     <div class="form-group mt-4">
                                                     <x-input-label for="lastname" :value="__('Last Name')" />
-                                                    <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname', $rentalPayments->lastname)" required autofocus autocomplete="family-name" />
+                                                    <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname', $attendance->lastname)" required autofocus autocomplete="family-name" readonly/>
                                                     <x-input-error :messages="$errors->get('lastname')" class="mt-2" />
                                                 </div>
                                             </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                    <!-- rppaytype -->
-                                                    @php
-                                                    $op1_c = '';
-                                                    $op2_c = '';
-                                                    if ($rentalPayments->rppaytype == 'Cash'):
-                                                        $op1_c = 'selected = "selected"';
-                                                    elseif ($rentalPayments->rppaytype == 'Bank Transfer'):
-                                                        $op2_c = 'selected = "selected"';
-                                                    
-                                                    endif;
-                                                @endphp
-                                                    <div class="form-group mt-4">
-                                                    <x-input-label for="rppaytype" :value="__('Payment Mode')" />
-                                                    <select id="rppaytype" name="rppaytype" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('rppaytype', $rentalPayments->rppaytype))">
-                                                        <option value = "Cash" {{ $op1_c; }}">Cash</option>
-                                                        <option value = "Bank Transfer" {{ $op2_c; }}">Bank Transfer</option>
-                                                    </select>
-                                                    
-                                                    <x-input-error :messages="$errors->get('rppaytype')" class="mt-2" />
-                                                </div>
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                    <!-- rpamount -->
-                                                    <div class="form-group mt-4">
-                                                    <x-input-label for="rpamount" :value="__('Rental Amount')" />
-                                                    <x-text-input id="rpamount" class="block mt-1 w-full" type="text" name="rpamount" :value="old('rpamount', $rentalPayments->rpamount)" required autofocus autocomplete="off" />
-                                                    <x-input-error :messages="$errors->get('rpamount')" class="mt-2" />
-                                                </div>
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                    <!-- rpmonthyear -->
-                                                    <div class="form-group mt-4">
-                                                    <x-input-label for="rpmonthyear" :value="__('Applicable Month')" />
-                                                    <select id="rpmonthyear" name="rpmonthyear" class="form-select mt-1  border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('rpmonthyear', $rentalPayments->rpmonthyear))">
-                                                        <option value = "01" {{ $op1_c; }}">01</option>
-                                                        <option value = "02" {{ $op2_c; }}">02</option>
-                                                        <option value = "03" {{ $op2_c; }}">03</option>
-                                                        <option value = "04" {{ $op2_c; }}">04</option>
-                                                        <option value = "05" {{ $op2_c; }}">05</option>
-                                                        <option value = "06" {{ $op2_c; }}">06</option>
-                                                        <option value = "07" {{ $op2_c; }}">07</option>
-                                                        <option value = "08" {{ $op2_c; }}">08</option>
-                                                        <option value = "09" {{ $op2_c; }}">09</option>
-                                                        <option value = "10" {{ $op2_c; }}">10</option>
-                                                        <option value = "11" {{ $op2_c; }}">11</option>
-                                                        <option value = "12" {{ $op2_c; }}">12</option>
-
-                                                    </select>
-                                                    <select id="rpmonthyear" name="rpmonthyear" class="form-select mt-1  border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('rpmonthyear', $rentalPayments->rpmonthyear))">
-                                                        <option value = "2023" {{ $op1_c; }}">2023</option>
-                                                        <option value = "2024" {{ $op2_c; }}">2024</option>
-                                                        <option value = "2025" {{ $op2_c; }}">2025</option>
-                                                        <option value = "2026" {{ $op2_c; }}">2026</option>
-                                                        <option value = "2027" {{ $op2_c; }}">2027</option>
-                                                        <option value = "2028" {{ $op2_c; }}">2028</option>
-                                                        <option value = "2029" {{ $op2_c; }}">2029</option>
-                                                        <option value = "2030" {{ $op2_c; }}">2030</option>
-                                                        <option value = "2031" {{ $op2_c; }}">2031</option>
-                                                        <option value = "2032" {{ $op2_c; }}">2032</option>
-                                                    </select>
-                                                    <x-input-error :messages="$errors->get('rpmonthyear')" class="mt-2" />
-                                                </div>
-                                            </div>
+                                            
                                             <div class="col-span-2 sm:col-span-1 ">
                                                 <!-- rpnotes -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="rpnotes" :value="__('Notes')" />
-                                                    <x-text-input id="rpnotes" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="textarea" name="rpnotes" :value="old('rpnotes', $rentalPayments->rpnotes)" required autofocus autocomplete="off" />
-                                                    <x-input-error :messages="$errors->get('rpnotes')" class="mt-2" />
+                                                    <x-text-input id="attnotes" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="textarea" name="attnotes" :value="old('attnotes', $attendance->attnotes)" required autofocus autocomplete="off"/>
+                                                    <x-input-error :messages="$errors->get('attnotes')" class="mt-2" />
                                                 </div>
                                             </div>
                                             <div class="flex items-center justify-between col-span-2 sm:col-span-2">
@@ -188,13 +97,8 @@
                                                 </x-primary-button>
                                                 </div>
                                             </div>
-                                            
                                         </div>
-                                    
                                 </div>
-                            </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                                
                             </div>
                         </form>
                     </div>

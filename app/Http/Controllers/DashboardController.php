@@ -11,12 +11,12 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 class DashboardController extends Controller
 {
     public function administrator(){
-        $sales = Sales::paginate(5);
+        $sales = Sales::latest()->paginate(5);
         $RenterRequests = RenterRequests::where('status','Pending')->orderBy('status','desc')->paginate(5);
         
         $rentalpayments = RentalPayments::where('status','Unpaid')->orderBy('status','desc')->paginate(5);
 
-        $attendance = attendance::paginate(5); 
+        $attendance = attendance::latest()->paginate(5); 
 
         return view('dashboard.index')->with(['sales' => $sales])
                                         ->with(['RenterRequests' => $RenterRequests])
@@ -30,7 +30,7 @@ class DashboardController extends Controller
                     ->where(function(Builder $builder){
                         $builder->where('branchname',auth()->user()->branchname)
                                 ->where('collected_status','Pending');
-                    })->paginate(5);
+                    })->latest()->paginate(5);
         $RenterRequests = RenterRequests::where('cabinetname',auth()->user()->cabinetname)
                     ->where(function(Builder $builder){
                         $builder->where('branchname',auth()->user()->branchname)
@@ -54,7 +54,8 @@ class DashboardController extends Controller
 
     public function cashier(){
         $sales = Sales::where('branchname',auth()->user()->branchname)
-                    ->paginate(5);
+                        ->latest()
+                        ->paginate(5);
         $RenterRequests = RenterRequests::where('branchname',auth()->user()->branchname)
                     ->paginate(5);
 
@@ -63,7 +64,7 @@ class DashboardController extends Controller
                         $builder->where('status','Pending');
                     })->paginate(5);
 
-        $attendance = attendance::where('branchname',auth()->user()->branchname)->paginate(5);
+        $attendance = attendance::where('branchname',auth()->user()->branchname)->latest()->paginate(5);
 
         return view('dashboard.index')->with(['sales' => $sales])
                     ->with(['RenterRequests' => $RenterRequests])

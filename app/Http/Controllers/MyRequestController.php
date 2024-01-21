@@ -25,7 +25,7 @@ class MyRequestController extends Controller
     }
     
     public function storedata($request){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $rent = Renters::where('username',auth()->user()->username)->first();
 
         $br = branch::where('branchname',auth()->user()->branchname)->first();

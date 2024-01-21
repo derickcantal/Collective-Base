@@ -21,7 +21,7 @@ class BranchController extends Controller
     }
     
     public function storedata($request){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $branches = branch::create([
             'branchname' => $request->branchname,
             'branchaddress' => $request->branchaddress,

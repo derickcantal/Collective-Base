@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\attendance;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use \Carbon\Carbon;
@@ -13,7 +14,7 @@ use \Carbon\Carbon;
 class AttendanceController extends Controller
 {
     public function loaddata(){
-        $attendance = attendance::orderBy('status','asc')
+        $attendance = attendance::where('branchname',auth()->user()->branchname)
         ->paginate(5);
 
         return view('attendance.index',compact('attendance'))
@@ -32,25 +33,49 @@ class AttendanceController extends Controller
     }
     
     public function storedata($request){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $users = User::findOrFail($request->userid);
 
-        $attendance = attendance::create([
-            'userid' => $users->userid,
-            'username' =>  $users->username,
-            'email' =>  $users->email,
-            'firstname' => $users->firstname,
-            'lastname' => $users->lastname,
-            'branchid' => '1',
-            'branchname' => $users->branchname,
-            'attnotes' => $request->attnotes,
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'timerecorded' => $timenow,
-            'posted' => 'N',
-            'mod' => 0,
-            'status' => 'Active',
-        ]);
+        $path = Storage::disk('public')->put('att',$request->file('avatarproof'));
+
+        if(empty($request->attnotes)){
+            $attendance = attendance::create([
+                'userid' => $users->userid,
+                'username' =>  $users->username,
+                'email' =>  $users->email,
+                'avatarproof' => $path,
+                'firstname' => $users->firstname,
+                'lastname' => $users->lastname,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'attnotes' => 'Null',
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'timerecorded' => $timenow,
+                'posted' => 'N',
+                'mod' => 0,
+                'status' => 'Active',
+            ]);
+        }else{
+            $attendance = attendance::create([
+                'userid' => $users->userid,
+                'username' =>  $users->username,
+                'email' =>  $users->email,
+                'avatarproof' => $path,
+                'firstname' => $users->firstname,
+                'lastname' => $users->lastname,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'attnotes' => $request->attnotes,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'timerecorded' => $timenow,
+                'posted' => 'N',
+                'mod' => 0,
+                'status' => 'Active',
+            ]);
+        }
+        
     
         if ($attendance) {
             //query successful
@@ -62,8 +87,71 @@ class AttendanceController extends Controller
         }  
     }
     
-    public function updatedata(){
+    public function updatedata($request, $attendance){
         
+        $att1 = attendance::where('attid',$attendance->attid)->first();
+        $mod = 0;
+        $mod = $attendance->mod;
+        if($mod == 0){
+            if(empty($request->avatarproof)){
+                if(empty($request->attnotes)){
+                    $att =attendance::where('attid',$attendance->attid)->update([
+                        'updated_by' => auth()->user()->email,
+                        'mod' => $mod + 1,
+                    ]);
+                }else{
+                    $att =attendance::where('attid',$attendance->attid)->update([
+                        'attnotes' => $request->attnotes,
+                        'updated_by' => auth()->user()->email,
+                        'mod' => $mod + 1,
+                    ]);
+                }
+    
+                
+            }else{
+                
+                if(!empty($request->avatarproof)){
+                    $path = Storage::disk('public')->put('att',$request->file('avatarproof'));
+                    $oldavatar = $attendance->avatarproof;
+                }
+                
+                if($oldavatar == 'avatars/cash-default.jpg'){
+                    
+                }else{
+                    Storage::disk('public')->delete($oldavatar);
+                    if(!empty($request->avatarproof)){
+                        Storage::disk('public')->delete($oldavatar);
+                    }
+    
+                }
+                if(empty($request->attnotes)){
+                    $att =attendance::where('attid',$attendance->attid)->update([
+                        'avatarproof' => $path,
+                        'updated_by' => auth()->user()->email,
+                        'mod' => $mod + 1,
+                    ]);
+                }else{
+                    $att =attendance::where('attid',$attendance->attid)->update([
+                        'avatarproof' => $path,
+                        'attnotes' => $request->attnotes,
+                        'updated_by' => auth()->user()->email,
+                        'mod' => $mod + 1,
+                    ]);
+                }
+            }
+        }else{
+            return redirect()->route('attendance.index')
+                        ->with('failed','Attendance Update not allowed. Maximum Modification: Once.');
+        }
+        
+        if ($att) {
+            //query successful
+            return redirect()->route('attendance.index')
+                        ->with('success','Attendance Updated successfully.');
+        }else{
+            return redirect()->route('attendance.index')
+                        ->with('failed','Attendance Update failed');
+        }
     }
     
     public function destroydata(){
@@ -222,13 +310,13 @@ class AttendanceController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return view('attendance.edit');
+                return view('attendance.edit', ['attendance' => $attendance]);
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return view('attendance.edit');
+                return view('attendance.edit', ['attendance' => $attendance]);
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return view('attendance.edit');
+                return view('attendance.edit', ['attendance' => $attendance]);
             }
         }else{
             return redirect()->route('dashboard.index');
