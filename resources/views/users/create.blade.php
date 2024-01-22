@@ -153,6 +153,7 @@
                                                         <option value ="Administrator">Administrator</option>
                                                         <option value ="Supervisor">Supervisor</option>
                                                         <option value ="Cashier">Cashier</option>
+                                                        <option value ="Crew">Crew</option>
                                                     </select>
                                                     <x-input-error :messages="$errors->get('accesstype')" class="mt-2" />
                                                 </div>

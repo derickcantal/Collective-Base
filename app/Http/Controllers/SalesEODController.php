@@ -11,7 +11,8 @@ use App\Models\RenterRequests;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use \Carbon\Carbon;
-use Redirect;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Controllers\SalesEODController;
 
 class SalesEODController extends Controller
 {
@@ -22,7 +23,11 @@ class SalesEODController extends Controller
         ;
     }
     
-    public function storedata($request){
+    public function storedata($request): RedirectResponse
+    {
+        return redirect()->route('dashboard.index')
+                                    ->with('success','EOD Succesful');
+        dd("Redirect Afer Save");
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         
         try{
@@ -122,7 +127,7 @@ class SalesEODController extends Controller
                 ]); 
                 
                 if($saleseod){
-            
+                    
                     return redirect()->route('dashboard.index')
                                     ->with('success','EOD Succesful');
                 }else{

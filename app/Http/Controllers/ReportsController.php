@@ -83,8 +83,8 @@ class ReportsController extends Controller
                                             ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
                                             ->latest()->paginate(5);
                 }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor'){
-                    $sales = history_sales::latest()->paginate(5);
-                    $salesget = history_sales::latest()->get();
+                    $sales = history_sales::whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])->latest()->paginate(5);
+                    $salesget = history_sales::whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])->latest()->get();
                 }
         
                 $totalqty = collect($salesget)->sum('qty');

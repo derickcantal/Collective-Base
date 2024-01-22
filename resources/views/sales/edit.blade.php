@@ -32,7 +32,7 @@
                                             <img width="100" height="100" class="rounded-full mt-4" src="{{ asset("/storage/$sales->salesavatar") }}" alt="proof avatar" />
 
                                                 <x-input-label for="name" value="Upload Receipt" />
-                                                <x-text-input id="salesavatar" name="salesavatar" type="file"  class="mt-1 block w-full mt-3" :value="old('salesavatar', $sales->salesavatar)" autofocus autocomplete="off" required/>
+                                                <x-text-input id="salesavatar" name="salesavatar" type="file"  class="mt-1 block w-full mt-3" :value="old('salesavatar', $sales->salesavatar)" autofocus autocomplete="off" />
                                                 <x-input-error class="mt-2" :messages="$errors->get('salesavatar')" />
                                             </div>
                                         </div>
@@ -90,6 +90,17 @@
                                                 <x-input-label for="total" :value="__('Total Amount')" />
                                                 <x-text-input id="total" x-model.number="total"  class="block mt-1 w-full" type="text" name="total" :value="old('total')" required autofocus autocomplete="off" readonly/>
                                                 <x-input-error :messages="$errors->get('total')" class="mt-2" />
+                                            </div>
+                                        </div>
+                                        <div class="col-span-2 sm:col-span-1 ">
+                                            <!-- cabname -->
+                                            <div class="form-group mt-4">
+                                                <x-input-label for="returned" :value="__('Returned?')" />
+                                                <select id="returned" name="returned" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('returned')" required>
+                                                        <option value = "N">No</option>
+                                                        <option value = "Y">Yes</option>
+                                                </select>
+                                                <x-input-error :messages="$errors->get('returned')" class="mt-2" />
                                             </div>
                                         </div>
                                         <div class="col-span-2 sm:col-span-1 ">

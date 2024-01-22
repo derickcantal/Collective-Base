@@ -6,6 +6,7 @@ use App\Models\Sales;
 use App\Models\attendance;
 use App\Models\RentalPayments;
 use App\Models\RenterRequests;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class DashboardController extends Controller
@@ -85,7 +86,7 @@ class DashboardController extends Controller
                 return $this->administrator();
             }
         }else{
-            return view('welcome');
+            return view('login')->with('failed','Account Inactive');
         }
         
     }

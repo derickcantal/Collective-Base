@@ -8,11 +8,13 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use App\Models\cabinet;
 use \Carbon\Carbon;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Imagick\Driver;
 
 class SalesController extends Controller
 {
     public function loaddata(){
-        $sales = Sales::orderBy('status','asc')
+        $sales = Sales::latest()
         ->paginate(5);
 
         return view('sales.index',compact('sales'))
@@ -21,7 +23,7 @@ class SalesController extends Controller
 
     public function loaddata_cashier(){
         $sales = Sales::where('branchname',auth()->user()->branchname)
-        ->orderBy('status','asc')
+        ->latest()
         ->paginate(5);
 
         return view('sales.index',compact('sales'))
@@ -32,16 +34,25 @@ class SalesController extends Controller
         
         $validated = $request->validate([
             'salesavatar'=>'required|image|file',
+            'payavatar'=>'image|file',
         ]);
 
+        $manager = ImageManager::imagick();
+        $name_gen = hexdec(uniqid()).'.'.$request->file('salesavatar')->getClientOriginalExtension();
+        
+        $image = $manager->read($request->file('salesavatar'));
+        $encoded = $image->toWebp()->save(storage_path('app/public/sales/'.$name_gen.'.webp'));
+        $path = 'sales/'.$name_gen.'.webp';
+        
+       
         $cabn = cabinet::where('cabinetname',$request->cabinetname)
         ->where(function(Builder $builder) use($request){
             $builder->where('branchname',$request->branchname);
         })->first();
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         if(empty($request->snotes)){
-            $path = Storage::disk('public')->put('sales',$request->file('salesavatar'));
             if(empty($request->payavatar)){
+                
                 $sales = Sales::create([
                     'salesavatar' => $path,
                     'salesname' => 'Null',
@@ -74,7 +85,7 @@ class SalesController extends Controller
             }
             
         }else{
-            $path = Storage::disk('public')->put('sales',$request->file('salesavatar'));
+            $path = Storage::disk('public')->put('sales',$request->file('salesavatar')); 
             if(!empty($request->payavatar)){
                 $path2 = Storage::disk('public')->put('salespayavatar',$request->file('payavatar'));
             
@@ -95,7 +106,7 @@ class SalesController extends Controller
                     'userid' => $cabn->userid,
                     'username' => $cabn->email,
                     'accesstype' => auth()->user()->accesstype,
-                    'branchid' => '1',
+                    'branchid' => $cabn->branchid,
                     'branchname' => auth()->user()->branchname,
                     'collected_status' => 'Pending',
                     'returned' => 'N',
@@ -111,6 +122,8 @@ class SalesController extends Controller
             }
                 
         }
+        
+        
         
     
         if ($sales) {
@@ -137,51 +150,68 @@ class SalesController extends Controller
             return redirect()->route('sales.index')
                             ->with('failed','Transaction completed. Modifications Not Allowed');
         }elseif($sales->mod == '0'){
-            $path = Storage::disk('public')->put('sales',$request->file('salesavatar'));
+            if($request->returned == 'N'){
+                $path = Storage::disk('public')->put('sales',$request->file('salesavatar'));
             
-            $oldavatar = $sales->salesavatar;
-            if(!empty($request->payavatar)){
-                $path2 = Storage::disk('public')->put('salespayavatar',$request->file('payavatar'));
-                $oldavatar2 = $sales->payavatar;
-            }
-            
-            
-            if($oldavatar == 'avatars/cash-default.jpg'){
-                
-            }else{
-                Storage::disk('public')->delete($oldavatar);
+                $oldavatar = $sales->salesavatar;
                 if(!empty($request->payavatar)){
-                    Storage::disk('public')->delete($oldavatar2);
+                    $path2 = Storage::disk('public')->put('salespayavatar',$request->file('payavatar'));
+                    $oldavatar2 = $sales->payavatar;
+                }
+                
+                if($oldavatar == 'avatars/cash-default.jpg'){
+                    
+                }else{
+                    Storage::disk('public')->delete($oldavatar);
+                    if(!empty($request->payavatar)){
+                        Storage::disk('public')->delete($oldavatar2);
+                    }
                 }
 
+                Sales::where('salesid', $sales->salesid)->update([
+                    'salesavatar' => $path,
+                    'cabid' => $cabn->cabid,
+                    'cabinetname' => $cabn->cabinetname,
+                    'productname' => $request->productname,
+                    'qty' => $request->qty,
+                    'origprice' => 0,
+                    'srp' => $request->srp,
+                    'total' => $request->qty * $request->srp,
+                    'grandtotal' => 0,
+                    'payavatar' => $request->payavatar,
+                    'paytype' => $request->paytype,
+                    'payref' => $request->payref,
+                    'userid' => $cabn->userid,
+                    'username' => $cabn->email,
+                    'accesstype' => auth()->user()->accesstype,
+                    'branchid' => $cabn->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'collected_status' => 'Pending',
+                    'returned' => 'N',
+                    'snotes' => $request->snotes,
+                    'posted' => 'N',
+                    'mod' => $mod + 1,
+                    'updated_by' => auth()->user()->email,
+                    'status' => 'Unposted',
+                ]);
+            }elseif($request->returned == 'Y'){
+                if($request->snotes == 'Null'){
+                    return redirect()->route('sales.index')
+                    ->with('failed','Update Failed. Note must not be null');
+                }elseif(empty($request->snotes)){
+                    return redirect()->route('sales.index')
+                    ->with('failed','Update Failed. Note must not be empty');
+                }else{
+                    Sales::where('salesid', $sales->salesid)->update([
+                        'total' => 0,
+                        'snotes' => $request->snotes,
+                        'returned' => 'Y',
+                        'mod' => $mod + 1,
+                        'updated_by' => auth()->user()->email,
+                    ]);
+                }
             }
-
-            Sales::where('salesid', $sales->salesid)->update([
-                'salesavatar' => $path,
-                'cabid' => $cabn->cabid,
-                'cabinetname' => $cabn->cabinetname,
-                'productname' => $request->productname,
-                'qty' => $request->qty,
-                'origprice' => 0,
-                'srp' => $request->srp,
-                'total' => $request->qty * $request->srp,
-                'grandtotal' => 0,
-                'payavatar' => $request->payavatar,
-                'paytype' => $request->paytype,
-                'payref' => $request->payref,
-                'userid' => $cabn->userid,
-                'username' => $cabn->email,
-                'accesstype' => auth()->user()->accesstype,
-                'branchid' => '1',
-                'branchname' => auth()->user()->branchname,
-                'collected_status' => 'Pending',
-                'returned' => 'N',
-                'snotes' => $request->snotes,
-                'posted' => 'N',
-                'mod' => $mod + 1,
-                'updated_by' => auth()->user()->email,
-                'status' => 'Unposted',
-            ]);
+            
 
             return redirect()->route('sales.index')
                             ->with('success','Sales Payment updated successfully');
@@ -213,7 +243,7 @@ class SalesController extends Controller
                     ->orWhere('username','like',"%{$request->search}%")
                     ->orWhere('branchname','like',"%{$request->search}%")
                     ->orWhere('snotes','like',"%{$request->search}%") 
-                    ->orderBy('status','asc');
+                    ->latest();
         })
         ->paginate(5);
 
@@ -234,7 +264,7 @@ class SalesController extends Controller
                     ->orWhere('username','like',"%{$request->search}%")
                     ->orWhere('branchname','like',"%{$request->search}%")
                     ->orWhere('snotes','like',"%{$request->search}%") 
-                    ->orderBy('status','asc');
+                    ->latest();
         })
         ->paginate(5);
 

@@ -29,7 +29,27 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        if(auth()->user()->status != "Active"){
+            Auth::guard('web')->logout();
+
+            $request->session()->invalidate();
+
+            $request->session()->regenerateToken();
+
+            return redirect('login')->with('failed','Account Inactive');
+        }elseif(auth()->user()->accesstype == "Crew"){
+            Auth::guard('web')->logout();
+
+            $request->session()->invalidate();
+
+            $request->session()->regenerateToken();
+
+            return redirect('login')->with('failed','Access Denied.');
+        }else{
+
+            return redirect()->intended(RouteServiceProvider::HOME);
+        }
+        
     }
 
     /**

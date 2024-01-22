@@ -120,9 +120,16 @@
                                                 <td class="px-6 py-4">
                                                     <x-input-label for="srp" :value="$sale->srp"/>
                                                 </td>
+                                                @if($sale->total == 0)
+                                                <td class="px-6 py-4">
+                                                    <x-input-label for="total">{{ $sale->total }}****</x-input-label>
+                                                </td>
+                                                @else
                                                 <td class="px-6 py-4">
                                                     <x-input-label for="total">{{ $sale->total }}</x-input-label>
                                                 </td>
+                                                @endif
+                                               
                                                 <td class="px-6 py-4">
                                                     @php
                                                         if($sale->payavatar == 'avatars/cash-default.jpg'):
