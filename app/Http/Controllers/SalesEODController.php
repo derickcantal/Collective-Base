@@ -11,7 +11,6 @@ use App\Models\RenterRequests;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use \Carbon\Carbon;
-use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\SalesEODController;
 
 class SalesEODController extends Controller
@@ -23,11 +22,9 @@ class SalesEODController extends Controller
         ;
     }
     
-    public function storedata($request): RedirectResponse
+    public function storedata($request)
     {
-        return redirect()->route('dashboard.index')
-                                    ->with('success','EOD Succesful');
-        dd("Redirect Afer Save");
+        
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         
         try{
@@ -125,7 +122,6 @@ class SalesEODController extends Controller
                     'timerecorded' => $timenow,
                     'posted' => 'N',
                 ]); 
-                
                 if($saleseod){
                     
                     return redirect()->route('dashboard.index')
@@ -151,7 +147,6 @@ class SalesEODController extends Controller
                     'timerecorded' => $timenow,
                     'posted' => 'N',
                 ]); 
-                
                 if($saleseod){
             
                     return redirect()->route('dashboard.index')
@@ -213,6 +208,7 @@ class SalesEODController extends Controller
      */
     public function create(Request $request)
     {
+        
         if(Hash::check($request->password, auth()->user()->password)){
             $sales = Sales::where('branchname',auth()->user()->branchname)
             ->where(function(Builder $builder){
@@ -242,6 +238,7 @@ class SalesEODController extends Controller
                 ->with('totalrentpay',$totalrentpay)
                 ->with('totalrequests',$totalrequests);
         }else{
+            dd('show here');
             return redirect()->route('saleseod.index')->with('failed','Incorrect Password.');
         }
     }

@@ -258,8 +258,9 @@ class CabinetController extends Controller
      */
     public function edit($cabinet)
     {
-        $cab = cabinet::where('cabinetname',$cabinet)->where('branchname',auth()->user()->branchname)->first();
-
+        $cab = cabinet::where('cabid',$cabinet)->first();                      
+                        
+                        
         $rent = Renters::where('accesstype','Renters')
         ->where(function(Builder $builder){
             $builder->where('status','Active')
@@ -267,7 +268,7 @@ class CabinetController extends Controller
                     ;
         })->get();
        
-        $branches = branch::all();
+        $branches = branch::all();  
         
         return view('cabinet.edit',['branches' => $branches])
                             ->with(['rent' => $rent])
