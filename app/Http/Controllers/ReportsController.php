@@ -12,10 +12,42 @@ use App\Models\history_sales_requests;
 use App\Models\history_attendance;
 use App\Models\history_rental_payments;
 use \Carbon\Carbon;
+use App\Models\branch;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class ReportsController extends Controller
 {
+    public function searchtopsalesbranch(){
+        dd("test");
+    }
+
+    public function topsalesbranch(){
+        
+        if(empty($request->startdate) && empty($request->enddate)){
+
+        }elseif(empty($request->startdate) or empty($request->enddate)){
+
+        }
+
+        if(auth()->user()->accesstype == 'Cashier'){
+            
+        }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor'){
+            $sales = history_sales::groupBy('cabid','cabinetname','branchname')
+            ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
+            ->orderBy('total_sum','desc')
+            ->paginate(10);
+        }
+        $branch = branch::orderBy('branchname', 'asc')->get();
+
+        $totalqty = collect($sales)->sum('qty_sum');
+        $totalsales = collect($sales)->sum('total_sum');
+
+        return view('reports.top-sales-branch')->with(['sales' => $sales])
+                                    ->with(['totalsales' => $totalsales])
+                                    ->with(['totalqty' => $totalqty])
+                                    ->with(['branch' => $branch]);
+    }
+
     public function searchhsales(Request $request)
     {  
         if(empty($request->search)){

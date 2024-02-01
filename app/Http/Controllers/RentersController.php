@@ -230,7 +230,14 @@ class RentersController extends Controller
      */
     public function show(Renters $renter)
     {
-        return view('renters.show',['renter' => $renter]);
+        
+        $cabinets = cabinet::where('userid',$renter->userid)
+                    ->orderBy('status','asc')
+                    ->orderBy('branchname','asc')
+                    ->paginate(5);
+        return view('renters.show',['renter' => $renter])
+            ->with(compact('cabinets'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**

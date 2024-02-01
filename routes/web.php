@@ -86,6 +86,10 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/reports', [ReportsController::class, 'displayall'])->name('reports.index');
     Route::get('reports.search', [ReportsController::class, 'searchhsales'])->name('reports.search');
+    Route::get('reports/topsalesbranch', [ReportsController::class, 'topsalesbranch'])->name('reports.topsalesbranch');
+    Route::get('reports/searchtopsalesbranch', [ReportsController::class, 'searchtopsalesbranch'])->name('reports.searchtopbranchsales');
+    
+    
     
 });
 

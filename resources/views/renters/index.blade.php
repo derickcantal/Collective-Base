@@ -120,8 +120,8 @@
                                                             
                                                         @endphp
                                                         <form action="{{ route('renters.destroy',$renters->userid) }}" method="POST">
-                                                            
-                                                            <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('renters.edit',$renters->userid) }}">Modify</a>
+                                                            <a class="font-medium text-white-600 dark:text-white-500 hover:underline" href="{{ route('renters.show',$renters->userid) }}">Cabinets</a>
+                                                            | <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('renters.edit',$renters->userid) }}">Modify</a>
                                                             @csrf
                                                             @method('DELETE')
                                                             @php
