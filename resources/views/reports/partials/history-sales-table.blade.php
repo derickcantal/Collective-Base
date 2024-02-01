@@ -30,7 +30,7 @@
 						</div>
 					</div>
 					@endif
-					<form action="reports.search" method="get">
+					<form action="{{ route('reports.search') }}" method="get">
 						<div class="grid gap-4 mb-4 grid-cols-4">  
 							<div>
 								<div class="relative max-w-sm">

@@ -37,59 +37,61 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'displayall'])->name('dashboard.index');
 });
 Route::middleware('auth')->group(function () {
+    Route::get('users/search', [UsersController::class, 'search'])->name('users.search');
     Route::resource('users', UsersController::class);
-    Route::get('users.search', [UsersController::class, 'search'])->name('users.search');
     
+    Route::get('sales/search', [SalesController::class, 'search'])->name('sales.search');
+    Route::get('sales/calc', [SalesController::class, 'salescalc'])->name('sales.calc');
     Route::resource('sales', SalesController::class);
-    Route::get('sales.search', [SalesController::class, 'search'])->name('sales.search');
-    Route::get('sales.calc', [SalesController::class, 'salescalc'])->name('sales.calc');
 
+
+    Route::get('attendance/search', [AttendanceController::class, 'search'])->name('attendance.search');
+    Route::get('attendance/selectemp', [AttendanceController::class, 'selectemp'])->name('attendance.selectemp');
+    Route::get('attendance/searchemp', [AttendanceController::class, 'searchemp'])->name('attendance.searchemp');
+    Route::put('attendance/putemp/{users}', [AttendanceController::class, 'putemp'])->name('attendance.putemp');
     Route::resource('attendance', AttendanceController::class);
-    Route::get('attendance.search', [AttendanceController::class, 'search'])->name('attendance.search');
-    Route::get('attendance.selectemp', [AttendanceController::class, 'selectemp'])->name('attendance.selectemp');
-    Route::get('attendance.searchemp', [AttendanceController::class, 'searchemp'])->name('attendance.searchemp');
-    Route::put('attendance.putemp/{users}', [AttendanceController::class, 'putemp'])->name('attendance.putemp');
-
-    Route::resource('cabinet', CabinetController::class);
-    Route::get('cabinet.search', [CabinetController::class, 'search'])->name('cabinet.search');
-
-    Route::resource('branch', BranchController::class);
-    Route::get('branch.search', [BranchController::class, 'search'])->name('branch.search');
-
-    Route::resource('rentersrequests', RenterRequestsController::class);
-    Route::get('rentersrequests.search', [RenterRequestsController::class, 'search'])->name('rentersrequests.search');
-    Route::get('rentersrequests.selectbranch', [RenterRequestsController::class, 'selectbranch'])->name('rentersrequests.selectbranch');
-    Route::put('rentersrequests.selectcabinet/{branch}', [RenterRequestsController::class, 'selectcabinet'])->name('rentersrequests.selectcabinet');
-
-    Route::resource('myrequest', MyRequestController::class);
-    Route::get('myrequest.search', [MyRequestController::class, 'search'])->name('myrequest.search');
     
+    Route::get('cabinet/search', [CabinetController::class, 'search'])->name('cabinet.search');
+    Route::resource('cabinet', CabinetController::class);
+
+    Route::get('branch/search', [BranchController::class, 'search'])->name('branch.search');
+    Route::resource('branch', BranchController::class);
+
+    Route::get('renters/requests/search', [RenterRequestsController::class, 'search'])->name('rentersrequests.search');
+    Route::get('renters/requests/selectbranch', [RenterRequestsController::class, 'selectbranch'])->name('rentersrequests.selectbranch');
+    Route::put('renters/requests/selectcabinet/{branch}', [RenterRequestsController::class, 'selectcabinet'])->name('rentersrequests.selectcabinet');
+    Route::resource('rentersrequests', RenterRequestsController::class);
+
+    Route::get('myrequest/search', [MyRequestController::class, 'search'])->name('myrequest.search');
+    Route::resource('myrequest', MyRequestController::class);
+
+    Route::get('myrental/search', [MyRequestController::class, 'search'])->name('myrental.search');
     Route::resource('myrental', MyRentalController::class);
-    Route::get('myrental.search', [MyRequestController::class, 'search'])->name('myrental.search');
 
     Route::resource('saleseod', SalesEODController::class);
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('renters/search', [RentersController::class, 'search'])->name('renters.search');
+    Route::get('renters/selectbranch', [RentersController::class, 'selectbranch'])->name('renters.selectbranch');
+    Route::put('renters/createrenter/{branchid}', [RentersController::class, 'createrenter'])->name('renters.createrenter');
     Route::resource('renters', RentersController::class);
-    Route::get('renters.search', [RentersController::class, 'search'])->name('renters.search');
-    Route::get('renters.selectbranch', [RentersController::class, 'selectbranch'])->name('renters.selectbranch');
-    Route::put('renters.createrenter/{branchid}', [RentersController::class, 'createrenter'])->name('renters.createrenter');
     
+    Route::get('rental/payments/search', [RentalPaymentsController::class, 'search'])->name('rentalpayments.search');
+    Route::get('rental/payments/selectrbc', [RentalPaymentsController::class, 'selectrbc'])->name('rentalpayments.selectrbc');
+    Route::get('rental/payments/searchrbc', [RentalPaymentsController::class, 'searchrbc'])->name('rentalpayments.searchrbc');
+    Route::put('rental/payments/putrbc/{renters}', [RentalPaymentsController::class, 'putrbc'])->name('rentalpayments.putrbc');
     Route::resource('rentalpayments', RentalPaymentsController::class);
-    Route::get('rentalpayments.search', [RentalPaymentsController::class, 'search'])->name('rentalpayments.search');
-    Route::get('rentalpayments.selectrbc', [RentalPaymentsController::class, 'selectrbc'])->name('rentalpayments.selectrbc');
-    Route::get('rentalpayments.searchrbc', [RentalPaymentsController::class, 'searchrbc'])->name('rentalpayments.searchrbc');
-    Route::put('rentalpayments.putrbc/{renters}', [RentalPaymentsController::class, 'putrbc'])->name('rentalpayments.putrbc');
+
 });
 
 Route::middleware('auth')->group(function () {
     Route::get('/reports', [ReportsController::class, 'displayall'])->name('reports.index');
-    Route::get('reports.search', [ReportsController::class, 'searchhsales'])->name('reports.search');
-    Route::get('reports/topsalesbranch', [ReportsController::class, 'topsalesbranch'])->name('reports.topsalesbranch');
-    Route::get('reports/searchtopsalesbranch', [ReportsController::class, 'searchtopsalesbranch'])->name('reports.searchtopbranchsales');
+    Route::get('reports/search', [ReportsController::class, 'searchhsales'])->name('reports.search');
+    Route::get('/top/salesbranch', [ReportsController::class, 'topsalesbranch'])->name('reports.topsalesbranch');
+    Route::get('/top/search/salesbranch', [ReportsController::class, 'searchtopsalesbranch'])->name('reports.searchtopsalesbranch');
     
-    
+     
     
 });
 
