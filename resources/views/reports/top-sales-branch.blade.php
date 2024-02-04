@@ -112,11 +112,11 @@
                                                 </td>
                                                 @if($sale->total_sum == 0)
                                                 <td class="px-6 py-4">
-                                                    <x-input-label for="total">{{ $sale->total_sum }}****</x-input-label>
+                                                    <x-input-label for="total">@php echo number_format($sale->total_sum, 2); @endphp****</x-input-label>
                                                 </td>
                                                 @else
                                                 <td class="px-6 py-4">
-                                                    <x-input-label for="total">{{ $sale->total_sum }}</x-input-label>
+                                                    <x-input-label for="total">@php echo number_format($sale->total_sum, 2); @endphp</x-input-label>
                                                 </td>
                                                 @endif
                                                 <td class="px-6 py-4">
@@ -141,7 +141,7 @@
                                         @endif
                                                 <td class="px-6 py-3">TOTAL:</td>
                                                 <td class="px-6 py-3">{{ $totalqty }}</td>
-                                                <td scope="row" class="px-6 py-4"> {{ $totalsales }}</td>
+                                                <td scope="row" class="px-6 py-4"> @php echo number_format($totalsales, 2); @endphp</td>
                                     </table>
                                 </div>
                                 <div class="mt-4">

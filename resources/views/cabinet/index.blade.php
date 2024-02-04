@@ -98,7 +98,11 @@
                                                         <x-input-label for="cabinetname" :value="$cabinet->cabinetname"/>
                                                     </td>
                                                     <td class="px-6 py-4">
-                                                        <x-input-label for="cabinetprice" :value="$cabinet->cabinetprice"/>
+                                                        @if($cabinet->cabinetprice == '' or $cabinet->cabinetprice == 'Null')
+                                                            <x-input-label for="cabinetprice" value="0.00"/>
+                                                        @else
+                                                            <x-input-label for="cabinetprice" :value="$cabinet->cabinetprice"/>
+                                                        @endif
                                                     </td>
                                                     <td class="px-6 py-4">
                                                         <x-input-label for="branchname" :value="$cabinet->branchname"/>

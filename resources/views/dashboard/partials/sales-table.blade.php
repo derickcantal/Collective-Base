@@ -65,15 +65,15 @@
 										<x-input-label for="qty" :value="$sale->qty"/>
 									</td>
 									<td class="px-6 py-4">
-										<x-input-label for="srp" :value="$sale->srp"/>
+										<x-input-label for="srp">@php echo number_format($sale->srp, 2); @endphp</x-input-label>
 									</td>
 									@if($sale->total == 0)
 									<td class="px-6 py-4">
-										<x-input-label for="total">{{ $sale->total }}****</x-input-label>
+										<x-input-label for="total">@php echo number_format($sale->total, 2); @endphp****</x-input-label>
 									</td>
 									@else
 									<td class="px-6 py-4">
-										<x-input-label for="total">{{ $sale->total }}</x-input-label>
+										<x-input-label for="total">@php echo number_format($sale->total, 2); @endphp</x-input-label>
 									</td>
 									@endif
 									<td class="px-6 py-4">
@@ -86,6 +86,11 @@
 									</td>
 									<td class="px-6 py-4">
 										<x-input-label for="paytype">{{ $sale->paytype }}</x-input-label>
+										@if($sale->payref == 'Null')
+											<x-input-label for="payref" value=""/>
+										@else
+											<x-input-label for="payref" :value="$sale->payref"/>
+										@endif
 									</td>
 									<td class="px-6 py-4">
 										<x-input-label for="branchname" :value="$sale->branchname"/>
