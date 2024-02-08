@@ -18,6 +18,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 class ReportsController extends Controller
 {
     public function searchtopsalesbranch(Request $request){
+
         if(empty($request->startdate) && empty($request->enddate)){
             if(empty($request->branchname) or $request->branchname == 'All'){
                 $sales = history_sales::groupBy('cabid','cabinetname','branchname')

@@ -74,7 +74,7 @@
                                                 <!-- productname -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="totalsales" :value="__('TOTAL SALES')" />
-                                                    <x-text-input id="totalsales" x-model.number="totalsales" class="block mt-1 w-full" type="number" name="totalsales" value="{{ $totalsales }}" required autofocus autocomplete="off" readonly />
+                                                    <x-text-input id="totalsales" x-model.number="totalsales" class="block mt-1 w-full" type="number" name="totalsales" value="{{ number_format($totalsales,2) }}" required autofocus autocomplete="off" readonly />
                                                     <x-input-error :messages="$errors->get('totalsales')" class="mt-2" />
                                                 </div>
                                             </div>

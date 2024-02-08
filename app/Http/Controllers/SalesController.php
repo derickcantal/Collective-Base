@@ -40,15 +40,15 @@ class SalesController extends Controller
             return redirect()->route('sales.index')
                         ->with('failed','Please update Price');
         }
-        //$manager = ImageManager::imagick();
-        //$name_gen = hexdec(uniqid()).'.'.$request->file('salesavatar')->getClientOriginalExtension();
+        $manager = ImageManager::imagick();
+        $name_gen = hexdec(uniqid()).'.'.$request->file('salesavatar')->getClientOriginalExtension();
         
-        //$image = $manager->read($request->file('salesavatar'));
+        $image = $manager->read($request->file('salesavatar'));
        
-        //$encoded = $image->toWebp()->save(storage_path('app/public/sales/'.$name_gen.'.webp'));
-        //$path = 'sales/'.$name_gen.'.webp';
+        $encoded = $image->toWebp()->save(storage_path('app/public/sales/'.$name_gen.'.webp'));
+        $path = 'sales/'.$name_gen.'.webp';
         
-        $path = Storage::disk('public')->put('sales',$request->file('salesavatar')); 
+        //$path = Storage::disk('public')->put('sales',$request->file('salesavatar')); 
        
         $cabn = cabinet::where('cabinetname',$request->cabinetname)
         ->where(function(Builder $builder) use($request){
@@ -64,7 +64,14 @@ class SalesController extends Controller
         if(empty($request->payavatar)){
             $path2 = 'avatars/cash-default.jpg';
         }else{
-            $path2 = Storage::disk('public')->put('salespayavatar',$request->file('payavatar'));
+            $manager2 = ImageManager::imagick();
+            $name_gen2 = hexdec(uniqid()).'.'.$request->file('payavatar')->getClientOriginalExtension();
+            
+            $image2 = $manager2->read($request->file('payavatar'));
+        
+            $encoded = $image2->toWebp()->save(storage_path('app/public/salespayavatar/'.$name_gen2.'.webp'));
+            $path2 = 'salespayavatar/'.$name_gen2.'.webp';
+            //$path2 = Storage::disk('public')->put('salespayavatar',$request->file('payavatar'));
         }
 
         if(empty($request->payref)){
