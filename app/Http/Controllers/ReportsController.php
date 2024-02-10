@@ -18,13 +18,12 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 class ReportsController extends Controller
 {
     public function searchtopsalesbranch(Request $request){
-
         if(empty($request->startdate) && empty($request->enddate)){
             if(empty($request->branchname) or $request->branchname == 'All'){
                 $sales = history_sales::groupBy('cabid','cabinetname','branchname')
                 ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
                 ->orderBy('total_sum','desc')
-                ->paginate(10);
+                ->paginate($request->pagerow);
 
                 $salesget = history_sales::groupBy('cabid','cabinetname','branchname')
                 ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
@@ -35,7 +34,7 @@ class ReportsController extends Controller
                 ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
                 ->where('branchname', $request->branchname)
                 ->orderBy('total_sum','desc')
-                ->paginate(10);
+                ->paginate($request->pagerow);
 
                 $salesget = history_sales::groupBy('cabid','cabinetname','branchname')
                 ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
@@ -48,7 +47,7 @@ class ReportsController extends Controller
             $sales = history_sales::groupBy('cabid','cabinetname','branchname')
             ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
             ->orderBy('total_sum','desc')
-            ->paginate(10);
+            ->paginate($request->pagerow);
 
             $salesget = history_sales::groupBy('cabid','cabinetname','branchname')
             ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
@@ -66,7 +65,7 @@ class ReportsController extends Controller
                     ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
                     ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
                     ->orderBy('total_sum','desc')
-                    ->paginate(10);
+                    ->paginate($request->pagerow);
         
                     $salesget = history_sales::groupBy('cabid','cabinetname','branchname')
                     ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
@@ -79,7 +78,7 @@ class ReportsController extends Controller
                     ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
                     ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
                     ->orderBy('total_sum','desc')
-                    ->paginate(10);
+                    ->paginate($request->pagerow);
         
                     $salesget = history_sales::groupBy('cabid','cabinetname','branchname')
                     ->where('branchname', $request->branchname)
@@ -106,17 +105,16 @@ class ReportsController extends Controller
         return view('reports.top-sales-branch')->with(['sales' => $sales])
                                     ->with(['totalsales' => $totalsales])
                                     ->with(['totalqty' => $totalqty])
-                                    ->with(['branch' => $branch]);
+                                    ->with(['branch' => $branch])
+                                    ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
        
 
     }
 
     public function topsalesbranch(){
-        
-        
 
         if(auth()->user()->accesstype == 'Cashier'){
-            
+            return redirect()->route('dashboard.index');
         }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor'){
             $sales = history_sales::groupBy('cabid','cabinetname','branchname')
             ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
@@ -136,7 +134,8 @@ class ReportsController extends Controller
         return view('reports.top-sales-branch')->with(['sales' => $sales])
                                     ->with(['totalsales' => $totalsales])
                                     ->with(['totalqty' => $totalqty])
-                                    ->with(['branch' => $branch]);
+                                    ->with(['branch' => $branch])
+                                    ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
     public function searchhsales(Request $request)

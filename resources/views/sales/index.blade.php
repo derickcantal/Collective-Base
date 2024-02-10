@@ -88,9 +88,11 @@
                                                 <th scope="col" class="px-6 py-3">
                                                     Time Sold
                                                 </th>
+                                                @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
                                                 <th scope="col" class="px-6 py-3">
                                                     Actions
                                                 </th>
+                                                @endif
                                             </tr>
                                         </thead>
                                                 
@@ -150,6 +152,7 @@
                                                     <x-input-label for="branchname" :value="$sale->branchname"/>
                                                     <x-input-label for="timerecorded" :value="$sale->timerecorded"/>
                                                 </td>
+                                                @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
                                                 <td class="px-6 py-4">
                                                     @php
                                                         $btndis='';
@@ -172,6 +175,7 @@
                                                         </x-danger-button>
                                                     </form>
                                                 </td>
+                                                @endif
                                             </tr>
                                             
                                             @empty

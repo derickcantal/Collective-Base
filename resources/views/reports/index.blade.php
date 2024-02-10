@@ -1,7 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Reports') }} | <a href="{{ route('reports.topsalesbranch') }}"> Top Sales Branch</a>
+            {{ __('Reports') }} 
+            @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
+             | <a href="{{ route('reports.topsalesbranch') }}"> Top Sales Branch</a>
+            @endif
         </h2>
     </x-slot>
 

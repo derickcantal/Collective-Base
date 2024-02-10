@@ -60,17 +60,25 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <select id="branchname" name="branchname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('branchname')">
+                                            <select id="branchname" name="branchname" class="form-select block w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2" :value="old('branchname')">
                                                 <option value = "All">All</option>        
                                                 @foreach($branch as $branches)
                                                     <option value = "{{ $branches->branchname}}">{{ $branches->branchname}}</option>
                                                 @endforeach
                                             </select>
+                                            
                                         </div>
                                         
                                         <div>
                                             <div class="relative max-w-sm">
-                                                <x-primary-button class="mt-4">
+                                                <select id="pagerow" name="pagerow" class="form-select w-auto bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2" :value="old('pagerow')">
+                                                    <option value = "10">10</option>    
+                                                    <option value = "25">25</option>    
+                                                    <option value = "50">50</option>
+                                                    <option value = "100">100</option>
+                                                    <option value = "250">250</option>            
+                                                </select>
+                                                <x-primary-button class="mt-2">
                                                     Search
                                                 </x-primary-button>
                                             </div>
@@ -82,7 +90,9 @@
                                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                             <tr>
-                                                
+                                                <th scope="col" class="px-6 py-3">
+                                                    No
+                                                </th>
                                                 <th scope="col" class="px-6 py-3">
                                                     Product Name
                                                 </th>
@@ -104,6 +114,9 @@
                                             @foreach($sales as $sale) 
                                             
                                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                                <td class="px-6 py-4">
+                                                    <x-input-label>{{ ++$i }}</x-input-label>
+                                                </td>
                                                 <td class="px-6 py-4">
                                                     <x-input-label>Cab. No.: <b>{{ $sale->cabinetname }}</b></x-input-label>
                                                 </td>

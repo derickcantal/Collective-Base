@@ -189,8 +189,9 @@ class SalesController extends Controller
                     ->with('failed','Update Failed. Note must not be empty');
                 }else{
                     Sales::where('salesid', $sales->salesid)->update([
+                        'qty' => 0,
                         'total' => 0,
-                        'snotes' => $request->snotes,
+                        'snotes' => $request->qty . ' pc/s returned. ' . $request->snotes,
                         'returned' => 'Y',
                         'mod' => $mod + 1,
                         'updated_by' => auth()->user()->email,
@@ -339,10 +340,26 @@ class SalesController extends Controller
      */
     public function edit($sales)
     {
-        $sales = Sales::findOrFail($sales);
-        $cabinet = cabinet::where('branchname',auth()->user()->branchname)->get();
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                $sales = Sales::findOrFail($sales);
+                $cabinet = cabinet::where('branchname',auth()->user()->branchname)->get();
 
-        return view('sales.edit',['sales' => $sales])->with(['cabinet' => $cabinet]);
+                return view('sales.edit',['sales' => $sales])->with(['cabinet' => $cabinet]);       
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                $sales = Sales::findOrFail($sales);
+                $cabinet = cabinet::where('branchname',auth()->user()->branchname)->get();
+
+                return view('sales.edit',['sales' => $sales])->with(['cabinet' => $cabinet]);
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+        
     }
 
     /**
