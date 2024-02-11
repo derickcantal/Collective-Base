@@ -18,40 +18,56 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 class ReportsController extends Controller
 {
     public function searchtopsalesbranch(Request $request){
+        
+        if($request->orderrow == 'H-L'){
+            $orderby = "total_sum";
+            $orderrow = 'desc';
+        }elseif($request->orderrow == 'L-H'){
+            $orderby = "total_sum";
+            $orderrow = 'asc';
+        }elseif($request->orderrow == 'A-Z'){
+            $orderby = "cabid";
+            $orderrow = 'asc';
+        }elseif($request->orderrow == 'Z-A'){
+            $orderby = "cabid";
+            $orderrow = 'desc';
+        }
+        
+
         if(empty($request->startdate) && empty($request->enddate)){
             if(empty($request->branchname) or $request->branchname == 'All'){
                 $sales = history_sales::groupBy('cabid','cabinetname','branchname')
                 ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
-                ->orderBy('total_sum','desc')
+                ->orderBy($orderby,$orderrow)
                 ->paginate($request->pagerow);
 
                 $salesget = history_sales::groupBy('cabid','cabinetname','branchname')
                 ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
-                ->orderBy('total_sum','desc')
+                ->orderBy($orderby,$orderrow)
                 ->get();
             }elseif(!empty($request->branchname)){
                 $sales = history_sales::groupBy('cabid','cabinetname','branchname')
                 ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
                 ->where('branchname', $request->branchname)
-                ->orderBy('total_sum','desc')
+                ->orderBy($orderby,$orderrow)
                 ->paginate($request->pagerow);
 
                 $salesget = history_sales::groupBy('cabid','cabinetname','branchname')
                 ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
                 ->where('branchname', $request->branchname)
-                ->orderBy('total_sum','desc')
+                ->orderBy($orderby,$orderrow)
                 ->get();
             }
             
         }elseif(empty($request->startdate) or empty($request->enddate)){
             $sales = history_sales::groupBy('cabid','cabinetname','branchname')
             ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
-            ->orderBy('total_sum','desc')
+            ->orderBy($orderby,$orderrow)
             ->paginate($request->pagerow);
 
             $salesget = history_sales::groupBy('cabid','cabinetname','branchname')
             ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
-            ->orderBy('total_sum','desc')
+            ->orderBy($orderby,$orderrow)
             ->get();
         }elseif(!empty($request->startdate) or !empty($request->enddate)){
             $startDate = Carbon::parse($request->startdate)->format('Y-m-d');
@@ -64,27 +80,27 @@ class ReportsController extends Controller
                     $sales = history_sales::groupBy('cabid','cabinetname','branchname')
                     ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
                     ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
-                    ->orderBy('total_sum','desc')
+                    ->orderBy($orderby,$orderrow)
                     ->paginate($request->pagerow);
         
                     $salesget = history_sales::groupBy('cabid','cabinetname','branchname')
                     ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
                     ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
-                    ->orderBy('total_sum','desc')
+                    ->orderBy($orderby,$orderrow)
                     ->get();
                 }elseif(!empty($request->branchname)){
                     $sales = history_sales::groupBy('cabid','cabinetname','branchname')
                     ->where('branchname', $request->branchname)
                     ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
                     ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
-                    ->orderBy('total_sum','desc')
+                    ->orderBy($orderby,$orderrow)
                     ->paginate($request->pagerow);
         
                     $salesget = history_sales::groupBy('cabid','cabinetname','branchname')
                     ->where('branchname', $request->branchname)
                     ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
                     ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
-                    ->orderBy('total_sum','desc')
+                    ->orderBy($orderby,$orderrow)
                     ->get();
                 }
                 

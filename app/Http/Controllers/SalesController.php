@@ -15,19 +15,19 @@ class SalesController extends Controller
 {
     public function loaddata(){
         $sales = Sales::latest()
-        ->paginate(5);
+        ->paginate(50);
 
         return view('sales.index',compact('sales'))
-        ->with('i', (request()->input('page', 1) - 1) * 5);
+        ->with('i', (request()->input('page', 1) - 1) * 50);
     }
 
     public function loaddata_cashier(){
         $sales = Sales::where('branchname',auth()->user()->branchname)
         ->latest()
-        ->paginate(5);
+        ->paginate(50);
 
         return view('sales.index',compact('sales'))
-        ->with('i', (request()->input('page', 1) - 1) * 5);
+        ->with('i', (request()->input('page', 1) - 1) * 50);
     }
     
     public function storedata($request){

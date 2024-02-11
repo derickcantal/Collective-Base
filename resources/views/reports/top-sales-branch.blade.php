@@ -59,24 +59,31 @@
                                                 <input datepicker datepicker-autohide name="enddate" id="enddate" type="text" :value="old('enddate')" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2" placeholder="End Date">
                                             </div>
                                         </div>
-                                        <div>
-                                            <select id="branchname" name="branchname" class="form-select block w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2" :value="old('branchname')">
+                                        <div class="flex">
+                                            <select id="branchname" name="branchname" class="form-select w-1/2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2" :value="old('branchname')">
                                                 <option value = "All">All</option>        
                                                 @foreach($branch as $branches)
                                                     <option value = "{{ $branches->branchname}}">{{ $branches->branchname}}</option>
                                                 @endforeach
                                             </select>
-                                            
-                                        </div>
-                                        
-                                        <div>
-                                            <div class="relative max-w-sm">
-                                                <select id="pagerow" name="pagerow" class="form-select w-auto bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2" :value="old('pagerow')">
+                                            <select id="pagerow" name="pagerow" class="form-select w-1/2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2" :value="old('pagerow')">
                                                     <option value = "10">10</option>    
                                                     <option value = "25">25</option>    
                                                     <option value = "50">50</option>
                                                     <option value = "100">100</option>
                                                     <option value = "250">250</option>            
+                                                </select>
+                                        </div>
+                                        
+                                        <div>
+                                            <div class="relative max-w-sm">
+                                                
+                                                <select id="orderrow" name="orderrow" class="form-select w-1/2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2" :value="old('orderrow')">
+                                                    <option value = "H-L">H-L</option>    
+                                                    <option value = "L-H">L-H</option>    
+                                                    <option value = "A-Z">A-Z</option>
+                                                    <option value = "Z-A">Z-A</option>
+                                                            
                                                 </select>
                                                 <x-primary-button class="mt-2">
                                                     Search
