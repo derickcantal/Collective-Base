@@ -17,6 +17,7 @@ use App\Http\Controllers\RentalPaymentsController;
 use App\Http\Controllers\RenterRequestsController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SalesEODController;
+use App\Http\Controllers\RenterCashierController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,7 +69,14 @@ Route::middleware('auth')->group(function () {
     Route::get('myrental/search', [MyRequestController::class, 'search'])->name('myrental.search');
     Route::resource('myrental', MyRentalController::class);
 
-    Route::resource('saleseod', SalesEODController::class);
+    Route::get('saleseod', [SalesEODController::class, 'index'])->name('saleseod.index');
+    Route::get('saleseod/create', [SalesEODController::class, 'create'])->name('saleseod.create');
+    Route::post('saleseod', [SalesEODController::class, 'store'])->name('saleseod.store');
+    Route::get('saleseod/{saleseod}/edit', [SalesEODController::class, 'edit'])->name('saleseod.edit');
+    Route::put('saleseod/{saleseod}', [SalesEODController::class, 'update'])->name('saleseod.update');
+
+    Route::get('renter/search', [RenterCashierController::class, 'search'])->name('renter.search');
+    Route::resource('renter', RenterCashierController::class);
 });
 
 Route::middleware('auth')->group(function () {

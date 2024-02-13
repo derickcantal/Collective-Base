@@ -66,7 +66,7 @@
                                                     <option value = "{{ $branches->branchname}}">{{ $branches->branchname}}</option>
                                                 @endforeach
                                             </select>
-                                            <select id="pagerow" name="pagerow" class="form-select w-1/2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2" :value="old('pagerow')">
+                                                <select id="pagerow" name="pagerow" class="form-select w-1/2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2" :value="old('pagerow')">
                                                     <option value = "10">10</option>    
                                                     <option value = "25">25</option>    
                                                     <option value = "50">50</option>

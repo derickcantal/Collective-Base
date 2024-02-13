@@ -208,7 +208,6 @@ class SalesEODController extends Controller
      */
     public function create(Request $request)
     {
-        
         if(Hash::check($request->password, auth()->user()->password)){
             $sales = Sales::where('branchname',auth()->user()->branchname)
             ->where(function(Builder $builder){
