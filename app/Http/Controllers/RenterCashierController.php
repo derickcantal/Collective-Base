@@ -39,7 +39,7 @@ class RenterCashierController extends Controller
      */
     public function create()
     {
-        //
+        return view('rentercashier.create');
     }
 
     /**
@@ -47,23 +47,34 @@ class RenterCashierController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return redirect()->route('renter.index')
+         ->with('success','Renter created successfully.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Renters $renter)
     {
-        //
+        $cabinets = cabinet::where('userid',$renter->userid)
+        ->where(function(Builder $builder){
+            $builder->where('branchname', auth()->user()->branchname)
+                    ->orderBy('status','asc')
+                    ->orderBy('branchname','asc');
+        })
+                    ->paginate(5);
+        return view('rentercashier.show',['renter' => $renter])
+            ->with(compact('cabinets'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Renters $renter)
     {
-        //
+
+        return view('rentercashier.edit',['renter' => $renter]);
     }
 
     /**
@@ -71,7 +82,8 @@ class RenterCashierController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        return redirect()->route('renter.index')
+         ->with('success','Update successfully.');
     }
 
     /**

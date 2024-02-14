@@ -9,7 +9,7 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <form action="{{ route('renters.update',$renter->userid) }}" method="POST" class="p-4 md:p-5">
+                        <form action="{{ route('renter.update',$renter->userid) }}" method="POST" class="p-4 md:p-5">
                         @csrf
                         @method('PUT') 
                             <div class="relative p-4 w-full max-w-full max-h-full">
@@ -127,61 +127,6 @@
                                                 </div>
                                             </div>
                                         
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- branchname -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="branchname" :value="__('Branch Name')" />
-                                                    <select id="branchname" name="branchname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('branchname', $renter->branchname)">
-                                                        @foreach($branch as $branches)
-                                                        @php
-                                                            $sel = '';
-                                                            if($branches->branchname == $renter->branchname):
-                                                                $sel = 'selected="selected"';
-                                                            endif;
-                                                            
-                                                        @endphp 
-                                                            <option value = "{{ $branches->branchname}}"  
-                                                                {{ $sel; }}
-                                                            >{{ $branches->branchname}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    
-                                                    <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
-                                                </div>
-                                                @php
-                                                @endphp
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- cabinetnumber -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="cabinetname" :value="__('Cabinet No.')" />
-                                                     <select id="cabinetname" name="cabinetname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('cabinetname', $renter->cabinetname)">
-                                                        @foreach($cabinet as $cabinets)
-                                                        @php
-                                                            $sel = '';
-                                                            if($cabinets->cabinetname == $renter->cabinetname):
-                                                                $sel = 'selected="selected"';
-                                                            endif;
-                                                            
-                                                        @endphp 
-                                                            <option value = "{{ $cabinets->cabinetname}}"  
-                                                                {{ $sel; }}
-                                                            >{{ $cabinets->cabinetname}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
-                                                </div>
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- accesstype -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="accesstype" :value="__('Access Type')" />
-                                                    <!-- <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" :value="old('accesstype')" required autofocus autocomplete="off" /> -->
-                                                    <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" :value="old('accesstype','Renters')" required autofocus readonly/>
-                                                    <x-input-error :messages="$errors->get('accesstype')" class="mt-2" />
-                                                    
-                                                </div>
-                                            </div>
                                             <div class="col-span-2 sm:col-span-1">
                                                 <!-- status -->
                                                 @php

@@ -2,7 +2,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <u><a href="{{ route('renters.index') }}"> Renters</a></u> / {{ __('Create New Renters') }}
+            <u><a href="{{ route('renter.index') }}"> Renters</a></u> / {{ __('Create New Renters') }}
         </h2>
     </x-slot>
     <section>
@@ -10,7 +10,7 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <form action="{{ route('renters.store') }}" method="POST" class="p-4 md:p-5">
+                        <form action="{{ route('renter.store') }}" method="POST" class="p-4 md:p-5">
                         @csrf   
                             <!-- Error & Success Notification -->        
                             <div>
@@ -127,30 +127,8 @@
                                                     <x-input-error :messages="$errors->get('birthdate')" class="mt-2" />
                                                 </div>
                                             </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- branchname -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="branchname" :value="__('Branch Name')" />
-                                                    <select id="branchname" name="branchname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('branchname')">
-                                                        @foreach($branch as $branches)    
-                                                            <option value = "{{ $branches->branchname}}" >{{ $branches->branchname}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
-                                                </div>
-                                            </div>
                                             
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- accesstype -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="accesstype" :value="__('Access Type')" />
-                                                    <!-- <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" :value="old('accesstype')" required autofocus autocomplete="off" /> -->
-                                                    <x-text-input id="accesstype" class="block mt-1 w-full" type="text" name="accesstype" value="Renters" autofocus disabled/> 
-                                                    <x-input-error :messages="$errors->get('accesstype')" class="mt-2" />
-                                                </div>
-                                            </div>
                                             <div class="flex items-center justify-between col-span-2 sm:col-span-2">
-                                                
                                                 <x-primary-button class="ms-4">
                                                     <a class="btn btn-primary" > Create</a>
                                                 </x-primary-button>
