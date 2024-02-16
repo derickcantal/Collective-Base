@@ -15,6 +15,14 @@ use App\Http\Requests\RenterUpdateRequests;
 
 class RenterCashierController extends Controller
 {
+    public function cabinetsearch(Request $request)
+    {
+        dd('Search Cabinet');
+    }
+    public function cabinetadd(Request $request)
+    {
+        dd('Assign Cabinet');
+    }
     public function search(Request $request)
     {
         dd($request->pagerow);
@@ -47,6 +55,8 @@ class RenterCashierController extends Controller
      */
     public function store(Request $request)
     {
+
+
         return redirect()->route('renter.index')
          ->with('success','Renter created successfully.');
     }
@@ -91,6 +101,6 @@ class RenterCashierController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        dd('Deactivate Renter');
     }
 }

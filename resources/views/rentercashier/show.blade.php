@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-        <u><a href="{{ route('renters.index') }}"> Renters</a></u> / {{ __('Renter') }} / {{ $renter->username }}
+        <u><a href="{{ route('renter.index') }}"> Renter</a></u> / {{ $renter->username }} / Cabinet List
         </h2>
     </x-slot>
     <section>
@@ -21,10 +21,10 @@
                             <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                                 <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
                                     <x-primary-button class="ms-4">
-                                        <a class="btn btn-primary" href="{{ route('renter.create') }}">Add New Cabinet</a>
+                                        <a class="btn btn-primary" href="{{ route('renter.cabinetadd') }}">Add Cabinet</a>
                                     </x-primary-button>
                                     
-                                    <form class="flex items-center" action="{{ route('renter.search') }}" method="get">
+                                    <form class="flex items-center" action="{{ route('renter.cabinetsearch') }}" method="get">
                                 
                                     <div class="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
                                         

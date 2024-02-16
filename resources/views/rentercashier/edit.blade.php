@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <u><a href="{{ route('renters.index') }}"> Renters</a></u> / {{ __('Modify Renters') }} / {{ $renter->username }}
+            <u><a href="{{ route('renter.index') }}"> Renter</a></u> / {{ __('Modify') }} / {{ $renter->username }}
         </h2>
     </x-slot>
     <section>
@@ -127,27 +127,6 @@
                                                 </div>
                                             </div>
                                         
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- status -->
-                                                @php
-                                                    $op1 = '';
-                                                    $op2 = '';
-                                                    if ($renter->status == 'Active'):
-                                                        $op1 = 'selected = "selected"';
-                                                    elseif ($renter->status == 'Inactive'):
-                                                        $op2 = 'selected = "selected"';
-                                                    endif;
-                                                @endphp
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="status" :value="__('Status')" />
-                                                    <!-- <x-text-input id="status" class="block mt-1 w-full" type="text" name="status" :value="old('status')" required autofocus autocomplete="off" /> -->
-                                                    <select id="status" name="status" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('status', $renter->status)">
-                                                        <option value ="Active"  {{ $op1; }}>Active</option>
-                                                        <option value ="Inactive"  {{ $op2; }}">Inactive</option>
-                                                    </select>
-                                                    <x-input-error :messages="$errors->get('status')" class="mt-2" />
-                                                </div>
-                                            </div>
                                             <div class="flex items-center justify-between col-span-2 sm:col-span-2">
                                                 
                                                 <x-primary-button class="ms-4">

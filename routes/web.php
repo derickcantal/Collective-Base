@@ -76,6 +76,8 @@ Route::middleware('auth')->group(function () {
     Route::put('saleseod/{saleseod}', [SalesEODController::class, 'update'])->name('saleseod.update');
 
     Route::get('renter/search', [RenterCashierController::class, 'search'])->name('renter.search');
+    Route::get('renter/cabinet/search', [RenterCashierController::class, 'cabinetsearch'])->name('renter.cabinetsearch');
+    Route::get('renter/cabinet/add', [RenterCashierController::class, 'cabinetadd'])->name('renter.cabinetadd');
     Route::resource('renter', RenterCashierController::class);
 });
 
