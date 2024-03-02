@@ -122,7 +122,7 @@
                                                             <x-input-label for="email" :value="$renters->email"/>
                                                     </th>
                                                     <td class="px-6 py-4">
-                                                        <x-input-label for="cabid" :value="$renters->cabid"/>
+                                                        <a class="font-medium text-white-600 dark:text-white-500 hover:underline" href="{{ route('renter.show',$renters->userid) }}">{{ $renters->cabid }}</a>
                                                     </td>
                                                     <td class="px-6 py-4">
                                                         <x-input-label for="branchname" :value="$renters->branchname"/>

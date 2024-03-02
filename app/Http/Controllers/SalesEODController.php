@@ -24,6 +24,10 @@ class SalesEODController extends Controller
     
     public function storedata($request)
     {
+       
+        
+        
+
         
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         
@@ -124,12 +128,12 @@ class SalesEODController extends Controller
                 ]); 
                 if($saleseod){
                     
-                    return redirect()->route('dashboard.index')
+                    return redirect()->route('saleseod.index')
                                     ->with('success','EOD Succesful');
                 }else{
                    
-                    return redirect()->route('dashboard.index')
-                                    ->with('failed','EOD Error.');
+                    return redirect()->route('saleseod.index')
+                                    ->with('failed','EOD Failed');
                 }
                 
             }else{
@@ -149,12 +153,12 @@ class SalesEODController extends Controller
                 ]); 
                 if($saleseod){
             
-                    return redirect()->route('dashboard.index')
-                                    ->with('success','EOD Succesful');
+                    return redirect()->route('saleseod.index')
+                    ->with('success','EOD Succesful');
                 }else{
-                   
-                    return redirect()->route('dashboard.index')
-                                    ->with('failed','EOD Error.');
+                
+                    return redirect()->route('saleseod.index')
+                                    ->with('failed','EOD Failed');
                 }
                 
             } 
@@ -164,12 +168,12 @@ class SalesEODController extends Controller
         
         if($saleseod){
             
-            return redirect()->route('dashboard.index')
-                            ->with('success','EOD Succesful');
+            return redirect()->route('saleseod.index')
+            ->with('success','EOD Succesful');
         }else{
-           
-            return redirect()->route('dashboard.index')
-                            ->with('failed','EOD Error.');
+
+        return redirect()->route('saleseod.index')
+                    ->with('failed','EOD Failed');
         }
        
         
@@ -249,13 +253,159 @@ class SalesEODController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                $this->storedata($request);
+                
+                $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        
+                try{
+                    Sales::where('branchname',auth()->user()->branchname)
+                    ->where(function(Builder $builder){
+                        $builder->where('posted', "N");
+                    })->update([
+                        'posted' => "Y",
+                        'status' => "Posted",
+                    ]);
+
+                    attendance::where('branchname',auth()->user()->branchname)
+                    ->where(function(Builder $builder){
+                        $builder->where('posted', "N");
+                    })->update([
+                        'posted' => "Y",
+                        'status' => "Posted",
+                    ]);
+                
+                    RenterRequests::where('branchname',auth()->user()->branchname)
+                    ->where(function(Builder $builder){
+                        $builder->where('posted', "N");
+                    })->update([
+                        'posted' => "Y",
+                    ]);
+
+                    RentalPayments::where('branchname',auth()->user()->branchname)
+                    ->where(function(Builder $builder){
+                        $builder->where('posted', "N");
+                    })->update([
+                        'posted' => "Y",
+                    ]);
+                    
+
+                    Sales::query()
+                    ->where('branchname',auth()->user()->branchname)
+                    ->where(function(Builder $builder){
+                        $builder->where('posted', "Y");
+                    })
+                    ->each(function ($oldRecord) {
+                        $newRecord = $oldRecord->replicate();
+                        $newRecord->setTable('history_sales');
+                        $newRecord->save();
+                        $oldRecord->delete();
+                    });
+
+                    attendance::query()
+                    ->where('branchname',auth()->user()->branchname)
+                    ->where(function(Builder $builder){
+                        $builder->where('posted', "Y");
+                    })
+                    ->each(function ($oldRecord) {
+                        $newRecord = $oldRecord->replicate();
+                        $newRecord->setTable('history_attendance');
+                        $newRecord->save();
+                        $oldRecord->delete();
+                    });
+
+                    RentalPayments::query()
+                    ->where('branchname',auth()->user()->branchname)
+                    ->where(function(Builder $builder){
+                        $builder->where('posted', "Y");
+                    })
+                    ->each(function ($oldRecord) {
+                        $newRecord = $oldRecord->replicate();
+                        $newRecord->setTable('history_rental_payments');
+                        $newRecord->save();
+                        $oldRecord->delete();
+                    });
+
+                    RenterRequests::query()
+                    ->where('branchname',auth()->user()->branchname)
+                    ->where(function(Builder $builder){
+                        $builder->where('posted', "Y");
+                    })
+                    ->each(function ($oldRecord) {
+                        $newRecord = $oldRecord->replicate();
+                        $newRecord->setTable('history_sales_requests');
+                        $newRecord->save();
+                        $oldRecord->delete();
+                    });
+                
+                    if($request->filled('notes')){
+                        $saleseod = sales_eod::create([
+                            'branchid' => auth()->user()->branchid,
+                            'branchname' => auth()->user()->branchname,
+                            'totalsales' => $request->totalsales,
+                            'rentalpayments' => $request->rentalpayments,
+                            'requestpayments' => $request->requestpayments,
+                            'otherexpenses' => $request->otherexpenses,
+                            'totalcash' => $request->totalcash,
+                            'notes' => $request->notes,
+                            'created_by' => auth()->user()->email,
+                            'updated_by' => 'Null',
+                            'timerecorded' => $timenow,
+                            'posted' => 'N',
+                        ]); 
+                        if($saleseod){
+                            
+                            return redirect()->route('saleseod.index')
+                                            ->with('success','EOD Succesful');
+                        }else{
+                        
+                            return redirect()->route('saleseod.index')
+                                            ->with('failed','EOD Failed');
+                        }
+                        
+                    }else{
+                        $saleseod = sales_eod::create([
+                            'branchid' => auth()->user()->branchid,
+                            'branchname' => auth()->user()->branchname,
+                            'totalsales' => $request->totalsales,
+                            'rentalpayments' => $request->rentalpayments,
+                            'requestpayments' => $request->requestpayments,
+                            'otherexpenses' => $request->otherexpenses,
+                            'totalcash' => $request->totalcash,
+                            'notes' => 'Null',
+                            'created_by' => auth()->user()->email,
+                            'updated_by' => 'Null',
+                            'timerecorded' => $timenow,
+                            'posted' => 'N',
+                        ]); 
+                        if($saleseod){
+                    
+                            return redirect()->route('saleseod.index')
+                            ->with('success','EOD Succesful');
+                        }else{
+                        
+                            return redirect()->route('saleseod.index')
+                                            ->with('failed','EOD Failed');
+                        }
+                        
+                    } 
+                } catch(Exception $e) {
+                    dd($e);
+                }
+                
+                if($saleseod){
+                    
+                    return redirect()->route('saleseod.index')
+                    ->with('success','EOD Succesful');
+                }else{
+
+                return redirect()->route('saleseod.index')
+                            ->with('failed','EOD Failed');
+                }
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                $this->storedata($request);
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Administrator'){
-                $this->storedata($request);
+                return redirect()->route('dashboard.index');
             }
         }else{
             return redirect()->route('dashboard.index');

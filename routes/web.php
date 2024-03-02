@@ -71,7 +71,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('saleseod', [SalesEODController::class, 'index'])->name('saleseod.index');
     Route::get('saleseod/create', [SalesEODController::class, 'create'])->name('saleseod.create');
-    Route::post('saleseod', [SalesEODController::class, 'store'])->name('saleseod.store');
+    Route::put('saleseod', [SalesEODController::class, 'store'])->name('saleseod.store');
     Route::get('saleseod/{saleseod}/edit', [SalesEODController::class, 'edit'])->name('saleseod.edit');
     Route::put('saleseod/{saleseod}', [SalesEODController::class, 'update'])->name('saleseod.update');
 

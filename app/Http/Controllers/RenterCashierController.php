@@ -201,13 +201,13 @@ class RenterCashierController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        dd($request);
+        $renter = Renters::where('userid',$id)->first();
 
         $mod = 0;
         $mod = $renter->mod;
 
         if($request->password == null){
-            $renter =Renters::where('userid',$renter->userid)->update([
+            $renter =Renters::where('userid',$id)->update([
                 'username' => $request->username,
                 'email' => $request->email,
                 'firstname' => $request->firstname,
@@ -216,10 +216,9 @@ class RenterCashierController extends Controller
                 'birthdate' => $request->birthdate,
                 'updated_by' => auth()->user()->email,
                 'mod' => $mod + 1,
-                'status' => $request->status,
             ]);
         }else{
-            $renter =Renters::where('userid',$renter->userid)->update([
+            $renter =Renters::where('userid',$id)->update([
                 'username' => $request->username,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
@@ -229,12 +228,18 @@ class RenterCashierController extends Controller
                 'birthdate' => $request->birthdate,
                 'updated_by' => auth()->user()->email,
                 'mod' => $mod + 1,
-                'status' => $request->status,
             ]);
         }
 
-        return redirect()->route('renter.index')
-         ->with('success','Update successfully.');
+        if ($renter) {
+            //query successful
+            return redirect()->route('renter.index')
+                        ->with('success','Renter updated successfully.');
+        }else{
+            return redirect()->route('renter.index')
+                        ->with('failed','Renter update failed');
+        }  
+       
     }
 
     /**
@@ -242,6 +247,31 @@ class RenterCashierController extends Controller
      */
     public function destroy(string $id)
     {
-        dd('Deactivate Renter');
+        $renter = Renters::where('userid',$id)->first();
+
+        $mod = 0;
+        $mod = $renter->mod;
+
+        if($renter->status == 'Active')
+        {
+            Renters::where('userid', $renter->userid)
+            ->update([
+            'status' => 'Inactive'
+        ]);
+
+        return redirect()->route('renter.index')
+            ->with('success','Renter Deactivated successfully'); 
+        }
+        elseif($renter->status == 'Inactive')
+        {
+            Renters::where('userid', $renter->userid)
+            ->update([
+            'status' => 'Active'
+        ]);
+
+        
+        return redirect()->route('renter.index')
+            ->with('success','User Activated successfully');
+        }
     }
 }

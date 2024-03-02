@@ -53,10 +53,10 @@ class RentersController extends Controller
         if ($renter) {
             //query successful
             return redirect()->route('renters.index')
-                        ->with('success','User created successfully.');
+                        ->with('success','Renter created successfully.');
         }else{
             return redirect()->route('renters.index')
-                        ->with('success','User creation failed');
+                        ->with('success','Renter creation failed');
         }  
     }
     
