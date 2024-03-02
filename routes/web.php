@@ -78,6 +78,11 @@ Route::middleware('auth')->group(function () {
     Route::get('renter/search', [RenterCashierController::class, 'search'])->name('renter.search');
     Route::get('renter/cabinet/search', [RenterCashierController::class, 'cabinetsearch'])->name('renter.cabinetsearch');
     Route::get('renter/cabinet/add', [RenterCashierController::class, 'cabinetadd'])->name('renter.cabinetadd');
+    Route::get('renter/cabinet/create', [RenterCashierController::class, 'cabinetcreate'])->name('renter.cabinetcreate');
+    Route::get('renter/cabinet/modify/{cabid}', [RenterCashierController::class, 'cabinetmodify'])->name('renter.cabinetmodify');
+    Route::put('renter/cabinet/delete/{cabid}', [RenterCashierController::class, 'cabinetdelete'])->name('renter.cabinetdelete');
+    Route::put('renter/cabinet/update/{cabid}', [RenterCashierController::class, 'cabinetupdate'])->name('renter.cabinetupdate');
+    Route::post('renter/cabinet/store', [RenterCashierController::class, 'cabinetstore'])->name('renter.cabinetstore');
     Route::resource('renter', RenterCashierController::class);
 });
 
