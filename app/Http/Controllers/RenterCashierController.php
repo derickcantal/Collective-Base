@@ -93,7 +93,7 @@ class RenterCashierController extends Controller
         ->update([
         'userid' => $renter->userid,
         'email' => $renter->email,
-        'cabinetprice' => $renter->cabinetprice,
+        'cabinetprice' => $request->cabinetprice,
         'updated_by' => auth()->user()->email,
         'mod' => $mod + 1,
         ]);
@@ -141,7 +141,8 @@ class RenterCashierController extends Controller
      */
     public function index()
     {
-        $renter = Renters::where('branchname', auth()->user()->branchname)
+        if(auth()->user()->accesstype == 'Cashier'){
+            $renter = Renters::where('branchname', auth()->user()->branchname)
                         ->where(function(Builder $builder){
                         $builder->where('accesstype',"Renters")
                                 ->orderBy('status','asc');
@@ -149,6 +150,10 @@ class RenterCashierController extends Controller
 
         return view('rentercashier.index',compact('renter'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+        
     }
 
     /**

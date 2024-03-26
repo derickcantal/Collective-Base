@@ -72,9 +72,10 @@ class CabinetController extends Controller
     }
     
     public function updatedata($request,$cabinet){
-        $rent = Renters::where('userid',$request->renter)->first();
-        
+        $rent = Renters::where('userid',$cabinet)->first();
+         
         $cabinet = cabinet::findOrFail($cabinet);
+
         $mod = 0;
         $mod = $cabinet->mod;
 
@@ -87,10 +88,13 @@ class CabinetController extends Controller
         
                 $totalcabown = count($cabrenter);
 
+                dd('Not equal' . $rent->userid . 'total cab: ' .  $totalcabown);
+
                 Renters::where('userid',$rent->userid)
                 ->update([
-                    'cabid' => $totalcabown,
+                    'cabid' => $totalcabown + 1,
                 ]);
+
                 $cabinets = cabinet::where('cabid', $cabinet->cabid)
                 ->update([
                 'userid' => $rent->userid,
@@ -109,6 +113,16 @@ class CabinetController extends Controller
                                 ->with('failed','Cabinet update failed');
                 }
             }else{
+                $cabrenter = cabinet::where('userid', $rent->userid)->get();
+        
+                $totalcabown = count($cabrenter);
+
+                dd('equal ' . $rent->userid . '/ total cab: ' .  $totalcabown );
+                Renters::where('userid',$rent->userid)
+                ->update([
+                    'cabid' => $totalcabown - 1,
+                ]);
+                
                 $cabinets = cabinet::where('cabid', $cabinet->cabid)
                 ->update([
                 'userid' => 0,
