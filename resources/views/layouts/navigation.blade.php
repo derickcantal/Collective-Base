@@ -30,7 +30,7 @@
                 @endif
                 @if(auth()->user()->accesstype == 'Renters')
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('myrequest.index')" :active="request()->routeIs('myrequest.index')">
+                    <x-nav-link :href="route('mycabinet.index')" :active="request()->routeIs('mycabinet.index')">
                         {{ __('My Account') }}
                     </x-nav-link>
                 </div>
@@ -77,7 +77,7 @@
                         </x-dropdown-link>
                         @endif
                         @if(auth()->user()->accesstype == 'Renters')
-                        <x-dropdown-link :href="route('myrequest.index')" :active="request()->routeIs('myrequest.index')">
+                        <x-dropdown-link :href="route('mycabinet.index')" :active="request()->routeIs('mycabinet.index')">
                             {{ __('My Account') }}
                         </x-dropdown-link>
                         @endif
@@ -150,7 +150,7 @@
         @endif
         @if(auth()->user()->accesstype == 'Renters')
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('myrequest.index')" :active="request()->routeIs('myrequest.index')">
+            <x-responsive-nav-link :href="route('mycabinet.index')" :active="request()->routeIs('mycabinet.index')">
                 {{ __('My Account') }}
             </x-responsive-nav-link>
         </div>

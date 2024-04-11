@@ -24,6 +24,96 @@ class RentersController extends Controller
         return view('renters.index',compact('renter'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
     }
+
+    public function editcabinet($cabinet){
+        $cab = cabinet::where('cabid',$cabinet)->first();                      
+                        
+                        
+        $rent = Renters::where('accesstype','Renters')
+        ->where(function(Builder $builder){
+            $builder->where('status','Active')
+                    ->orderBy('lastname','asc')
+                    ;
+        })->get();
+       
+        $branches = branch::all();  
+        
+        return view('renters.cabinetedit',['branches' => $branches])
+                            ->with(['rent' => $rent])
+                            ->with(['cabinet' => $cab]);
+    }
+
+    public function updatecabinet(Request $request,$cabinet){
+        $rent = Renters::where('userid',$cabinet)->first();
+         
+        $cabinet = cabinet::findOrFail($cabinet);
+
+        $mod = 0;
+        $mod = $cabinet->mod;
+        
+
+        if($cabinet->status == 'Active')
+        {
+            if($request->renter != 'Vacant'){
+                $cabinets = cabinet::where('cabid', $rent->userid)
+                ->update([
+                'userid' => $rent->userid,
+                'email' => $rent->email,
+                'cabinetprice' => $request->cabinetprice,
+                'updated_by' => auth()->user()->email,
+                'mod' => $mod + 1,
+                ]);
+
+                $totalcabown = cabinet::where('userid', $cabinet->userid)->count();
+        
+                Renters::where('userid',$rent->userid)
+                ->update([
+                    'cabid' => $totalcabown + 1,
+                ]);
+
+                
+                if ($cabinets) {
+                    //query successful
+                    return redirect()->route('renters.index')
+                                ->with('success','Cabinet updated successfully.');
+                }else{
+                    return redirect()->route('renters.update')
+                                ->with('failed','Cabinet update failed');
+                }
+            }else{
+
+                $cabinets = cabinet::where('userid', $cabinet->userid)
+                ->update([
+                'userid' => 0,
+                'email' => 'Vacant',
+                'cabinetprice' => $request->cabinetprice,
+                'updated_by' => auth()->user()->email,
+                'mod' => $mod + 1,
+                ]);
+
+                $totalcabown = cabinet::where('userid', $cabinet->userid)->count();
+                
+                $rentercabUpdate = Renters::where('userid',$cabinet->userid)
+                            ->update([
+                                'cabid' => $totalcabown - 1,
+                            ]);
+                
+
+                if ($cabinets) {
+                    //query successful
+                    return redirect()->route('renters.index')
+                                ->with('success','Cabinet updated successfully.');
+                }else{
+                    return redirect()->route('renters.update')
+                                ->with('failed','Cabinet update failed');
+                }
+            }
+            
+        }else{
+            return redirect()->route('cabinet.index')
+                            ->with('failed','Cabinet Inactive');
+        }
+    }
     
     public function storedata(Request $request){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');

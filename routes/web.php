@@ -18,6 +18,7 @@ use App\Http\Controllers\RenterRequestsController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SalesEODController;
 use App\Http\Controllers\RenterCashierController;
+use App\Http\Controllers\MyCabinetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,6 +70,10 @@ Route::middleware('auth')->group(function () {
     Route::get('myrental/search', [MyRequestController::class, 'search'])->name('myrental.search');
     Route::resource('myrental', MyRentalController::class);
 
+    Route::get('mycabinet/search', [MyCabinetController::class, 'search'])->name('mycabinet.search');
+    Route::get('mycabinet/sales/{cabinetsales}', [MyCabinetController::class, 'cabinetsales'])->name('mycabinet.sales');
+    Route::resource('mycabinet', MyCabinetController::class);
+
     Route::get('saleseod', [SalesEODController::class, 'index'])->name('saleseod.index');
     Route::get('saleseod/create', [SalesEODController::class, 'create'])->name('saleseod.create');
     Route::put('saleseod', [SalesEODController::class, 'store'])->name('saleseod.store');
@@ -90,6 +95,8 @@ Route::middleware('auth')->group(function () {
     Route::get('renters/search', [RentersController::class, 'search'])->name('renters.search');
     Route::get('renters/selectbranch', [RentersController::class, 'selectbranch'])->name('renters.selectbranch');
     Route::put('renters/createrenter/{branchid}', [RentersController::class, 'createrenter'])->name('renters.createrenter');
+    Route::put('renters/cabinet/modify/{cabinetid}', [RentersController::class, 'updatecabinet'])->name('renters.updatecabinet');
+    Route::get('renters/cabinet/{cabinetid}', [RentersController::class, 'editcabinet'])->name('renters.editcabinet');
     Route::resource('renters', RentersController::class);
     
     Route::get('rental/payments/search', [RentalPaymentsController::class, 'search'])->name('rentalpayments.search');

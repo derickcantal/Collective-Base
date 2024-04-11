@@ -84,18 +84,7 @@ class CabinetController extends Controller
         if($cabinet->status == 'Active')
         {
             if($request->renter != 'Vacant'){
-                $cabrenter = cabinet::where('userid', $rent->userid)->get();
-        
-                $totalcabown = count($cabrenter);
-
-                dd('Not equal' . $rent->userid . 'total cab: ' .  $totalcabown);
-
-                Renters::where('userid',$rent->userid)
-                ->update([
-                    'cabid' => $totalcabown + 1,
-                ]);
-
-                $cabinets = cabinet::where('cabid', $cabinet->cabid)
+                $cabinets = cabinet::where('cabid', $cabinet->userid)
                 ->update([
                 'userid' => $rent->userid,
                 'email' => $rent->email,
@@ -104,26 +93,25 @@ class CabinetController extends Controller
                 'mod' => $mod + 1,
                 ]);
 
+                $totalcabown = cabinet::where('userid', $cabinet->userid)->count();
+        
+                Renters::where('userid',$rent->userid)
+                ->update([
+                    'cabid' => $totalcabown + 1,
+                ]);
+
+                
                 if ($cabinets) {
                     //query successful
                     return redirect()->route('cabinet.index')
                                 ->with('success','Cabinet updated successfully.');
                 }else{
-                    return redirect()->route('cabinet.update')
+                    return redirect()->route('cabinet.index')
                                 ->with('failed','Cabinet update failed');
                 }
             }else{
-                $cabrenter = cabinet::where('userid', $rent->userid)->get();
-        
-                $totalcabown = count($cabrenter);
 
-                dd('equal ' . $rent->userid . '/ total cab: ' .  $totalcabown );
-                Renters::where('userid',$rent->userid)
-                ->update([
-                    'cabid' => $totalcabown - 1,
-                ]);
-                
-                $cabinets = cabinet::where('cabid', $cabinet->cabid)
+                $cabinets = cabinet::where('cabid', $cabinet->userid)
                 ->update([
                 'userid' => 0,
                 'email' => 'Vacant',
@@ -132,12 +120,20 @@ class CabinetController extends Controller
                 'mod' => $mod + 1,
                 ]);
 
+                $totalcabown = cabinet::where('userid', $cabinet->userid)->count();
+                
+                $rentercabUpdate = Renters::where('userid',$cabinet->userid)
+                            ->update([
+                                'cabid' => $totalcabown - 1,
+                            ]);
+                
+
                 if ($cabinets) {
                     //query successful
                     return redirect()->route('cabinet.index')
                                 ->with('success','Cabinet updated successfully.');
                 }else{
-                    return redirect()->route('cabinet.update')
+                    return redirect()->route('cabinet.index')
                                 ->with('failed','Cabinet update failed');
                 }
             }

@@ -88,7 +88,7 @@
                                                     <td class="px-6 py-4">
                                                         
                                                         <form action="{{ route('cabinet.destroy',$cabinet->cabid) }}" method="POST">
-                                                        <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('cabinet.edit',$cabinet->cabid) }}">Modify</a>
+                                                        <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('renters.editcabinet',$cabinet->cabid) }}">Modify</a>
                                                             @csrf
                                                             @method('DELETE')
                                                             @php
