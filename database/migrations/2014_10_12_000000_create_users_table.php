@@ -20,10 +20,14 @@ return new class extends Migration
             $table->string('lastname');
             $table->date('birthdate');
             $table->string('email')->unique();
+            $table->string('mobile_primary')->nullable();
+            $table->string('mobile_secondary')->nullable();
+            $table->string('homeno')->nullable();
             $table->integer('branchid');
             $table->string('branchname');
             $table->integer('cabid');
             $table->string('cabinetname');
+            $table->integer('BLID')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

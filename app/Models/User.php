@@ -29,10 +29,14 @@ class User extends Authenticatable
         'middlename',
         'lastname',
         'birthdate',
+        'mobile_primary',
+        'mobile_secondary',
+        'homeno',
         'branchid',
         'branchname',
         'cabid',
         'cabinetname',
+        'BLID',
         'accesstype',
         'created_by',
         'updated_by',
@@ -62,4 +66,8 @@ class User extends Authenticatable
         'birthdate' => 'date',
     ];
 
+    public function branchlist()
+    {
+        return $this->belongsTo(branchlist::class);
+    }
 }

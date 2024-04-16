@@ -2,7 +2,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <u><a href="{{ route('renter.index') }}"> Renters</a></u> / {{ __('Create New Renters') }}
+            <u><a href="{{ route('renter.index') }}"> Renters</a></u> / {{ __('Create Renter') }} / {{ __('Login Details') }}
         </h2>
     </x-slot>
     <section>
@@ -10,7 +10,7 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <form action="{{ route('renter.store') }}" method="POST" class="p-4 md:p-5">
+                        <form action="{{ route('renter.renterregister') }}" method="POST" class="p-4 md:p-5">
                         @csrf   
                             <!-- Error & Success Notification -->        
                             <div>
@@ -95,38 +95,7 @@
                                                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                                                 </div>                    
                                             </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- firstname -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="firstname" :value="__('First Name')" />
-                                                    <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname')" required autofocus autocomplete="given-name" />
-                                                    <x-input-error :messages="$errors->get('firstname')" class="mt-2" />
-                                                </div>
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- middlename -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="middlename" :value="__('Middle Name')" />
-                                                    <x-text-input id="middlename" class="block mt-1 w-full" type="text" name="middlename" :value="old('middlename')" required autofocus autocomplete="additional-name" />
-                                                    <x-input-error :messages="$errors->get('username')" class="mt-2" />
-                                                </div>
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                    <!-- lastname -->
-                                                    <div class="form-group mt-4">
-                                                    <x-input-label for="lastname" :value="__('Last Name')" />
-                                                    <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname')" required autofocus autocomplete="family-name" />
-                                                    <x-input-error :messages="$errors->get('lastname')" class="mt-2" />
-                                                </div>
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- birthdate -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="birthdate" :value="__('Birth Date')" />
-                                                    <x-text-input id="birthdate" class="block mt-1 w-full" type="date" name="birthdate" :value="old('birthdate')" required autofocus autocomplete="bday" />
-                                                    <x-input-error :messages="$errors->get('birthdate')" class="mt-2" />
-                                                </div>
-                                            </div>
+                                            
                                             
                                             <div class="flex items-center justify-between col-span-2 sm:col-span-2">
                                                 <x-primary-button class="ms-4">
