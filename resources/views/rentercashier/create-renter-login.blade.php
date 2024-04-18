@@ -20,7 +20,7 @@
                                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
                                     </svg>
                                     <span class="sr-only">Danger</span>
-                                    <div>
+                                    <div> 
                                         <span class="font-medium">Ensure that these requirements are met:</span>
                                         <ul class="mt-1.5 list-disc list-inside">
                                             @foreach ($errors->all() as $error)
@@ -41,6 +41,17 @@
                                     </div>
                                     </div>
                                     @endif
+                                    @if ($message = Session::get('failed'))
+                                    <div class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
+                                        <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                        </svg>
+                                        <span class="sr-only">Info</span>
+                                        <div>
+                                            <span class="font-medium">Failed!</span> {{ $message }}
+                                        </div>
+                                    </div>
+                                    @endif
                                 </div>
                             <div class="relative p-4 w-full max-w-full max-h-full">
                                 
@@ -54,6 +65,38 @@
                                     </div>
                                     <!-- Modal body -->
                                         <div class="grid gap-4 mb-4 grid-cols-2">
+                                        <div class="col-span-2 sm:col-span-1">
+                                                <!-- firstname -->
+                                                <div class="form-group mt-4">
+                                                    <x-input-label for="firstname" :value="__('First Name')" />
+                                                    <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname', $renterinfo->firstname)" required autofocus autocomplete="given-name" readonly/>
+                                                    <x-input-error :messages="$errors->get('firstname')" class="mt-2" />
+                                                </div>
+                                            </div>
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <!-- middlename -->
+                                                <div class="form-group mt-4">
+                                                    <x-input-label for="middlename" :value="__('Middle Name')" />
+                                                    <x-text-input id="middlename" class="block mt-1 w-full" type="text" name="middlename" :value="old('middlename', $renterinfo->middlename)" required autofocus autocomplete="additional-name" readonly/>
+                                                    <x-input-error :messages="$errors->get('username')" class="mt-2" />
+                                                </div>
+                                            </div>
+                                            <div class="col-span-2 sm:col-span-1">
+                                                    <!-- lastname -->
+                                                    <div class="form-group mt-4">
+                                                    <x-input-label for="lastname" :value="__('Last Name')" />
+                                                    <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname', $renterinfo->lastname)" required autofocus autocomplete="family-name" readonly/>
+                                                    <x-input-error :messages="$errors->get('lastname')" class="mt-2" />
+                                                </div>
+                                            </div>
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <!-- birthdate -->
+                                                <div class="form-group mt-4">
+                                                    <x-input-label for="birthdate" :value="__('Birth Date')" />
+                                                    <x-text-input id="birthdate" class="block mt-1 w-full" type="date" name="birthdate" :value="old('birthdate', $renterinfo->birthdate)" required autofocus autocomplete="bday" readonly/>
+                                                    <x-input-error :messages="$errors->get('birthdate')" class="mt-2" />
+                                                </div>
+                                            </div>
                                             <div class="col-span-2 sm:col-span-1 ">
                                                 <!-- username -->
                                                 <div class="form-group mt-4">
@@ -95,7 +138,40 @@
                                                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                                                 </div>                    
                                             </div>
-                                            
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <!-- lastname -->
+                                                <div class="form-group mt-4">
+                                                    <x-input-label for="mobile_primary" :value="__('Mobile No. (1)')" />
+                                                    <x-text-input id="mobile_primary" class="block mt-1 w-full" type="text" name="mobile_primary" :value="old('mobile_primary')" required />
+                                                    <x-input-error :messages="$errors->get('mobile_primary')" class="mt-2" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <!-- lastname -->
+                                                <div class="form-group mt-4">
+                                                    <x-input-label for="mobile_secondary" :value="__('Mobile No. (2)')" />
+                                                    <x-text-input id="mobile_secondary" class="block mt-1 w-full" type="text" name="mobile_secondary" :value="old('mobile_secondary')" />
+                                                    <x-input-error :messages="$errors->get('mobile_secondary')" class="mt-2" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <!-- lastname -->
+                                                <div class="form-group mt-4">
+                                                    <x-input-label for="homeno" :value="__('Home No.')" />
+                                                    <x-text-input id="homeno" class="block mt-1 w-full" type="text" name="homeno" :value="old('homeno')" />
+                                                    <x-input-error :messages="$errors->get('homeno')" class="mt-2" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <!-- lastname -->
+                                                <div class="form-group mt-4">
+                                                    <x-text-input id="newrenter" class="block mt-1 w-full" type="hidden" name="newrenter" :value="old('newrenter','Y')" required readonly/>
+                                                    <x-input-error :messages="$errors->get('newrenter')" class="mt-2" />
+                                                </div>
+                                            </div>
                                             
                                             <div class="flex items-center justify-between col-span-2 sm:col-span-2">
                                                 <x-primary-button class="ms-4">

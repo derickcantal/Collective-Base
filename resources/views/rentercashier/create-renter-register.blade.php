@@ -54,6 +54,17 @@
                                                 </div>
                                                 </div>
                                                 @endif
+                                                @if ($message = Session::get('failed'))
+                                                <div class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
+                                                    <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                                    </svg>
+                                                    <span class="sr-only">Info</span>
+                                                    <div>
+                                                        <span class="font-medium">Failed!</span> {{ $message }}
+                                                    </div>
+                                                </div>
+                                                @endif
                                             </div>
                                             <div class="col-span-2 sm:col-span-1 ">
                                                 <!-- username -->
@@ -133,7 +144,7 @@
                                                     <!-- lastname -->
                                                     <div class="form-group mt-4">
                                                     <x-input-label for="mobile_primary" :value="__('Mobile No. (1)')" />
-                                                    <x-text-input id="mobile_primary" class="block mt-1 w-full" type="text" name="mobile_primary" :value="old('mobile_primary', $renter->lastname)" required />
+                                                    <x-text-input id="mobile_primary" class="block mt-1 w-full" type="text" name="mobile_primary" :value="old('mobile_primary', $renter->mobile_primary)" required />
                                                     <x-input-error :messages="$errors->get('mobile_primary')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -142,7 +153,7 @@
                                                     <!-- lastname -->
                                                     <div class="form-group mt-4">
                                                     <x-input-label for="mobile_secondary" :value="__('Mobile No. (2)')" />
-                                                    <x-text-input id="mobile_secondary" class="block mt-1 w-full" type="text" name="mobile_secondary" :value="old('mobile_secondary', $renter->lastname)" required />
+                                                    <x-text-input id="mobile_secondary" class="block mt-1 w-full" type="text" name="mobile_secondary" :value="old('mobile_secondary', $renter->mobile_secondary)" required />
                                                     <x-input-error :messages="$errors->get('mobile_secondary')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -151,7 +162,7 @@
                                                     <!-- lastname -->
                                                     <div class="form-group mt-4">
                                                     <x-input-label for="homeno" :value="__('Home No.')" />
-                                                    <x-text-input id="homeno" class="block mt-1 w-full" type="text" name="homeno" :value="old('homeno', $renter->lastname)" required />
+                                                    <x-text-input id="homeno" class="block mt-1 w-full" type="text" name="homeno" :value="old('homeno', $renter->homeno)" required />
                                                     <x-input-error :messages="$errors->get('homeno')" class="mt-2" />
                                                 </div>
                                             </div>

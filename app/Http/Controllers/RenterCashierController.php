@@ -177,44 +177,104 @@ class RenterCashierController extends Controller
     {
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
 
-        $branchlist = branchlist::where('userid', $request->userid)
+        if($request->newrenter == 'Y'){
+            if($request->password == $request->password_confirmation){
+                $renter = Renters::create([
+                    'avatar' => 'avatars/avatar-default.jpg',
+                    'username' => $request->username,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'firstname' => $request->firstname,
+                    'middlename' => $request->middlename,
+                    'lastname' => $request->lastname,
+                    'birthdate' => $request->birthdate,
+                    'mobile_primary' => $request->mobile_primary,
+                    'mobile_secondary' => $request->mobile_secondary,
+                    'homeno' => $request->homeno,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'cabid' => 0,
+                    'cabinetname' => 'Null',
+                    'accesstype' => 'Renters',
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'timerecorded' => $timenow,
+                    'mod' => 0,
+                    'status' => 'Active',
+                ]);
+
+                $rentersearch = Renters::where('firstname', $request->firstname)
                         ->where(function(Builder $builder) use($request){
-                        $builder->where('branchid',auth()->user()->branchid);
-                        })->first();
-        $branch = Renters::where('userid', $request->userid)->first();
+                        $builder->where('lastname',$request->lastname)
+                                ->where('birthdate',$request->birthdate);
+                            })->first();
+
+                $branchlistadd =branchlist::create([
+                    'userid' => $rentersearch->userid,
+                    'branchid' => auth()->user()->branchid,
+                    'accesstype' => 'Renters',
+                    'timerecorded'  => $timenow,
+                    'posted'  => 'N',
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod' => 0,
+                    'status' => 'Active',
+                ]);
 
 
-        if(empty($branchlist))
-        {
-
-
-            $branchlistadd =branchlist::create([
-                'userid' => $request->userid,
-                'branchid' => auth()->user()->branchid,
-                'accesstype' => 'Renters',
-                'timerecorded'  => $timenow,
-                'posted'  => 'N',
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod' => 0,
-                'status' => 'Active',
-            ]);
-
-            if($branchlistadd)
-            {
-                return redirect()->route('renter.index')
-                        ->with('success','Renter Registered successfully.');
+                if($renter){
+                    return redirect()->route('renter.index')
+                            ->with('success','Renter Registered successfully.');
+                }else{
+                    return redirect()->back()
+                                ->with('failed','Renter Registration failed. Save Error.');
+                }
+    
             }else{
-                return redirect()->route('renter.index')
-                            ->with('failed','Renter Registration failed');
-            }  
-        }
-        else{
-            return redirect()->route('renter.index')
-                            ->with('failed','Renter Registration failed: Already Registered.');
+                return redirect()->back()
+                                ->with('failed','Renter Registration failed. Password Mismatched.');
+            }
+           
+        }else{
 
+            $branchlist = branchlist::where('userid', $request->userid)
+                            ->where(function(Builder $builder) use($request){
+                            $builder->where('branchid',auth()->user()->branchid);
+                            })->first();
+            $branch = Renters::where('userid', $request->userid)->first();
+
+
+            if(empty($branchlist))
+            {
+
+                $branchlistadd =branchlist::create([
+                    'userid' => $request->userid,
+                    'branchid' => auth()->user()->branchid,
+                    'accesstype' => 'Renters',
+                    'timerecorded'  => $timenow,
+                    'posted'  => 'N',
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod' => 0,
+                    'status' => 'Active',
+                ]);
+
+                if($branchlistadd)
+                {
+                    return redirect()->route('renter.index')
+                            ->with('success','Renter Registered successfully.');
+                }else{
+                    return redirect()->route('renter.index')
+                                ->with('failed','Renter Registration failed');
+                }  
+            }
+            else{
+                return redirect()->route('renter.index')
+                                ->with('failed','Renter Registration failed: Already Registered.');
+
+            }
         }
-        dd('Register Renter to Branch');
+        
     }
     public function renterlogin(Request $request)
     {
@@ -228,7 +288,7 @@ class RenterCashierController extends Controller
             if($renter){
                 return view('rentercashier.create-renter-register',['renter' => $renter])->with('success','Renter Record Found.');
             }else{
-                return view('rentercashier.create-renter-login');
+                return view('rentercashier.create-renter-login')->with(['renterinfo' => $request]);
             }
             
         }else{

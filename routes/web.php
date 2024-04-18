@@ -90,7 +90,7 @@ Route::middleware('auth')->group(function () {
     Route::post('renter/cabinet/store', [RenterCashierController::class, 'cabinetstore'])->name('renter.cabinetstore');
     Route::get('renter/create/info', [RenterCashierController::class, 'renterinfo'])->name('renter.renterinfo');
     Route::get('renter/create/login', [RenterCashierController::class, 'renterlogin'])->name('renter.renterlogin');
-    Route::put('renter/create/register', [RenterCashierController::class, 'renterregister'])->name('renter.renterregister');
+    Route::post('renter/create/register', [RenterCashierController::class, 'renterregister'])->name('renter.renterregister');
     
     Route::resource('renter', RenterCashierController::class);
 });
