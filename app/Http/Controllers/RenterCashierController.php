@@ -7,6 +7,7 @@ use App\Models\Renters;
 use App\Models\branch;
 use App\Models\cabinet;
 use App\Models\branchlist;
+use App\Models\users_temp;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use \Carbon\Carbon;
@@ -114,12 +115,11 @@ class RenterCashierController extends Controller
          ->with('success','Cabinet Assigned Successfully.');
     }
 
-    public function cabinetsearch(Request $request)
-    {
+    public function cabinetsearch(Request $request){
         dd('Search Cabinet');
     }
-    public function cabinetadd(Request $request)
-    {
+    public function cabinetadd(Request $request){
+    
         $cabuser = $request->cabuser;
 
         $renter = Renters::where('userid',$request->cabuser)->first();
@@ -223,6 +223,13 @@ class RenterCashierController extends Controller
 
 
                     if($renter){
+                        users_temp::where('firstname',$request->firstname)
+                        ->where(function(Builder $builder) use($request){
+                            $builder->where('middlename',$request->middlename)
+                                    ->where('lastname',$request->lastname)
+                                    ->where('birthdate',$request->birthdate);
+                            })
+                        ->delete();
                         return redirect()->route('renter.index')
                                 ->with('success','Renter Registered successfully.');
                     }else{
@@ -261,7 +268,15 @@ class RenterCashierController extends Controller
                     ]);
 
                     if($branchlistadd)
+                    
                     {
+                        users_temp::where('firstname',$request->firstname)
+                        ->where(function(Builder $builder) use($request){
+                            $builder->where('middlename',$request->middlename)
+                                    ->where('lastname',$request->lastname)
+                                    ->where('birthdate',$request->birthdate);
+                            })
+                        ->delete();
                         return redirect()->route('renter.index')
                                 ->with('success','Renter Registered successfully.');
                     }else{
@@ -282,18 +297,58 @@ class RenterCashierController extends Controller
     }
     public function renterlogin(Request $request)
     {
-        
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         if(auth()->user()->accesstype == 'Cashier'){
             $renter = Renters::where('firstname', $request->firstname)
                         ->where(function(Builder $builder) use($request){
                         $builder->where('lastname',$request->lastname)
                                 ->where('birthdate',$request->birthdate);
                             })->first();
+            
+            $usertemp = users_temp::where('firstname', $request->firstname)
+            ->where(function(Builder $builder) use($request){
+            $builder->where('lastname',$request->lastname)
+                    ->where('birthdate',$request->birthdate);
+                })->first();
             if($renter){
                 return view('rentercashier.create-renter-register',['renter' => $renter])->with('success','Renter Record Found.');
+            }elseif(empty($usertemp)){
+            
+               
+                
+                    $usertempadd =users_temp::create([
+                        'firstname' => $request->firstname,
+                        'middlename' => $request->middlename,
+                        'lastname' => $request->lastname,
+                        'birthdate' => $request->birthdate,
+                        'branchid' => auth()->user()->branchid,
+                        'branchname' => auth()->user()->branchname,
+                        'accesstype' => 'Renters',
+                        'timerecorded'  => $timenow,
+                        'posted'  => 'N',
+                        'created_by' => auth()->user()->email,
+                        'updated_by' => 'Null',
+                        'mod' => 0,
+                        'status' => 'Active',
+                    ]);
+
+                
+                    return view('rentercashier.create-renter-login')->with(['renterinfo' => $request]);
+                
+                
             }else{
-                return view('rentercashier.create-renter-login')->with(['renterinfo' => $request]);
+                
+                if($usertemp->branchid == auth()->user()->branchid){
+                    return view('rentercashier.create-renter-login')->with(['renterinfo' => $request]);
+                }else{
+                    return redirect()->back()
+                                    ->with('failed','Renter Registration. Application on Progress.');
+                }
+                
             }
+                
+
+            
             
         }else{
             return redirect()->route('dashboard.index')->with('failed','Renter Registration failed.');

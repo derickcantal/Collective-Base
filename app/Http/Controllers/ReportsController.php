@@ -375,8 +375,8 @@ class ReportsController extends Controller
         }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor'){
             $sales = history_sales::latest()->paginate(5);
             $salesget = history_sales::latest()->get();
-        }
 
+        }
         $totalqty = collect($salesget)->sum('qty');
         $totalsales = collect($salesget)->sum('total');
 
