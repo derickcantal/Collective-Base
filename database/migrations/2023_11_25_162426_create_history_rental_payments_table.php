@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('firstname');
             $table->string('lastname');
             $table->decimal('rpamount', $precision = 8, $scale = 2);
+            $table->decimal('rpbal', $precision = 8, $scale = 2);
             $table->string('rppaytype');
             $table->integer('rpmonth');
             $table->integer('rpyear');
@@ -32,6 +33,7 @@ return new class extends Migration
             $table->string('updated_by');
             $table->string('timerecorded');
             $table->string('posted');
+            $table->string('fully_paid');
             $table->integer('mod');
             $table->string('status');
         });

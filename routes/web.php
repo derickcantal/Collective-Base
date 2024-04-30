@@ -19,6 +19,7 @@ use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SalesEODController;
 use App\Http\Controllers\RenterCashierController;
 use App\Http\Controllers\MyCabinetController;
+use App\Http\Controllers\RenterCashierRentalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -111,6 +112,8 @@ Route::middleware('auth')->group(function () {
     Route::get('rental/payments/searchrbc', [RentalPaymentsController::class, 'searchrbc'])->name('rentalpayments.searchrbc');
     Route::put('rental/payments/putrbc/{renters}', [RentalPaymentsController::class, 'putrbc'])->name('rentalpayments.putrbc');
     Route::resource('rentalpayments', RentalPaymentsController::class);
+
+    Route::resource('rentercashierrental', RenterCashierRentalController::class);
 
 });
 

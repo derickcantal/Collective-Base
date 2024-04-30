@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <u> <a href="{{ route('sales.index') }}"> Sales</a></u> | <a href="{{ route('attendance.index') }}"> Attendance</a>@if(auth()->user()->accesstype == 'Cashier') | <a href="{{ route('renter.index') }}"> Renters</a> @endif
+            <u> <a href="{{ route('sales.index') }}"> Sales</a></u> @if(auth()->user()->accesstype == 'Cashier') | <a href="{{ route('attendance.index') }}"> Attendance</a> | <a href="{{ route('renter.index') }}"> Renters</a> | <a href="{{ route('rentercashierrental.index') }}"> Rental Payments</a> @endif
         </h2>
     </x-slot>
     <section>

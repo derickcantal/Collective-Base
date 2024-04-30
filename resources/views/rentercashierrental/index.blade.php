@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-           <a href="{{ route('sales.index') }}"> Sales</a> | <a href="{{ route('attendance.index') }}"> Attendance</a> | <u><a href="{{ route('renter.index') }}"> Renters</a></u> | <a href="{{ route('rentercashierrental.index') }}"> Rental Payments</a> 
+           <a href="{{ route('sales.index') }}"> Sales</a> | <a href="{{ route('attendance.index') }}"> Attendance</a> | <a href="{{ route('renter.index') }}"> Renters</a> | <u><a href="{{ route('rentercashierrental.index') }}"> Rental Payments</a></u> 
         </h2>
     </x-slot>
     <section>
@@ -13,9 +13,8 @@
                             <!-- Start coding here -->
                             <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                                 <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
-                                    <x-primary-button class="ms-4">
-                                        <a class="btn btn-primary" href="{{ route('renter.renterinfo') }}">Create New Renter</a>
-                                    </x-primary-button>
+                                    <div></div>
+                                    
                                     
                                     <form class="flex items-center" action="{{ route('renter.search') }}" method="get">
                                 
@@ -81,7 +80,7 @@
                                 </div>    
 
                                     @csrf
-                                    <div class="max-w-7xl overflow-x-auto shadow-md sm:rounded-lg mt-4" >
+                                    <div class="max-w-7xl overflow-x-auto shadow-md sm:rounded-lg">
                                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                                 <tr>
@@ -89,13 +88,13 @@
                                                         No
                                                     </th>
                                                     <th scope="col" class="px-6 py-3">
-                                                        Profile
+                                                        Cabinet No.
                                                     </th>
                                                     <th scope="col" class="px-6 py-3">
-                                                        Cabinet Owned
+                                                        Rent Price
                                                     </th>
                                                     <th scope="col" class="px-6 py-3">
-                                                        Branch
+                                                        Renter
                                                     </th>
                                                     <th scope="col" class="px-6 py-3">
                                                         Status
@@ -106,7 +105,7 @@
                                                     
                                                 </tr>
                                             </thead>
-                                                @forelse ($renter as $renters)
+                                                @forelse ($cabinets as $cabinet)
                                                 
                                             <tbody>
                                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -114,57 +113,53 @@
                                                     <td class="px-6 py-4">
                                                         <x-input-label>{{ ++$i }}</x-input-label>
                                                     </td>
-                                                    <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                                                        <img class="w-10 h-10 rounded-full" src="{{ asset("/storage/$renters->avatar") }}" alt="avatar">
-                                                        <div class="ps-3">
-                                                            <div class="text-base font-semibold"><x-input-label for="username" :value="$renters->username"/></div>
-                                                            <x-input-label>{{ $renters->lastname }}, {{ $renters->firstname }} {{ $renters->middlename }}</x-input-label>
-                                                            <x-input-label for="email" :value="$renters->email"/>
-                                                    </th>
                                                     <td class="px-6 py-4">
-                                                        <a class="font-medium text-white-600 dark:text-white-500 hover:underline" href="{{ route('renter.show',$renters->userid) }}">{{ $renters->cabid }}</a>
+                                                        <x-input-label for="cabinetname" :value="$cabinet->cabinetname"/>
                                                     </td>
                                                     <td class="px-6 py-4">
-                                                        <x-input-label for="branchname" :value="$renters->branchname"/>
+                                                        @if($cabinet->cabinetprice == '' or $cabinet->cabinetprice == 'Null')
+                                                            <x-input-label for="cabinetprice" value="0.00"/>
+                                                        @else
+                                                            <x-input-label for="cabinetprice" :value="$cabinet->cabinetprice"/>
+                                                        @endif
                                                     </td>
-                                                    
+                                                    <td class="px-6 py-4">
+                                                        <x-input-label for="email" :value="$cabinet->email"/>
+                                                    </td>
                                                     <td class="px-6 py-4">
                                                         <div class="flex items-center">
                                                         @php
                                                             $color = '';
-                                                            if ($renters->status == 'Active'):
+                                                            if ($cabinet->status == 'Active'):
                                                                 $color = 'green';
-                                                            elseif ($renters->status == 'Inactive'):
+                                                            elseif ($cabinet->status == 'Inactive'):
                                                                 $color = 'red';
                                                             endif;
                                                         @endphp
-                                                                <div class="h-2.5 w-2.5 rounded-full bg-{{ $color; }}-500 me-2"></div> <x-input-label for="status" :value="$renters->status"/>
+                                                                <div class="h-2.5 w-2.5 rounded-full bg-{{ $color; }}-500 me-2"></div> <x-input-label for="status" :value="$cabinet->status"/>
                                                         </div>
                                                     </td>
                                                     <td class="px-6 py-4">
-                                                        @php
-                                                            
-                                                        @endphp
-                                                        <form action="{{ route('renter.destroy',$renters->userid) }}" method="POST">
-                                                            <a class="font-medium text-white-600 dark:text-white-500 hover:underline" href="{{ route('renter.show',$renters->userid) }}">Cabinets</a>
-                                                            | <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('renter.edit',$renters->userid) }}">Modify</a>
+                                                        
+                                                        <form action="{{ route('cabinet.destroy',$cabinet->cabid) }}" method="POST">
+                                                        <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('cabinet.edit',$cabinet->cabid) }}">Payment</a>
                                                             @csrf
                                                             @method('DELETE')
                                                             @php
                                                             $txtbutton = '';
                                                             $colorbutton = '';
                                                             
-                                                            if ($renters->status == 'Active'):
+                                                            if ($cabinet->status == 'Active'):
                                                                 $txtbutton = 'Decativate';
-                                                                
-                                                            elseif ($renters->status == 'Inactive'):
+                                                                $colorbutton = 'dark:text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800';
+                                                            elseif ($cabinet->status == 'Inactive'):
                                                                 $txtbutton = 'Activate';
                                                                 $colorbutton = 'dark:text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800';
                                                             endif
                                                             
                                                             @endphp
                                                             
-                                                            <x-danger-button class="ms-3 mt-4 {{ $colorbutton }}">
+                                                            <x-danger-button class="ms-3 {{ $colorbutton }}">
                                                                 {{ $txtbutton }}
                                                             </x-danger-button>
                                                         </form>
@@ -181,7 +176,7 @@
                                         </table>
                                     </div>
                                     <div class="mt-4">
-                                        {!! $renter->appends(request()->query())->links() !!}
+                                        {!! $cabinets->appends(request()->query())->links() !!}
                                     </div>
                                     
                                 </div>

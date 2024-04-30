@@ -11,19 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('branchlist', function (Blueprint $table) {
-            $table->increments('BLID');
-            $table->integer('userid');
-            $table->integer('branchid');
-            $table->integer('cabcount');
-            $table->string('accesstype');
-            $table->string('timerecorded');
-            $table->string('posted');
+        Schema::create('rental_active_month', function (Blueprint $table) {
+            $table->increments('ramid');
+            $table->integer('rpmonth');
+            $table->integer('rpyear');
+            $table->string('rpnotes');
+            $table->timestamps();
             $table->string('created_by');
             $table->string('updated_by');
+            $table->string('timerecorded');
+            $table->string('posted');
             $table->integer('mod');
-            $table->string('status');
-            $table->timestamps();
+            $table->string('status'); 
         });
     }
 
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('branchlist');
+        Schema::dropIfExists('rental_active_month');
     }
 };
