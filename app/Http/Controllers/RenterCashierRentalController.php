@@ -8,9 +8,16 @@ use \Carbon\Carbon;
 use App\Models\cabinet;
 use App\Models\branch;
 use App\Models\Renters;
+use App\Models\history_rental_payments;
+use App\Models\RentalPayments;
+use App\Models\rental_active_month;
 
 class RenterCashierRentalController extends Controller
 {
+    public function search(Request $request)
+    {
+        
+    }
     /**
      * Display a listing of the resource.
      */
@@ -33,9 +40,19 @@ class RenterCashierRentalController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($cabid)
     {
-        //
+        $cabinet = cabinet::where('cabid', $cabid)->first();
+
+        $renter = Renters::where('userid', $cabinet->userid)->first();
+
+        $rentername = $renter->lastname . ', ' . $renter->firstname;
+
+
+        return view('rentercashierrental.create')
+                                ->with(['cabinet' => $cabinet])
+                                ->with(['renters' => $renter])
+                                ->with('rentername', $rentername);
     }
 
     /**
@@ -51,7 +68,7 @@ class RenterCashierRentalController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return view('rentercashierrental.show');
     }
 
     /**
@@ -59,7 +76,19 @@ class RenterCashierRentalController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        
+        $currentmonth = rental_active_month::query()->get();
+
+
+        if(empty($currentmonth))
+        {
+            return redirect()->route('rentercashierrental.index')
+                                ->with('failed','No Records Found.');
+        }
+        else{
+            dd('Record Found');
+                
+        }
     }
 
     /**

@@ -19,6 +19,7 @@ class history_rental_payments extends Model
         'firstname',
         'lastname',
         'rpamount',
+        'rpbal',
         'rppaytype',
         'rpmonthyear',
         'rpnotes',
@@ -29,6 +30,7 @@ class history_rental_payments extends Model
         'updated_by',
         'timerecorded',
         'posted',
+        'fully_paid',
         'mod',
         'status',
     ];

@@ -91,7 +91,8 @@ Route::middleware('auth')->group(function () {
     Route::post('renter/cabinet/store', [RenterCashierController::class, 'cabinetstore'])->name('renter.cabinetstore');
     Route::get('renter/create/info', [RenterCashierController::class, 'renterinfo'])->name('renter.renterinfo');
     Route::get('renter/create/login', [RenterCashierController::class, 'renterlogin'])->name('renter.renterlogin');
-    Route::post('renter/create/register', [RenterCashierController::class, 'renterregister'])->name('renter.renterregister');
+    Route::post('renter/create/register', [RenterCashierController::class, 'renterregister'])->name('renter.renterregisternew');
+    Route::post('renter/create/register/{userid}', [RenterCashierController::class, 'renterregister'])->name('renter.renterregister');
     
     Route::resource('renter', RenterCashierController::class);
 });
@@ -104,7 +105,7 @@ Route::middleware('auth')->group(function () {
     Route::get('renters/cabinet/{cabinetid}', [RentersController::class, 'editcabinet'])->name('renters.editcabinet');
     Route::get('renters/create/info', [RentersController::class, 'renterinfo'])->name('renters.renterinfo');
     Route::get('renters/create/login', [RentersController::class, 'renterlogin'])->name('renters.renterlogin');
-    Route::put('renters/create/register', [RentersController::class, 'renterregister'])->name('renters.renterregister');
+    Route::post('renters/create/register', [RentersController::class, 'renterregister'])->name('renters.renterregister');
     Route::resource('renters', RentersController::class);
     
     Route::get('rental/payments/search', [RentalPaymentsController::class, 'search'])->name('rentalpayments.search');
@@ -113,6 +114,9 @@ Route::middleware('auth')->group(function () {
     Route::put('rental/payments/putrbc/{renters}', [RentalPaymentsController::class, 'putrbc'])->name('rentalpayments.putrbc');
     Route::resource('rentalpayments', RentalPaymentsController::class);
 
+    Route::get('cashier/rental/payments', [RenterCashierRentalController::class, 'search'])->name('rentercashierrental.search');
+    Route::get('cashier/rental/payments/{renterid}/new', [RenterCashierRentalController::class, 'create'])->name('rentercashierrental.creates');
+    Route::get('cashier/rental/payments/{renterid}/history', [RenterCashierRentalController::class, 'show'])->name('rentercashierrental.shows');
     Route::resource('rentercashierrental', RenterCashierRentalController::class);
 
 });

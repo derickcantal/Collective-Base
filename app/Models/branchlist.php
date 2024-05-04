@@ -17,6 +17,7 @@ class branchlist extends Model
             'branchid',
             'accesstype',
             'timerecorded',
+            'cabcount',
             'posted',
             'created_by',
             'updated_by',

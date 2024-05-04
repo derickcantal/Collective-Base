@@ -19,6 +19,7 @@ class RentalPayments extends Model
         'firstname',
         'lastname',
         'rpamount',
+        'rpbal',
         'rppaytype',
         'rpmonth',
         'rpyear',
@@ -32,6 +33,7 @@ class RentalPayments extends Model
         'updated_by',
         'timerecorded',
         'posted',
+        'fully_paid',
         'mod',
         'status',
     ];

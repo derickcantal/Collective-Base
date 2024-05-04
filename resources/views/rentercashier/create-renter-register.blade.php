@@ -11,7 +11,6 @@
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         <form action="{{ route('renter.renterregister',$renter->userid) }}" method="POST" class="p-4 md:p-5">
                         @csrf
-                        @method('PUT') 
                             <div class="relative p-4 w-full max-w-full max-h-full">
                                 <!-- Modal content -->
                                 <div class="relative bg-white rounded-lg dark:bg-gray-800">
