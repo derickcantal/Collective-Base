@@ -115,8 +115,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('rentalpayments', RentalPaymentsController::class);
 
     Route::get('cashier/rental/payments', [RenterCashierRentalController::class, 'search'])->name('rentercashierrental.search');
+    Route::get('cashier/rental/payments/{renterid}/select/month/year', [RenterCashierRentalController::class, 'select'])->name('rentercashierrental.select');
     Route::get('cashier/rental/payments/{renterid}/new', [RenterCashierRentalController::class, 'create'])->name('rentercashierrental.creates');
     Route::get('cashier/rental/payments/{renterid}/history', [RenterCashierRentalController::class, 'show'])->name('rentercashierrental.shows');
+    Route::post('cashier/rental/payments/store/{cabid}', [RenterCashierRentalController::class, 'store'])->name('rentercashierrental.stores');
     Route::resource('rentercashierrental', RenterCashierRentalController::class);
 
 });

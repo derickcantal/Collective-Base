@@ -141,7 +141,7 @@
                                                     </td>
                                                     <td class="px-6 py-4">
                                                         
-                                                        <form action="{{ route('rentercashierrental.creates',$cabinet->cabid) }}" method="POST">
+                                                        <form action="{{ route('rentercashierrental.select',$cabinet->cabid) }}" method="POST">
                                                         <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('rentercashierrental.shows',$cabinet->cabid) }}">History</a>
                                                             @csrf
                                                             @method('GET')
