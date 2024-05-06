@@ -10,7 +10,7 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <form action="{{ route('rentercashierrental.stores', $cabinet->cabid) }}" method="POST" class="p-4 md:p-5">
+                        <form action="{{ route('rentercashierrental.stores', $cabinet->cabid) }}" enctype="multipart/form-data" method="POST" class="p-4 md:p-5">
                         @csrf   
                             <div class="relative p-4 w-full max-w-full max-h-full">
                                 <!-- Error & Success Notification -->        

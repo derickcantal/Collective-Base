@@ -284,8 +284,7 @@ class SalesEODController extends Controller
 
                     RentalPayments::where('branchname',auth()->user()->branchname)
                     ->where(function(Builder $builder){
-                        $builder->where('posted', "N")
-                                ->where('fully_paid', 'Y');
+                        $builder->where('posted', "N");
                     })->update([
                         'posted' => "Y",
                     ]);
