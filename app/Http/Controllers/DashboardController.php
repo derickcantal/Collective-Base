@@ -27,10 +27,9 @@ class DashboardController extends Controller
     }
 
     public function renters(){
-        $sales = Sales::where('cabinetname',auth()->user()->cabinetname)
+        $sales = Sales::where('userid',auth()->user()->userid)
                     ->where(function(Builder $builder){
-                        $builder->where('branchname',auth()->user()->branchname)
-                                ->where('collected_status','Pending');
+                        $builder->where('collected_status','Pending');
                     })->latest()->paginate(5);
         $RenterRequests = RenterRequests::where('cabinetname',auth()->user()->cabinetname)
                     ->where(function(Builder $builder){
@@ -38,11 +37,9 @@ class DashboardController extends Controller
                                 ->orderBy('status','desc');
                     })->paginate(5);
 
-        $rentalpayments = RentalPayments::where('cabinetname',auth()->user()->cabinetname)
-                    ->where(function(Builder $builder){
-                        $builder->where('branchname',auth()->user()->branchname)
-                                ->where('status','Pending');
-                    })->paginate(5);
+        $rentalpayments = RentalPayments::where('userid',auth()->user()->userid)
+                    ->latest()
+                    ->paginate(5);
 
         $attendance = attendance::where('status','Renters')->paginate(5);
 
@@ -62,8 +59,7 @@ class DashboardController extends Controller
 
         $rentalpayments = rentalpayments::where('branchname',auth()->user()->branchname)
                     ->where(function(Builder $builder){
-                        $builder->where('status','Pending');
-                    })->paginate(5);
+                    })->latest()->paginate(5);
 
         $attendance = attendance::where('branchname',auth()->user()->branchname)->latest()->paginate(5);
 

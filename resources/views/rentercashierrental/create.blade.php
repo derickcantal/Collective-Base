@@ -63,8 +63,11 @@
                                         </h3>
                                     </div>
                                     <!-- Modal body -->
+                                    @if($rpbal == 0 )
                                     <div class="grid gap-4 mb-4 grid-cols-2" x-data="{ rent: '{{ $cabinet->cabinetprice }}', rentpay: 0,  bal: 0}" x-effect="bal = rent - rentpay">
-                                            
+                                    @else
+                                    <div class="grid gap-4 mb-4 grid-cols-2" x-data="{ rent: '{{ $rpbal }}', rentpay: 0,  bal: 0}" x-effect="bal = rent - rentpay">
+                                    @endif
                                             <div class="col-span-2 sm:col-span-1">
                                                 <!-- firstname -->
                                                 <div class="form-group mt-4">
@@ -88,10 +91,10 @@
                                                 <!-- rpmonthyear -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="rpmonth" :value="__('Applicable Month')" />
-                                                    <x-text-input id="rpmonth" name="rpmonth" class="mt-1 w-1/2" type="text" :value="old('rpmonth')" readonly required/>
+                                                    <x-text-input id="rpmonth" name="rpmonth" class="mt-1 w-1/2" type="text" :value="old('rpmonth',$rpmonth)" readonly required/>
                                                     <x-input-error :messages="$errors->get('rpmonth')" class="mt-2" />
 
-                                                    <x-text-input id="rpyear" name="rpyear" type="text" class="form-select mt-1  border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('rpyear')" readonly required/>
+                                                    <x-text-input id="rpyear" name="rpyear" type="text" class="form-select mt-1  border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('rpyear',$rpyear)" readonly required/>
                                                     <x-input-error :messages="$errors->get('rpyear')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -104,8 +107,8 @@
                                                 </div>
                                             </div>
                                             <div class="col-span-2 sm:col-span-1">
-                                                    <!-- rpamount -->
-                                                    <div class="form-group mt-4">
+                                                <!-- rpamount -->
+                                                <div class="form-group mt-4">
                                                     <x-input-label for="rpamount" :value="__('Rental Amount')" />
                                                     <x-text-input id="rpamount" x-model.number="rent" class="block mt-1 w-full" type="number" name="rpamount"  required autofocus autocomplete="off" readonly/>
                                                     <x-input-error :messages="$errors->get('rpamount')" class="mt-2" />

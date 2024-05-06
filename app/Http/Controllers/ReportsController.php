@@ -171,7 +171,7 @@ class ReportsController extends Controller
     
                 $sales_requests = history_sales_requests::where('status','Pending')->orderBy('status','desc')->paginate(5);
                 
-                $rentalpayments = history_rental_payments::where('status','Unpaid')->orderBy('status','desc')->paginate(5);
+                $rentalpayments = history_rental_payments::where('branchname',auth()->user()->branchname)->orderBy('status','desc')->paginate(5);
     
                 $attendance = history_attendance::where('branchname',auth()->user()->branchname)->latest()->paginate(5); 
                 
@@ -196,7 +196,7 @@ class ReportsController extends Controller
     
                 $sales_requests = history_sales_requests::where('status','Pending')->orderBy('status','desc')->paginate(5);
                 
-                $rentalpayments = history_rental_payments::where('status','Unpaid')->orderBy('status','desc')->paginate(5);
+                $rentalpayments = history_rental_payments::where('branchname',auth()->user()->branchname)->orderBy('status','desc')->paginate(5);
     
                 $attendance = history_attendance::where('branchname',auth()->user()->branchname)->latest()->paginate(5); 
                 
@@ -230,7 +230,7 @@ class ReportsController extends Controller
     
                 $sales_requests = history_sales_requests::where('status','Pending')->orderBy('status','desc')->paginate(5);
                 
-                $rentalpayments = history_rental_payments::where('status','Unpaid')->orderBy('status','desc')->paginate(5);
+                $rentalpayments = history_rental_payments::where('branchname',auth()->user()->branchname)->orderBy('status','desc')->paginate(5);
     
                 $attendance = history_attendance::where('branchname',auth()->user()->branchname)->latest()->paginate(5); 
                 
@@ -256,7 +256,7 @@ class ReportsController extends Controller
 
                 $sales_requests = history_sales_requests::where('status','Pending')->orderBy('status','desc')->paginate(5);
             
-                $rentalpayments = history_rental_payments::where('status','Unpaid')->orderBy('status','desc')->paginate(5);
+                $rentalpayments = history_rental_payments::where('branchname',auth()->user()->branchname)->orderBy('status','desc')->paginate(5);
 
                 $attendance = history_attendance::paginate(5); 
 
@@ -306,7 +306,7 @@ class ReportsController extends Controller
 
                     $sales_requests = history_sales_requests::where('status','Pending')->orderBy('status','desc')->paginate(5);
                 
-                    $rentalpayments = history_rental_payments::where('status','Unpaid')->orderBy('status','desc')->paginate(5);
+                    $rentalpayments = history_rental_payments::where('branchname',auth()->user()->branchname)->orderBy('status','desc')->paginate(5);
 
                     $attendance = history_attendance::paginate(5); 
 
@@ -352,7 +352,7 @@ class ReportsController extends Controller
 
                     $sales_requests = history_sales_requests::where('status','Pending')->orderBy('status','desc')->paginate(5);
                 
-                    $rentalpayments = history_rental_payments::where('status','Unpaid')->orderBy('status','desc')->paginate(5);
+                    $rentalpayments = history_rental_payments::where('branchname',auth()->user()->branchname)->orderBy('status','desc')->paginate(5);
 
                     $attendance = history_attendance::paginate(5); 
 
@@ -382,7 +382,7 @@ class ReportsController extends Controller
 
         $sales_requests = history_sales_requests::where('status','Pending')->orderBy('status','desc')->paginate(5);
         
-        $rentalpayments = history_rental_payments::where('status','Unpaid')->orderBy('status','desc')->paginate(5);
+        $rentalpayments = history_rental_payments::where('branchname',auth()->user()->branchname)->orderBy('status','desc')->paginate(5);
 
         $attendance = history_attendance::where('branchname',auth()->user()->branchname)->latest()->paginate(5); 
 

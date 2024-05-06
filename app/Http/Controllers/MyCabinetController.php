@@ -39,7 +39,10 @@ class MyCabinetController extends Controller
         $cabinetid = $cabinetsales;
 
         $history_sales = history_sales::where('cabid', $cabinetid)
-                            ->paginate(5);
+                                    ->where(function(Builder $builder){
+                                        $builder->where('total', '!=','0');
+                                    })
+                                    ->paginate(5);
 
         return view('mycabinet.cabsales',compact('history_sales'))
 

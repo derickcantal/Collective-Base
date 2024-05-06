@@ -10,103 +10,68 @@
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
+                           
                             <th scope="col" class="px-6 py-3">
-                                RP ID
+                                Profile
                             </th>
+                         
                             <th scope="col" class="px-6 py-3">
-                                Username
+                                Proof Image
                             </th>
+                          
                             <th scope="col" class="px-6 py-3">
-                                Full Name
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Amount Paid
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Payment Type
+                                Total Due
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Applicable Month
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Notes
+                                Processed By
                             </th>
-                            <th scope="col" class="px-6 py-3">
-                                Branch
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Created at
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Created by
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Status
-                            </th>
+                         
                         </tr>
                     </thead>
+                            
+                            @forelse($rentalpayments as $rentalpayment) 
                     <tbody>
-                        @csrf
-                        @foreach($rentalpayments as $rental) 
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            
+                            
+                            <td class="px-6 py-4">
+                                <x-input-label>{{ $rentalpayment->lastname }}, {{ $rentalpayment->firstname }} {{ $rentalpayment->middlename }}</x-input-label>
+                                <x-input-label>Cab. No.: <b>{{ $rentalpayment->cabinetname }}</b></x-input-label>
+                            </td>
+                            <td class="px-6 py-4">
+                                @php
+                                    if($rentalpayment->avatarproof == 'avatars/cash-default.jpg'):
+                                        echo "";
+                                    endif;
+                                @endphp
+                                <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$rentalpayment->avatarproof") }}" alt="avatar">
+                            </td>
+                           
+                            <td class="px-6 py-4">
+                                <x-input-label for="rpamount" :value="$rentalpayment->rpamount"/>
+                                <x-input-label for="rppaytype" :value="$rentalpayment->rppaytype"/>
+                            </td>
+                            <td class="px-6 py-4">
+                                <x-input-label for="rpmonthyear">{{ $rentalpayment->rpmonth }} - {{ $rentalpayment->rpyear }}</x-input-label>
+                            </td>
+                            
+                            <td class="px-6 py-4">
+                                <x-input-label for="created_by" :value="$rentalpayment->created_by"/>
+                                <x-input-label for="timerecorded" :value="$rentalpayment->timerecorded"/>
+                            </td>
+                            
+                        </tr>
                         
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <td class="px-6 py-4">
-                                <x-input-label for="rpid" :value="$rental->rpid"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="username" :value="$rental->username"/>
-                            </td>
-                            <td class="px-6 py-4">
-                            <x-input-label for="lastname" :value="$rental->lastname"/>, <x-input-label for="firstname" :value="$rental->firstname"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="rpamount" :value="$rental->rpamount"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="rppaytype" :value="$rental->rppaytype"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="rpmonthyear" :value="$rental->rpmonthyear"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="rpnotes" :value="$rental->rpnotes"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="branchname" :value="$rental->branchname"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="created_at" :value="$rental->created_at"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="created_by" :value="$rental->created_by"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="status" :value="$rental->status"/>
-                            </td>
-                        </tr>
-                        @endforeach
+                        @empty
+                        <td scope="row" class="px-6 py-4">
+                            No Records Found.
+                        </td>	
+                        @endforelse
+                            
                     </tbody>
-                    @if(empty($rental))
-                    <td scope="row" class="px-6 py-4">
-                        No Records Found.
-                    </td>	
-                    @else
-                    <tfoot>
-                        <tr class="font-semibold text-gray-900 dark:text-white">
-                            <th scope="row" class="px-6 py-3 text-base"></th>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                        </tr>
-                    </tfoot>
-                    @endif
                 </table>
                 <div class="mt-4">
                     {!! $rentalpayments->appends(request()->query())->links() !!}

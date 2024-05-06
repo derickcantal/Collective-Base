@@ -16,28 +16,21 @@
                             <th scope="col" class="px-6 py-3">
                                 Profile
                             </th>
-                            <th scope="col" class="px-6 py-3">
-                                Branch
-                            </th>
+                         
                             <th scope="col" class="px-6 py-3">
                                 Proof Image
                             </th>
-                            <th scope="col" class="px-6 py-3">
-                                Payment Mode
-                            </th>
+                          
                             <th scope="col" class="px-6 py-3">
                                 Total Due
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Applicable Month
                             </th>
-                            
                             <th scope="col" class="px-6 py-3">
-                                Updated By
+                                Processed By
                             </th>
-                            <th scope="col" class="px-6 py-3">
-                                Status
-                            </th>
+                         
                         </tr>
                     </thead>
                             
@@ -53,9 +46,6 @@
                                 <x-input-label>Cab. No.: <b>{{ $rentalpayment->cabinetname }}</b></x-input-label>
                             </td>
                             <td class="px-6 py-4">
-                                <x-input-label for="branchname" :value="$rentalpayment->branchname"/>
-                            </td>
-                            <td class="px-6 py-4">
                                 @php
                                     if($rentalpayment->avatarproof == 'avatars/cash-default.jpg'):
                                         echo "";
@@ -63,44 +53,20 @@
                                 @endphp
                                 <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$rentalpayment->avatarproof") }}" alt="avatar">
                             </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="rppaytype" :value="$rentalpayment->rppaytype"/>
-                            </td>
+                           
                             <td class="px-6 py-4">
                                 <x-input-label for="rpamount" :value="$rentalpayment->rpamount"/>
+                                <x-input-label for="rppaytype" :value="$rentalpayment->rppaytype"/>
                             </td>
                             <td class="px-6 py-4">
                                 <x-input-label for="rpmonthyear">{{ $rentalpayment->rpmonth }} - {{ $rentalpayment->rpyear }}</x-input-label>
                             </td>
                             
                             <td class="px-6 py-4">
-                            <x-input-label for="updated_by" :value="$rentalpayment->updated_by"/>
+                                <x-input-label for="created_by" :value="$rentalpayment->created_by"/>
+                                <x-input-label for="timerecorded" :value="$rentalpayment->timerecorded"/>
                             </td>
-                            <td class="px-6 py-4">
-                                @php
-                                    $btndis='';
-                                    $btnlabel = '';
-                                    $btncolor = '';
-                                    $btntxtcolor = '';
-
-                                    if($rentalpayment->status == 'Unpaid'):
-                                        $btndis = '';
-                                        $btnlabel = 'Unpaid';
-                                        $btncolor = 'blue';
-                                        $btntxtcolor = 'white';
-                                    elseif($rentalpayment->status == 'Paid'):
-                                        $btndis = 'disabled';
-                                        $btnlabel = 'Paid';
-                                        $btncolor = 'green';
-                                        $btntxtcolor = 'white';
-                                    endif;
-                                @endphp
-                                <form action="{{ route('rentalpayments.edit',$rentalpayment->rpid) }}" method="PUT">
-                                    <x-danger-button class="ms-3 dark:text-{{ $btntxtcolor; }} bg-{{ $btncolor; }}-700 hover:bg-{{ $btncolor; }}-800 focus:outline-none focus:ring-4 focus:ring-{{ $btncolor; }}-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-{{ $btncolor; }}-600 dark:hover:bg-{{ $btncolor; }}-700 dark:focus:ring-{{ $btncolor; }}-800 ">
-                                        {{ $btnlabel; }}
-                                    </x-danger-button>
-                                </form>
-                            </td>
+                            
                         </tr>
                         
                         @empty

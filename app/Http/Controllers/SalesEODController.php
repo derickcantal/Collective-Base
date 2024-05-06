@@ -57,7 +57,8 @@ class SalesEODController extends Controller
 
             RentalPayments::where('branchname',auth()->user()->branchname)
             ->where(function(Builder $builder){
-                $builder->where('posted', "N");
+                $builder->where('posted', "N")
+                    ->where('fully_paid', 'Y');
             })->update([
                 'posted' => "Y",
             ]);
@@ -90,7 +91,8 @@ class SalesEODController extends Controller
             RentalPayments::query()
             ->where('branchname',auth()->user()->branchname)
             ->where(function(Builder $builder){
-                $builder->where('posted', "Y");
+                $builder->where('posted', "Y")
+                        ->where('fully_paid', 'Y');
             })
             ->each(function ($oldRecord) {
                 $newRecord = $oldRecord->replicate();
@@ -282,7 +284,8 @@ class SalesEODController extends Controller
 
                     RentalPayments::where('branchname',auth()->user()->branchname)
                     ->where(function(Builder $builder){
-                        $builder->where('posted', "N");
+                        $builder->where('posted', "N")
+                                ->where('fully_paid', 'Y');
                     })->update([
                         'posted' => "Y",
                     ]);
@@ -315,7 +318,8 @@ class SalesEODController extends Controller
                     RentalPayments::query()
                     ->where('branchname',auth()->user()->branchname)
                     ->where(function(Builder $builder){
-                        $builder->where('posted', "Y");
+                        $builder->where('posted', "Y")
+                            ->where('fully_paid', 'Y');
                     })
                     ->each(function ($oldRecord) {
                         $newRecord = $oldRecord->replicate();

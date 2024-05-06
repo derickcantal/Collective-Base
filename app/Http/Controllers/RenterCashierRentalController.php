@@ -53,14 +53,31 @@ class RenterCashierRentalController extends Controller
                         ->where('rpmonth',$request->rpmonth)
                         ->where('rpyear',$request->rpyear);
                     })
-                    ->first();
+                    ->latest()->first();
+        if(!empty($rentalpayment))
+        {
+            $rpbal = $rentalpayment->rpbal;
+        }
+        else
+        {
+            $rpbal = $cabinet->cabinetprice;
+        }
+              
+        $rpmonth = $request->rpmonth;
+        $rpyear = $request->rpyear;
 
         if($rentalpayment)
         {
             if($rentalpayment->rpbal != 0)
             {
-                return redirect()->route('rentercashierrental.select',$cabid)
-                                ->with('failed','Existing balance!.');
+                
+                return view('rentercashierrental.create')
+                                ->with(['cabinet' => $cabinet])
+                                ->with(['renters' => $renter])
+                                ->with('rpbal', $rpbal)
+                                ->with('rpmonth', $rpmonth)
+                                ->with('rpyear', $rpyear)
+                                ->with('rentername', $rentername);
             }
             if($rentalpayment->fully_paid == 'Y')
             {
@@ -73,6 +90,9 @@ class RenterCashierRentalController extends Controller
         return view('rentercashierrental.create')
                                 ->with(['cabinet' => $cabinet])
                                 ->with(['renters' => $renter])
+                                ->with('rpbal', $rpbal)
+                                ->with('rpmonth', $rpmonth)
+                                ->with('rpyear', $rpyear)
                                 ->with('rentername', $rentername);
     }
 
@@ -102,26 +122,28 @@ class RenterCashierRentalController extends Controller
 
         $renter = Renters::where('userid', $cabinet->userid)->first();
 
-        $totalbalance = $cabinet->cabinetprice - $request->paidamount; 
-
         $rentalpayment = RentalPayments::where('userid',$renter->userid)
                 ->where(function(Builder $builder) use($request,$cabinet) {
                     $builder->where('cabid',$cabinet->cabid)
                         ->where('rpmonth',$request->rpmonth)
                         ->where('rpyear',$request->rpyear);
                     })
-                    ->first();
+                    ->latest()->first();
+
+        if(empty($rentalpayment))
+        {
+            $totalbalance = $cabinet->cabinetprice - $request->paidamount; 
+        }
+        else{
+            $totalbalance = $rentalpayment->rpbal - $request->paidamount; 
+        }
 
         if($rentalpayment)
         {
-            if($rentalpayment->rpbal != 0)
-            {
-                return redirect()->route('rentercashierrental.index')
-                                ->with('failed','Existing balance.');
-            }
+            
             if($rentalpayment->fully_paid == 'Y')
             {
-                return redirect()->route('rentercashierrental.index')
+                return redirect()->back()
                                 ->with('failed','Rental Month/Year has been paid.');
             }
             
@@ -129,21 +151,23 @@ class RenterCashierRentalController extends Controller
 
         if($request->paidamount <= 0)
         {
-            return redirect()->route('rentercashierrental.index')
+            return redirect()->back()
                                 ->with('failed','Total amount paid must not be equal 0.');
+        }
+        if($request->totalbalance < 0)
+        {
+            return redirect()->back()
+                                ->with('failed','Please pay exact amount');
         }
         if($totalbalance == 0)
         {
             $fullypaid = 'Y';
-        }elseif($totalbalance > 0)
+        }
+        elseif($totalbalance > 0)
         {
             $fullypaid = 'N';
         }
-        elseif($totalbalance < 0)
-        {
-            return redirect()->route('rentercashierrental.index')
-                                ->with('failed','Please pay exact amount');
-        }
+        
 
         if(empty($request->rpnotes))
         {
@@ -160,13 +184,14 @@ class RenterCashierRentalController extends Controller
             $payavatar = $request->payavatar;
         }
 
+
         $RentalPayments = RentalPayments::create([
             'userid' => $renter->userid,
             'username' => $renter->username,
             'firstname' => $renter->firstname,
             'lastname' => $renter->lastname,
             'rpamount' => $request->paidamount,
-            'rpbal' => $cabinet->cabinetprice - $request->paidamount,
+            'rpbal' => $totalbalance,
             'rppaytype' => $request->rppaytype,
             'rpmonth' => $request->rpmonth,
             'rpyear' => $request->rpyear,
@@ -185,6 +210,29 @@ class RenterCashierRentalController extends Controller
             'status' => 'Active',
         ]);
 
+        $rentalpaymentupdate = RentalPayments::where('userid',$renter->userid)
+                ->where(function(Builder $builder) use($request,$cabinet) {
+                    $builder->where('cabid',$cabinet->cabid)
+                        ->where('rpmonth',$request->rpmonth)
+                        ->where('rpyear',$request->rpyear);
+                    })
+                    ->latest()->first();
+        
+        if($rentalpaymentupdate->fully_paid == 'Y')
+        {
+            $rpu = RentalPayments::where('branchname',auth()->user()->branchname)
+                    ->where(function(Builder $builder)use($request,$cabinet,$renter){
+                        $builder->where('userid',$renter->userid)
+                                ->where('cabid',$cabinet->cabid)
+                                ->where('rpmonth',$request->rpmonth)
+                                ->where('rpyear',$request->rpyear)
+                                ->where('fully_paid', 'N');
+                    })->update([
+                        'fully_paid' => "Y",
+                    ]);
+           
+        }
+
         if($RentalPayments)
         {
             return redirect()->route('rentercashierrental.index')
@@ -202,7 +250,24 @@ class RenterCashierRentalController extends Controller
      */
     public function show(string $id)
     {
-        return view('rentercashierrental.show');
+        $rentalpayments = RentalPayments::where('cabid',$id)
+                    ->where(function(Builder $builder){
+                        $builder->where('branchname',auth()->user()->branchname);
+                    })->latest()->paginate(5);
+
+        $rental = RentalPayments::where('cabid',$id)
+                    ->where(function(Builder $builder){
+                        $builder->where('branchname',auth()->user()->branchname);
+                    })->first();
+
+        $fullname = $rental->lastname .', ' . $rental->firstname .' '. $rental->middlename;
+        $cabn = $rental->cabinetname;
+
+        return view('rentercashierrental.show')
+                ->with('i', (request()->input('page', 1) - 1) * 5)
+                ->with('fullname', $fullname)
+                ->with('cabn', $cabn)
+                ->with(['rentalpayments' => $rentalpayments]);
     }
 
     /**

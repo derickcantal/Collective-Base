@@ -11,12 +11,15 @@ use \Carbon\Carbon;
 class MyRentalController extends Controller
 {
     public function loaddata(){
-        $RentalPayments = RentalPayments::where('cabinetname',auth()->user()->cabinetname)
+
+        $RentalPayments = RentalPayments::where('userid',auth()->user()->userid)
                     ->where(function(Builder $builder){
-                        $builder->where('branchname',auth()->user()->branchname)
-                                ->where('userid',auth()->user()->userid);
+                        $builder->where('branchid',auth()->user()->branchid)
+                                ;
                                 
                     })->paginate(5);
+
+        dd($RentalPayments);
             return view('myrental.index',['RentalPayments' => $RentalPayments])
                 ->with('i', (request()->input('page', 1) - 1) * 5);
     }
