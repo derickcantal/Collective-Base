@@ -114,9 +114,12 @@ class ReportsController extends Controller
         }
 
         $branch = branch::orderBy('branchname', 'asc')->get();
-
-        $totalqty = collect($salesget)->sum('qty_sum');
-        $totalsales = collect($salesget)->sum('total_sum');
+        if($salesget)
+        {
+            $totalqty = collect($salesget)->sum('qty_sum');
+            $totalsales = collect($salesget)->sum('total_sum');
+        }
+        
 
         return view('reports.top-sales-branch')->with(['sales' => $sales])
                                     ->with(['totalsales' => $totalsales])
@@ -168,6 +171,8 @@ class ReportsController extends Controller
         
                 $totalqty = collect($salesget)->sum('qty');
                 $totalsales = collect($salesget)->sum('total');
+
+                $branch = branch::orderBy('branchname', 'asc')->get();
     
                 $sales_requests = history_sales_requests::where('status','Pending')->orderBy('status','desc')->paginate(5);
                 
@@ -181,7 +186,8 @@ class ReportsController extends Controller
                     ->with(['attendance' => $attendance])
                     ->with(['rentalpayments' => $rentalpayments])
                     ->with(['totalsales' => $totalsales])
-                    ->with(['totalqty' => $totalqty]);
+                    ->with(['totalqty' => $totalqty])
+                    ->with(['branch' => $branch]);
             }elseif(empty($request->startdate) or empty($request->enddate)){
                 if(auth()->user()->accesstype == 'Cashier'){
                     $salesget = history_sales::where('branchname',auth()->user()->branchname)->latest()->get();
@@ -200,13 +206,15 @@ class ReportsController extends Controller
     
                 $attendance = history_attendance::where('branchname',auth()->user()->branchname)->latest()->paginate(5); 
                 
-    
+                $branch = branch::orderBy('branchname', 'asc')->get();
+                
                 return redirect()->route('reports.index')->with(['sales' => $sales])
                     ->with(['sales_requests' => $sales_requests])
                     ->with(['attendance' => $attendance])
                     ->with(['rentalpayments' => $rentalpayments])
                     ->with(['totalsales' => $totalsales])
                     ->with(['totalqty' => $totalqty])
+                    ->with(['branch' => $branch])
                     ->with('failed','Start & End Dates Required');
             }else{
                 // dd(Carbon::parse($request->startdate)->format('Y-m-d'));
@@ -234,13 +242,15 @@ class ReportsController extends Controller
     
                 $attendance = history_attendance::where('branchname',auth()->user()->branchname)->latest()->paginate(5); 
                 
-    
+                $branch = branch::orderBy('branchname', 'asc')->get();
+
                 return view('reports.index')->with(['sales' => $sales])
                     ->with(['sales_requests' => $sales_requests])
                     ->with(['attendance' => $attendance])
                     ->with(['rentalpayments' => $rentalpayments])
                     ->with(['totalsales' => $totalsales])
-                    ->with(['totalqty' => $totalqty]);
+                    ->with(['totalqty' => $totalqty])
+                    ->with(['branch' => $branch]);
             }
             
 
@@ -268,7 +278,8 @@ class ReportsController extends Controller
                     ->with(['attendance' => $attendance])
                     ->with(['rentalpayments' => $rentalpayments])
                     ->with(['totalsales' => $totalsales])
-                    ->with(['totalqty' => $totalqty]);
+                    ->with(['totalqty' => $totalqty])
+                    ->with(['branch' => $branch]);
             }else{
                 if(auth()->user()->accesstype == 'Cashier'){
                     $sales = history_sales::where('branchname', auth()->user()->branchname)
@@ -376,9 +387,15 @@ class ReportsController extends Controller
             $sales = history_sales::latest()->paginate(5);
             $salesget = history_sales::latest()->get();
 
+        }elseif(auth()->user()->accesstype == 'Renters'){
+            $sales = history_sales::where('userid',auth()->user()->userid)->latest()->paginate(5);
+            $salesget = history_sales::where('userid',auth()->user()->userid)->latest()->get();
         }
-        $totalqty = collect($salesget)->sum('qty');
-        $totalsales = collect($salesget)->sum('total');
+        
+            $totalqty = collect($salesget)->sum('qty_sum');
+            $totalsales = collect($salesget)->sum('total_sum');
+        
+            $branch = branch::orderBy('branchname', 'asc')->get();
 
         $sales_requests = history_sales_requests::where('status','Pending')->orderBy('status','desc')->paginate(5);
         
@@ -391,6 +408,7 @@ class ReportsController extends Controller
                                     ->with(['attendance' => $attendance])
                                     ->with(['rentalpayments' => $rentalpayments])
                                     ->with(['totalsales' => $totalsales])
-                                    ->with(['totalqty' => $totalqty]);
+                                    ->with(['totalqty' => $totalqty])
+                                    ->with(['branch' => $branch]);
     }
 }

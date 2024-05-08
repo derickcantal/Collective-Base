@@ -23,6 +23,9 @@ return new class extends Migration
             $table->string('created_by');
             $table->string('updated_by');
             $table->string('timerecorded');
+            $table->string('rpmonth');
+            $table->string('rpyear');
+            $table->string('fully_paid');
             $table->string('posted');
             $table->integer('mod');
             $table->string('status');

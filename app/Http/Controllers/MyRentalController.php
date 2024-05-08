@@ -6,22 +6,40 @@ use Illuminate\Http\Request;
 use App\Models\RentalPayments;
 use App\Models\cabinet;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use App\Models\history_rental_payments;
 use \Carbon\Carbon;
 
 class MyRentalController extends Controller
 {
     public function loaddata(){
 
+        
         $RentalPayments = RentalPayments::where('userid',auth()->user()->userid)
                     ->where(function(Builder $builder){
-                        $builder->where('branchid',auth()->user()->branchid)
-                                ;
-                                
+                        $builder->where('branchid',auth()->user()->branchid);
+                    })->paginate(5);
+        
+        $RentalPaymentsHistory = history_rental_payments::where('userid',auth()->user()->userid)
+                    ->where(function(Builder $builder){
+                        $builder->where('branchid',auth()->user()->branchid);
                     })->paginate(5);
 
-        dd($RentalPayments);
+        if(!empty($RentalPayments))
+        {
             return view('myrental.index',['RentalPayments' => $RentalPayments])
                 ->with('i', (request()->input('page', 1) - 1) * 5);
+        }
+        elseif(!empty($RentalPaymentsHistory))
+        {
+            return view('myrental.index',['RentalPayments' => $RentalPaymentsHistory])
+                ->with('i', (request()->input('page', 1) - 1) * 5);
+        }
+        else
+        {
+            return redirect()->back()
+                                ->with('failed','No Record Found.');
+        }
+            
     }
     
     public function storedata(){

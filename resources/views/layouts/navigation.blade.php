@@ -90,7 +90,7 @@
                             {{ __('Reports') }}
                         </x-dropdown-link>
                         <div class="pt-1 pb-1 border-t border-gray-200 dark:border-gray-600">
-                            @if(auth()->user()->accesstype != 'Renters')
+                            @if(auth()->user()->accesstype == 'Cashier')
                             <x-dropdown-link :href="route('saleseod.index')">
                                 {{ __('EOD') }}
                             </x-dropdown-link>

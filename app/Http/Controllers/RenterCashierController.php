@@ -7,6 +7,8 @@ use App\Models\Renters;
 use App\Models\branch;
 use App\Models\cabinet;
 use App\Models\branchlist;
+use App\Models\history_sales;
+use App\Models\Sales;
 use App\Models\users_temp;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -32,6 +34,8 @@ class RenterCashierController extends Controller
                 'updated_by' => auth()->user()->email,
                 'mod' => $mod + 1,
                 ]);
+
+
         if ($cabinets) {
             return redirect()->route('renter.show',$cabinet->userid)
          ->with('success','Cabinet Update Successful.');
@@ -100,6 +104,16 @@ class RenterCashierController extends Controller
         'cabinetprice' => $request->cabinetprice,
         'updated_by' => auth()->user()->email,
         'mod' => $mod + 1,
+        ]);
+
+        $sales_history = history_sales::where('cabid', $cabinet->cabid)
+        ->update([
+        'userid' => $renter->userid,
+        ]);
+
+        $sales = Sales::where('cabid', $cabinet->cabid)
+        ->update([
+        'userid' => $renter->userid,
         ]);
 
         if ($cabinets) {
