@@ -66,7 +66,6 @@ class RenterCashierRentalController extends Controller
                         ->latest()->first();
         
        
-        
         if(!empty($rentalpayment))
         {
             $rpbal = $rentalpayment->rpbal;
@@ -152,7 +151,7 @@ class RenterCashierRentalController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    { 
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
 
         $cabinet = cabinet::where('cabid', $request->cabid)->first();

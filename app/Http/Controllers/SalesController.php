@@ -15,19 +15,19 @@ class SalesController extends Controller
 {
     public function loaddata(){
         $sales = Sales::latest()
-        ->paginate(50);
+        ->paginate(5);
 
         return view('sales.index',compact('sales'))
-        ->with('i', (request()->input('page', 1) - 1) * 50);
+        ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     public function loaddata_cashier(){
         $sales = Sales::where('branchname',auth()->user()->branchname)
         ->latest()
-        ->paginate(50);
+        ->paginate(5);
 
         return view('sales.index',compact('sales'))
-        ->with('i', (request()->input('page', 1) - 1) * 50);
+        ->with('i', (request()->input('page', 1) - 1) * 5);
     }
     
     public function storedata($request){
@@ -232,10 +232,10 @@ class SalesController extends Controller
                     ->orWhere('snotes','like',"%{$request->search}%") 
                     ->latest();
         })
-        ->paginate(5);
+        ->paginate($request->pagerow);
 
         return view('sales.index',compact('sales'))
-                ->with('i', (request()->input('page', 1) - 1) * 5);
+                ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
     }
     
     public function searchbybranch($request)
@@ -253,10 +253,10 @@ class SalesController extends Controller
                     ->orWhere('snotes','like',"%{$request->search}%") 
                     ->latest();
         })
-        ->paginate(5);
+        ->paginate($request->pagerow);
 
         return view('sales.index',compact('sales'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+            ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
     }
 
     public function search(Request $request)

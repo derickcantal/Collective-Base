@@ -13,7 +13,7 @@
                             <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                                 <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
                                     <x-primary-button class="ms-4">
-                                        <a class="btn btn-primary" href="{{ route('rentalpayments.selectrbc') }}"> Create New Rental Payments</a>
+                                        <a class="btn btn-primary" href="{{ route('rentalpayments.selectrenter') }}"> Create New Rental Payments</a>
                                     </x-primary-button>
                                     
                                     <form class="flex items-center" action="{{ route('rentalpayments.search') }}" method="get">
@@ -88,19 +88,13 @@
                                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                             <tr>
                                                 <th scope="col" class="px-6 py-3">
-                                                    SRID
+                                                    #
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
                                                     Profile
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
-                                                    Branch
-                                                </th>
-                                                <th scope="col" class="px-6 py-3">
-                                                    Payment Mode
-                                                </th>
-                                                <th scope="col" class="px-6 py-3">
-                                                    Total Due
+                                                    Balance
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
                                                     Applicable Month
@@ -109,11 +103,9 @@
                                                     Proof Image
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
-                                                    Updated By
+                                                    Processed By
                                                 </th>
-                                                <th scope="col" class="px-6 py-3">
-                                                    Status
-                                                </th>
+                                             
                                             </tr>
                                         </thead>
                                                 
@@ -129,14 +121,9 @@
                                                     <x-input-label>Cab. No.: <b>{{ $rentalpayment->cabinetname }}</b></x-input-label>
                                                 </td>
                                                 <td class="px-6 py-4">
-                                                    <x-input-label for="branchname" :value="$rentalpayment->branchname"/>
+                                                    <x-input-label for="rpbal" :value="$rentalpayment->rpbal"/>
                                                 </td>
-                                                <td class="px-6 py-4">
-                                                    <x-input-label for="branchname" :value="$rentalpayment->rppaytype"/>
-                                                </td>
-                                                <td class="px-6 py-4">
-                                                    <x-input-label for="totalsales" :value="$rentalpayment->rpamount"/>
-                                                </td>
+                                              
                                                 <td class="px-6 py-4">
                                                 <x-input-label for="rpmonthyear">{{ $rentalpayment->rpmonth }} - {{ $rentalpayment->rpyear }}</x-input-label>
                                                 </td>
@@ -149,37 +136,11 @@
                                                     <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$rentalpayment->avatarproof") }}" alt="avatar">
                                                 </td>
                                                 <td class="px-6 py-4">
-                                                <x-input-label for="updated_by" :value="$rentalpayment->updated_by"/>
+                                                    <x-input-label for="created_by" :value="$rentalpayment->created_by"/>
+                                                    <x-input-label for="branchname" :value="$rentalpayment->branchname"/>
+                                                    <x-input-label for="timerecorded" :value="$rentalpayment->timerecorded"/>
                                                 </td>
-                                                <td class="px-6 py-4">
-                                                    <form action="{{ route('rentalpayments.edit',$rentalpayment->rpid) }}" method="PUT">
-
-                                                    @php
-                                                        $btndis='';
-                                                        $btnlabel = '';
-                                                        $btncolor = '';
-
-                                                        if($rentalpayment->status == 'Unpaid'):
-                                                            $btndis = '';
-                                                            $btnlabel = 'Unpaid';
-                                                            $btncolor = 'blue';
-                                                        elseif($rentalpayment->status == 'Paid'):
-                                                            $btndis = 'disabled';
-                                                            $btnlabel = 'Paid';
-                                                            $btncolor = 'green';
-                                                        endif;
-                                                    @endphp
-                                                    @if($rentalpayment->status == 'Unpaid')
-                                                        <x-danger-button class="ms-3 dark:text-white bg-{{ $btncolor; }}-700 hover:bg-{{ $btncolor; }}-800 focus:outline-none focus:ring-4 focus:ring-{{ $btncolor; }}-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-{{ $btncolor; }}-600 dark:hover:bg-{{ $btncolor; }}-700 dark:focus:ring-{{ $btncolor; }}-800" >
-                                                            {{ $btnlabel; }}
-                                                        </x-danger-button>
-                                                    </form>
-                                                    @elseif($rentalpayment->status == 'Paid')
-                                                        <x-danger-button class="ms-3 dark:text-white bg-{{ $btncolor; }}-700 hover:bg-{{ $btncolor; }}-800 focus:outline-none focus:ring-4 focus:ring-{{ $btncolor; }}-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-{{ $btncolor; }}-600 dark:hover:bg-{{ $btncolor; }}-700 dark:focus:ring-{{ $btncolor; }}-800" disabled>
-                                                            {{ $btnlabel; }}
-                                                        </x-danger-button>
-                                                    @endif
-                                                </td>
+                                                
                                             </tr>
                                             
                                             @empty

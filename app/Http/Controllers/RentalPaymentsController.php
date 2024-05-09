@@ -6,20 +6,26 @@ use App\Models\branch;
 use App\Models\cabinet;
 use App\Models\RentalPayments;
 use App\Models\Renters;
+use App\Models\history_rental_payments;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use \Carbon\Carbon;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Imagick\Driver;
 
 class RentalPaymentsController extends Controller
 {
     public function loaddata(){
         $rentalPayments = RentalPayments::orderBy('status','desc')
-                                            ->orderBy('branchname','asc')
-                                            ->orderBy('lastname','asc')
-                                            ->orderBy('cabinetname','asc')
-                                            ->paginate(5);
+                ->where(function(Builder $builder)  {
+                    $builder->orderBy('branchname','asc')
+                            ->orderBy('lastname','asc')
+                            ->orderBy('cabinetname','asc');
+                    })
+                    ->latest()->paginate(5);
+
 
                 return view('rentalpayments.index')->with(['rentalPayments' => $rentalPayments])
                                             ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -27,56 +33,159 @@ class RentalPaymentsController extends Controller
 
     public function storedata($request){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
-        $rent = Renters::where('username',$request->username)->first();
 
-        $br = branch::where('branchname',$request->branchname)->first();
+        $cabinet = cabinet::where('cabid', $request->cabinetname)->first();
 
-        $cab = cabinet::where('cabinetname',$request->cabinetname)
-        ->where(function(Builder $builder) use($request){
-            $builder->where('branchname',$request->branchname);
-        })->first();
+        $renter = Renters::where('userid', $cabinet->userid)->first();
 
-        $rentp = RentalPayments::where('rpmonth',$request->rpmonth)
-        ->where(function(Builder $builder) use($request){
-            $builder->where('rpyear',$request->rpyear)
-                    ->where('username',$request->username);
-        })->first();
+        $rentalpayment = RentalPayments::where('userid',$renter->userid)
+                ->where(function(Builder $builder) use($request,$cabinet) {
+                    $builder->where('cabid',$cabinet->cabid)
+                        ->where('rpmonth',$request->rpmonth)
+                        ->where('rpyear',$request->rpyear);
+                    })
+                    ->latest()->first();
+
+        $rentalpaymenthistory = history_rental_payments::where('userid',$renter->userid)
+                    ->where(function(Builder $builder) use($request,$cabinet) {
+                        $builder->where('cabid',$cabinet->cabid)
+                            ->where('rpmonth',$request->rpmonth)
+                            ->where('rpyear',$request->rpyear);
+                        })
+                        ->latest()->first();
+
+        if(empty($rentalpayment))
+        {
+            $totalbalance = $cabinet->cabinetprice - $request->paidamount; 
+        }
+        else{
+            $totalbalance = $rentalpayment->rpbal - $request->paidamount; 
+        }
+
+
+        if($rentalpayment)
+        {
+            
+            if($rentalpayment->fully_paid == 'Y')
+            {
+                return redirect()->back()
+                                ->with('failed','Rental Month/Year has been paid.');
+            }
+            
+        }       
         
-        if(empty($rentp->rpid)){
-            $rentalpayments = RentalPayments::create([
-                'branchid' => $br->branchid,
-                'branchname' => $request->branchname,
-                'cabid' => $cab->cabid,
-                'cabinetname' => $cab->cabinetname,
-                'rppaytype' => $request->rppaytype,
-                'rpamount' => $request->rpamount,
-                'rpmonth' => $request->rpmonth,
-                'rpyear' => $request->rpyear,
-                'avatarproof' => 'avatars/cash-default.jpg',
-                'rpnotes' => $request->rpnotes,
-                'userid' => $rent->userid,
-                'username' => $request->username,
-                'firstname' => $request->firstname,
-                'lastname' => $request->lastname,
-                'created_by' => Auth()->user()->email,
-                'updated_by' => Auth()->user()->email,
-                'timerecorded' => $timenow,
-                'posted' => 'N',
-                'mod' => 0,
-                'status' => 'Unpaid',
+        if($rentalpaymenthistory)
+        {
+            
+            if($rentalpaymenthistory->fully_paid == 'Y')
+            {
+                return redirect()->back()
+                                ->with('failed','Rental Month/Year has been paid.');
+            }
+            
+        }   
+
+        if($request->paidamount <= 0)
+        {
+            return redirect()->back()
+                                ->with('failed','Total amount paid must not be equal 0.');
+        }
+        if($request->totalbalance < 0)
+        {
+            return redirect()->back()
+                                ->with('failed','Please pay exact amount');
+        }
+        if($totalbalance == 0)
+        {
+            $fullypaid = 'Y';
+        }
+        elseif($totalbalance > 0)
+        {
+            $fullypaid = 'N';
+        }
+        
+
+        if(empty($request->rpnotes))
+        {
+            $rpnotes = 'Null';
+        }else
+        {
+            $rpnotes = $request->rpnotes;
+        }
+        if(empty($request->payavatar))
+        {
+            $payavatar = 'avatars/cash-default.jpg';
+        }else
+        {
+            $validated = $request->validate([
+                'payavatar'=>'image|file',
             ]);
+
+            $manager2 = ImageManager::imagick();
+            $name_gen2 = hexdec(uniqid()).'.'.$request->file('payavatar')->getClientOriginalExtension();
+            
+            $image2 = $manager2->read($request->file('payavatar'));
         
-            if ($rentalpayments) {
-                //query successful
-                return redirect()->route('rentalpayments.index')
-                            ->with('success','Sales Request created successfully.');
-            }else{
-                return redirect()->route('rentalpayments.index')
-                            ->with('failed','Sales Request creation failed');
-            }  
+            $encoded = $image2->toWebp()->save(storage_path('app/public/rentalpayments/'.$name_gen2.'.webp'));
+            $payavatar = 'rentalpayments/'.$name_gen2.'.webp';
+        }
+
+
+        $RentalPayments = RentalPayments::create([
+            'userid' => $renter->userid,
+            'username' => $renter->username,
+            'firstname' => $renter->firstname,
+            'lastname' => $renter->lastname,
+            'rpamount' => $request->paidamount,
+            'rpbal' => $totalbalance,
+            'rppaytype' => $request->rppaytype,
+            'rpmonth' => $request->rpmonth,
+            'rpyear' => $request->rpyear,
+            'rpnotes' => $rpnotes,
+            'branchid' => $renter->branchid,
+            'branchname' => $renter->branchname,
+            'cabid' => $cabinet->cabid,
+            'cabinetname' => $cabinet->cabinetname,
+            'avatarproof' => $payavatar,
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'timerecorded'  => $timenow,
+            'posted'  => 'N',
+            'fully_paid' => $fullypaid,
+            'mod' => 0,
+            'status' => 'Active',
+        ]);
+
+        $rentalpaymentupdate = RentalPayments::where('userid',$renter->userid)
+                ->where(function(Builder $builder) use($request,$cabinet) {
+                    $builder->where('cabid',$cabinet->cabid)
+                        ->where('rpmonth',$request->rpmonth)
+                        ->where('rpyear',$request->rpyear);
+                    })
+                    ->latest()->first();
+        
+        if($rentalpaymentupdate->fully_paid == 'Y')
+        {
+            $rpu = RentalPayments::where('branchname',auth()->user()->branchname)
+                    ->where(function(Builder $builder)use($request,$cabinet,$renter){
+                        $builder->where('userid',$renter->userid)
+                                ->where('cabid',$cabinet->cabid)
+                                ->where('rpmonth',$request->rpmonth)
+                                ->where('rpyear',$request->rpyear)
+                                ->where('fully_paid', 'N');
+                    })->update([
+                        'fully_paid' => "Y",
+                    ]);
+           
+        }
+
+        if($RentalPayments)
+        {
+            return redirect()->route('rentalpayments.index')
+                                ->with('success','Payment Successful.');
         }else{
             return redirect()->route('rentalpayments.index')
-                            ->with('failed','Already Exists.');
+                                ->with('failed','Payment Unsuccessful');
         }
     }
 
@@ -148,10 +257,12 @@ class RentalPaymentsController extends Controller
             return Redirect('/');
         }
     }
-    public function searchrbc(Request $request)
+    public function searchrenter(Request $request)
     {
-        
-        $renter = Renters::where('accesstype',"Renters")->where('status',"Active")
+        $pagerow = $request->pagerow;
+
+
+        $renter = Renters::where('accesstype',"Renters")->orderBy('status','asc')
                     ->where(function(Builder $builder) use($request){
                         $builder
                                 ->where('username','like',"%{$request->searchrbc}%")
@@ -161,27 +272,127 @@ class RentalPaymentsController extends Controller
                                 ->orWhere('branchname','like',"%{$request->searchrbc}%")
                                 ->orWhere('cabinetname','like',"%{$request->searchrbc}%")
                                 ->orWhere('email','like',"%{$request->searchrbc}%")
-                                ->orWhere('status','like',"%{$request->searchrbc}%") 
-                                ->orderBy('status','asc');
+                                ->orWhere('status','like',"%{$request->searchrbc}%")
+                                
+                                ->orderBy('lastname',$request->orderrow);
                     })
-                    ->paginate(5);
+                    ->paginate($pagerow);
 
                     return view('rentalpayments.create-select-rbc',compact('renter'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+            ->with('i', (request()->input('page', 1) - 1) * $pagerow);
     }
-    public function selectrbc()
+    public function selectrenter()
     {
         $renter = Renters::where('accesstype',"Renters")
-                    
-                    ->where(function(Builder $builder){
-                        $builder->where('status',"Active");
-                    })
+                    ->orderBy('status','asc')
                     ->paginate(5);
     
-        return view('rentalpayments.create-select-rbc',compact('renter'))
+        return view('rentalpayments.create-select-renter',compact('renter'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
             
     }
+
+    public function selectcabinet($renters)
+    {
+        $renter = Renters::findOrFail($renters);
+
+        $cabinet = cabinet::where('userid', $renter->userid)->get();
+
+        return view('rentalpayments.create-select-cabinet')
+                    ->with(['renters' => $renter])
+                    ->with(['cabinet' => $cabinet]);
+    }
+
+    public function selectpayment(Request $request)
+    {
+        $renter = Renters::where('userid',$request->userid)->first();
+
+        $cabinet = cabinet::where('cabid', $request->cabinetname)->first();
+
+        $rentername = $renter->lastname . ', ' . $renter->firstname;
+
+        $rentalpayment = RentalPayments::where('userid',$request->userid)
+                ->where(function(Builder $builder) use($request) {
+                    $builder->where('cabid',$request->cabinetname)
+                        ->where('rpmonth',$request->rpmonth)
+                        ->where('rpyear',$request->rpyear);
+                    })
+                    ->latest()->first();
+
+        $rentalpaymenthistory = history_rental_payments::where('userid',$request->userid)
+                    ->where(function(Builder $builder) use($request) {
+                        $builder->where('cabid',$request->cabinetname)
+                            ->where('rpmonth',$request->rpmonth)
+                            ->where('rpyear',$request->rpyear);
+                        })
+                        ->latest()->first();
+        
+       
+        if(!empty($rentalpayment))
+        {
+            $rpbal = $rentalpayment->rpbal;
+        }
+        elseif(!empty($rentalpaymenthistory))
+        {
+            $rpbal = $rentalpaymenthistory->rpbal;
+        }
+        else
+        {
+            $rpbal = $cabinet->cabinetprice;
+        }
+              
+        $rpmonth = $request->rpmonth;
+        $rpyear = $request->rpyear;
+
+        if($rentalpayment)
+        {
+            if($rentalpayment->rpbal != 0)
+            {
+                
+                return view('rentercashierrental.create')
+                                ->with(['cabinet' => $cabinet])
+                                ->with(['renters' => $renter])
+                                ->with('rpbal', $rpbal)
+                                ->with('rpmonth', $rpmonth)
+                                ->with('rpyear', $rpyear)
+                                ->with('rentername', $rentername);
+            }
+            if($rentalpayment->fully_paid == 'Y')
+            {
+                return redirect()->route('rentalpayments.selectcabinet',$request->userid)
+                                ->with('failed','Rental Month/Year has been paid.');
+            }
+            
+        } 
+        if($rentalpaymenthistory)
+        {
+            if($rentalpaymenthistory->rpbal != 0)
+            {
+                
+                return view('rentalpayments.create-select-payment')
+                                ->with(['cabinet' => $cabinet])
+                                ->with(['renters' => $renter])
+                                ->with('rpbal', $rpbal)
+                                ->with('rpmonth', $rpmonth)
+                                ->with('rpyear', $rpyear)
+                                ->with('rentername', $rentername);
+            }
+            if($rentalpaymenthistory->fully_paid == 'Y')
+            {
+                return redirect()->route('rentalpayments.selectcabinet',$request->userid)
+                                ->with('failed','Rental Month/Year has been paid.');
+            }
+            
+        } 
+        return view('rentalpayments.create-select-payment')
+                    ->with(['renters' => $renter])
+                    ->with(['cabinet' => $cabinet])
+                    ->with('rpbal', $rpbal)
+                    ->with('rpmonth', $rpmonth)
+                    ->with('rpyear', $rpyear)
+                    ->with('rentername', $rentername);
+    }
+
     public function search(Request $request)
     {
         $rentalPayments = RentalPayments::orderBy('status','desc')
@@ -244,6 +455,7 @@ class RentalPaymentsController extends Controller
      */
     public function store(Request $request)
     {
+
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 return redirect()->route('dashboard.index');
@@ -252,6 +464,7 @@ class RentalPaymentsController extends Controller
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->storedata($request);         
             }elseif(auth()->user()->accesstype =='Administrator'){
+
                 return $this->storedata($request); 
             }
         }else{
@@ -267,11 +480,7 @@ class RentalPaymentsController extends Controller
         $renters = Renters::findOrFail($renters);
         return view('rentalpayments.show',['$renters' => $renters]);
     }
-    public function putrbc($renters)
-    {
-        $renter = Renters::findOrFail($renters);
-        return view('rentalpayments.create-put',['renters' => $renter]);
-    }
+    
     
     /**
      * Show the form for editing the specified resource.

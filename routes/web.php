@@ -109,9 +109,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('renters', RentersController::class);
     
     Route::get('rental/payments/search', [RentalPaymentsController::class, 'search'])->name('rentalpayments.search');
-    Route::get('rental/payments/selectrbc', [RentalPaymentsController::class, 'selectrbc'])->name('rentalpayments.selectrbc');
-    Route::get('rental/payments/searchrbc', [RentalPaymentsController::class, 'searchrbc'])->name('rentalpayments.searchrbc');
-    Route::put('rental/payments/putrbc/{renters}', [RentalPaymentsController::class, 'putrbc'])->name('rentalpayments.putrbc');
+    Route::get('rental/payments/select/renter', [RentalPaymentsController::class, 'selectrenter'])->name('rentalpayments.selectrenter');
+    Route::get('rental/payments/search/renter', [RentalPaymentsController::class, 'searchrenter'])->name('rentalpayments.searchrenter');
+    Route::get('rental/payments/select/{renters}/cabinet', [RentalPaymentsController::class, 'selectcabinet'])->name('rentalpayments.selectcabinet');
+    Route::get('rental/payments/select/payment', [RentalPaymentsController::class, 'selectpayment'])->name('rentalpayments.selectpayment');
     Route::resource('rentalpayments', RentalPaymentsController::class);
 
     Route::get('cashier/rental/payments', [RenterCashierRentalController::class, 'search'])->name('rentercashierrental.search');

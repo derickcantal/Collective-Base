@@ -11,7 +11,6 @@
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         <form action="{{ route('rentalpayments.store') }}" enctype="multipart/form-data" method="POST" class="p-4 md:p-5">
                         @csrf
-                        
                             <div class="relative p-4 w-full max-w-full max-h-full">
                                 <!-- Error & Success Notification -->        
                                 <div>
@@ -42,6 +41,17 @@
                                     </div>
                                     </div>
                                     @endif
+                                    @if ($message = Session::get('failed'))
+                                    <div class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
+                                        <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                        </svg>
+                                        <span class="sr-only">Info</span>
+                                        <div>
+                                            <span class="font-medium">Failed!</span> {{ $message }}
+                                        </div>
+                                    </div>
+                                    @endif
                                 </div>
                                 <!-- Modal content -->
                                 <div class="relative bg-white rounded-lg dark:bg-gray-800">
@@ -54,62 +64,54 @@
                                     
                                     
                                     <!-- Modal body -->
-                                    <div class="grid gap-4 mb-4 grid-cols-2">
+                                    @if($rpbal == 0 )
+                                    <div class="grid gap-4 mb-4 grid-cols-2" x-data="{ rent: '{{ $cabinet->cabinetprice }}', rentpay: 0,  bal: 0}" x-effect="bal = rent - rentpay">
+                                    @else
+                                    <div class="grid gap-4 mb-4 grid-cols-2" x-data="{ rent: '{{ $rpbal }}', rentpay: 0,  bal: 0}" x-effect="bal = rent - rentpay">
+                                    @endif
                                             <div class="col-span-2 sm:col-span-1">
-                                                <!-- branchname -->
+                                                <!-- firstname -->
                                                 <div class="form-group mt-4">
-                                                    <x-input-label for="branchname" :value="__('Branch Name')" />
-                                                    <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname', $renters->branchname)" required autofocus autocomplete="off" readonly/> 
-                                                   
-                                                    <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
+                                                    <x-input-label for="fullname" :value="__('Full Name')" />
+                                                    <x-text-input id="fullname" class="block mt-1 w-full" type="text" name="fullname" value="{{ $renters->lastname.', '.$renters->firstname }}" required autofocus readonly/>
+                                                    <x-input-error :messages="$errors->get('fullname')" class="mt-2" />
                                                 </div>
                                             </div>
+                                            
                                             <div class="col-span-2 sm:col-span-1 ">
                                                 <!-- cabname -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="cabinetname" :value="__('Cabinet No.')" />
-                                                    <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" :value="old('cabinetname', $renters->cabinetname)" required autofocus autocomplete="off" readonly/>
+                                                    <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" :value="old('cabinetname', $cabinet->cabid)" required autofocus autocomplete="off" readonly/>
                                                     <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
                                                 </div>
                                             </div>
+                                            
+                                            
                                             <div class="col-span-2 sm:col-span-1">
-                                                <!-- username -->
+                                                <!-- rpmonthyear -->
                                                 <div class="form-group mt-4">
-                                                    <x-input-label for="username" :value="__('Username')" />
-                                                    <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username', $renters->username)" required autofocus autocomplete="off" readonly/>
-                                                    <x-input-error :messages="$errors->get('username')" class="mt-2" />
+                                                    <x-input-label for="rpmonth" :value="__('Applicable Month')" />
+                                                    <x-text-input id="rpmonth" name="rpmonth" class="mt-1 w-1/2" type="text" :value="old('rpmonth',$rpmonth)" readonly required/>
+                                                    <x-input-error :messages="$errors->get('rpmonth')" class="mt-2" />
+
+                                                    <x-text-input id="rpyear" name="rpyear" type="text" class="form-select mt-1  border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('rpyear',$rpyear)" readonly required/>
+                                                    <x-input-error :messages="$errors->get('rpyear')" class="mt-2" />
                                                 </div>
                                             </div>
                                             <div class="col-span-2 sm:col-span-1">
-                                                <!-- firstname -->
+                                            <!-- avatar -->
                                                 <div class="form-group mt-4">
-                                                    <x-input-label for="firstname" :value="__('First Name')" />
-                                                    <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname', $renters->firstname)" required autofocus autocomplete="given-name" readonly/>
-                                                    <x-input-error :messages="$errors->get('firstname')" class="mt-2" />
+                                                    <x-input-label for="payavatar" value="Payment Proof" />
+                                                    <x-text-input id="payavatar" name="payavatar" type="file"  class="mt-1 block w-full mt-1" :value="old('payavatar')" autofocus autocomplete="off"/>
+                                                    <x-input-error class="mt-2" :messages="$errors->get('payavatar')" />
                                                 </div>
                                             </div>
-                                   
                                             <div class="col-span-2 sm:col-span-1">
-                                                    <!-- lastname -->
-                                                    <div class="form-group mt-4">
-                                                    <x-input-label for="lastname" :value="__('Last Name')" />
-                                                    <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname', $renters->lastname)" required autofocus autocomplete="family-name" readonly/>
-                                                    <x-input-error :messages="$errors->get('lastname')" class="mt-2" />
-                                                </div>
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1 ">
-                                                <!-- rpnotes -->
+                                                <!-- rpamount -->
                                                 <div class="form-group mt-4">
-                                                    <x-input-label for="rpnotes" :value="__('Notes')" />
-                                                    <x-text-input id="rpnotes" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="rpnotes" value="Details" required autofocus autocomplete="off" readonly/>
-                                                    <x-input-error :messages="$errors->get('rpnotes')" class="mt-2" />
-                                                </div>
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                    <!-- rpamount -->
-                                                    <div class="form-group mt-4">
                                                     <x-input-label for="rpamount" :value="__('Rental Amount')" />
-                                                    <x-text-input id="rpamount" class="block mt-1 w-full" type="text" name="rpamount" value="0.00" required autofocus autocomplete="off" readonly/>
+                                                    <x-text-input id="rpamount" x-model.number="rent" class="block mt-1 w-full" type="number" name="rpamount"  required autofocus autocomplete="off" readonly/>
                                                     <x-input-error :messages="$errors->get('rpamount')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -126,41 +128,31 @@
                                                     <x-input-error :messages="$errors->get('rppaytype')" class="mt-2" />
                                                 </div>
                                             </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- rpmonthyear -->
+                                            <div class="col-span-2 sm:col-span-1 ">
+                                                <!-- rpnotes -->
                                                 <div class="form-group mt-4">
-                                                    <x-input-label for="rpmonth" :value="__('Applicable Month')" />
-                                                    <select id="rpmonth" name="rpmonth" class="form-select mt-1  border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('rpmonth')">
-                                                        <option value = "01">01</option>
-                                                        <option value = "02">02</option>
-                                                        <option value = "03">03</option>
-                                                        <option value = "04">04</option>
-                                                        <option value = "05">05</option>
-                                                        <option value = "06">06</option>
-                                                        <option value = "07">07</option>
-                                                        <option value = "08">08</option>
-                                                        <option value = "09">09</option>
-                                                        <option value = "10">10</option>
-                                                        <option value = "11">11</option>
-                                                        <option value = "12">12</option>
-                                                    </select>
-                                                    <x-input-error :messages="$errors->get('rpmonth')" class="mt-2" />
-                                                
-                                                    <select id="rpyear" name="rpyear" class="form-select mt-1  border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('rpyear')">
-                                                        <option value = "2023">2023</option>
-                                                        <option value = "2024">2024</option>
-                                                        <option value = "2025">2025</option>
-                                                        <option value = "2026">2026</option>
-                                                        <option value = "2027">2027</option>
-                                                        <option value = "2028">2028</option>
-                                                        <option value = "2029">2029</option>
-                                                        <option value = "2030">2030</option>
-                                                        <option value = "2031">2031</option>
-                                                        <option value = "2032">2032</option>
-                                                    </select>
-                                                    <x-input-error :messages="$errors->get('rpyear')" class="mt-2" />
+                                                    <x-input-label for="paidamount" :value="__('Amount to be Paid')" />
+                                                    <x-text-input id="paidamount" x-model.number="rentpay" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="number" name="paidamount" required autofocus autocomplete="off"/>
+                                                    <x-input-error :messages="$errors->get('paidamount')" class="mt-2" />
                                                 </div>
                                             </div>
+                                            <div class="col-span-2 sm:col-span-1 ">
+                                                <!-- rpnotes -->
+                                                <div class="form-group mt-4">
+                                                    <x-input-label for="totalbalance" :value="__('Total Balance')" />
+                                                    <x-text-input id="totalbalance" x-model.number="bal" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="number" name="totalbalance" required autofocus autocomplete="off" readonly/>
+                                                    <x-input-error :messages="$errors->get('totalbalance')" class="mt-2" />
+                                                </div>
+                                            </div>
+                                            <div class="col-span-2 sm:col-span-1 ">
+                                                <!-- rpnotes -->
+                                                <div class="form-group mt-4">
+                                                    <x-input-label for="rpnotes" :value="__('Notes')" />
+                                                    <x-text-input id="rpnotes" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="rpnotes" value="" autofocus autocomplete="off"/>
+                                                    <x-input-error :messages="$errors->get('rpnotes')" class="mt-2" />
+                                                </div>
+                                            </div>
+
                                             <div class="flex items-center justify-between col-span-2 sm:col-span-2">
                                                 
                                                 <x-primary-button class="ms-4">
@@ -168,8 +160,6 @@
                                                 </x-primary-button>
                                                 </div>
                                             </div>
-                                            
-                                    </div>
                                     
                                 </div>
                             </div>
