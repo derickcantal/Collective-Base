@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <u><a href="{{ route('mycabinet.index') }}">Cabinet</a></u> | Sales List
+            <u><a href="{{ route('mydashboard.index') }}">Sales</a></u>  | <a href="{{ route('myrental.index') }}">Rental</a>  | <a href="{{ route('myrequest.index') }}">Request</a>
         </h2>
     </x-slot>
     <section>
@@ -10,29 +10,12 @@
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="py-8">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
-                            <form class="flex items-center" action="{{ route('mycabinet.search') }}" method="get">
+                            <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                                 <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
-                                    
-                                        <div>
-                                            <div class="relative max-w-sm">
-                                                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
-                                                    </svg>
-                                                </div>
-                                                <input datepicker datepicker-autohide name="startdate" id="startdate" type="text" :value="old('startdate')" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2" placeholder="Start Date">
-                                            </div>
-                                        </div>
-                                        <div class="relative max-w-sm">
-                                                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
-                                                    </svg>
-                                                </div>
-                                                <input datepicker datepicker-autohide name="enddate" id="enddate" type="text" :value="old('enddate')" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2" placeholder="End Date">
-                                            </div>
-                                                                   
+                                    <div>
+                                        
+                                    </div>                                    
+                                    <form class="flex items-center" action="{{ route('myrental.search') }}" method="get">
                                 
                                     <div class="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
                                         
@@ -43,7 +26,10 @@
                                             <option value = "100">100</option>
                                             <option value = "250">250</option>            
                                         </select>
-                                        
+                                        <select id="orderrow" name="orderrow" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" :value="old('orderrow')">
+                                            <option value = "A-Z">A-Z</option>
+                                            <option value = "Z-A">Z-A</option>        
+                                        </select>
                                         <div class="w-full md:w-1/2">
                                             <label for="simple-search" class="sr-only">Search</label>
                                             <div class="relative w-full">
@@ -58,7 +44,7 @@
                                         
                                         <div class="flex items-center w-full space-x-3 md:w-auto">
                                             <x-primary-button class="ms-4">
-                                                <a class="btn btn-primary" href="{{ route('mycabinet.search') }}">Search</a>
+                                                <a class="btn btn-primary" href="{{ route('myrental.search') }}">Search</a>
                                             </x-primary-button>   
                                         </div>
                                         
@@ -68,7 +54,7 @@
                                 </div>
                             </div>
                             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mt-4">
-                                                        
+                                
                                     @if ($message = Session::get('success'))
                                     <div class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800" role="alert">
                                     <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -80,18 +66,7 @@
                                     </div>
                                     </div>
                                     @endif
-                                    
-                                    @if ($message = Session::get('failed'))
-                                    <div class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
-                                        <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                                        </svg>
-                                        <span class="sr-only">Info</span>
-                                        <div>
-                                            <span class="font-medium">Failed!</span> {{ $message }}
-                                        </div>
-                                    </div>
-                                    @endif
+                                </div>    
 
                                 @csrf
                                 <div class="max-w-7xl overflow-x-auto shadow-md sm:rounded-lg " >
@@ -104,8 +79,7 @@
                                                 <th scope="col" class="px-6 py-3">
                                                     Image
                                                 </th>
-                                                
-                                                <th scope="col" class="px-6 py-3">
+                                                <th scope="col" class="px-6 py-4">
                                                     Product
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
@@ -118,18 +92,22 @@
                                                     Total
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
-                                                    Time Sold
+                                                    Pay IMG 
                                                 </th>
-                                               
-                                        
+                                                <th scope="col" class="px-6 py-3">
+                                                    Mode
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Sold At
+                                                </th>
                                             </tr>
                                         </thead>
                                                 
-                                                @forelse($history_sales as $sale) 
+                                                @forelse($sales as $sale) 
                                         <tbody>
                                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                                 
-                                                <th class="px-6 py-4">
+                                                <th class="px-6 py-3">
                                                     <x-input-label>{{ ++$i }}</x-input-label>
                                                 </th>
                                                 <td class="px-6 py-4">
@@ -145,6 +123,7 @@
                                                     <x-input-label>Cab. No.: <b>{{ $sale->cabinetname }}</b></x-input-label>
                                                 </td>
                                             
+                                                
                                                 <td class="px-6 py-4">
                                                     <x-input-label for="qty" :value="$sale->qty"/>
                                                 </td>
@@ -160,13 +139,28 @@
                                                     <x-input-label for="total">@php echo number_format($sale->total, 2); @endphp</x-input-label>
                                                 </td>
                                                 @endif
-                                                
+                                                <td class="px-6 py-4">
+                                                    @php
+                                                        if($sale->payavatar == 'avatars/cash-default.jpg'):
+                                                            echo "";
+                                                        endif;
+                                                    @endphp
+                                                    <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$sale->payavatar") }}" alt="avatar">
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <x-input-label for="paytype">{{ $sale->paytype }}</x-input-label>
+                                                    @if($sale->payref == 'Null')
+                                                        <x-input-label for="payref" value=""/>
+                                                    @else
+                                                        <x-input-label for="payref" :value="$sale->payref"/>
+                                                    @endif
+                                                </td>
                                                 <td class="px-6 py-4">
                                                     <x-input-label for="branchname" :value="$sale->branchname"/>
+                                                    <x-input-label for="created_by" :value="$sale->created_by"/>
                                                     <x-input-label for="timerecorded" :value="$sale->timerecorded"/>
                                                 </td>
-                                             
-                                               
+                                                
                                             </tr>
                                             
                                             @empty
@@ -177,11 +171,15 @@
                                                 
                                         </tbody>
                                     </table>
-                                </div>
-                                <div class="mt-4">
-                                    {!! $history_sales->appends(request()->query())->links() !!}
-                                </div>
                                     
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="py-4">
+                        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                                
                             </div>
                         </div>
                     </div>

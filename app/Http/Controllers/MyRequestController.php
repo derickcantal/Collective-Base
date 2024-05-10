@@ -8,12 +8,22 @@ use App\Models\Sales;
 use App\Models\Renters;
 use App\Models\branch;
 use App\Models\cabinet;
+use App\Models\history_sales;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use \Carbon\Carbon;
 
 class MyRequestController extends Controller
 {
     public function loaddata(){
+        $cabinets = cabinet::where('userid',auth()->user()->userid)
+                    ->orderBy('status','asc')
+                    ->orderBy('cabid','asc')
+                    ->orderBy('branchname','asc')
+                    ->paginate(5);
+
+        return view('myrequest.index',['cabinets' => $cabinets])
+                    ->with('i', (request()->input('page', 1) - 1) * 5);
+
         $RenterRequests = RenterRequests::where('cabinetname',auth()->user()->cabinetname)
                     ->where(function(Builder $builder){
                         $builder->where('branchname',auth()->user()->branchname);
@@ -130,9 +140,26 @@ class MyRequestController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $cabid)
     {
-        //
+        $history_sales = history_sales::where('cabid',$cabid)
+                    ->where(function(Builder $builder){
+                        $builder->where('collected_status', "Pending");
+                    })->paginate(5);
+
+        $history_sales1 = history_sales::where('cabid',$cabid)
+                    ->where(function(Builder $builder){
+                        $builder->where('collected_status', "Pending");
+                    })->get();
+                   
+        $totalsales = collect($history_sales1)->sum('total');
+
+
+
+        return view('myrequest.show')
+                    ->with('history_sales',$history_sales)
+                    ->with('totalsales',$totalsales)
+                    ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**

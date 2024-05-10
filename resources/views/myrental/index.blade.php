@@ -69,106 +69,86 @@
                                 </div>    
 
                                 @csrf
-                                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                        <tr>
+                                <div class="max-w-7xl overflow-x-auto shadow-md sm:rounded-lg " >
+                                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                            <tr>
                                             <th scope="col" class="px-6 py-3">
-                                                SRID
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Profile
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Branch
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Total Sales
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Total Collected
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Proof Image
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Updated By
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Status
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Action
-                                            </th>
+                                                    No
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Cabinet No.
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Rent Price
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Branch
+                                                </th>
+                                                
+                                                <th scope="col" class="px-6 py-3">
+                                                    Status
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Action
+                                                </th>
+                                                
+                                            </tr>
+                                        </thead>
+                                            @forelse ($cabinets as $cabinet)
                                             
-                                        </tr>
-                                    </thead>
+                                        <tbody>
+                                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                             
-                                            @forelse($RentalPayments as $RentalPayments) 
-                                    <tbody>
-                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                            
-                                            <th class="px-6 py-4">
-                                                <div class="text-base font-semibold"><x-input-label for="username" :value="$RentalPayments->username"/></div>
-                                                <x-input-label>{{ ++$i }}</x-input-label>
-                                            </th>
                                             <td class="px-6 py-4">
-                                                <x-input-label>{{ $RentalPayments->lastname }}, {{ $RentalPayments->firstname }} {{ $RentalPayments->middlename }}</x-input-label>
-                                                <x-input-label>Cab. No.: <b>{{ $RentalPayments->cabinetname }}</b></x-input-label>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <x-input-label for="branchname" :value="$RentalPayments->branchname"/>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <x-input-label for="totalsales" :value="$RentalPayments->totalsales"/>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <x-input-label for="totalcollected" :value="$RentalPayments->totalcollected"/>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$RentalPayments->avatarproof") }}" alt="avatar">
-                                            </td>
-                                            <td class="px-6 py-4">
-                                            <x-input-label for="updated_by" :value="$RentalPayments->updated_by"/>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <x-input-label for="status" :value="$RentalPayments->status"/>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                @php
-                                                    $btndis='';
-                                                    $btnlabel = '';
-                                                    $btncolor = '';
-
-                                                    if($RentalPayments->status == 'Pending'):
-                                                        $btndis = '';
-                                                        $btnlabel = 'Process';
-                                                        $btncolor = 'blue';
-                                                    elseif($RentalPayments->status == 'Completed'):
-                                                        $btndis = 'disabled';
-                                                        $btnlabel = 'Completed';
-                                                        $btncolor = 'green';
-                                                    endif;
+                                                    <x-input-label>{{ ++$i }}</x-input-label>
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <x-input-label for="cabinetname" :value="$cabinet->cabinetname"/>
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    @if($cabinet->cabinetprice == '' or $cabinet->cabinetprice == 'Null')
+                                                        <x-input-label for="cabinetprice" value="0.00"/>
+                                                    @else
+                                                        <x-input-label for="cabinetprice" :value="$cabinet->cabinetprice"/>
+                                                    @endif
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <x-input-label for="branchname" :value="$cabinet->branchname"/>
+                                                </td>
+                                                
+                                                <td class="px-6 py-4">
+                                                    <div class="flex items-center">
+                                                    @php
+                                                        $color = '';
+                                                        if ($cabinet->status == 'Active'):
+                                                            $color = 'green';
+                                                        elseif ($cabinet->status == 'Inactive'):
+                                                            $color = 'red';
+                                                        endif;
+                                                    @endphp
+                                                            <div class="h-2.5 w-2.5 rounded-full bg-{{ $color; }}-500 me-2"></div> <x-input-label for="status" :value="$cabinet->status"/>
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4">
                                                     
-                                                @endphp
-                                                <form action="{{ route('myrental.edit',$RentalPayments->rpid) }}" method="PUT">
-                                                    <x-danger-button class="ms-3 dark:text-red bg-{{ $btncolor; }}-700 hover:bg-{{ $btncolor; }}-800 focus:outline-none focus:ring-4 focus:ring-{{ $btncolor; }}-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-{{ $btncolor; }}-600 dark:hover:bg-{{ $btncolor; }}-700 dark:focus:ring-{{ $btncolor; }}-800 ">
-                                                        {{ $btnlabel; }}
-                                                    </x-danger-button>
-                                                </form>
-                                            </td>
-                                        </tr>
+                                                    <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('myrental.show',$cabinet->cabid) }}">Payments History</a>
+                                                        
+                                                </td>
+                                            </tr>
                                         
-                                        @empty
-                                        <td scope="row" class="px-6 py-4">
-                                            No Records Found.
-                                        </td>	
-                                        @endforelse
-                                            
-                                    </tbody>
-                                </table>
-                                <div class="mt-4">
-                                    {!! $RentalPayments->appends(request()->query())->links() !!}
+                                            @empty
+                                            <td scope="row" class="px-6 py-4">
+                                                No Records Found.
+                                            </td>	
+                                            @endforelse
+                                                
+                                        </tbody>
+                                    </table>
                                 </div>
+                                    <div class="mt-4">
+                                        {!! $cabinets->appends(request()->query())->links() !!}
+                                    </div>
                                     
                                 </div>
                             </div>

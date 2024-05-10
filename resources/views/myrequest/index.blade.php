@@ -10,12 +10,12 @@
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="py-8">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+                            <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                                 <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
                                     <div>
                                         
                                     </div>                                    
-                                    <form class="flex items-center" action="{{ route('myrequest.search') }}" method="get">
+                                    <form class="flex items-center" action="{{ route('myrental.search') }}" method="get">
                                 
                                     <div class="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
                                         
@@ -44,7 +44,7 @@
                                         
                                         <div class="flex items-center w-full space-x-3 md:w-auto">
                                             <x-primary-button class="ms-4">
-                                                <a class="btn btn-primary" href="{{ route('myrequest.search') }}">Search</a>
+                                                <a class="btn btn-primary" href="{{ route('myrental.search') }}">Search</a>
                                             </x-primary-button>   
                                         </div>
                                         
@@ -53,9 +53,7 @@
                                     
                                 </div>
                             </div>
-
-
-                            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mt-4" >
+                            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mt-4">
                                 
                                     @if ($message = Session::get('success'))
                                     <div class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800" role="alert">
@@ -71,105 +69,77 @@
                                 </div>    
 
                                 @csrf
-                                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                        <tr>
+                                <div class="max-w-7xl overflow-x-auto shadow-md sm:rounded-lg " >
+                                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                            <tr>
                                             <th scope="col" class="px-6 py-3">
-                                                SRID
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Profile
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Branch
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Total Sales
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Total Collected
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Proof Image
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Updated By
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Status
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Action
-                                            </th>
-                                        </tr>
-                                    </thead>
+                                                    No
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Cabinet No.
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Branch
+                                                </th>
+                                                
+                                                <th scope="col" class="px-6 py-3">
+                                                    Status
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Action
+                                                </th>
+                                                
+                                            </tr>
+                                        </thead>
+                                            @forelse ($cabinets as $cabinet)
                                             
-                                            @forelse($RenterRequests as $RenterRequest) 
-                                    <tbody>
-                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        <tbody>
+                                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                             
-                                            <th class="px-6 py-4">
-                                                <div class="text-base font-semibold"><x-input-label for="username" :value="$RenterRequest->username"/></div>
-                                                <x-input-label>{{ ++$i }}</x-input-label>
-                                            </th>
                                             <td class="px-6 py-4">
-                                                <x-input-label>{{ $RenterRequest->lastname }}, {{ $RenterRequest->firstname }} {{ $RenterRequest->middlename }}</x-input-label>
-                                                <x-input-label>Cab. No.: <b>{{ $RenterRequest->cabinetname }}</b></x-input-label>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <x-input-label for="branchname" :value="$RenterRequest->branchname"/>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <x-input-label for="totalsales" :value="$RenterRequest->totalsales"/>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <x-input-label for="totalcollected" :value="$RenterRequest->totalcollected"/>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$RenterRequest->avatarproof") }}" alt="avatar">
-                                            </td>
-                                            <td class="px-6 py-4">
-                                            <x-input-label for="updated_by" :value="$RenterRequest->updated_by"/>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <x-input-label for="status" :value="$RenterRequest->status"/>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                @php
-                                                    $btndis='';
-                                                    $btnlabel = '';
-                                                    $btncolor = '';
-
-                                                    if($RenterRequest->status == 'Pending'):
-                                                        $btndis = '';
-                                                        $btnlabel = 'Process';
-                                                        $btncolor = 'blue';
-                                                    elseif($RenterRequest->status == 'Completed'):
-                                                        $btndis = 'disabled';
-                                                        $btnlabel = 'Completed';
-                                                        $btncolor = 'green';
-                                                    endif;
+                                                    <x-input-label>{{ ++$i }}</x-input-label>
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <x-input-label for="cabinetname" :value="$cabinet->cabinetname"/>
+                                                </td>
+                                             
+                                                <td class="px-6 py-4">
+                                                    <x-input-label for="branchname" :value="$cabinet->branchname"/>
+                                                </td>
+                                                
+                                                <td class="px-6 py-4">
+                                                    <div class="flex items-center">
+                                                    @php
+                                                        $color = '';
+                                                        if ($cabinet->status == 'Active'):
+                                                            $color = 'green';
+                                                        elseif ($cabinet->status == 'Inactive'):
+                                                            $color = 'red';
+                                                        endif;
+                                                    @endphp
+                                                            <div class="h-2.5 w-2.5 rounded-full bg-{{ $color; }}-500 me-2"></div> <x-input-label for="status" :value="$cabinet->status"/>
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4">
                                                     
-                                                @endphp
-                                                <form action="{{ route('myrequest.edit',$RenterRequest->salesrid) }}" method="PUT">
-                                                    <x-danger-button class="ms-3 dark:text-red bg-{{ $btncolor; }}-700 hover:bg-{{ $btncolor; }}-800 focus:outline-none focus:ring-4 focus:ring-{{ $btncolor; }}-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-{{ $btncolor; }}-600 dark:hover:bg-{{ $btncolor; }}-700 dark:focus:ring-{{ $btncolor; }}-800 ">
-                                                        {{ $btnlabel; }}
-                                                    </x-danger-button>
-                                                </form>
-                                            </td>
-                                        </tr>
+                                                    <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('myrequest.show',$cabinet->cabid) }}">Request Payment</a>
+                                                        
+                                                </td>
+                                            </tr>
                                         
-                                        @empty
-                                        <td scope="row" class="px-6 py-4">
-                                            No Records Found.
-                                        </td>	
-                                        @endforelse
-                                            
-                                    </tbody>
-                                </table>
-                                <div class="mt-4">
-                                    {!! $RenterRequests->appends(request()->query())->links() !!}
+                                            @empty
+                                            <td scope="row" class="px-6 py-4">
+                                                No Records Found.
+                                            </td>	
+                                            @endforelse
+                                                
+                                        </tbody>
+                                    </table>
                                 </div>
+                                    <div class="mt-4">
+                                        {!! $cabinets->appends(request()->query())->links() !!}
+                                    </div>
                                     
                                 </div>
                             </div>

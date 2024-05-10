@@ -27,10 +27,12 @@ class DashboardController extends Controller
     }
 
     public function renters(){
+
         $sales = Sales::where('userid',auth()->user()->userid)
                     ->where(function(Builder $builder){
                         $builder->where('collected_status','Pending');
                     })->latest()->paginate(5);
+
         $RenterRequests = RenterRequests::where('cabinetname',auth()->user()->cabinetname)
                     ->where(function(Builder $builder){
                         $builder->where('branchname',auth()->user()->branchname)
@@ -48,6 +50,9 @@ class DashboardController extends Controller
                                         ->with(['rentalpayments' => $rentalpayments])
                                         ->with(['attendance' => $attendance])
                                         ->with('i', (request()->input('page', 1) - 1) * 5);
+
+        return redirect()->route('mydashboard.index');
+
     }
 
     public function cashier(){

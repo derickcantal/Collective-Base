@@ -305,6 +305,10 @@ class RentalPaymentsController extends Controller
 
     public function selectpayment(Request $request)
     {
+        if($request->cabinetname == 'SelectCabinet'){
+            return redirect()->route('rentalpayments.selectcabinet',$request->userid)
+                                ->with('failed','No Active Cabinet Selected.');
+        }
         $renter = Renters::where('userid',$request->userid)->first();
 
         $cabinet = cabinet::where('cabid', $request->cabinetname)->first();

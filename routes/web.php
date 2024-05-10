@@ -12,6 +12,7 @@ use App\Livewire\Counter;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MyRentalController;
 use App\Http\Controllers\MyRequestController;
+use App\Http\Controllers\MyDashboardController;
 use App\Http\Controllers\Profile\AvatarController;
 use App\Http\Controllers\RentalPaymentsController;
 use App\Http\Controllers\RenterRequestsController;
@@ -68,8 +69,11 @@ Route::middleware('auth')->group(function () {
     Route::get('myrequest/search', [MyRequestController::class, 'search'])->name('myrequest.search');
     Route::resource('myrequest', MyRequestController::class);
 
-    Route::get('myrental/search', [MyRequestController::class, 'search'])->name('myrental.search');
+    Route::get('myrental/search', [MyRentalController::class, 'search'])->name('myrental.search');
+    Route::get('myrental/{cabinet}/payments', [MyRentalController::class, 'cabinetrental'])->name('myrental.cabinetrental');
     Route::resource('myrental', MyRentalController::class);
+
+    Route::resource('mydashboard', MyDashboardController::class);
 
     Route::get('mycabinet/search', [MyCabinetController::class, 'search'])->name('mycabinet.search');
     Route::get('mycabinet/sales/{cabinetsales}', [MyCabinetController::class, 'cabinetsales'])->name('mycabinet.sales');

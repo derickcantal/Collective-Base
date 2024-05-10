@@ -12,7 +12,14 @@ use \Carbon\Carbon;
 class MyRentalController extends Controller
 {
     public function loaddata(){
+        $cabinets = cabinet::where('userid',auth()->user()->userid)
+                    ->orderBy('status','asc')
+                    ->orderBy('cabid','asc')
+                    ->orderBy('branchname','asc')
+                    ->paginate(5);
 
+        return view('myrental.index',['cabinets' => $cabinets])
+                    ->with('i', (request()->input('page', 1) - 1) * 5);
         
         $RentalPayments = RentalPayments::where('userid',auth()->user()->userid)
                     ->where(function(Builder $builder){
@@ -54,6 +61,25 @@ class MyRentalController extends Controller
     public function destroydata(){
     
     }
+
+    public function cabinetrental(){
+        $RentalPaymentsHistory = history_rental_payments::where('userid',auth()->user()->userid)
+                    ->where(function(Builder $builder){
+                        $builder->where('branchid',auth()->user()->branchid);
+                    })->paginate(5);
+
+        if(!empty($RentalPaymentsHistory))
+        {
+            return view('myrental.index',['RentalPayments' => $RentalPaymentsHistory])
+                ->with('i', (request()->input('page', 1) - 1) * 5);
+        }
+        else
+        {
+            return redirect()->back()
+                                ->with('failed','No Record Found.');
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -94,9 +120,31 @@ class MyRentalController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $cabinet)
     {
-        //
+        $cabinet = cabinet::where('cabid',$cabinet)->first();
+
+        $RentalPayments = RentalPayments::where('cabid',$cabinet)->latest()->paginate(5);
+        
+        $RentalPaymentsHistory = history_rental_payments::where('cabid',$cabinet)->latest()->paginate(5);
+
+        if(!empty($RentalPayments))
+        {
+            return view('myrental.show',['rentalpayments' => $RentalPayments])
+                ->with(['cabid'=>$cabinet->cabinetname])
+                ->with('i', (request()->input('page', 1) - 1) * 5);
+        }
+        elseif(!empty($RentalPaymentsHistory))
+        {
+            return view('myrental.show',['rentalpayments' => $RentalPaymentsHistory])
+                ->with(['cabid'=>$cabinet->cabinetname])
+                ->with('i', (request()->input('page', 1) - 1) * 5);
+        }
+        else
+        {
+            return redirect()->back()
+                                ->with('failed','No Record Found.');
+        }
     }
 
     /**
