@@ -33,7 +33,7 @@
                                             <img width="100" height="100" class="rounded-full mt-4" src="{{ asset("/storage/$RenterRequests->avatarproof") }}" alt="proof avatar" />
 
                                                 <x-input-label for="name" value="Upload Receipt" />
-                                                <x-text-input id="avatarproof" name="avatarproof" type="file"  class="mt-1 block w-full mt-3" :value="old('avatarproof', $RenterRequests->avatarproof)" autofocus autocomplete="off" />
+                                                <x-text-input id="avatarproof" name="avatarproof" type="file"  class="mt-1 block w-full mt-3" :value="old('avatarproof', $RenterRequests->avatarproof)" required autofocus autocomplete="off" />
                                                 <x-input-error class="mt-2" :messages="$errors->get('avatarproof')" />
                                             </div>
                                         </div>
@@ -44,15 +44,8 @@
                                                 <!-- branchname -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="branchname" :value="__('Branch Name')" />
-                                                    <!-- <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname')" required autofocus autocomplete="off" /> -->
-                                                    <select id="branchname" name="branchname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('branchname')">
-                                                        <option value = "CB Main">CB Main</option>
-                                                        <option value = "CB Annex">CB Annex</option>
-                                                        <option value = "CB Complex">CB Complex</option>
-                                                        <option value = "CB Plus 1">CB Plus 1</option>
-                                                        <option value = "CB Plus 2">CB Plus 2</option>
-                                                        <option value = "CB Plus 3">CB Plus 3</option>
-                                                    </select>
+                                                     <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname',$RenterRequests->branchname)" required autofocus readonly /> 
+                                                    
                                                     <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -60,57 +53,42 @@
                                                 <!-- cabname -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="cabinetname" :value="__('Cabinet No.')" />
-                                                    <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" :value="old('cabinetname', $RenterRequests->cabinetname)" required autofocus autocomplete="off" />
+                                                    <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" :value="old('cabinetname', $RenterRequests->cabinetname)" required autofocus readonly/>
                                                     <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
                                                 </div>
                                             </div>
                                             <div class="col-span-2 sm:col-span-1">
-                                                <!-- firstname -->
+                                                <!-- Full Name -->
                                                 <div class="form-group mt-4">
-                                                    <x-input-label for="firstname" :value="__('First Name')" />
-                                                    <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname', $RenterRequests->firstname)" required autofocus autocomplete="given-name" />
-                                                    <x-input-error :messages="$errors->get('firstname')" class="mt-2" />
+                                                    <x-input-label for="fullname" :value="__('Full Name')" />
+                                                    <x-text-input id="fullname" class="block mt-1 w-full" type="text" name="fullname" :value="old('fullname', $fullname)" required autofocus readonly />
+                                                    <x-input-error :messages="$errors->get('fullname')" class="mt-2" />
                                                 </div>
                                             </div>
                                    
                                             <div class="col-span-2 sm:col-span-1">
-                                                    <!-- lastname -->
-                                                    <div class="form-group mt-4">
-                                                    <x-input-label for="lastname" :value="__('Last Name')" />
-                                                    <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname', $RenterRequests->lastname)" required autofocus autocomplete="family-name" />
-                                                    <x-input-error :messages="$errors->get('lastname')" class="mt-2" />
-                                                </div>
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
                                                     <!-- total sales -->
                                                     <div class="form-group mt-4">
                                                     <x-input-label for="totalsales" :value="__('Total Sales')" />
-                                                    <x-text-input id="totalsales" class="block mt-1 w-full" type="text" name="totalsales" :value="old('totalsales', $RenterRequests->totalsales)" required autofocus autocomplete="off" />
+                                                    <x-text-input id="totalsales" class="block mt-1 w-full" type="text" name="totalsales" :value="old('totalsales', number_format($RenterRequests->totalsales,2))" readonly required autofocus autocomplete="off" />
                                                     <x-input-error :messages="$errors->get('totalsales')" class="mt-2" />
                                                 </div>
                                             </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                    <!-- total collected -->
-                                                    <div class="form-group mt-4">
-                                                    <x-input-label for="totalcollected" :value="__('Total Collected')" />
-                                                    <x-text-input id="totalcollected" class="block mt-1 w-full" type="text" name="totalcollected" :value="old('totalcollected', $RenterRequests->totalcollected)" required autofocus autocomplete="off" />
-                                                    <x-input-error :messages="$errors->get('totalcollected')" class="mt-2" />
-                                                </div>
-                                            </div>
+                                            
 
                                             
                                             <div class="col-span-2 sm:col-span-1 ">
                                                 <!-- Notes -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="rnotes" :value="__('Notes')" />
-                                                    <x-text-input id="rnotes" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="textarea" name="rnotes" :value="old('rnotes', $RenterRequests->rnotes)" required autofocus autocomplete="off" />
+                                                    <x-text-input id="rnotes" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="textarea" name="rnotes" :value="old('rnotes', $RenterRequests->rnotes)" autofocus autocomplete="off" />
                                                     <x-input-error :messages="$errors->get('rnotes')" class="mt-2" />
                                                 </div>
                                             </div>
                                             <div class="flex items-center justify-between col-span-2 sm:col-span-2">
                                                 
                                                 <x-primary-button class="ms-4">
-                                                    <a class="btn btn-primary" > Update</a>
+                                                    <a class="btn btn-primary" > Complete</a>
                                                 </x-primary-button>
                                                 </div>
                                             </div>

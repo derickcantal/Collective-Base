@@ -2,7 +2,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <u><a href="{{ route('myrequest.index') }}"> Request</a></u> / {{ __('Create New Request') }}
+            <u><a href="{{ route('myrequest.index') }}"> Request</a></u> / {{ __('Create New Request') }} 
         </h2>
     </x-slot>
     <section>
@@ -10,8 +10,9 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <form action="{{ route('myrequest.store') }}" method="POST" class="p-4 md:p-5">
-                        @csrf   
+                        <form action="{{ route('myrequest.stores',$cabid) }}" method="POST" class="p-4 md:p-5">
+                        @csrf 
+                        @method('GET')
                             <!-- Error & Success Notification -->        
                             <div>
                                     @if ($errors->any())
@@ -66,7 +67,7 @@
                                                 <!-- cabinetnumber -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="cabinetname" :value="__('Cabinet No.')" />
-                                                    <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" value="{{ auth()->user()->cabinetname }}" required autofocus autocomplete="off" readonly/> 
+                                                    <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" value="{{ $cabinet->cabinetname }}" required autofocus autocomplete="off" readonly/> 
                                                    
                                                     <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
                                                 </div>
@@ -74,50 +75,26 @@
                                             <div class="col-span-2 sm:col-span-1">
                                                 <!-- firstname -->
                                                 <div class="form-group mt-4">
-                                                    <x-input-label for="firstname" :value="__('First Name')" />
-                                                    <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" value="{{ auth()->user()->firstname }}" required autofocus autocomplete="given-name" readonly/>
-                                                    <x-input-error :messages="$errors->get('firstname')" class="mt-2" />
+                                                    <x-input-label for="fullname" :value="__('Full Name')" />
+                                                    <x-text-input id="fullname" class="block mt-1 w-full" type="text" name="fullname" value="{{ auth()->user()->lastname }}, {{ auth()->user()->firstname }} {{ auth()->user()->middlename }}" required autofocus autocomplete="given-name" readonly/>
+                                                    <x-input-error :messages="$errors->get('fullname')" class="mt-2" />
                                                 </div>
                                             </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- middlename -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="middlename" :value="__('Middle Name')" />
-                                                    <x-text-input id="middlename" class="block mt-1 w-full" type="text" name="middlename" value="{{ auth()->user()->middlename }}" required autofocus autocomplete="additional-name" readonly/>
-                                                    <x-input-error :messages="$errors->get('username')" class="mt-2" />
-                                                </div>
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                    <!-- lastname -->
-                                                    <div class="form-group mt-4">
-                                                    <x-input-label for="lastname" :value="__('Last Name')" />
-                                                    <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" value="{{ auth()->user()->lastname }}" required autofocus autocomplete="family-name" readonly/>
-                                                    <x-input-error :messages="$errors->get('lastname')" class="mt-2" />
-                                                </div>
-                                            </div>
+                                          
                                             <div class="col-span-2 sm:col-span-1">
                                                     <!-- total sales -->
                                                     <div class="form-group mt-4">
                                                     <x-input-label for="totalsales" :value="__('Total Sales')" />
-                                                    <x-text-input id="totalsales" class="block mt-1 w-full" type="text" name="totalsales" value="{{ $totalsales }}" required autofocus autocomplete="off" readonly />
+                                                    <x-text-input id="totalsales" class="block mt-1 w-full" type="text" name="totalsales" value="{{ number_format($totalsales, 2) }}" required autofocus autocomplete="off" readonly />
                                                     <x-input-error :messages="$errors->get('totalsales')" class="mt-2" />
                                                 </div>
                                             </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                    <!-- total collected -->
-                                                    <div class="form-group mt-4">
-                                                    <x-input-label for="totalcollected" :value="__('Total Collected')" />
-                                                    <x-text-input id="totalcollected" class="block mt-1 w-full" type="text" name="totalcollected" value="0.00" required autofocus autocomplete="off" readonly/>
-                                                    <x-input-error :messages="$errors->get('totalcollected')" class="mt-2" />
-                                                </div>
-                                            </div>
-
                                             
                                             <div class="col-span-2 sm:col-span-1 ">
                                                 <!-- Notes -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="rnotes" :value="__('Notes')" />
-                                                    <x-text-input id="rnotes" class="block mt-1 w-full" type="text" name="rnotes" :value="old('rnotes')" required autofocus autocomplete="off" />
+                                                    <x-text-input id="rnotes" class="block mt-1 w-full" type="text" name="rnotes" :value="old('rnotes')"  autofocus autocomplete="off" />
                                                     <x-input-error :messages="$errors->get('rnotes')" class="mt-2" />
                                                 </div>
                                             </div>

@@ -128,14 +128,30 @@ class MyRentalController extends Controller
         
         $RentalPaymentsHistory = history_rental_payments::where('cabid',$cabinet)->latest()->paginate(5);
 
+        $RentalPayments1 = RentalPayments::where('cabid',$cabinet)->latest()->get();
+        
+        $RentalPaymentsHistory1 = history_rental_payments::where('cabid',$cabinet)->latest()->get();
+
+        $totalsales = collect($RentalPayments1)->sum('total');
+
+        $totalsales1 = collect($RentalPaymentsHistory1)->sum('total');
+
         if(!empty($RentalPayments))
         {
+            if($totalsales == 0){
+                return redirect()->back()
+                                ->with('failed','No Record Found.');
+            }
             return view('myrental.show',['rentalpayments' => $RentalPayments])
                 ->with(['cabid'=>$cabinet->cabinetname])
                 ->with('i', (request()->input('page', 1) - 1) * 5);
         }
         elseif(!empty($RentalPaymentsHistory))
         {
+            if($totalsales1 == 0){
+                return redirect()->back()
+                                ->with('failed','No Record Found.');
+            }
             return view('myrental.show',['rentalpayments' => $RentalPaymentsHistory])
                 ->with(['cabid'=>$cabinet->cabinetname])
                 ->with('i', (request()->input('page', 1) - 1) * 5);

@@ -13,7 +13,7 @@ class DashboardController extends Controller
 {
     public function administrator(){
         $sales = Sales::latest()->paginate(5);
-        $RenterRequests = RenterRequests::where('status','Pending')->orderBy('status','desc')->paginate(5);
+        $RenterRequests = RenterRequests::where('status','For Approval')->latest()->paginate(5);
         
         $rentalpayments = RentalPayments::where('status','Unpaid')->orderBy('status','desc')->paginate(5);
 
@@ -33,11 +33,11 @@ class DashboardController extends Controller
                         $builder->where('collected_status','Pending');
                     })->latest()->paginate(5);
 
-        $RenterRequests = RenterRequests::where('cabinetname',auth()->user()->cabinetname)
+        $RenterRequests = RenterRequests::where('userid',auth()->user()->userid)
                     ->where(function(Builder $builder){
-                        $builder->where('branchname',auth()->user()->branchname)
+                        $builder
                                 ->orderBy('status','desc');
-                    })->paginate(5);
+                    })->latest()->paginate(5);
 
         $rentalpayments = RentalPayments::where('userid',auth()->user()->userid)
                     ->latest()

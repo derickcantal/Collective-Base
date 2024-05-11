@@ -13,6 +13,8 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use \Carbon\Carbon;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Imagick\Driver;
 
 
 class RenterRequestsController extends Controller
@@ -68,43 +70,60 @@ class RenterRequestsController extends Controller
         }  
     }
     
-    public function updatedata($request,$id){
-        $rentreq = RenterRequests::findOrFail($id);
-        $path = Storage::disk('public')->put('rentersrequests',$request->file('avatarproof'));
-        // $path = $request->file('avatar')->store('avatars','public');
-        
-        $oldavatar = $rentreq->avatarproof;
-        
-        if($oldavatar == 'avatars/cash-default.jpg'){
-            
-        }else{
-            Storage::disk('public')->delete($oldavatar);
-        }
-
-        RenterRequests::where('salesrid', $id)->update([
-            'branchid' => '1',
-            'branchname' => $request->branchname,
-            'cabid' => '1',
-            'cabinetname' => $request->cabinetname,
-            'totalsales' => $request->totalsales,
-            'totalcollected' => $request->totalcollected,
-            'avatarproof' => $path,
-            'rnotes' => $request->rnotes,
-            'userid' => '1',
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'updated_by' => Auth()->user()->email,
-            'status' => 'Completed',
+    public function updatedata($request,$salerid){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $validated = $request->validate([
+            'avatarproof'=>'required|image|file',
         ]);
 
+        $RenterRequests = RenterRequests::where('salesrid',$salerid)->first();
+
+        $renter = Renters::where('userid',$RenterRequests->userid)->first();
+
+        $manager2 = ImageManager::imagick();
+        $name_gen2 = hexdec(uniqid()).'.'.$request->file('avatarproof')->getClientOriginalExtension();
         
-        if(auth()->user()->accesstype = 'Cashier'){
-            return redirect()->route('dashboard.index')
-                        ->with('success','Sales Request updated successfully');
-        }elseif(auth()->user()->accesstype = 'Administrator' or auth()->user()->accesstype = 'Supervisor'){
-            return redirect()->route('rentersrequests.index')
-                        ->with('success','Sales Request updated successfully');
+        $image2 = $manager2->read($request->file('avatarproof'));
+    
+        $encoded = $image2->toWebp()->save(storage_path('app/public/rentersrequests/'.$name_gen2.'.webp'));
+        $path = 'rentersrequests/'.$name_gen2.'.webp';
+
+        // $path = Storage::disk('public')->put('rentersrequests',$request->file('avatarproof'));
+        // $path = $request->file('avatar')->store('avatars','public');
+        
+
+        $renterrequestupdate = RenterRequests::where('salesrid', $salerid)->update([
+                                    'totalcollected' => $RenterRequests->totalsales,
+                                    'avatarproof' => $path,
+                                    'rnotes' => $request->rnotes,
+                                    'timerecorded_c' => $timenow,
+                                    'updated_by' => Auth()->user()->email,
+                                    'status' => 'Completed',
+                                ]);
+
+        if($renterrequestupdate)
+        {
+            if(auth()->user()->accesstype = 'Cashier'){
+                return redirect()->route('dashboard.index')
+                            ->with('success','Sales Request updated successfully');
+            }elseif(auth()->user()->accesstype = 'Administrator' or auth()->user()->accesstype = 'Supervisor'){
+                return redirect()->route('rentersrequests.index')
+                            ->with('success','Sales Request updated successfully');
+            }
         }
+        else
+        {
+            if(auth()->user()->accesstype = 'Cashier'){
+                return redirect()->route('dashboard.index')
+                            ->with('failed','Request Process Failed');
+            }elseif(auth()->user()->accesstype = 'Administrator' or auth()->user()->accesstype = 'Supervisor'){
+                return redirect()->route('rentersrequests.index')
+                            ->with('failed','Request Process Failed');
+            }
+            
+        }
+        
+        
         
     }
     
@@ -238,26 +257,35 @@ class RenterRequestsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit($salerid)
     {
-        $RenterRequests = RenterRequests::findOrFail($id);
-        return view('rentersrequests.edit',['RenterRequests' => $RenterRequests]);
+        
+        $RenterRequests = RenterRequests::where('salesrid',$salerid)->first();
+
+        $renter = Renters::where('userid',$RenterRequests->userid)->first();
+
+        $fullname = $renter->lastname . ', ' . $renter->firstname . ' ' . $renter->middlename;
+
+        return view('rentersrequests.edit')
+                        ->with(['RenterRequests' => $RenterRequests])
+                        ->with(['renter' => $renter])
+                        ->with('fullname',$fullname);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $salerid)
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return $this->updatedata($request,$id);
+                return $this->updatedata($request,$salerid);
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return $this->updatedata($request,$id);
+                return $this->updatedata($request,$salerid);
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return $this->updatedata($request,$id);
+                return $this->updatedata($request,$salerid);
             }
             
         }else{

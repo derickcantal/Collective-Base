@@ -29,6 +29,7 @@ class history_sales_requests extends Model
         'created_by',
         'updated_by',
         'timerecorded',
+        'timerecorded_c',
         'posted',
         'mod',
         'status',

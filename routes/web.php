@@ -67,10 +67,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('rentersrequests', RenterRequestsController::class);
 
     Route::get('myrequest/search', [MyRequestController::class, 'search'])->name('myrequest.search');
+    Route::get('myrequest/{cabinet}/payments', [MyRequestController::class, 'create'])->name('myrequest.creates');
+    Route::get('myrequest/{cabinet}/payments/process', [MyRequestController::class, 'store'])->name('myrequest.stores');
+    Route::get('myrequest/{cabinet}/sales', [MyRequestController::class, 'sales'])->name('myrequest.sales');
     Route::resource('myrequest', MyRequestController::class);
 
     Route::get('myrental/search', [MyRentalController::class, 'search'])->name('myrental.search');
-    Route::get('myrental/{cabinet}/payments', [MyRentalController::class, 'cabinetrental'])->name('myrental.cabinetrental');
     Route::resource('myrental', MyRentalController::class);
 
     Route::resource('mydashboard', MyDashboardController::class);

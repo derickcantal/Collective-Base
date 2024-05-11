@@ -12,9 +12,7 @@
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                                 <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
-                                    <x-primary-button class="ms-4">
-                                        <a class="btn btn-primary" href="{{ route('rentersrequests.selectbranch') }}"> Create New Renters Request</a>
-                                    </x-primary-button>
+                                    <div></div>
                                     
                                     <form class="flex items-center" action="{{ route('rentersrequests.search') }}" method="get">
                                 
@@ -154,7 +152,7 @@
                                                         $btnlabel = '';
                                                         $btncolor = '';
 
-                                                        if($RenterRequest->status == 'Pending'):
+                                                        if($RenterRequest->status == 'For Approval'):
                                                             $btndis = '';
                                                             $btnlabel = 'Process';
                                                             $btncolor = 'blue';

@@ -13,9 +13,7 @@
                             <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                                 <form class="flex items-center" action="{{ route('myrequest.search') }}" method="get">
                                     <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
-                                        <x-primary-button class="ms-4">
-                                            <a class="btn btn-primary" href="{{ route('myrequest.creates',$cabid) }}">Request Sales</a>
-                                        </x-primary-button>
+                                        
                                         <div>
                                             <div class="relative max-w-sm">
                                                 <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">

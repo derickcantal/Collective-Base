@@ -27,6 +27,7 @@ class RenterRequests extends Model
         'created_by',
         'updated_by',
         'timerecorded',
+        'timerecorded_c',
         'posted',
         'mod',
         'status',
