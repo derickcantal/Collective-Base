@@ -52,6 +52,8 @@
 							<option value = "250">250</option>            
 						</select>
 						<select id="orderrow" name="orderrow" class="flex items-center justify-center w-full px-2 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" :value="old('orderrow')">
+							<option value = "Latest">Latest</option>
+							<option value = "Oldest">Oldest</option>
 							<option value = "H-L">H-L</option>    
 							<option value = "L-H">L-H</option>    
 							<option value = "A-Z">A-Z</option>
@@ -72,8 +74,8 @@
 						<div class="flex items-center w-full space-x-3 md:w-auto">
 							<x-primary-button class="ms-4">
 										Search
-									</x-primary-button>
-							</div>
+							</x-primary-button>
+						</div>
 						
 					</div>
 					</form>

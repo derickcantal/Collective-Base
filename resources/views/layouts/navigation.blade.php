@@ -176,7 +176,7 @@
             </div>
 
             <div class="mt-3 space-y-1">
-                @if(auth()->user()->accesstype != 'Renters')
+                   @if(auth()->user()->accesstype == 'Cashier')
                     <x-responsive-nav-link :href="route('saleseod.index')">
                         {{ __('EOD') }}
                     </x-responsive-nav-link>

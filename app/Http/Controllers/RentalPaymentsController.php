@@ -272,10 +272,9 @@ class RentalPaymentsController extends Controller
                                 ->orWhere('branchname','like',"%{$request->searchrbc}%")
                                 ->orWhere('cabinetname','like',"%{$request->searchrbc}%")
                                 ->orWhere('email','like',"%{$request->searchrbc}%")
-                                ->orWhere('status','like',"%{$request->searchrbc}%")
-                                
-                                ->orderBy('lastname',$request->orderrow);
+                                ->orWhere('status','like',"%{$request->searchrbc}%");
                     })
+                    ->orderBy('lastname',$request->orderrow)
                     ->paginate($pagerow);
 
                     return view('rentalpayments.create-select-rbc',compact('renter'))

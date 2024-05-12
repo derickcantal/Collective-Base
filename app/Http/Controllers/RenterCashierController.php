@@ -130,10 +130,9 @@ class RenterCashierController extends Controller
     }
 
     public function cabinetsearch(Request $request){
-        dd('Search Cabinet');
+     
     }
     public function cabinetadd(Request $request){
-    
         $cabuser = $request->cabuser;
 
         $renter = Renters::where('userid',$request->cabuser)->first();
@@ -144,14 +143,31 @@ class RenterCashierController extends Controller
                         })
         ->get();
 
+        $rentername = $renter->lastname . ', ' . $renter->firstname;
 
         return view('rentercashier.show-cabinet-create',compact('renter'))
                                             ->with(compact('cabinet'))
-                                            ->with(['cabuser' => $cabuser]);
+                                            ->with(['cabuser' => $cabuser])
+                                            ->with(['rentername' => $rentername]);
     }
     public function search(Request $request)
     {
-        dd($request->pagerow);
+       
+        if(auth()->user()->accesstype == 'Cashier'){
+
+            $renter = DB::table('branchlist')
+                    ->leftJoin('users', 'users.userid', '=', 'branchlist.userid')
+                    ->where('users.accesstype', 'Renters')
+                    ->where('branchlist.branchid', auth()->user()->branchid)
+                    ->orderBy('users.lastname',$request->orderrow)
+                    ->paginate($request->pagerow);
+
+            
+            return view('rentercashier.index',compact('renter'))
+                            ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
     /**
      * Display a listing of the resource.
@@ -388,6 +404,7 @@ class RenterCashierController extends Controller
      */
     public function show(Renters $renter)
     {
+
         $cabinets = cabinet::where('userid',$renter->userid)
         ->where(function(Builder $builder){
             $builder->where('branchname', auth()->user()->branchname)

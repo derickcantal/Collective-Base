@@ -99,6 +99,7 @@ class MyRequestController extends Controller
             'created_by' => Auth()->user()->email,
             'updated_by' => 'Null',
             'timerecorded' => $timenow,
+            'timerecorded_c' => 'Null',
             'mod' => 0,
             'posted' => 'N',
             'status' => 'For Approval',

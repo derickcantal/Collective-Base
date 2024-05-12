@@ -159,22 +159,58 @@ class ReportsController extends Controller
 
     public function searchhsales(Request $request)
     {  
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return $this->cashiersearch($request);  
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return $this->rentersearch($request);
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->adminsearch($request);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->adminsearch($request);
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+
+    }
+
+    public function cashiersearch($request){
+        if($request->orderrow == 'H-L'){
+            $orderby = "total";
+            $orderrow = 'desc';
+        }elseif($request->orderrow == 'L-H'){
+            $orderby = "total";
+            $orderrow = 'asc';
+        }elseif($request->orderrow == 'A-Z'){
+            $orderby = "productname";
+            $orderrow = 'asc';
+        }elseif($request->orderrow == 'Z-A'){
+            $orderby = "productname";
+            $orderrow = 'desc';
+        }elseif($request->orderrow == 'Latest'){
+            $orderby = "salesid";
+            $orderrow = 'desc';
+        }elseif($request->orderrow == 'Oldest'){
+            $orderby = "salesid";
+            $orderrow = 'asc';
+        }
+        
         if(empty($request->search)){
             if(empty($request->startdate) && empty($request->enddate)){
-                if(auth()->user()->accesstype == 'Cashier'){
-                    $salesget = history_sales::where('branchname',auth()->user()->branchname)->latest()->get();
-                    $sales = history_sales::where('branchname',auth()->user()->branchname)->latest()->paginate(5);
-                }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor'){
-                    $sales = history_sales::latest()->paginate(5);
-                    $salesget = history_sales::latest()->get();
-                }
-        
+                $salesget = history_sales::where('branchname',auth()->user()->branchname)
+                                        ->orderBy($orderby,$orderrow)
+                                        ->get();
+                $sales = history_sales::where('branchname',auth()->user()->branchname)
+                                        ->orderBy($orderby,$orderrow)
+                                        ->paginate($request->pagerow);
+
                 $totalqty = collect($salesget)->sum('qty');
                 $totalsales = collect($salesget)->sum('total');
 
                 $branch = branch::orderBy('branchname', 'asc')->get();
     
-                $sales_requests = history_sales_requests::where('status','Pending')->orderBy('status','desc')->paginate(5);
+                $sales_requests = history_sales_requests::where('status','Completed')->orderBy('status','desc')->paginate(5);
                 
                 $rentalpayments = history_rental_payments::where('branchname',auth()->user()->branchname)->orderBy('status','desc')->paginate(5);
     
@@ -188,55 +224,30 @@ class ReportsController extends Controller
                     ->with(['totalsales' => $totalsales])
                     ->with(['totalqty' => $totalqty])
                     ->with(['branch' => $branch]);
-            }elseif(empty($request->startdate) or empty($request->enddate)){
-                if(auth()->user()->accesstype == 'Cashier'){
-                    $salesget = history_sales::where('branchname',auth()->user()->branchname)->latest()->get();
-                    $sales = history_sales::where('branchname',auth()->user()->branchname)->latest()->paginate(5);
-                }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor'){
-                    $sales = history_sales::latest()->paginate(5);
-                    $salesget = history_sales::latest()->get();
-                }
-        
-                $totalqty = collect($salesget)->sum('qty');
-                $totalsales = collect($salesget)->sum('total');
-    
-                $sales_requests = history_sales_requests::where('status','Pending')->orderBy('status','desc')->paginate(5);
+            }
+            elseif(empty($request->startdate) or empty($request->enddate)){
                 
-                $rentalpayments = history_rental_payments::where('branchname',auth()->user()->branchname)->orderBy('status','desc')->paginate(5);
-    
-                $attendance = history_attendance::where('branchname',auth()->user()->branchname)->latest()->paginate(5); 
-                
-                $branch = branch::orderBy('branchname', 'asc')->get();
-                
-                return redirect()->route('reports.index')->with(['sales' => $sales])
-                    ->with(['sales_requests' => $sales_requests])
-                    ->with(['attendance' => $attendance])
-                    ->with(['rentalpayments' => $rentalpayments])
-                    ->with(['totalsales' => $totalsales])
-                    ->with(['totalqty' => $totalqty])
-                    ->with(['branch' => $branch])
+                return redirect()->back()
+                    
                     ->with('failed','Start & End Dates Required');
-            }else{
-                // dd(Carbon::parse($request->startdate)->format('Y-m-d'));
-
+            }
+            else{
                 $startDate = Carbon::parse($request->startdate)->format('Y-m-d');
                 $endDate = Carbon::parse($request->enddate)->format('Y-m-d');
-                if(auth()->user()->accesstype == 'Cashier'){
-                    $salesget = history_sales::where('branchname',auth()->user()->branchname)
+
+                $salesget = history_sales::where('branchname',auth()->user()->branchname)
                                             ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
-                                            ->latest()->get();
-                    $sales = history_sales::where('branchname',auth()->user()->branchname)
-                                            ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
-                                            ->latest()->paginate(5);
-                }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor'){
-                    $sales = history_sales::whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])->latest()->paginate(5);
-                    $salesget = history_sales::whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])->latest()->get();
-                }
-        
+                                            ->orderBy($orderby,$orderrow)
+                                            ->get();
+                $sales = history_sales::where('branchname',auth()->user()->branchname)
+                                        ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                                        ->orderBy($orderby,$orderrow)
+                                        ->paginate($request->pagerow);
+                
                 $totalqty = collect($salesget)->sum('qty');
                 $totalsales = collect($salesget)->sum('total');
     
-                $sales_requests = history_sales_requests::where('status','Pending')->orderBy('status','desc')->paginate(5);
+                $sales_requests = history_sales_requests::where('status','Completed')->orderBy('status','desc')->paginate(5);
                 
                 $rentalpayments = history_rental_payments::where('branchname',auth()->user()->branchname)->orderBy('status','desc')->paginate(5);
     
@@ -251,27 +262,138 @@ class ReportsController extends Controller
                     ->with(['totalsales' => $totalsales])
                     ->with(['totalqty' => $totalqty])
                     ->with(['branch' => $branch]);
-            }
-            
-
-           
-        }else{
-            if($request->search == 'Top Sold'){
-   
-                $sales = DB::table('history_sales')
-                ->select(DB::raw('*, DISTINCT cabinetname, branchname, sum(total) as total'))
-                ->groupBy('cabinetname', 'branchname')
-                ->get();
                 
+            }
+        }else{
 
-                $sales_requests = history_sales_requests::where('status','Pending')->orderBy('status','desc')->paginate(5);
-            
-                $rentalpayments = history_rental_payments::where('branchname',auth()->user()->branchname)->orderBy('status','desc')->paginate(5);
+            $sales = history_sales::where('branchname', auth()->user()->branchname)
+                    ->where(function(Builder $builder) use($request){
+                        $builder
+                                ->where('cabinetname','like',"%{$request->search}%")
+                                ->orWhere('productname','like',"%{$request->search}%")
+                                ->orWhere('qty','like',"%{$request->search}%")
+                                ->orWhere('srp','like',"%{$request->search}%")
+                                ->orWhere('total','like',"%{$request->search}%")
+                                ->orWhere('username','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('snotes','like',"%{$request->search}%");
+                    })
+                    ->orderBy($orderby,$orderrow)
+                    ->paginate($request->pagerow);
 
-                $attendance = history_attendance::paginate(5); 
+            $salesget = history_sales::where('branchname', auth()->user()->branchname)
+                    ->where(function(Builder $builder) use($request){
+                        $builder
+                                ->where('cabinetname','like',"%{$request->search}%")
+                                ->orWhere('productname','like',"%{$request->search}%")
+                                ->orWhere('qty','like',"%{$request->search}%")
+                                ->orWhere('srp','like',"%{$request->search}%")
+                                ->orWhere('total','like',"%{$request->search}%")
+                                ->orWhere('username','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('snotes','like',"%{$request->search}%");
+                    })
+                    ->orderBy($orderby,$orderrow)
+                    ->get();
 
-                $totalsales = collect($sales)->sum('total');
+            $totalsales = collect($salesget)->sum('total');
+            $totalqty = collect($salesget)->sum('qty');
+
+            $sales_requests = history_sales_requests::where('status','Completed')->orderBy('status','desc')->paginate(5);
+        
+            $rentalpayments = history_rental_payments::where('branchname',auth()->user()->branchname)->orderBy('status','desc')->paginate(5);
+
+            $attendance = history_attendance::paginate(5); 
+
+            return view('reports.index')->with(['sales' => $sales])
+                ->with(['sales_requests' => $sales_requests])
+                ->with(['attendance' => $attendance])
+                ->with(['rentalpayments' => $rentalpayments])
+                ->with(['totalsales' => $totalsales])
+                ->with(['totalqty' => $totalqty]);
+        }
+        
+    }
+
+    public function rentersearch($request){
+        if($request->orderrow == 'H-L'){
+            $orderby = "total";
+            $orderrow = 'desc';
+        }elseif($request->orderrow == 'L-H'){
+            $orderby = "total";
+            $orderrow = 'asc';
+        }elseif($request->orderrow == 'A-Z'){
+            $orderby = "productname";
+            $orderrow = 'asc';
+        }elseif($request->orderrow == 'Z-A'){
+            $orderby = "productname";
+            $orderrow = 'desc';
+        }elseif($request->orderrow == 'Latest'){
+            $orderby = "salesid";
+            $orderrow = 'desc';
+        }elseif($request->orderrow == 'Oldest'){
+            $orderby = "salesid";
+            $orderrow = 'asc';
+        }
+        
+        if(empty($request->search)){
+            if(empty($request->startdate) && empty($request->enddate)){
+                $salesget = history_sales::where('userid',auth()->user()->userid)
+                                        ->orderBy($orderby,$orderrow)
+                                        ->get();
+                $sales = history_sales::where('userid',auth()->user()->userid)
+                                        ->orderBy($orderby,$orderrow)
+                                        ->paginate($request->pagerow);
+
                 $totalqty = collect($salesget)->sum('qty');
+                $totalsales = collect($salesget)->sum('total');
+
+                $branch = branch::orderBy('branchname', 'asc')->get();
+    
+                $sales_requests = history_sales_requests::where('userid',auth()->user()->userid)->orderBy('status','desc')->paginate(5);
+                
+                $rentalpayments = history_rental_payments::where('userid',auth()->user()->userid)->orderBy('status','desc')->paginate(5);
+    
+                $attendance = history_attendance::where('userid',auth()->user()->userid)->latest()->paginate(5); 
+                
+    
+                return view('reports.index')->with(['sales' => $sales])
+                    ->with(['sales_requests' => $sales_requests])
+                    ->with(['attendance' => $attendance])
+                    ->with(['rentalpayments' => $rentalpayments])
+                    ->with(['totalsales' => $totalsales])
+                    ->with(['totalqty' => $totalqty])
+                    ->with(['branch' => $branch]);
+            }
+            elseif(empty($request->startdate) or empty($request->enddate)){
+                
+                return redirect()->back()
+                    
+                    ->with('failed','Start & End Dates Required');
+            }
+            else{
+                $startDate = Carbon::parse($request->startdate)->format('Y-m-d');
+                $endDate = Carbon::parse($request->enddate)->format('Y-m-d');
+
+                $salesget = history_sales::where('userid',auth()->user()->userid)
+                                            ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                                            ->orderBy($orderby,$orderrow)
+                                            ->get();
+                $sales = history_sales::where('userid',auth()->user()->userid)
+                                        ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                                        ->orderBy($orderby,$orderrow)
+                                        ->paginate($request->pagerow);
+                
+                $totalqty = collect($salesget)->sum('qty');
+                $totalsales = collect($salesget)->sum('total');
+    
+                $sales_requests = history_sales_requests::where('userid',auth()->user()->userid)->orderBy('status','desc')->paginate(5);
+                
+                $rentalpayments = history_rental_payments::where('userid',auth()->user()->userid)->orderBy('status','desc')->paginate(5);
+    
+                $attendance = history_attendance::where('userid',auth()->user()->userid)->latest()->paginate(5); 
+                
+                $branch = branch::orderBy('branchname', 'asc')->get();
 
                 return view('reports.index')->with(['sales' => $sales])
                     ->with(['sales_requests' => $sales_requests])
@@ -280,135 +402,279 @@ class ReportsController extends Controller
                     ->with(['totalsales' => $totalsales])
                     ->with(['totalqty' => $totalqty])
                     ->with(['branch' => $branch]);
-            }else{
-                if(auth()->user()->accesstype == 'Cashier'){
-                    $sales = history_sales::where('branchname', auth()->user()->branchname)
-                    ->where(function(Builder $builder) use($request){
-                        $builder
-                                ->where('cabinetname','like',"%{$request->search}%")
-                                ->orWhere('productname','like',"%{$request->search}%")
-                                ->orWhere('qty','like',"%{$request->search}%")
-                                ->orWhere('srp','like',"%{$request->search}%")
-                                ->orWhere('total','like',"%{$request->search}%")
-                                ->orWhere('username','like',"%{$request->search}%")
-                                ->orWhere('branchname','like',"%{$request->search}%")
-                                ->orWhere('snotes','like',"%{$request->search}%") 
-                                ->orderBy('status','asc');
-                    })
-                    ->paginate(5);
-
-                    $salesget = history_sales::where('branchname', auth()->user()->branchname)
-                    ->where(function(Builder $builder) use($request){
-                        $builder
-                                ->where('cabinetname','like',"%{$request->search}%")
-                                ->orWhere('productname','like',"%{$request->search}%")
-                                ->orWhere('qty','like',"%{$request->search}%")
-                                ->orWhere('srp','like',"%{$request->search}%")
-                                ->orWhere('total','like',"%{$request->search}%")
-                                ->orWhere('username','like',"%{$request->search}%")
-                                ->orWhere('branchname','like',"%{$request->search}%")
-                                ->orWhere('snotes','like',"%{$request->search}%") 
-                                ->orderBy('status','asc');
-                    })
-                    ->get();
-
-                    $totalsales = collect($salesget)->sum('total');
-                    $totalqty = collect($salesget)->sum('qty');
-
-                    $sales_requests = history_sales_requests::where('status','Pending')->orderBy('status','desc')->paginate(5);
                 
-                    $rentalpayments = history_rental_payments::where('branchname',auth()->user()->branchname)->orderBy('status','desc')->paginate(5);
-
-                    $attendance = history_attendance::paginate(5); 
-
-                    return view('reports.index')->with(['sales' => $sales])
-                        ->with(['sales_requests' => $sales_requests])
-                        ->with(['attendance' => $attendance])
-                        ->with(['rentalpayments' => $rentalpayments])
-                        ->with(['totalsales' => $totalsales])
-                        ->with(['totalqty' => $totalqty]);
-                }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor'){
-                    $sales = history_sales::query()
-                    ->where(function(Builder $builder) use($request){
-                        $builder
-                                ->where('cabinetname','like',"%{$request->search}%")
-                                ->orWhere('productname','like',"%{$request->search}%")
-                                ->orWhere('qty','like',"%{$request->search}%")
-                                ->orWhere('srp','like',"%{$request->search}%")
-                                ->orWhere('total','like',"%{$request->search}%")
-                                ->orWhere('username','like',"%{$request->search}%")
-                                ->orWhere('branchname','like',"%{$request->search}%")
-                                ->orWhere('snotes','like',"%{$request->search}%") 
-                                ->orderBy('status','asc');
-                    })
-                    ->paginate(5);
-
-                    $salesget = history_sales::query()
-                    ->where(function(Builder $builder) use($request){
-                        $builder
-                                ->where('cabinetname','like',"%{$request->search}%")
-                                ->orWhere('productname','like',"%{$request->search}%")
-                                ->orWhere('qty','like',"%{$request->search}%")
-                                ->orWhere('srp','like',"%{$request->search}%")
-                                ->orWhere('total','like',"%{$request->search}%")
-                                ->orWhere('username','like',"%{$request->search}%")
-                                ->orWhere('branchname','like',"%{$request->search}%")
-                                ->orWhere('snotes','like',"%{$request->search}%") 
-                                ->orderBy('status','asc');
-                    })
-                    ->get();
-
-                    $totalsales = collect($salesget)->sum('total');
-                    $totalqty = collect($salesget)->sum('qty');
-
-                    $sales_requests = history_sales_requests::where('status','Pending')->orderBy('status','desc')->paginate(5);
-                
-                    $rentalpayments = history_rental_payments::where('branchname',auth()->user()->branchname)->orderBy('status','desc')->paginate(5);
-
-                    $attendance = history_attendance::paginate(5); 
-
-                    return view('reports.index')->with(['sales' => $sales])
-                        ->with(['sales_requests' => $sales_requests])
-                        ->with(['attendance' => $attendance])
-                        ->with(['rentalpayments' => $rentalpayments])
-                        ->with(['totalsales' => $totalsales])
-                        ->with(['totalqty' => $totalqty]);
-
-                }
             }
+        }else{
+
+            $sales = history_sales::where('userid', auth()->user()->userid)
+                    ->where(function(Builder $builder) use($request){
+                        $builder
+                                ->where('cabinetname','like',"%{$request->search}%")
+                                ->orWhere('productname','like',"%{$request->search}%")
+                                ->orWhere('qty','like',"%{$request->search}%")
+                                ->orWhere('srp','like',"%{$request->search}%")
+                                ->orWhere('total','like',"%{$request->search}%")
+                                ->orWhere('username','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('snotes','like',"%{$request->search}%");
+                    })
+                    ->orderBy($orderby,$orderrow)
+                    ->paginate($request->pagerow);
+
+            $salesget = history_sales::where('userid', auth()->user()->userid)
+                    ->where(function(Builder $builder) use($request){
+                        $builder
+                                ->where('cabinetname','like',"%{$request->search}%")
+                                ->orWhere('productname','like',"%{$request->search}%")
+                                ->orWhere('qty','like',"%{$request->search}%")
+                                ->orWhere('srp','like',"%{$request->search}%")
+                                ->orWhere('total','like',"%{$request->search}%")
+                                ->orWhere('username','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('snotes','like',"%{$request->search}%");
+                    })
+                    ->orderBy($orderby,$orderrow)
+                    ->get();
+
+            $totalsales = collect($salesget)->sum('total');
+            $totalqty = collect($salesget)->sum('qty');
+
+            $sales_requests = history_sales_requests::where('userid',auth()->user()->userid)->orderBy('status','desc')->paginate(5);
+        
+            $rentalpayments = history_rental_payments::where('userid',auth()->user()->userid)->orderBy('status','desc')->paginate(5);
+
+            $attendance = history_attendance::paginate(5); 
+
+            return view('reports.index')->with(['sales' => $sales])
+                ->with(['sales_requests' => $sales_requests])
+                ->with(['attendance' => $attendance])
+                ->with(['rentalpayments' => $rentalpayments])
+                ->with(['totalsales' => $totalsales])
+                ->with(['totalqty' => $totalqty]);
         }
     }
-    public function displayall()
-    {  
-        if(auth()->user()->accesstype == 'Cashier'){
-            $salesget = history_sales::where('branchname',auth()->user()->branchname)->latest()->get();
-            $sales = history_sales::where('branchname',auth()->user()->branchname)->latest()->paginate(5);
-        }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor'){
-            $sales = history_sales::latest()->paginate(5);
-            $salesget = history_sales::latest()->get();
 
-        }elseif(auth()->user()->accesstype == 'Renters'){
-            $sales = history_sales::where('userid',auth()->user()->userid)->latest()->paginate(5);
-            $salesget = history_sales::where('userid',auth()->user()->userid)->latest()->get();
+    public function adminsearch($request){
+        if($request->orderrow == 'H-L'){
+            $orderby = "total";
+            $orderrow = 'desc';
+        }elseif($request->orderrow == 'L-H'){
+            $orderby = "total";
+            $orderrow = 'asc';
+        }elseif($request->orderrow == 'A-Z'){
+            $orderby = "productname";
+            $orderrow = 'asc';
+        }elseif($request->orderrow == 'Z-A'){
+            $orderby = "productname";
+            $orderrow = 'desc';
+        }elseif($request->orderrow == 'Latest'){
+            $orderby = "salesid";
+            $orderrow = 'desc';
+        }elseif($request->orderrow == 'Oldest'){
+            $orderby = "salesid";
+            $orderrow = 'asc';
         }
         
-            $totalqty = collect($salesget)->sum('qty_sum');
-            $totalsales = collect($salesget)->sum('total_sum');
+        if(empty($request->search)){
+            if(empty($request->startdate) && empty($request->enddate)){
+                $salesget = history_sales::orderBy($orderby,$orderrow)
+                                        ->get();
+                $sales = history_sales::orderBy($orderby,$orderrow)
+                                        ->paginate($request->pagerow);
+
+                $totalqty = collect($salesget)->sum('qty'); 
+                $totalsales = collect($salesget)->sum('total');
+
+                $branch = branch::orderBy('branchname', 'asc')->get();
+    
+                $sales_requests = history_sales_requests::latest()->paginate(5);
+                
+                $rentalpayments = history_rental_payments::latest()->paginate(5);
+    
+                $attendance = history_attendance::latest()->paginate(5); 
+                
+    
+                return view('reports.index')->with(['sales' => $sales])
+                    ->with(['sales_requests' => $sales_requests])
+                    ->with(['attendance' => $attendance])
+                    ->with(['rentalpayments' => $rentalpayments])
+                    ->with(['totalsales' => $totalsales])
+                    ->with(['totalqty' => $totalqty])
+                    ->with(['branch' => $branch]);
+            }
+            elseif(empty($request->startdate) or empty($request->enddate)){
+                
+                return redirect()->back()
+                    
+                    ->with('failed','Start & End Dates Required');
+            }
+            else{
+                $startDate = Carbon::parse($request->startdate)->format('Y-m-d');
+                $endDate = Carbon::parse($request->enddate)->format('Y-m-d');
+
+                $salesget = history_sales::whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                                            ->orderBy($orderby,$orderrow)
+                                            ->get();
+                $sales = history_sales::whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                                        ->orderBy($orderby,$orderrow)
+                                        ->paginate($request->pagerow);
+                
+                $totalqty = collect($salesget)->sum('qty');
+                $totalsales = collect($salesget)->sum('total');
+    
+                $sales_requests = history_sales_requests::latest()->paginate(5);
+                
+                $rentalpayments = history_rental_payments::latest()->paginate(5);
+    
+                $attendance = history_attendance::latest()->paginate(5); 
+                
+                $branch = branch::orderBy('branchname', 'asc')->get();
+
+                return view('reports.index')->with(['sales' => $sales])
+                    ->with(['sales_requests' => $sales_requests])
+                    ->with(['attendance' => $attendance])
+                    ->with(['rentalpayments' => $rentalpayments])
+                    ->with(['totalsales' => $totalsales])
+                    ->with(['totalqty' => $totalqty])
+                    ->with(['branch' => $branch]);
+                
+            }
+        }else{
+
+            $sales = history_sales::where('cabinetname','like',"%{$request->search}%")
+                    ->where(function(Builder $builder) use($request){
+                        $builder
+                                ->orWhere('productname','like',"%{$request->search}%")
+                                ->orWhere('qty','like',"%{$request->search}%")
+                                ->orWhere('srp','like',"%{$request->search}%")
+                                ->orWhere('total','like',"%{$request->search}%")
+                                ->orWhere('username','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('snotes','like',"%{$request->search}%");
+                    })
+                    ->orderBy($orderby,$orderrow)
+                    ->paginate($request->pagerow);
+
+            $salesget = history_sales::where('cabinetname','like',"%{$request->search}%")
+                    ->where(function(Builder $builder) use($request){
+                        $builder
+                                ->orWhere('productname','like',"%{$request->search}%")
+                                ->orWhere('qty','like',"%{$request->search}%")
+                                ->orWhere('srp','like',"%{$request->search}%")
+                                ->orWhere('total','like',"%{$request->search}%")
+                                ->orWhere('username','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('snotes','like',"%{$request->search}%");
+                    })
+                    ->orderBy($orderby,$orderrow)
+                    ->get();
+
+            $totalsales = collect($salesget)->sum('total');
+            $totalqty = collect($salesget)->sum('qty');
+
+            $sales_requests = history_sales_requests::latest()->paginate(5);
         
+            $rentalpayments = history_rental_payments::latest()->paginate(5);
+
+            $attendance = history_attendance::latest()->paginate(5); 
+
             $branch = branch::orderBy('branchname', 'asc')->get();
 
-        $sales_requests = history_sales_requests::where('status','Pending')->orderBy('status','desc')->paginate(5);
+            return view('reports.index')->with(['sales' => $sales])
+                ->with(['sales_requests' => $sales_requests])
+                ->with(['attendance' => $attendance])
+                ->with(['branch' => $branch])
+                ->with(['rentalpayments' => $rentalpayments])
+                ->with(['totalsales' => $totalsales])
+                ->with(['totalqty' => $totalqty]);
+        }
+    }
+
+    public function displayall()
+    {  
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                $salesget = history_sales::where('branchname',auth()->user()->branchname)
+                                        ->latest()
+                                        ->get();
+                $sales = history_sales::where('branchname',auth()->user()->branchname)
+                                        ->latest()
+                                        ->paginate(5);
+
+                $totalqty = collect($salesget)->sum('qty'); 
+                $totalsales = collect($salesget)->sum('total');
+
+                $branch = branch::orderBy('branchname', 'asc')->get();
+    
+                $sales_requests = history_sales_requests::latest()->paginate(5);
+                
+                $rentalpayments = history_rental_payments::latest()->paginate(5);
+    
+                $attendance = history_attendance::latest()->paginate(5);   
+
+            }elseif(auth()->user()->accesstype =='Renters'){
+                $salesget = history_sales::where('userid',auth()->user()->userid)
+                                        ->latest()
+                                        ->get();
+                $sales = history_sales::where('userid',auth()->user()->userid)
+                                        ->latest()
+                                        ->paginate(5);
+
+                $totalqty = collect($salesget)->sum('qty'); 
+                $totalsales = collect($salesget)->sum('total');
+
+                $branch = branch::orderBy('branchname', 'asc')->get();
+    
+                $sales_requests = history_sales_requests::latest()->paginate(5);
+                
+                $rentalpayments = history_rental_payments::latest()->paginate(5);
+    
+                $attendance = history_attendance::latest()->paginate(5);   
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                $salesget = history_sales::sortkeys()
+                                        ->get();
+                $sales = history_sales::sortkeys()
+                                        ->paginate(5);
+
+                $totalqty = collect($salesget)->sum('qty'); 
+                $totalsales = collect($salesget)->sum('total');
+
+                $branch = branch::orderBy('branchname', 'asc')->get();
+    
+                $sales_requests = history_sales_requests::latest()->paginate(5);
+                
+                $rentalpayments = history_rental_payments::latest()->paginate(5);
+    
+                $attendance = history_attendance::latest()->paginate(5); 
+
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                $salesget = history_sales::orderby('salesid')
+                                        ->get();
+                $sales = history_sales::orderby('salesid')
+                                        ->paginate(5);
+
+                $totalqty = collect($salesget)->sum('qty'); 
+                $totalsales = collect($salesget)->sum('total');
+
+                $branch = branch::orderBy('branchname', 'asc')->get();
+    
+                $sales_requests = history_sales_requests::latest()->paginate(5);
+                
+                $rentalpayments = history_rental_payments::latest()->paginate(5);
+    
+                $attendance = history_attendance::latest()->paginate(5); 
+            }
+
+            return view('reports.index')->with(['sales' => $sales])
+                ->with(['sales_requests' => $sales_requests])
+                ->with(['attendance' => $attendance])
+                ->with(['branch' => $branch])
+                ->with(['rentalpayments' => $rentalpayments])
+                ->with(['totalsales' => $totalsales])
+                ->with(['totalqty' => $totalqty]);
+        }else{
+            return redirect()->route('dashboard.index');
+        }
         
-        $rentalpayments = history_rental_payments::where('branchname',auth()->user()->branchname)->orderBy('status','desc')->paginate(5);
-
-        $attendance = history_attendance::where('branchname',auth()->user()->branchname)->latest()->paginate(5); 
-
-        return view('reports.index')->with(['sales' => $sales])
-                                    ->with(['sales_requests' => $sales_requests])
-                                    ->with(['attendance' => $attendance])
-                                    ->with(['rentalpayments' => $rentalpayments])
-                                    ->with(['totalsales' => $totalsales])
-                                    ->with(['totalqty' => $totalqty])
-                                    ->with(['branch' => $branch]);
     }
 }

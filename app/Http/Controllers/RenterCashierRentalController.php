@@ -18,7 +18,24 @@ class RenterCashierRentalController extends Controller
 {
     public function search(Request $request)
     {
-        
+        $cabinets = cabinet::where('branchname',auth()->user()->branchname)
+                    ->where(function(Builder $builder) use($request){
+                        $builder->orWhere('cabinetname','like',"%{$request->search}%")
+                                ->orWhere('userid','like',"%{$request->search}%")
+                                ->orWhere('email','like',"%{$request->search}%")
+                                ->orWhere('created_by','like',"%{$request->search}%")
+                                ->orWhere('updated_by','like',"%{$request->search}%")
+                                ->orWhere('status','like',"%{$request->search}%") 
+                                
+                                ->orderBy('branchname','asc')
+                                ->orderBy('cabinetname','asc');
+                    })
+                    ->orderBy('cabid',$request->orderrow)
+                    ->where('email','!=','Vacant')
+                    ->paginate($request->pagerow);
+    
+        return view('rentercashierrental.index',compact('cabinets'))
+            ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
     }
     /**
      * Display a listing of the resource.

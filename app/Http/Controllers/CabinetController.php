@@ -189,13 +189,13 @@ class CabinetController extends Controller
                                 ->orWhere('updated_by','like',"%{$request->search}%")
                                 ->orWhere('status','like',"%{$request->search}%") 
                                 ->orderBy('status','asc')
-                                ->orderBy('branchname','asc')
                                 ->orderBy('cabinetname','asc');
                     })
-                    ->paginate(5);
+                    ->orderBy('branchname',$request->orderrow)
+                    ->paginate($request->pagerow);
     
         return view('cabinet.index',compact('cabinets'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+            ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
     }
     /**
      * Display a listing of the resource.

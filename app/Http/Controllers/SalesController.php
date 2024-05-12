@@ -209,16 +209,22 @@ class SalesController extends Controller
     
     }
 
-
-    public function displayall()
-    {
-        $sales = Sales::all();
-
-        return view('dashboard.index',['sales' => $sales]);
-    }
-
     public function searchall($request)
     {
+        if($request->orderrow == 'H-L'){
+            $orderby = "total_sum";
+            $orderrow = 'desc';
+        }elseif($request->orderrow == 'L-H'){
+            $orderby = "total_sum";
+            $orderrow = 'asc';
+        }elseif($request->orderrow == 'A-Z'){
+            $orderby = "cabid";
+            $orderrow = 'asc';
+        }elseif($request->orderrow == 'Z-A'){
+            $orderby = "cabid";
+            $orderrow = 'desc';
+        }
+
         $sales = Sales::query()
         ->where(function(Builder $builder) use($request){
             $builder
@@ -229,10 +235,12 @@ class SalesController extends Controller
                     ->orWhere('total','like',"%{$request->search}%")
                     ->orWhere('username','like',"%{$request->search}%")
                     ->orWhere('branchname','like',"%{$request->search}%")
-                    ->orWhere('snotes','like',"%{$request->search}%") 
-                    ->latest();
+                    ->orWhere('snotes','like',"%{$request->search}%");
         })
+        ->orderBy($orderby,$orderrow)
         ->paginate($request->pagerow);
+
+
 
         return view('sales.index',compact('sales'))
                 ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);

@@ -362,13 +362,13 @@ class RentersController extends Controller
                                 ->orWhere('middlename','like',"%{$request->search}%")
                                 ->orWhere('branchname','like',"%{$request->search}%")
                                 ->orWhere('email','like',"%{$request->search}%")
-                                ->orWhere('status','like',"%{$request->search}%") 
-                                ->orderBy('status','asc');
+                                ->orWhere('status','like',"%{$request->search}%");
                     })
-                    ->paginate(5);
+                    ->orderBy('lastname',$request->orderrow)
+                    ->paginate($request->pagerow);
     
         return view('renters.index',compact('renter'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+            ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
     }
     /**
      * Display a listing of the resource.

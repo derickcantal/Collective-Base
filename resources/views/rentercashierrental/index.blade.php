@@ -13,7 +13,9 @@
                             <!-- Start coding here -->
                             <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                                 <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
-                                    <div></div>
+                                    <div>
+                                    
+                                    </div>
                                     
                                     
                                     <form class="flex items-center" action="{{ route('rentercashierrental.search') }}" method="get">
@@ -28,10 +30,8 @@
                                             <option value = "250">250</option>            
                                         </select>
                                         <select id="orderrow" name="orderrow" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" :value="old('orderrow')">
-                                            <option value = "H-L">H-L</option>    
-                                            <option value = "L-H">L-H</option>    
-                                            <option value = "A-Z">A-Z</option>
-                                            <option value = "Z-A">Z-A</option>        
+                                            <option value = "asc">A-Z</option>
+                                            <option value = "desc">Z-A</option>        
                                         </select>
                                         <div class="w-full md:w-1/2">
                                             <label for="simple-search" class="sr-only">Search</label>
@@ -41,11 +41,13 @@
                                                     <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                                                     </svg>
                                                 </div>
-                                                <input type="text" name="search" id="search" class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search" required="">
+                                                <input type="text" name="search" id="search" class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search" >
                                             </div>
                                         </div>              
                                         <div class="flex items-center w-full space-x-3 md:w-auto">
-                                            
+                                            <x-primary-button class="ms-4">
+                                                        Search
+                                            </x-primary-button>
                                         </div>
                                         
                                     </div>

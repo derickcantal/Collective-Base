@@ -68,11 +68,12 @@
                                             <div class="col-span-2 sm:col-span-1">
                                                 <!-- firstname -->
                                                 <div class="form-group mt-4">
-                                                    <x-input-label for="cabuser" :value="__('Userid')" />
-                                                    <x-text-input id="cabuser" class="block mt-1 w-full" type="text" name="cabuser" value="{{ $cabuser; }}" required readonly />
-                                                    <x-input-error :messages="$errors->get('cabuser')" class="mt-2" />
+                                                    <x-input-label for="rentername" :value="__('Full Name')" />
+                                                    <x-text-input id="rentername" class="block mt-1 w-full" type="text" name="rentername" value="{{ $rentername }}" required readonly />
+                                                    <x-input-error :messages="$errors->get('rentername')" class="mt-2" />
                                                 </div>
                                             </div>
+                                            
                                             <div class="col-span-2 sm:col-span-1">
                                                 <!-- firstname -->
                                                 <div class="form-group mt-4">
@@ -99,6 +100,13 @@
                                                         @endforeach
                                                     </select>
                                                     <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
+                                                </div>
+                                            </div>
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <!-- firstname -->
+                                                <div class="form-group mt-4">
+                                                    <x-text-input id="cabuser" class="block mt-1 w-full" type="hidden" name="cabuser" value="{{ $cabuser; }}" required readonly />
+                                                    <x-input-error :messages="$errors->get('cabuser')" class="mt-2" />
                                                 </div>
                                             </div>
                                             <div class="flex items-center justify-between col-span-2 sm:col-span-2">

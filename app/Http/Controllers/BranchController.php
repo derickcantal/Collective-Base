@@ -72,6 +72,7 @@ class BranchController extends Controller
 
     public function search(Request $request)
     {
+       
         $branches = branch::query()
                     ->where(function(Builder $builder) use($request){
                         $builder->where('branchname','like',"%{$request->search}%")
@@ -81,14 +82,13 @@ class BranchController extends Controller
                                 ->orWhere('cabinetcount','like',"%{$request->search}%")
                                 ->orWhere('created_by','like',"%{$request->search}%")
                                 ->orWhere('updated_by','like',"%{$request->search}%")
-                                ->orWhere('status','like',"%{$request->search}%") 
-                                ->orderBy('branchname','asc')
-                                ->orderBy('status','asc');
+                                ->orWhere('status','like',"%{$request->search}%");
                     })
-                    ->paginate(5);
+                    ->orderBy('branchname',$request->orderrow)
+                    ->paginate($request->pagerow);
     
         return view('branch.index',compact('branches'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+            ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
     }
     /**
      * Display a listing of the resource.
