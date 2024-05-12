@@ -11,6 +11,18 @@ use \Carbon\Carbon;
 
 class MyRentalController extends Controller
 {
+    public function search(Request $request)
+    {
+        $cabinets = cabinet::where('userid',auth()->user()->userid)
+                    ->where(function(Builder $builder){
+                        $builder->where('branchid',auth()->user()->branchid);
+                    })
+                    ->orderBy('cabid',$request->orderrow)
+                    ->paginate($request->pagerow);
+
+        return view('myrental.index',['cabinets' => $cabinets])
+                    ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
+    }
     public function loaddata(){
         $cabinets = cabinet::where('userid',auth()->user()->userid)
                     ->orderBy('status','asc')

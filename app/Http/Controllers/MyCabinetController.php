@@ -14,9 +14,17 @@ use \Carbon\Carbon;
 
 class MyCabinetController extends Controller
 {
-    public function search()
+    public function search(Request $request)
     {
-        dd("List Cabinet Search");
+
+        $cabinets = cabinet::where('userid',auth()->user()->userid)
+                    ->orderBy('status','asc')
+                    ->orderBy('cabid','asc')
+                    ->orderBy('branchname','asc')
+                    ->paginate($request->pagerow);
+    
+        return view('mycabinet.index',compact('cabinets'))
+            ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
     }
 
     public function cabinetsearch()

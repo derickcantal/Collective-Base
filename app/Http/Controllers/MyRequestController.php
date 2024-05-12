@@ -14,6 +14,18 @@ use \Carbon\Carbon;
 
 class MyRequestController extends Controller
 {
+    public function search(Request $request)
+    {
+        $cabinets = cabinet::where('userid',auth()->user()->userid)
+                    ->orderBy('status','asc')
+                    ->orderBy('cabid','asc')
+                    ->orderBy('branchname','asc')
+                    ->paginate($request->pagerow);
+
+        return view('myrequest.index',['cabinets' => $cabinets])
+                    ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);   
+    }
+
     public function loaddata(){
         $cabinets = cabinet::where('userid',auth()->user()->userid)
                     ->orderBy('status','asc')
