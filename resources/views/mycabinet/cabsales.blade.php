@@ -11,7 +11,7 @@
                     <div class="py-8">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
-                            <form class="flex items-center" action="{{ route('mycabinet.search') }}" method="get">
+                            <form class="flex items-center" action="{{ route('mycabinet.cabinetsearch') }}" method="get">
                                 <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
                                     
                                         <div>
@@ -58,7 +58,7 @@
                                         
                                         <div class="flex items-center w-full space-x-3 md:w-auto">
                                             <x-primary-button class="ms-4">
-                                                <a class="btn btn-primary" href="{{ route('mycabinet.search') }}">Search</a>
+                                                <a class="btn btn-primary">Search</a>
                                             </x-primary-button>   
                                         </div>
                                         

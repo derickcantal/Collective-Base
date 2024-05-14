@@ -631,9 +631,9 @@ class ReportsController extends Controller
     
                 $attendance = history_attendance::latest()->paginate(5);   
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                $salesget = history_sales::sortkeys()
+                $salesget = history_sales::latest()
                                         ->get();
-                $sales = history_sales::sortkeys()
+                $sales = history_sales::latest()
                                         ->paginate(5);
 
                 $totalqty = collect($salesget)->sum('qty'); 
@@ -648,9 +648,9 @@ class ReportsController extends Controller
                 $attendance = history_attendance::latest()->paginate(5); 
 
             }elseif(auth()->user()->accesstype =='Administrator'){
-                $salesget = history_sales::orderby('salesid')
+                $salesget = history_sales::latest()
                                         ->get();
-                $sales = history_sales::orderby('salesid')
+                $sales = history_sales::latest()
                                         ->paginate(5);
 
                 $totalqty = collect($salesget)->sum('qty'); 

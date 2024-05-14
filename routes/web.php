@@ -79,6 +79,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('mycabinet/search', [MyCabinetController::class, 'search'])->name('mycabinet.search');
     Route::get('mycabinet/sales/{cabinetsales}', [MyCabinetController::class, 'cabinetsales'])->name('mycabinet.sales');
+    Route::get('mycabinet/search/cabinet', [MyCabinetController::class, 'cabinetsearch'])->name('mycabinet.cabinetsearch');
+
     Route::resource('mycabinet', MyCabinetController::class);
 
     Route::get('saleseod', [SalesEODController::class, 'index'])->name('saleseod.index');
