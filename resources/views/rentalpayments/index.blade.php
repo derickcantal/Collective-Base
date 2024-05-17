@@ -119,7 +119,7 @@
                                                     <x-input-label>Cab. No.: <b>{{ $rentalpayment->cabinetname }}</b></x-input-label>
                                                 </td>
                                                 <td class="px-6 py-4">
-                                                    <x-input-label for="rpbal" :value="$rentalpayment->rpbal"/>
+                                                    <x-input-label for="rpbal">@php echo number_format($rentalpayment->rpbal, 2); @endphp</x-input-label>
                                                 </td>
                                               
                                                 <td class="px-6 py-4">

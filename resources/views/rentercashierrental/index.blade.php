@@ -122,7 +122,7 @@
                                                         @if($cabinet->cabinetprice == '' or $cabinet->cabinetprice == 'Null')
                                                             <x-input-label for="cabinetprice" value="0.00"/>
                                                         @else
-                                                            <x-input-label for="cabinetprice" :value="$cabinet->cabinetprice"/>
+                                                            <x-input-label for="cabinetprice">@php echo number_format($cabinet->cabinetprice, 2); @endphp</x-input-label>
                                                         @endif
                                                     </td>
                                                     <td class="px-6 py-4">

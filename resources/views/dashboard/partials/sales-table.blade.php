@@ -94,7 +94,9 @@
 									</td>
 									<td class="px-6 py-4">
 										<x-input-label for="branchname" :value="$sale->branchname"/>
+										@if(auth()->user()->accesstype != 'Renters')
 										<x-input-label for="created_by" :value="$sale->created_by"/>
+										@endif
 										<x-input-label for="timerecorded" :value="$sale->timerecorded"/>
 									</td>
 									

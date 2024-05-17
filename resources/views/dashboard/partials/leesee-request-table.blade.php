@@ -57,10 +57,10 @@
                                                 <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$RenterRequest->avatarproof") }}" alt="avatar">
                                             </td>
                                             <td class="px-6 py-4">
-                                                <x-input-label for="totalsales" :value="$RenterRequest->totalsales"/>
+                                                <x-input-label for="totalsales">@php echo number_format($RenterRequest->totalsales, 2); @endphp</x-input-label>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <x-input-label for="totalcollected" :value="$RenterRequest->totalcollected"/>
+                                                <x-input-label for="totalcollected">@php echo number_format($RenterRequest->totalcollected, 2); @endphp</x-input-label>
                                             </td>
                                             
                                             <td class="px-6 py-4">

@@ -55,7 +55,7 @@
                             </td>
                            
                             <td class="px-6 py-4">
-                                <x-input-label for="rpamount" :value="$rentalpayment->rpamount"/>
+                                <x-input-label for="rpamount">@php echo number_format($rentalpayment->rpamount, 2); @endphp</x-input-label>
                                 <x-input-label for="rppaytype" :value="$rentalpayment->rppaytype"/>
                             </td>
                             <td class="px-6 py-4">
