@@ -91,14 +91,10 @@
                                                         Cabinet No.
                                                     </th>
                                                     <th scope="col" class="px-6 py-3">
-                                                        Rent Price
+                                                        Rent Info
                                                     </th>
-                                                    <th scope="col" class="px-6 py-3">
-                                                        Branch
-                                                    </th>
-                                                    <th scope="col" class="px-6 py-3">
-                                                        Renter
-                                                    </th>
+                                                   
+                                                
                                                     <th scope="col" class="px-6 py-3">
                                                         Created by
                                                     </th>
@@ -126,16 +122,14 @@
                                                         @if($cabinet->cabinetprice == '' or $cabinet->cabinetprice == 'Null')
                                                             <x-input-label for="cabinetprice" value="0.00"/>
                                                         @else
-                                                            <x-input-label for="cabinetprice" :value="$cabinet->cabinetprice"/>
+                                                            <x-input-label for="cabinetprice">{{ number_format($cabinet->cabinetprice, 2) }}</x-input-label>
                                                         @endif
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        <x-input-label for="branchname" :value="$cabinet->branchname"/>
-                                                    </td>
-                                                    <td class="px-6 py-4">
                                                         <x-input-label for="email" :value="$cabinet->email"/>
                                                     </td>
+                                                 
+                                                   
                                                     <td class="px-6 py-4">
+                                                        <x-input-label for="branchname" :value="$cabinet->branchname"/>
                                                         <x-input-label for="created_by" :value="$cabinet->created_by"/>
                                                     </td>
                                                     <td class="px-6 py-4">

@@ -293,6 +293,11 @@ class RenterCashierRentalController extends Controller
             'status' => 'Active',
         ]);
 
+        $cabinetupdate = cabinet::where('cabid',$cabinet->cabid)
+                    ->update([
+                        'fully_paid' => $fullypaid,
+                    ]);
+
         $rentalpaymentupdate = RentalPayments::where('userid',$renter->userid)
                 ->where(function(Builder $builder) use($request,$cabinet) {
                     $builder->where('cabid',$cabinet->cabid)
@@ -311,6 +316,11 @@ class RenterCashierRentalController extends Controller
                                 ->where('rpyear',$request->rpyear)
                                 ->where('fully_paid', 'N');
                     })->update([
+                        'fully_paid' => "Y",
+                    ]);
+                    
+            $cabinetupdate = cabinet::where('cabid',$cabinet->cabid)
+                    ->update([
                         'fully_paid' => "Y",
                     ]);
            

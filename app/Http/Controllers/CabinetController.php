@@ -187,11 +187,9 @@ class CabinetController extends Controller
                                 ->orWhere('email','like',"%{$request->search}%")
                                 ->orWhere('created_by','like',"%{$request->search}%")
                                 ->orWhere('updated_by','like',"%{$request->search}%")
-                                ->orWhere('status','like',"%{$request->search}%") 
-                                ->orderBy('status','asc')
-                                ->orderBy('cabinetname','asc');
+                                ->orWhere('status','like',"%{$request->search}%");
                     })
-                    ->orderBy('branchname',$request->orderrow)
+                    ->orderBy('cabid',$request->orderrow)
                     ->paginate($request->pagerow);
     
         return view('cabinet.index',compact('cabinets'))

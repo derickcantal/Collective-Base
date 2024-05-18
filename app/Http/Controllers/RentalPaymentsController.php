@@ -17,6 +17,24 @@ use Intervention\Image\Drivers\Imagick\Driver;
 
 class RentalPaymentsController extends Controller
 {
+    public function setpayment(){
+
+        $cabinet = cabinet::latest()->first();
+
+        return view('rentalpayments.create-set-payment')
+                            ->with(['cabinet' => $cabinet]);
+    }
+    
+    public function storesetpayment(Request $request){
+        $cabinet = cabinet::query()->update([
+                'rpmonth' => $request->rpmonth,
+                'rpyear' => $request->rpyear,
+                ]);
+
+        return redirect()->route('rentalpayments.index')
+                ->with('success','Month Set Successful.');
+    }
+
     public function loaddata(){
         $rentalPayments = RentalPayments::orderBy('status','desc')
                 ->where(function(Builder $builder)  {
@@ -156,6 +174,11 @@ class RentalPaymentsController extends Controller
             'status' => 'Active',
         ]);
 
+        $cabinetupdate = cabinet::where('cabid',$cabinet->cabid)
+                    ->update([
+                        'fully_paid' => $fullypaid,
+                    ]);
+
         $rentalpaymentupdate = RentalPayments::where('userid',$renter->userid)
                 ->where(function(Builder $builder) use($request,$cabinet) {
                     $builder->where('cabid',$cabinet->cabid)
@@ -176,7 +199,12 @@ class RentalPaymentsController extends Controller
                     })->update([
                         'fully_paid' => "Y",
                     ]);
-           
+            
+            $cabinetupdate = cabinet::where('cabid',$cabinet->cabid)
+                    ->update([
+                        'fully_paid' => "Y",
+                    ]);
+            
         }
 
         if($RentalPayments)
@@ -277,7 +305,7 @@ class RentalPaymentsController extends Controller
                     ->orderBy('lastname',$request->orderrow)
                     ->paginate($pagerow);
 
-                    return view('rentalpayments.create-select-rbc',compact('renter'))
+                    return view('rentalpayments.create-select-renter',compact('renter'))
             ->with('i', (request()->input('page', 1) - 1) * $pagerow);
     }
     public function selectrenter()

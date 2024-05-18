@@ -89,9 +89,7 @@
                                                 <th scope="col" class="px-6 py-3">
                                                     Profile
                                                 </th>
-                                                <th scope="col" class="px-6 py-3">
-                                                    Branch
-                                                </th>
+                                            
                                                 <th scope="col" class="px-6 py-3">
                                                     Total Sales
                                                 </th>
@@ -102,7 +100,7 @@
                                                     Proof Image
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
-                                                    Updated By
+                                                    Created By
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
                                                     Status
@@ -126,20 +124,20 @@
                                                     <x-input-label>{{ $RenterRequest->lastname }}, {{ $RenterRequest->firstname }} {{ $RenterRequest->middlename }}</x-input-label>
                                                     <x-input-label>Cab. No.: <b>{{ $RenterRequest->cabinetname }}</b></x-input-label>
                                                 </td>
+                                               
                                                 <td class="px-6 py-4">
-                                                    <x-input-label for="branchname" :value="$RenterRequest->branchname"/>
+                                                    <x-input-label for="totalsales">{{ number_format($RenterRequest->totalsales, 2)}}</x-input-label>
                                                 </td>
                                                 <td class="px-6 py-4">
-                                                    <x-input-label for="totalsales" :value="$RenterRequest->totalsales"/>
-                                                </td>
-                                                <td class="px-6 py-4">
-                                                    <x-input-label for="totalcollected" :value="$RenterRequest->totalcollected"/>
+                                                    <x-input-label for="totalcollected">{{ number_format($RenterRequest->totalcollected, 2)}}</x-input-label>
                                                 </td>
                                                 <td class="px-6 py-4">
                                                     <img class="w-10 h-10 rounded-sm" src="{{ asset("/storage/$RenterRequest->avatarproof") }}" alt="avatar">
                                                 </td>
                                                 <td class="px-6 py-4">
-                                                <x-input-label for="updated_by" :value="$RenterRequest->updated_by"/>
+                                                    <x-input-label for="branchname" :value="$RenterRequest->branchname"/>
+                                                    <x-input-label for="created_by" :value="$RenterRequest->created_by"/>
+                                                    <x-input-label for="timerecorded" :value="$RenterRequest->timerecorded"/>
                                                 </td>
                                                 <td class="px-6 py-4">
                                                     <x-input-label for="status" :value="$RenterRequest->status"/>

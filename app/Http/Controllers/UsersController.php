@@ -37,6 +37,19 @@ class UsersController extends Controller
             $builder->where('branchname',$request->branchname);
         })->first();
 
+        if(auth()->user()->accesstype == 'Supervisor')
+        {
+            if($request->accesstype == 'Adminstrator')
+            {
+                return redirect()->route('users.index')
+                        ->with('failed','User creation failed');
+            }
+            elseif($request->accesstype == 'Supervisor')
+            {
+                return redirect()->route('users.index')
+                        ->with('failed','User creation failed');
+            }
+        }
         $user = User::create([
             'avatar' => 'avatars/avatar-default.jpg',
             'username' => $request->username,
@@ -72,6 +85,20 @@ class UsersController extends Controller
 
         $mod = 0;
         $mod = $user->mod;
+
+        if(auth()->user()->accesstype == 'Supervisor')
+        {
+            if($request->accesstype == 'Adminstrator')
+            {
+                return redirect()->route('users.index')
+                        ->with('failed','User update failed');
+            }
+            elseif($request->accesstype == 'Supervisor')
+            {
+                return redirect()->route('users.index')
+                        ->with('failed','User update failed');
+            }
+        }
 
         if(empty($request->password)){
             $user =User::where('userid',$user->userid)->update([
@@ -257,7 +284,19 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(User $user)
-    {
+    {   
+        if(auth()->user()->accesstype == 'Supervisor')
+        {
+            if($user->accesstype == 'Administrator'){
+                return redirect()->route('users.index')
+                ->with('failed','User modification not allowed');
+            }elseif($user->accesstype == 'Supervisor'){
+                return redirect()->route('users.index')
+                ->with('failed','User modification not allowed');
+            }
+            
+        }
+
         return view('users.edit',['user' => $user]);
     }
     

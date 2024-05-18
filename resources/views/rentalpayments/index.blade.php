@@ -15,6 +15,9 @@
                                     <x-primary-button class="ms-4">
                                         <a class="btn btn-primary" href="{{ route('rentalpayments.selectrenter') }}"> Create New Rental Payments</a>
                                     </x-primary-button>
+                                    <x-primary-button class="ms-4">
+                                        <a class="btn btn-primary" href="{{ route('rentalpayments.setpayment') }}">Set Month</a>
+                                    </x-primary-button>
                                     
                                     <form class="flex items-center" action="{{ route('rentalpayments.search') }}" method="get">
                                 

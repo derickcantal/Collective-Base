@@ -32,12 +32,6 @@
                                                         Rent Price
                                                     </th>
                                                     <th scope="col" class="px-6 py-3">
-                                                        Branch
-                                                    </th>
-                                                    <th scope="col" class="px-6 py-3">
-                                                        Renter
-                                                    </th>
-                                                    <th scope="col" class="px-6 py-3">
                                                         Created by
                                                     </th>
                                                     <th scope="col" class="px-6 py-3">
@@ -61,16 +55,15 @@
                                                         <x-input-label for="cabinetname" :value="$cabinet->cabinetname"/>
                                                     </td>
                                                     <td class="px-6 py-4">
-                                                        <x-input-label for="cabinetprice" :value="$cabinet->cabinetprice"/>
+                                                        <x-input-label for="email" :value="$cabinet->email"/>
+                                                        <x-input-label for="cabinetprice">{{ number_format($cabinet->cabinetprice, 2) }}</x-input-label>
                                                     </td>
+                                             
+                                                 
                                                     <td class="px-6 py-4">
                                                         <x-input-label for="branchname" :value="$cabinet->branchname"/>
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        <x-input-label for="email" :value="$cabinet->email"/>
-                                                    </td>
-                                                    <td class="px-6 py-4">
                                                         <x-input-label for="created_by" :value="$cabinet->created_by"/>
+                                                        <x-input-label for="timerecorded" :value="$cabinet->timerecorded"/>
                                                     </td>
                                                     <td class="px-6 py-4">
                                                         <div class="flex items-center">

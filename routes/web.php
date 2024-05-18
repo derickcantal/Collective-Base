@@ -21,6 +21,7 @@ use App\Http\Controllers\SalesEODController;
 use App\Http\Controllers\RenterCashierController;
 use App\Http\Controllers\MyCabinetController;
 use App\Http\Controllers\RenterCashierRentalController;
+use App\Http\Controllers\EODController;
 
 /*
 |--------------------------------------------------------------------------
@@ -121,6 +122,8 @@ Route::middleware('auth')->group(function () {
     Route::get('rental/payments/search/renter', [RentalPaymentsController::class, 'searchrenter'])->name('rentalpayments.searchrenter');
     Route::get('rental/payments/select/{renters}/cabinet', [RentalPaymentsController::class, 'selectcabinet'])->name('rentalpayments.selectcabinet');
     Route::get('rental/payments/select/payment', [RentalPaymentsController::class, 'selectpayment'])->name('rentalpayments.selectpayment');
+    Route::get('rental/payments/set/payment/month', [RentalPaymentsController::class, 'setpayment'])->name('rentalpayments.setpayment');
+    Route::get('rental/payments/set/payment/month/store', [RentalPaymentsController::class, 'storesetpayment'])->name('rentalpayments.storesetpayment');
     Route::resource('rentalpayments', RentalPaymentsController::class);
 
     Route::get('cashier/rental/payments', [RenterCashierRentalController::class, 'search'])->name('rentercashierrental.search');
@@ -129,6 +132,9 @@ Route::middleware('auth')->group(function () {
     Route::get('cashier/rental/payments/{renterid}/history', [RenterCashierRentalController::class, 'show'])->name('rentercashierrental.shows');
     Route::post('cashier/rental/payments/store/{cabid}', [RenterCashierRentalController::class, 'store'])->name('rentercashierrental.stores');
     Route::resource('rentercashierrental', RenterCashierRentalController::class);
+
+    Route::get('eod/search', [EODController::class, 'search'])->name('eod.search');
+    Route::resource('eod', EODController::class);
 
 });
 
