@@ -8,6 +8,7 @@ use App\Models\RentalPayments;
 use App\Models\RenterRequests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use \Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -76,6 +77,7 @@ class DashboardController extends Controller
     }
     public function displayall()
     {
+       
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->cashier();

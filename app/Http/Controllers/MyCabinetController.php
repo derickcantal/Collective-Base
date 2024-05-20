@@ -44,6 +44,29 @@ class MyCabinetController extends Controller
 
     public function cabinetsales($cabinetsales)
     {
+        $today = Carbon::now();
+        $today->month; 
+        $today->year;
+
+        $cabinet = cabinet::where('cabid', $cabinetsales)
+                            ->latest()
+                            ->first();
+
+        if($today->month == $cabinet->rpmonth && $today->year == $cabinet->rpyear)
+        {
+            if($cabinet->fully_paid == 'N' or empty($cabinet->fully_paid))
+            {
+                return redirect()->back()
+                                ->with('failed','please settle this account rental payment first.');
+            }
+        }
+        else
+        {
+            dd('not same');
+        }                   
+
+        dd($today->month, $today->year);
+
         $cabinetid = $cabinetsales;
 
         $history_sales = history_sales::where('cabid', $cabinetid)

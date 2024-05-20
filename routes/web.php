@@ -22,6 +22,7 @@ use App\Http\Controllers\RenterCashierController;
 use App\Http\Controllers\MyCabinetController;
 use App\Http\Controllers\RenterCashierRentalController;
 use App\Http\Controllers\EODController;
+use App\Http\Controllers\UserLoginLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -135,6 +136,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('eod/search', [EODController::class, 'search'])->name('eod.search');
     Route::resource('eod', EODController::class);
+
+    Route::get('User/Login/Log/search', [UserLoginLogController::class, 'search'])->name('userloginlog.search');
+    Route::resource('User/Login/Log', UserLoginLogController::class);
 
 });
 
