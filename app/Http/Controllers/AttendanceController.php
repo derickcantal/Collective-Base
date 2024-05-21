@@ -9,12 +9,14 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use \Carbon\Carbon;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Imagick\Driver;
 
 
 class AttendanceController extends Controller
 {
     public function loaddata(){
-        $attendance = attendance::where('branchname',auth()->user()->branchname)
+        $attendance = attendance::latest()
         ->paginate(5);
 
         return view('attendance.index',compact('attendance'))
@@ -36,7 +38,19 @@ class AttendanceController extends Controller
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $users = User::findOrFail($request->userid);
 
-        $path = Storage::disk('public')->put('att',$request->file('avatarproof'));
+        // $path = Storage::disk('public')->put('att',$request->file('avatarproof'));
+
+        $validated = $request->validate([
+            'avatarproof'=>'required|image|file',
+        ]);
+        
+        $manager = ImageManager::imagick();
+        $name_gen = hexdec(uniqid()).'.'.$request->file('avatarproof')->getClientOriginalExtension();
+        
+        $image = $manager->read($request->file('avatarproof'));
+       
+        $encoded = $image->toWebp()->save(storage_path('app/public/att/'.$name_gen.'.webp'));
+        $path = 'att/'.$name_gen.'.webp';
 
         if(empty($request->attnotes)){
             $attendance = attendance::create([
@@ -92,57 +106,71 @@ class AttendanceController extends Controller
         $att1 = attendance::where('attid',$attendance->attid)->first();
         $mod = 0;
         $mod = $attendance->mod;
-        if($mod == 0){
-            if(empty($request->avatarproof)){
-                if(empty($request->attnotes)){
-                    $att =attendance::where('attid',$attendance->attid)->update([
-                        'updated_by' => auth()->user()->email,
-                        'mod' => $mod + 1,
-                    ]);
-                }else{
-                    $att =attendance::where('attid',$attendance->attid)->update([
-                        'attnotes' => $request->attnotes,
-                        'updated_by' => auth()->user()->email,
-                        'mod' => $mod + 1,
-                    ]);
-                }
-    
+
+        $validated = $request->validate([
+            'avatarproof'=>'required|image|file',
+        ]);
+        
+        $oldavatar = $att1->avatarproof;
+
+        if($mod != 0){
+            return redirect()->route('attendance.index')
+                                ->with('failed','Attendance Update not allowed. Maximum Modification: Once.');
+        }
+
+        if(empty($request->avatarproof)){
+            if(empty($request->attnotes)){
+                $att =attendance::where('attid',$attendance->attid)->update([
+                    'updated_by' => auth()->user()->email,
+                    'mod' => $mod + 1,
+                ]);
+            }else{
+                $att =attendance::where('attid',$attendance->attid)->update([
+                    'attnotes' => $request->attnotes,
+                    'updated_by' => auth()->user()->email,
+                    'mod' => $mod + 1,
+                ]);
+            }
+            
+        }else{
+            
+            if(!empty($request->avatarproof)){
+                // $path = Storage::disk('public')->put('att',$request->file('avatarproof'));
+                $manager = ImageManager::imagick();
+                $name_gen = hexdec(uniqid()).'.'.$request->file('avatarproof')->getClientOriginalExtension();
+                
+                $image = $manager->read($request->file('avatarproof'));
+            
+                $encoded = $image->toWebp()->save(storage_path('app/public/att/'.$name_gen.'.webp'));
+                $path = 'att/'.$name_gen.'.webp';
+                $oldavatar = $attendance->avatarproof;
+            }
+            
+            if($oldavatar == 'avatars/cash-default.jpg'){
                 
             }else{
-                
-                if(!empty($request->avatarproof)){
-                    $path = Storage::disk('public')->put('att',$request->file('avatarproof'));
-                    $oldavatar = $attendance->avatarproof;
-                }
-                
-                if($oldavatar == 'avatars/cash-default.jpg'){
-                    
-                }else{
+                if($oldavatar = $request->avatarproof){
                     Storage::disk('public')->delete($oldavatar);
-                    if(!empty($request->avatarproof)){
-                        Storage::disk('public')->delete($oldavatar);
-                    }
-    
                 }
-                if(empty($request->attnotes)){
-                    $att =attendance::where('attid',$attendance->attid)->update([
-                        'avatarproof' => $path,
-                        'updated_by' => auth()->user()->email,
-                        'mod' => $mod + 1,
-                    ]);
-                }else{
-                    $att =attendance::where('attid',$attendance->attid)->update([
-                        'avatarproof' => $path,
-                        'attnotes' => $request->attnotes,
-                        'updated_by' => auth()->user()->email,
-                        'mod' => $mod + 1,
-                    ]);
-                }
+
             }
-        }else{
-            return redirect()->route('attendance.index')
-                        ->with('failed','Attendance Update not allowed. Maximum Modification: Once.');
+            if(empty($request->attnotes)){
+                $att =attendance::where('attid',$attendance->attid)->update([
+                    'avatarproof' => $path,
+                    'updated_by' => auth()->user()->email,
+                    'mod' => $mod + 1,
+                ]);
+            }else{
+                $att =attendance::where('attid',$attendance->attid)->update([
+                    'avatarproof' => $path,
+                    'attnotes' => $request->attnotes,
+                    'updated_by' => auth()->user()->email,
+                    'mod' => $mod + 1,
+                ]);
+            }
         }
+        
+            
         
         if ($att) {
             //query successful
@@ -161,7 +189,8 @@ class AttendanceController extends Controller
 
     public function search(Request $request)
     {
-        $attendance = attendance::where('branchname',auth()->user()->branchname)->where('status',"Active")
+        if(auth()->user()->accesstype =='Cashier'){
+            $attendance = attendance::where('branchname',auth()->user()->branchname)->where('status',"Active")
                     ->where(function(Builder $builder) use($request){
                         $builder
                                 ->where('username','like',"%{$request->search}%")
@@ -173,6 +202,34 @@ class AttendanceController extends Controller
                                 ->orderBy('status','asc');
                     })
                     ->paginate(5);
+        }elseif(auth()->user()->accesstype =='Renters'){
+            return redirect()->route('dashboard.index');
+        }elseif(auth()->user()->accesstype =='Supervisor'){
+            $attendance = attendance::where('status',"Active")
+                    ->where(function(Builder $builder) use($request){
+                        $builder->where('username','like',"%{$request->search}%")
+                                ->orWhere('firstname','like',"%{$request->search}%")
+                                ->orWhere('lastname','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('attnotes','like',"%{$request->search}%")
+                                ->orWhere('status','like',"%{$request->search}%") 
+                                ->orderBy('status','asc');
+                    })
+                    ->paginate(5);
+        }elseif(auth()->user()->accesstype =='Administrator'){
+            $attendance = attendance::where('status',"Active")
+                    ->where(function(Builder $builder) use($request){
+                        $builder->where('username','like',"%{$request->search}%")
+                                ->orWhere('firstname','like',"%{$request->search}%")
+                                ->orWhere('lastname','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('attnotes','like',"%{$request->search}%")
+                                ->orWhere('status','like',"%{$request->search}%") 
+                                ->orderBy('status','asc');
+                    })
+                    ->paginate(5);
+        }
+        
 
                     return view('attendance.index',compact('attendance'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -183,20 +240,20 @@ class AttendanceController extends Controller
         $users = User::where('branchname',auth()->user()->branchname)->where('accesstype',"Cashier")
                     ->where(function(Builder $builder) use($request){
                         $builder->where('status',"Active")
-                                ->where('username','like',"%{$request->searchemp}%")
-                                ->orWhere('firstname','like',"%{$request->searchemp}%")
-                                ->orWhere('lastname','like',"%{$request->searchemp}%")
-                                ->orWhere('middlename','like',"%{$request->searchemp}%")
-                                ->orWhere('branchname','like',"%{$request->searchemp}%")
-                                ->orWhere('cabinetname','like',"%{$request->searchemp}%")
-                                ->orWhere('email','like',"%{$request->searchemp}%")
-                                ->orWhere('status','like',"%{$request->searchemp}%") 
+                                ->where('username','like',"%{$request->search}%")
+                                ->orWhere('firstname','like',"%{$request->search}%")
+                                ->orWhere('lastname','like',"%{$request->search}%")
+                                ->orWhere('middlename','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('cabinetname','like',"%{$request->search}%")
+                                ->orWhere('email','like',"%{$request->search}%")
+                                ->orWhere('status','like',"%{$request->search}%") 
                                 ->orderBy('status','asc');
                     })
-                    ->paginate(5);
+                    ->paginate($request->pagerow);
 
                     return view('attendance.create-select-emp',compact('users'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+            ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
     }
 
     public function selectemp()
@@ -271,7 +328,7 @@ class AttendanceController extends Controller
      */
     public function create()
     {
-        //
+        return redirect()->route('dashboard.index');
     }
 
     /**
@@ -300,7 +357,7 @@ class AttendanceController extends Controller
      */
     public function show(attendance $attendance)
     {
-        //
+        return redirect()->route('dashboard.index');
     }
 
     /**

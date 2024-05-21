@@ -125,19 +125,41 @@ class SalesController extends Controller
     public function updatedata($request,$sales){
 
         $cabn = cabinet::where('cabinetname',$request->cabinetname)
-        ->where(function(Builder $builder) use($request){
-            $builder->where('branchname',$request->branchname);
-        })->first();
+                        ->where(function(Builder $builder) use($request){
+                            $builder->where('branchname',$request->branchname);
+                        })->first();
 
         $sales = Sales::findOrFail($sales);
         $mod = 0;
         $mod = $sales->mod;
+
+        $validated = $request->validate([
+            'salesavatar'=>'image|file',
+            'payavatar'=>'image|file',
+        ]);
+        if(!empty($request->salesavatar)){
+            $oldavatar = $sales->salesavatar;
+        }
+        if(!empty($request->payavatar)){
+            $oldavatar = $sales->payavatar;
+        }
+        dd("Check Complete");
+
         if($sales->mod == '1'){
             return redirect()->route('sales.index')
                             ->with('failed','Transaction completed. Modifications Not Allowed');
         }elseif($sales->mod == '0'){
             if($request->returned == 'N'){
-                $path = Storage::disk('public')->put('sales',$request->file('salesavatar'));
+                
+                // $path = Storage::disk('public')->put('sales',$request->file('salesavatar'));
+
+                $manager = ImageManager::imagick();
+                $name_gen = hexdec(uniqid()).'.'.$request->file('salesavatar')->getClientOriginalExtension();
+                
+                $image = $manager->read($request->file('salesavatar'));
+            
+                $encoded = $image->toWebp()->save(storage_path('app/public/sales/'.$name_gen.'.webp'));
+                $path = 'sales/'.$name_gen.'.webp';
             
                 $oldavatar = $sales->salesavatar;
                 if(!empty($request->payavatar)){
@@ -309,9 +331,19 @@ class SalesController extends Controller
      */
     public function create()
     {
-        $cabinet = cabinet::where('branchname',auth()->user()->branchname)->get();
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                $cabinet = cabinet::where('branchname',auth()->user()->branchname)->get();
 
-        return view('sales.create',['cabinet' => $cabinet]);
+                return view('sales.create',['cabinet' => $cabinet]);
+            }
+            else{
+                return redirect()->route('dashboard.index');
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+        
     }
 
     /**
@@ -339,8 +371,18 @@ class SalesController extends Controller
      */
     public function show($sales)
     {
-        $sales = Sales::findOrFail($sales);
-        return view('sales.show',['sales' => $sales]);
+        return redirect()->route('dashboard.index');
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                $sales = Sales::findOrFail($sales);
+                return view('sales.show',['sales' => $sales]);
+            }
+            else{
+                return redirect()->route('dashboard.index');
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
 
     /**
@@ -355,14 +397,12 @@ class SalesController extends Controller
                 return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 $sales = Sales::findOrFail($sales);
-                $cabinet = cabinet::where('branchname',auth()->user()->branchname)->get();
 
-                return view('sales.edit',['sales' => $sales])->with(['cabinet' => $cabinet]);       
+                return view('sales.edit',['sales' => $sales]);       
             }elseif(auth()->user()->accesstype =='Administrator'){
                 $sales = Sales::findOrFail($sales);
-                $cabinet = cabinet::where('branchname',auth()->user()->branchname)->get();
 
-                return view('sales.edit',['sales' => $sales])->with(['cabinet' => $cabinet]);
+                return view('sales.edit',['sales' => $sales]);
             }
         }else{
             return redirect()->route('dashboard.index');
@@ -396,6 +436,8 @@ class SalesController extends Controller
      */
     public function destroy(sales $sales)
     {
+        return redirect()->route('dashboard.index');
+        
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->destroydata($sales);

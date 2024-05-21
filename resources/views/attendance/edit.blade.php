@@ -48,14 +48,7 @@
                                                     <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
                                                 </div>
                                             </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- i -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="userid" :value="__('User ID')" />
-                                                    <x-text-input id="userid" class="block mt-1 w-full" type="text" name="userid" :value="old('userid', $attendance->userid)" required autofocus autocomplete="off" readonly/>
-                                                    <x-input-error :messages="$errors->get('userid')" class="mt-2" />
-                                                </div>
-                                            </div>
+                                            
                                             <div class="col-span-2 sm:col-span-1">
                                                 <!-- username -->
                                                 <div class="form-group mt-4">
@@ -88,6 +81,13 @@
                                                     <x-input-label for="rpnotes" :value="__('Notes')" />
                                                     <x-text-input id="attnotes" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="textarea" name="attnotes" :value="old('attnotes', $attendance->attnotes)" required autofocus autocomplete="off"/>
                                                     <x-input-error :messages="$errors->get('attnotes')" class="mt-2" />
+                                                </div>
+                                            </div>
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <!-- i -->
+                                                <div class="form-group mt-4">
+                                                    <x-text-input id="userid" class="block mt-1 w-full" type="hidden" name="userid" :value="old('userid', $attendance->userid)" required autofocus autocomplete="off" readonly/>
+                                                    <x-input-error :messages="$errors->get('userid')" class="mt-2" />
                                                 </div>
                                             </div>
                                             <div class="flex items-center justify-between col-span-2 sm:col-span-2">

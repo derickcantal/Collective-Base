@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <a href="{{ route('sales.index') }}"> Sales</a> @if(auth()->user()->accesstype == 'Cashier')| <u><a href="{{ route('attendance.index') }}"> Attendance</a></u> | <a href="{{ route('renter.index') }}"> Renters</a> @endif | <a href="{{ route('rentercashierrental.index') }}"> Rental Payments</a> 
+            <a href="{{ route('sales.index') }}"> Sales</a> | <u><a href="{{ route('attendance.index') }}"> Attendance</a></u> @if(auth()->user()->accesstype == 'Cashier')| <a href="{{ route('renter.index') }}"> Renters</a> | <a href="{{ route('rentercashierrental.index') }}"> Rental Payments</a>  @endif
         </h2>
     </x-slot>
     <section>
@@ -16,6 +16,10 @@
                                         <x-primary-button class="ms-4">
                                             <a class="btn btn-primary" href="{{ route('attendance.selectemp') }}"> Add Employee</a>
                                         </x-primary-button>
+                                        @else
+                                        <div>
+                                            
+                                        </div>
                                     @endif
                                     
                                     <form class="flex items-center" action="{{ route('attendance.search') }}" method="get">
