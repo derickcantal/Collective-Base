@@ -25,6 +25,8 @@ class AuthenticatedSessionController extends Controller
             if($user){
                 User::where('accesstype','Cashier')->where('status','Inactive')->update([
                     'status' => 'Active',
+                ]);
+                User::where('accesstype','Cashier')->where('status','Active')->update([
                     'BLID' => 0,
                 ]);
             }
