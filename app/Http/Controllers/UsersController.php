@@ -153,7 +153,8 @@ class UsersController extends Controller
         {
             User::where('userid', $user->userid)
             ->update([
-            'status' => 'Inactive'
+            'BLID' => 0,
+            'status' => 'Inactive',
         ]);
 
         $user = User::wherenot('accesstype', 'Renters')->get();
@@ -165,7 +166,8 @@ class UsersController extends Controller
         {
             User::where('userid', $user->userid)
             ->update([
-            'status' => 'Active'
+            'BLID' => 1,
+            'status' => 'Active',
         ]);
 
         $user = User::wherenot('accesstype', 'Renters')->get();
@@ -346,13 +348,6 @@ class UsersController extends Controller
         }else{
             return redirect()->route('dashboard.index');
         }
-    }
-
-     public function displayall()
-    {
-        $user = User::wherenot('accesstype', 'Renters')->get();
-        
-        return view('users.index', ['user' => $user]);
     }
 
     

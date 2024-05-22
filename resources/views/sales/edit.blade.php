@@ -32,7 +32,7 @@
                                             <img width="100" height="100" class="rounded-full mt-4" src="{{ asset("/storage/$sales->salesavatar") }}" alt="proof avatar" />
 
                                                 <x-input-label for="name" value="Upload Receipt" />
-                                                <x-text-input id="salesavatar" name="salesavatar" type="file"  class="mt-1 block w-full mt-3" :value="old('salesavatar', $sales->salesavatar)" autofocus autocomplete="off" />
+                                                <x-text-input id="salesavatar" name="salesavatar" type="file"  class="mt-1 block w-full mt-3" :value="old('salesavatar')" autofocus autocomplete="off" />
                                                 <x-input-error class="mt-2" :messages="$errors->get('salesavatar')" />
                                             </div>
                                         </div>
@@ -89,6 +89,36 @@
                                                 <x-input-error :messages="$errors->get('total')" class="mt-2" />
                                             </div>
                                         </div>
+                                        <div class="col-span-2 sm:col-span-1">
+                                            <!-- avatar -->
+                                            <div class="form-group mt-4">
+                                                <x-input-label for="name" value="Upload Payment Proof" />
+                                                <x-text-input id="payavatar" name="payavatar" type="file"  class="mt-1 block w-full mt-1" :value="old('payavatar')" autofocus autocomplete="off"/>
+                                                <x-input-error class="mt-2" :messages="$errors->get('payavatar')" />
+                                            </div>
+                                        </div>
+                                        <div class="col-span-2 sm:col-span-1">
+                                            <!-- productname -->
+                                            <div class="form-group mt-4">
+                                                <x-input-label for="paytype" :value="__('Payment Mode')" />
+                                                <!-- <x-text-input id="paytype" class="block mt-1 w-full" type="text" name="paytype" :value="old('paytype')" required autofocus autocomplete="off" /> -->
+                                                <select id="paytype" name="paytype" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('paytype')" required>
+                                                    <option value = "Cash">Cash</option>
+                                                    <option value = "Mobile Bank Transfer">Mobile Bank Transfer</option>
+                                                    <option value = "Online Wallet (GCash/Maya)">Online Wallet (GCash/Maya)</option>
+                                                    <option value = "Credit Card">Credit Card</option>
+                                                </select>
+                                                <x-input-error :messages="$errors->get('paytype')" class="mt-2" />
+                                            </div>
+                                        </div>
+                                        <div class="col-span-2 sm:col-span-1">
+                                            <!-- productname -->
+                                            <div class="form-group mt-4">
+                                                <x-input-label for="payref" :value="__('Payment Reference No.')" />
+                                                <x-text-input id="payref" class="block mt-1 w-full" type="text" name="payref" :value="old('payref',$sales->payref)" autofocus autocomplete="off" />
+                                                <x-input-error :messages="$errors->get('payref')" class="mt-2" />
+                                            </div>
+                                        </div>
                                         <div class="col-span-2 sm:col-span-1 ">
                                             <!-- cabname -->
                                             <div class="form-group mt-4">
@@ -106,6 +136,14 @@
                                                 <x-input-label for="snotes" :value="__('Remarks')" />
                                                 <x-text-input id="snotes" class="block mt-1 w-full" type="text" name="snotes" :value="old('snotes', $sales->snotes)" required autofocus autocomplete="off" />
                                                 <x-input-error :messages="$errors->get('snotes')" class="mt-2" />
+                                            </div>
+                                        </div>
+                                        <div class="col-span-2 sm:col-span-1 ">
+                                            <!-- cabname -->
+                                            <div class="form-group mt-4">
+                                                <x-text-input id="cabid" class="block mt-1 w-full" type="hidden" name="cabid" :value="old('cabid', $sales->cabid)" required autofocus autocomplete="off" readonly />
+                                                
+                                                <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
                                             </div>
                                         </div>
                                         

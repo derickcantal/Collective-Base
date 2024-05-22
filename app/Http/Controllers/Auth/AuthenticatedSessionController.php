@@ -22,19 +22,38 @@ class AuthenticatedSessionController extends Controller
     {
         if (now()->isBetween('09:00:00', '21:00:00')) {
             $user = User::where('accesstype','Cashier')->where('accesstype','Active')->first();
-
-            User::where('accesstype','Cashier')->where('status','Inactive')->update([
+            if($user){
+                User::where('accesstype','Cashier')->where('status','Inactive')->update([
                     'status' => 'Active',
-            ]);
+                    'BLID' => 0,
+                ]);
+            }
+            
             #dd('Access Allowed',now());
 
         }
         else
         {
             $user = User::where('accesstype','Cashier')->where('status','Active')->first();
-            User::where('accesstype','Cashier')->where('status','Active')->update([
-                'status' => 'Inactive',
-            ]);
+            if($user){
+                if(now()->isBetween('21:00:01', '23:59:59') or now()->isBetween('00:00:00', '08:59:59'))
+                {
+                    if($user->BLID == 0)
+                    {
+                        User::where('accesstype','Cashier')
+                        ->where('status','Active')
+                        ->update([
+                            'status' => 'Inactive',
+                        ]);
+                    }
+                }
+            }
+            
+               
+               
+                   
+            
+            
 
             #dd('Access Denied',now());
         }
@@ -54,6 +73,8 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         if(auth()->user()->status != "Active"){
+
+            
             $userlog = user_login_log::query()->create([
                 'userid' => auth()->user()->userid,
                 'username' => auth()->user()->username,
@@ -105,23 +126,47 @@ class AuthenticatedSessionController extends Controller
 
             return redirect('login')->with('failed','Access Denied.');
         }else{
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Login',
-                'status'  => 'Success',
-            ]);
+            if(auth()->user()->BLID == 1)
+            {
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'Login. Extended.hh',
+                    'status'  => 'Success',
+                ]);
+            }
+            else
+            {
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'Login',
+                    'status'  => 'Success',
+                ]);
+            }
+            
             return redirect()->intended(RouteServiceProvider::HOME);
         }
         

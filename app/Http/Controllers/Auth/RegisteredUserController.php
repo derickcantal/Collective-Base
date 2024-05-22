@@ -34,7 +34,7 @@ class RegisteredUserController extends Controller
      */
     public function store(UserTableRequest $request): RedirectResponse
     {
-        $branch = branch::where('branchname', $request->branchname)->first();
+        $branch = branch::where('branchid', $request->branchid)->first();
 
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s a');
         $user = User::create([

@@ -69,7 +69,7 @@ class SalesController extends Controller
             
             $image2 = $manager2->read($request->file('payavatar'));
         
-            $encoded = $image2->toWebp()->save(storage_path('app/public/salespayavatar/'.$name_gen2.'.webp'));
+            $encoded2 = $image2->toWebp()->save(storage_path('app/public/salespayavatar/'.$name_gen2.'.webp'));
             $path2 = 'salespayavatar/'.$name_gen2.'.webp';
             //$path2 = Storage::disk('public')->put('salespayavatar',$request->file('payavatar'));
         }
@@ -124,12 +124,18 @@ class SalesController extends Controller
     
     public function updatedata($request,$sales){
 
-        $cabn = cabinet::where('cabinetname',$request->cabinetname)
+        $cabn = cabinet::where('cabid',$request->cabid)
                         ->where(function(Builder $builder) use($request){
                             $builder->where('branchname',$request->branchname);
                         })->first();
 
         $sales = Sales::findOrFail($sales);
+
+        $oldavatar = $sales->salesavatar;
+
+        $oldavatar1 = $sales->payavatar;
+
+
         $mod = 0;
         $mod = $sales->mod;
 
@@ -137,77 +143,78 @@ class SalesController extends Controller
             'salesavatar'=>'image|file',
             'payavatar'=>'image|file',
         ]);
-        if(!empty($request->salesavatar)){
-            $oldavatar = $sales->salesavatar;
-        }
-        if(!empty($request->payavatar)){
-            $oldavatar = $sales->payavatar;
-        }
-        dd("Check Complete");
 
-        if($sales->mod == '1'){
+        if($sales->mod >= 10){
             return redirect()->route('sales.index')
                             ->with('failed','Transaction completed. Modifications Not Allowed');
-        }elseif($sales->mod == '0'){
+        }else{
             if($request->returned == 'N'){
                 
                 // $path = Storage::disk('public')->put('sales',$request->file('salesavatar'));
-
-                $manager = ImageManager::imagick();
-                $name_gen = hexdec(uniqid()).'.'.$request->file('salesavatar')->getClientOriginalExtension();
-                
-                $image = $manager->read($request->file('salesavatar'));
-            
-                $encoded = $image->toWebp()->save(storage_path('app/public/sales/'.$name_gen.'.webp'));
-                $path = 'sales/'.$name_gen.'.webp';
-            
-                $oldavatar = $sales->salesavatar;
-                if(!empty($request->payavatar)){
-                    $path2 = Storage::disk('public')->put('salespayavatar',$request->file('payavatar'));
-                    $oldavatar2 = $sales->payavatar;
-                }
-                
-                if($oldavatar == 'avatars/cash-default.jpg'){
+                if((!empty($request->salesavatar))){
+                    $manager = ImageManager::imagick();
+                    $name_gen = hexdec(uniqid()).'.'.$request->file('salesavatar')->getClientOriginalExtension();
                     
-                }else{
+                    $image = $manager->read($request->file('salesavatar'));
+                
+                    $encoded = $image->toWebp()->save(storage_path('app/public/sales/'.$name_gen.'.webp'));
+                    $path = 'sales/'.$name_gen.'.webp';
+
                     Storage::disk('public')->delete($oldavatar);
-                    if(!empty($request->payavatar)){
-                        Storage::disk('public')->delete($oldavatar2);
-                    }
+                }else{
+                    $path = $oldavatar;
                 }
+
+                if(!empty($request->payavatar)){
+                    // $path2 = Storage::disk('public')->put('salespayavatar',$request->file('payavatar'));
+
+                    $manager1 = ImageManager::imagick();
+                    $name_gen1 = hexdec(uniqid()).'.'.$request->file('payavatar')->getClientOriginalExtension();
+                    
+                    $image1 = $manager1->read($request->file('payavatar'));
+                
+                    $encoded1 = $image1->toWebp()->save(storage_path('app/public/salespayavatar/'.$name_gen1.'.webp'));
+                    $path1 = 'salespayavatar/'.$name_gen1.'.webp';
+
+                    Storage::disk('public')->delete($oldavatar1);
+                }else{
+                    $path1 = $oldavatar1;
+                }
+                
+                if($request->payref == 'Null' or empty($request->payref) )
+                {
+                    $payref = 'Null';
+                }else{
+                    $payref = $request->payref;
+                }
+
+                if($request->snotes == 'Null' or empty($request->snotes) )
+                {
+                    $snotes = 'Null';
+                }else{
+                    $snotes = $request->snotes;
+                }
+                
 
                 Sales::where('salesid', $sales->salesid)->update([
                     'salesavatar' => $path,
-                    'cabid' => $cabn->cabid,
-                    'cabinetname' => $cabn->cabinetname,
                     'productname' => $request->productname,
                     'qty' => $request->qty,
-                    'origprice' => 0,
                     'srp' => $request->srp,
                     'total' => $request->qty * $request->srp,
-                    'grandtotal' => 0,
-                    'payavatar' => $request->payavatar,
+                    'payavatar' => $path1,
                     'paytype' => $request->paytype,
-                    'payref' => $request->payref,
-                    'userid' => $cabn->userid,
-                    'username' => $cabn->email,
-                    'accesstype' => auth()->user()->accesstype,
-                    'branchid' => $cabn->branchid,
-                    'branchname' => auth()->user()->branchname,
-                    'collected_status' => 'Pending',
-                    'returned' => 'N',
-                    'snotes' => $request->snotes,
-                    'posted' => 'N',
+                    'payref' => $payref,
+                    'snotes' => $snotes,
                     'mod' => $mod + 1,
                     'updated_by' => auth()->user()->email,
-                    'status' => 'Unposted',
                 ]);
             }elseif($request->returned == 'Y'){
                 if($request->snotes == 'Null'){
-                    return redirect()->route('sales.index')
+                    return redirect()->back()
                     ->with('failed','Update Failed. Note must not be null');
                 }elseif(empty($request->snotes)){
-                    return redirect()->route('sales.index')
+                    return redirect()->back()
                     ->with('failed','Update Failed. Note must not be empty');
                 }else{
                     Sales::where('salesid', $sales->salesid)->update([
@@ -228,7 +235,7 @@ class SalesController extends Controller
     }
     
     public function destroydata(){
-    
+        return redirect()->route('dashboard.index');
     }
 
     public function searchall($request)

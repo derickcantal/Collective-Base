@@ -12,7 +12,16 @@ use Intervention\Image\Drivers\Imagick\Driver;
 class AvatarController extends Controller
 {
    public function update(UpdateAvatarRequest $request){
-        $path = Storage::disk('public')->put('avatars',$request->file('avatar'));
+        $manager = ImageManager::imagick();
+        $name_gen = hexdec(uniqid()).'.'.$request->file('avatar')->getClientOriginalExtension();
+        
+        $image = $manager->read($request->file('avatar'));
+       
+        $encoded = $image->toWebp()->save(storage_path('app/public/avatars/'.$name_gen.'.webp'));
+        $path = 'avatars/'.$name_gen.'.webp';
+
+        // $path = Storage::disk('public')->put('avatars',$request->file('avatar'));
+
         // $path = $request->file('avatar')->store('avatars','public');
         
         if($oldavatar = $request->user()->avatar){
