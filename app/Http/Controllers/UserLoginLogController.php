@@ -15,8 +15,37 @@ class UserLoginLogController extends Controller
     {
         $branch = branch::all();
 
-        if($request->branchname == 'All'){
+        if($request->branchname == 'All' && empty($request->search)){
             $userslog = user_login_log::orderBy('ullid',$request->orderrow)
+                                    ->paginate($request->pagerow);
+        }elseif($request->branchname == 'All' && !empty($request->search)){
+            $userslog = user_login_log::orderBy('ullid',$request->orderrow)
+                                    ->where(function(Builder $builder) use($request){
+                                $builder->where('username','like',"%{$request->search}%")
+                                        ->orWhere('firstname','like',"%{$request->search}%")
+                                        ->orWhere('lastname','like',"%{$request->search}%")
+                                        ->orWhere('middlename','like',"%{$request->search}%")
+                                        ->orWhere('email','like',"%{$request->search}%")
+                                        ->orWhere('branchname','like',"%{$request->search}%")
+                                        ->orWhere('accesstype','like',"%{$request->search}%")
+                                        ->orWhere('notes','like',"%{$request->search}%")
+                                        ->orWhere('status','like',"%{$request->search}%"); 
+                                    })
+                                    ->paginate($request->pagerow);
+        }elseif($request->branchname != 'All' && !empty($request->search)){
+            $userslog = user_login_log::where('branchid',$request->branchname)
+                                    ->where(function(Builder $builder) use($request){
+                                $builder->where('username','like',"%{$request->search}%")
+                                        ->orWhere('firstname','like',"%{$request->search}%")
+                                        ->orWhere('lastname','like',"%{$request->search}%")
+                                        ->orWhere('middlename','like',"%{$request->search}%")
+                                        ->orWhere('email','like',"%{$request->search}%")
+                                        ->orWhere('branchname','like',"%{$request->search}%")
+                                        ->orWhere('accesstype','like',"%{$request->search}%")
+                                        ->orWhere('notes','like',"%{$request->search}%")
+                                        ->orWhere('status','like',"%{$request->search}%"); 
+                                    })
+                                    ->orderBy('ullid',$request->orderrow)
                                     ->paginate($request->pagerow);
         }else{
             $userslog = user_login_log::where('branchid',$request->branchname)
