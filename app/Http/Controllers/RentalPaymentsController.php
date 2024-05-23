@@ -7,6 +7,7 @@ use App\Models\cabinet;
 use App\Models\RentalPayments;
 use App\Models\Renters;
 use App\Models\history_rental_payments;
+use App\Models\user_login_log;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -26,16 +27,59 @@ class RentalPaymentsController extends Controller
     }
     
     public function storesetpayment(Request $request){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $cabinet = cabinet::query()->update([
                 'rpmonth' => $request->rpmonth,
                 'rpyear' => $request->rpyear,
                 ]);
+        
+        if($cabinet){
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Rental Payments. Set Payment Month',
+                'status'  => 'Success',
+            ]);  
 
-        return redirect()->route('rentalpayments.index')
+            return redirect()->route('rentalpayments.index')
                 ->with('success','Month Set Successful.');
+        }else{
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Rental Payments. Set Payment Month',
+                'status'  => 'Failed',
+            ]); 
+            return redirect()->route('rentalpayments.index')
+                ->with('failed','Month Set Failed.');
+        }
+        
     }
 
     public function loaddata(){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $rentalPayments = RentalPayments::orderBy('status','desc')
                 ->where(function(Builder $builder)  {
                     $builder->orderBy('branchname','asc')
@@ -44,6 +88,23 @@ class RentalPaymentsController extends Controller
                     })
                     ->latest()->paginate(5);
 
+                    $userlog = user_login_log::query()->create([
+                        'userid' => auth()->user()->userid,
+                        'username' => auth()->user()->username,
+                        'firstname' => auth()->user()->firstname,
+                        'middlename' => auth()->user()->middlename,
+                        'lastname' => auth()->user()->lastname,
+                        'email' => auth()->user()->email,
+                        'branchid' => auth()->user()->branchid,
+                        'branchname' => auth()->user()->branchname,
+                        'accesstype' => auth()->user()->accesstype,
+                        'timerecorded'  => $timenow,
+                        'created_by' => auth()->user()->email,
+                        'updated_by' => 'Null',
+                        'mod'  => 0,
+                        'notes' => 'Rental Payments',
+                        'status'  => 'Success',
+                    ]); 
 
                 return view('rentalpayments.index')->with(['rentalPayments' => $rentalPayments])
                                             ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -86,6 +147,24 @@ class RentalPaymentsController extends Controller
             
             if($rentalpayment->fully_paid == 'Y')
             {
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'Rental Payments. Month/Year has been paid',
+                    'status'  => 'Failed',
+                ]); 
+
                 return redirect()->back()
                                 ->with('failed','Rental Month/Year has been paid.');
             }
@@ -97,6 +176,24 @@ class RentalPaymentsController extends Controller
             
             if($rentalpaymenthistory->fully_paid == 'Y')
             {
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'Rental Payments. Month/Year has been paid',
+                    'status'  => 'Failed',
+                ]); 
+
                 return redirect()->back()
                                 ->with('failed','Rental Month/Year has been paid.');
             }
@@ -105,11 +202,47 @@ class RentalPaymentsController extends Controller
 
         if($request->paidamount <= 0)
         {
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Rental Payments. Total amount paid must not be equal 0.',
+                'status'  => 'Failed',
+            ]); 
+
             return redirect()->back()
                                 ->with('failed','Total amount paid must not be equal 0.');
         }
         if($request->totalbalance < 0)
         {
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Rental Payments. Please pay exact amount.',
+                'status'  => 'Failed',
+            ]); 
+
             return redirect()->back()
                                 ->with('failed','Please pay exact amount');
         }
@@ -209,15 +342,50 @@ class RentalPaymentsController extends Controller
 
         if($RentalPayments)
         {
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Rental Payments. Create',
+                'status'  => 'Success',
+            ]); 
             return redirect()->route('rentalpayments.index')
                                 ->with('success','Payment Successful.');
         }else{
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Rental Payments. Create',
+                'status'  => 'Success',
+            ]); 
             return redirect()->route('rentalpayments.index')
                                 ->with('failed','Payment Unsuccessful');
         }
     }
 
     public function updatedata($request,$rentalPayments){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $rent = Renters::where('username',$request->username)->first();
         $br = Renters::where('branchname',$request->branchname)->first();
         $cab = cabinet::where('cabinetname',$request->cabinetname)
@@ -229,6 +397,23 @@ class RentalPaymentsController extends Controller
         $mod = 0;
         $mod = $rentalPayment->mod;
         if($rentalPayment->status == 'Paid'){
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Rental Payments. Paid. Modification Not Allowed',
+                'status'  => 'Failed',
+            ]); 
             return redirect()->route('rentalpayments.index')
                             ->with('failed','Already Paid. Modifications Not Allowed');
         }elseif($rentalPayment->status == 'Unpaid'){
@@ -244,7 +429,7 @@ class RentalPaymentsController extends Controller
             }
         
 
-            RentalPayments::where('rpid', $rentalPayments)->update([
+            $rpayment = RentalPayments::where('rpid', $rentalPayments)->update([
                 'userid' => $rent->userid,
                 'username' => $request->username,
                 'firstname' => $request->firstname,
@@ -263,13 +448,57 @@ class RentalPaymentsController extends Controller
                 'mod' => $mod + 1,
                 'status' => 'Paid',
             ]);
+            if($rpayment){
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'Rental Payments. Update',
+                    'status'  => 'Success',
+                ]); 
 
-            return redirect()->route('rentalpayments.index')
+                return redirect()->route('rentalpayments.index')
                             ->with('success','Rental Payment updated successfully');
+            }else{
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'Rental Payments. Update',
+                    'status'  => 'Failed',
+                ]); 
+
+                return redirect()->route('rentalpayments.index')
+                            ->with('failed','Rental Payment updated failed');
+            }
+            
         }
     }
 
     public function destroydata($request,$rentalPayments){
+        return redirect()->route('rentalpayments.index')
+                            ->with('failed','Delete Not Allowed');
+                            
         $rentalPayments->delete();
         
         $rentalPayments = RentalPayments::wherenot('accesstype', 'Renters')->get();

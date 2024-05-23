@@ -186,7 +186,7 @@ class AuthenticatedSessionController extends Controller
             'created_by' => auth()->user()->email,
             'updated_by' => 'Null',
             'mod'  => 0,
-            'notes' => 'Login',
+            'notes' => 'Logout',
             'status'  => 'Success',
         ]);
 

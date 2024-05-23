@@ -10,6 +10,7 @@ use App\Models\branchlist;
 use App\Models\history_sales;
 use App\Models\Sales;
 use App\Models\users_temp;
+use App\Models\user_login_log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use \Carbon\Carbon;
@@ -24,7 +25,7 @@ class RenterCashierController extends Controller
     public function cabinetupdate(Request $request)
     {
         $cabid = $request->cabid;
-
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $cabinet = cabinet::where('cabid',$cabid)->first();
         $mod = 0;
         $mod = $cabinet->mod;
@@ -37,9 +38,43 @@ class RenterCashierController extends Controller
 
 
         if ($cabinets) {
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Renter. Cashier. Cabinet. Update',
+                'status'  => 'Success',
+            ]);
             return redirect()->route('renter.show',$cabinet->userid)
          ->with('success','Cabinet Update Successful.');
         }else{
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Renter. Cashier. Cabinet. Update',
+                'status'  => 'Failed',
+            ]);
             return redirect()->route('renter.show',$cabinet->userid)
          ->with('failed','Cabinet Update Failed.');
         }
@@ -77,6 +112,23 @@ class RenterCashierController extends Controller
         if($cabinet->status == 'Active'){
             
         }else{
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Renter. Cashier. Cabinet. Assign',
+                'status'  => 'Failed',
+            ]);
             return redirect()->route('renter.show',$renter->userid)
          ->with('failed','Inactive Cabinet.');
         }
@@ -84,6 +136,24 @@ class RenterCashierController extends Controller
         if($cabinet->email == 'Vacant'){
             
         }else{
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Renter. Cashier. Cabinet. Update. Occupied',
+                'status'  => 'Failed',
+            ]);
+
             return redirect()->route('renter.show',$renter->userid)
          ->with('failed','Cabinet Occupied.');
         }
@@ -118,9 +188,44 @@ class RenterCashierController extends Controller
 
         if ($cabinets) {
             //query successful
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Renter. Cashier. Cabinet. Assign',
+                'status'  => 'Success',
+            ]);
+
             return redirect()->route('renter.show',$renter->userid)
                         ->with('success','Cabinet Assigned successfully.');
         }else{
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Renter. Cashier. Cabinet. Assign',
+                'status'  => 'Failed',
+            ]);
             return redirect()->route('renter.show',$renter->userid)
                         ->with('failed','Cabinet Assigned failed');
         }
@@ -174,6 +279,7 @@ class RenterCashierController extends Controller
      */
     public function index()
     {
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         if(auth()->user()->accesstype == 'Cashier'){
 
             $renter = DB::table('branchlist')
@@ -182,6 +288,23 @@ class RenterCashierController extends Controller
                     ->where('branchlist.branchid', auth()->user()->branchid)
                     ->paginate(5);
 
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Rnter. Cashier.',
+                'status'  => 'Success',
+            ]);
             
             
             return view('rentercashier.index',compact('renter'))
@@ -269,14 +392,66 @@ class RenterCashierController extends Controller
                                     ->where('birthdate',$request->birthdate);
                             })
                         ->delete();
+
+                        $userlog = user_login_log::query()->create([
+                            'userid' => auth()->user()->userid,
+                            'username' => auth()->user()->username,
+                            'firstname' => auth()->user()->firstname,
+                            'middlename' => auth()->user()->middlename,
+                            'lastname' => auth()->user()->lastname,
+                            'email' => auth()->user()->email,
+                            'branchid' => auth()->user()->branchid,
+                            'branchname' => auth()->user()->branchname,
+                            'accesstype' => auth()->user()->accesstype,
+                            'timerecorded'  => $timenow,
+                            'created_by' => auth()->user()->email,
+                            'updated_by' => 'Null',
+                            'mod'  => 0,
+                            'notes' => 'Renter. Cashier. Register.',
+                            'status'  => 'Success',
+                        ]);
                         return redirect()->route('renter.index')
                                 ->with('success','Renter Registered successfully.');
                     }else{
+                        $userlog = user_login_log::query()->create([
+                            'userid' => auth()->user()->userid,
+                            'username' => auth()->user()->username,
+                            'firstname' => auth()->user()->firstname,
+                            'middlename' => auth()->user()->middlename,
+                            'lastname' => auth()->user()->lastname,
+                            'email' => auth()->user()->email,
+                            'branchid' => auth()->user()->branchid,
+                            'branchname' => auth()->user()->branchname,
+                            'accesstype' => auth()->user()->accesstype,
+                            'timerecorded'  => $timenow,
+                            'created_by' => auth()->user()->email,
+                            'updated_by' => 'Null',
+                            'mod'  => 0,
+                            'notes' => 'Renter. Cashier. Register.',
+                            'status'  => 'Failed',
+                        ]);
                         return redirect()->back()
                                     ->with('failed','Renter Registration failed. Save Error.');
                     }
         
                 }else{
+                    $userlog = user_login_log::query()->create([
+                        'userid' => auth()->user()->userid,
+                        'username' => auth()->user()->username,
+                        'firstname' => auth()->user()->firstname,
+                        'middlename' => auth()->user()->middlename,
+                        'lastname' => auth()->user()->lastname,
+                        'email' => auth()->user()->email,
+                        'branchid' => auth()->user()->branchid,
+                        'branchname' => auth()->user()->branchname,
+                        'accesstype' => auth()->user()->accesstype,
+                        'timerecorded'  => $timenow,
+                        'created_by' => auth()->user()->email,
+                        'updated_by' => 'Null',
+                        'mod'  => 0,
+                        'notes' => 'Renter. Cashier. Register. Password Mismatched',
+                        'status'  => 'Failed',
+                    ]);
                     return redirect()->back()
                                     ->with('failed','Renter Registration failed. Password Mismatched.');
                 }
@@ -317,20 +492,89 @@ class RenterCashierController extends Controller
                                     ->where('birthdate',$request->birthdate);
                             })
                         ->delete();
+
+                        $userlog = user_login_log::query()->create([
+                            'userid' => auth()->user()->userid,
+                            'username' => auth()->user()->username,
+                            'firstname' => auth()->user()->firstname,
+                            'middlename' => auth()->user()->middlename,
+                            'lastname' => auth()->user()->lastname,
+                            'email' => auth()->user()->email,
+                            'branchid' => auth()->user()->branchid,
+                            'branchname' => auth()->user()->branchname,
+                            'accesstype' => auth()->user()->accesstype,
+                            'timerecorded'  => $timenow,
+                            'created_by' => auth()->user()->email,
+                            'updated_by' => 'Null',
+                            'mod'  => 0,
+                            'notes' => 'Renter. Cashier. Register.',
+                            'status'  => 'Success',
+                        ]);
                         return redirect()->route('renter.index')
                                 ->with('success','Renter Registered successfully.');
                     }else{
+                        $userlog = user_login_log::query()->create([
+                            'userid' => auth()->user()->userid,
+                            'username' => auth()->user()->username,
+                            'firstname' => auth()->user()->firstname,
+                            'middlename' => auth()->user()->middlename,
+                            'lastname' => auth()->user()->lastname,
+                            'email' => auth()->user()->email,
+                            'branchid' => auth()->user()->branchid,
+                            'branchname' => auth()->user()->branchname,
+                            'accesstype' => auth()->user()->accesstype,
+                            'timerecorded'  => $timenow,
+                            'created_by' => auth()->user()->email,
+                            'updated_by' => 'Null',
+                            'mod'  => 0,
+                            'notes' => 'Renter. Cashier. Register.',
+                            'status'  => 'Failed',
+                        ]);
                         return redirect()->route('renter.index')
                                     ->with('failed','Renter Registration failed');
                     }  
                 }
                 else{
+                    $userlog = user_login_log::query()->create([
+                        'userid' => auth()->user()->userid,
+                        'username' => auth()->user()->username,
+                        'firstname' => auth()->user()->firstname,
+                        'middlename' => auth()->user()->middlename,
+                        'lastname' => auth()->user()->lastname,
+                        'email' => auth()->user()->email,
+                        'branchid' => auth()->user()->branchid,
+                        'branchname' => auth()->user()->branchname,
+                        'accesstype' => auth()->user()->accesstype,
+                        'timerecorded'  => $timenow,
+                        'created_by' => auth()->user()->email,
+                        'updated_by' => 'Null',
+                        'mod'  => 0,
+                        'notes' => 'Renter. Cashier. Register. Duplicate',
+                        'status'  => 'Failed',
+                    ]);
                     return redirect()->route('renter.index')
                                     ->with('failed','Renter Registration failed: Already Registered.');
 
                 }
             }
         }else{
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Renter. Cashier. Register.',
+                'status'  => 'Failed',
+            ]);
             return redirect()->route('dashboard.index')->with('failed','Renter Registration failed.');
         }
         
@@ -447,6 +691,7 @@ class RenterCashierController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         if(auth()->user()->accesstype == 'Cashier'){
             $renter = Renters::where('userid',$id)->first();
 
@@ -480,9 +725,43 @@ class RenterCashierController extends Controller
 
             if ($renter) {
                 //query successful
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'Renter. Cashier. Update.',
+                    'status'  => 'Success',
+                ]);
                 return redirect()->route('renter.index')
                             ->with('success','Renter updated successfully.');
             }else{
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'Renter. Cashier. Update.',
+                    'status'  => 'Failed',
+                ]);
                 return redirect()->route('renter.index')
                             ->with('failed','Renter update failed');
             }
@@ -497,6 +776,7 @@ class RenterCashierController extends Controller
      */
     public function destroy(string $id)
     {
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         if(auth()->user()->accesstype == 'Cashier'){
             $renter = Renters::where('userid',$id)->first();
 
@@ -510,6 +790,24 @@ class RenterCashierController extends Controller
                 'status' => 'Inactive'
             ]);
 
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Renter. Cashier. Deactivate.',
+                'status'  => 'Success',
+            ]);
+
             return redirect()->route('renter.index')
                 ->with('success','Renter Deactivated successfully'); 
             }
@@ -520,7 +818,24 @@ class RenterCashierController extends Controller
                 'status' => 'Active'
             ]);
 
-            
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Renter. Cashier. Activate.',
+                'status'  => 'Success',
+            ]);
+
             return redirect()->route('renter.index')
                 ->with('success','User Activated successfully');
             }

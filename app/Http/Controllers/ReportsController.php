@@ -11,6 +11,7 @@ use App\Models\history_sales;
 use App\Models\history_sales_requests;
 use App\Models\history_attendance;
 use App\Models\history_rental_payments;
+use App\Models\user_login_log;
 use \Carbon\Carbon;
 use App\Models\branch;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -592,6 +593,7 @@ class ReportsController extends Controller
 
     public function displayall()
     {  
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 $salesget = history_sales::where('branchname',auth()->user()->branchname)
@@ -665,6 +667,23 @@ class ReportsController extends Controller
                 $attendance = history_attendance::latest()->paginate(5); 
             }
 
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Reports',
+                'status'  => 'Success',
+            ]);
             return view('reports.index')->with(['sales' => $sales])
                 ->with(['sales_requests' => $sales_requests])
                 ->with(['attendance' => $attendance])

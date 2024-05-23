@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use App\Models\cabinet;
+use App\Models\user_login_log;
 use \Carbon\Carbon;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Imagick\Driver;
@@ -14,17 +15,55 @@ use Intervention\Image\Drivers\Imagick\Driver;
 class SalesController extends Controller
 {
     public function loaddata(){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $sales = Sales::latest()
         ->paginate(5);
+
+        $userlog = user_login_log::query()->create([
+            'userid' => auth()->user()->userid,
+            'username' => auth()->user()->username,
+            'firstname' => auth()->user()->firstname,
+            'middlename' => auth()->user()->middlename,
+            'lastname' => auth()->user()->lastname,
+            'email' => auth()->user()->email,
+            'branchid' => auth()->user()->branchid,
+            'branchname' => auth()->user()->branchname,
+            'accesstype' => auth()->user()->accesstype,
+            'timerecorded'  => $timenow,
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'mod'  => 0,
+            'notes' => 'Sales.',
+            'status'  => 'Success',
+        ]);
 
         return view('sales.index',compact('sales'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     public function loaddata_cashier(){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $sales = Sales::where('branchname',auth()->user()->branchname)
         ->latest()
         ->paginate(5);
+
+        $userlog = user_login_log::query()->create([
+            'userid' => auth()->user()->userid,
+            'username' => auth()->user()->username,
+            'firstname' => auth()->user()->firstname,
+            'middlename' => auth()->user()->middlename,
+            'lastname' => auth()->user()->lastname,
+            'email' => auth()->user()->email,
+            'branchid' => auth()->user()->branchid,
+            'branchname' => auth()->user()->branchname,
+            'accesstype' => auth()->user()->accesstype,
+            'timerecorded'  => $timenow,
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'mod'  => 0,
+            'notes' => 'Sales.',
+            'status'  => 'Success',
+        ]);
 
         return view('sales.index',compact('sales'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -114,16 +153,50 @@ class SalesController extends Controller
             
         if ($sales) {
             //query successful
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Sales. Create',
+                'status'  => 'Success',
+            ]);
             return redirect()->route('sales.index')
                         ->with('success','Sales created successfully.');
         }else{
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Sales. Create',
+                'status'  => 'Failed',
+            ]);
             return redirect()->route('sales.index')
                         ->with('failed','Sales creation failed');
         }  
     }
     
     public function updatedata($request,$sales){
-
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $cabn = cabinet::where('cabid',$request->cabid)
                         ->where(function(Builder $builder) use($request){
                             $builder->where('branchname',$request->branchname);
@@ -144,7 +217,24 @@ class SalesController extends Controller
             'payavatar'=>'image|file',
         ]);
 
-        if($sales->mod >= 10){
+        if($sales->mod >= 3){
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Sales. Modification Limit',
+                'status'  => 'Failed',
+            ]);
             return redirect()->route('sales.index')
                             ->with('failed','Transaction completed. Modifications Not Allowed');
         }else{
@@ -211,9 +301,43 @@ class SalesController extends Controller
                 ]);
             }elseif($request->returned == 'Y'){
                 if($request->snotes == 'Null'){
+                    $userlog = user_login_log::query()->create([
+                        'userid' => auth()->user()->userid,
+                        'username' => auth()->user()->username,
+                        'firstname' => auth()->user()->firstname,
+                        'middlename' => auth()->user()->middlename,
+                        'lastname' => auth()->user()->lastname,
+                        'email' => auth()->user()->email,
+                        'branchid' => auth()->user()->branchid,
+                        'branchname' => auth()->user()->branchname,
+                        'accesstype' => auth()->user()->accesstype,
+                        'timerecorded'  => $timenow,
+                        'created_by' => auth()->user()->email,
+                        'updated_by' => 'Null',
+                        'mod'  => 0,
+                        'notes' => 'Sales. Update. Notes must not be null',
+                        'status'  => 'Failed',
+                    ]);
                     return redirect()->back()
                     ->with('failed','Update Failed. Note must not be null');
                 }elseif(empty($request->snotes)){
+                    $userlog = user_login_log::query()->create([
+                        'userid' => auth()->user()->userid,
+                        'username' => auth()->user()->username,
+                        'firstname' => auth()->user()->firstname,
+                        'middlename' => auth()->user()->middlename,
+                        'lastname' => auth()->user()->lastname,
+                        'email' => auth()->user()->email,
+                        'branchid' => auth()->user()->branchid,
+                        'branchname' => auth()->user()->branchname,
+                        'accesstype' => auth()->user()->accesstype,
+                        'timerecorded'  => $timenow,
+                        'created_by' => auth()->user()->email,
+                        'updated_by' => 'Null',
+                        'mod'  => 0,
+                        'notes' => 'Sales. Update. Note must not be empty',
+                        'status'  => 'Failed',
+                    ]);
                     return redirect()->back()
                     ->with('failed','Update Failed. Note must not be empty');
                 }else{
@@ -228,7 +352,23 @@ class SalesController extends Controller
                 }
             }
             
-
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Sales. Update',
+                'status'  => 'Success',
+            ]);
             return redirect()->route('sales.index')
                             ->with('success','Sales Payment updated successfully');
         }

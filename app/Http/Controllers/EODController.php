@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use \Carbon\Carbon;
 use App\Models\sales_eod;
+use App\Models\user_login_log;
 use App\Models\branch;
 
 class EODController extends Controller
@@ -41,6 +42,24 @@ class EODController extends Controller
         if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
             $branch = branch::orderBy('branchid','asc')->get();
             $saleseod = sales_eod::latest()->paginate(5);
+
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'EOD',
+                'status'  => 'Success',
+            ]);  
 
             return view('eod.index')->with(['saleseod' => $saleseod])
                                     ->with(['branch' => $branch])

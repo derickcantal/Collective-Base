@@ -9,6 +9,7 @@ use App\Models\Renters;
 use App\Models\branch;
 use App\Models\cabinet;
 use App\Models\history_sales;
+use App\Models\user_login_log;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use \Carbon\Carbon;
 
@@ -47,7 +48,25 @@ class MyRequestController extends Controller
                             $builder->where('branchname',auth()->user()->branchname);
                                     
                         })->paginate(5);
-
+            
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'My Request',
+                'status'  => 'Success',
+            ]);  
+                        
             return view('myrequest.index',compact('RenterRequests'))
                 ->with('i', (request()->input('page', 1) - 1) * 5);
         }else{
@@ -145,9 +164,43 @@ class MyRequestController extends Controller
         
             if ($RenterRequests) {
                 //query successful
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'My Request. Create',
+                    'status'  => 'Success',
+                ]);  
                 return redirect()->route('myrequest.index')
                             ->with('success','Sales Request created successfully.');
             }else{
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'My Request. Create',
+                    'status'  => 'Success',
+                ]);  
                 return redirect()->route('myrequest.index')
                             ->with('success','Sales Request creation failed');
             }
@@ -214,7 +267,7 @@ class MyRequestController extends Controller
 
                     
             $totalsales = collect($history_sales)->sum('total');
-
+                        
 
             return view('myrequest.create')
                         ->with(['cabinet'=>$cabinet])

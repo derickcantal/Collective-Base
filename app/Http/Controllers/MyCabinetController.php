@@ -7,6 +7,7 @@ use App\Models\cabinet;
 use App\Models\branch;
 use App\Models\Renters;
 use App\Models\history_sales;
+use App\Models\user_login_log;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use \Carbon\Carbon;
@@ -37,7 +38,23 @@ class MyCabinetController extends Controller
                     ->orderBy('cabid','asc')
                     ->orderBy('branchname','asc')
                     ->paginate(5);
-    
+        $userlog = user_login_log::query()->create([
+            'userid' => auth()->user()->userid,
+            'username' => auth()->user()->username,
+            'firstname' => auth()->user()->firstname,
+            'middlename' => auth()->user()->middlename,
+            'lastname' => auth()->user()->lastname,
+            'email' => auth()->user()->email,
+            'branchid' => auth()->user()->branchid,
+            'branchname' => auth()->user()->branchname,
+            'accesstype' => auth()->user()->accesstype,
+            'timerecorded'  => $timenow,
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'mod'  => 0,
+            'notes' => 'My Cabinet',
+            'status'  => 'Success',
+        ]);  
         return view('mycabinet.index',compact('cabinets'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }

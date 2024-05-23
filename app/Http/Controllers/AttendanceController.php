@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\attendance;
 use App\Models\User;
+use App\Models\user_login_log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -19,6 +20,25 @@ class AttendanceController extends Controller
         $attendance = attendance::latest()
         ->paginate(5);
 
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $userlog = user_login_log::query()->create([
+            'userid' => auth()->user()->userid,
+            'username' => auth()->user()->username,
+            'firstname' => auth()->user()->firstname,
+            'middlename' => auth()->user()->middlename,
+            'lastname' => auth()->user()->lastname,
+            'email' => auth()->user()->email,
+            'branchid' => auth()->user()->branchid,
+            'branchname' => auth()->user()->branchname,
+            'accesstype' => auth()->user()->accesstype,
+            'timerecorded'  => $timenow,
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'mod'  => 0,
+            'notes' => 'Attendance',
+            'status'  => 'Success',
+        ]);
+
         return view('attendance.index',compact('attendance'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -29,6 +49,25 @@ class AttendanceController extends Controller
                                     $builder->where('status','Active')
                                         ->orderBy('status','asc');
                                     })->paginate(5);
+        
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $userlog = user_login_log::query()->create([
+            'userid' => auth()->user()->userid,
+            'username' => auth()->user()->username,
+            'firstname' => auth()->user()->firstname,
+            'middlename' => auth()->user()->middlename,
+            'lastname' => auth()->user()->lastname,
+            'email' => auth()->user()->email,
+            'branchid' => auth()->user()->branchid,
+            'branchname' => auth()->user()->branchname,
+            'accesstype' => auth()->user()->accesstype,
+            'timerecorded'  => $timenow,
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'mod'  => 0,
+            'notes' => 'Attendance',
+            'status'  => 'Success',
+        ]);
 
         return view('attendance.index',compact('attendance'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -93,6 +132,23 @@ class AttendanceController extends Controller
     
         if ($attendance) {
             //query successful
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Attendance. Create',
+                'status'  => 'Success',
+            ]);
             return redirect()->route('attendance.index')
                         ->with('success','Attendance added successfully.');
         }else{
@@ -102,7 +158,7 @@ class AttendanceController extends Controller
     }
     
     public function updatedata($request, $attendance){
-        
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $att1 = attendance::where('attid',$attendance->attid)->first();
         $mod = 0;
         $mod = $attendance->mod;
@@ -174,9 +230,43 @@ class AttendanceController extends Controller
         
         if ($att) {
             //query successful
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Attendance. Update',
+                'status'  => 'Success',
+            ]);
             return redirect()->route('attendance.index')
                         ->with('success','Attendance Updated successfully.');
         }else{
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Attendance. Update',
+                'status'  => 'Failed',
+            ]);
             return redirect()->route('attendance.index')
                         ->with('failed','Attendance Update failed');
         }
@@ -308,6 +398,8 @@ class AttendanceController extends Controller
      */
     public function index()
     {
+        
+
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->loaddata_cashier();

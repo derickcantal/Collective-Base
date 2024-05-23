@@ -11,6 +11,7 @@ use App\Models\Renters;
 use App\Models\history_rental_payments;
 use App\Models\RentalPayments;
 use App\Models\rental_active_month;
+use App\Models\user_login_log;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Imagick\Driver;
 
@@ -42,6 +43,7 @@ class RenterCashierRentalController extends Controller
      */
     public function index()
     {
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         if(auth()->user()->accesstype == 'Cashier'){
             $cabinets = cabinet::where('branchname',auth()->user()->branchname)
                     ->where(function(Builder $builder){
@@ -50,7 +52,25 @@ class RenterCashierRentalController extends Controller
                             ->orderBy('cabid','asc')
                             ->orderBy('branchname','asc');
                         })
-                        ->paginate(10);
+                        ->paginate(5);
+            
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Renter. Cashier. Rental.',
+                'status'  => 'Success',
+            ]);
         
             return view('rentercashierrental.index',compact('cabinets'))
                 ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -218,6 +238,23 @@ class RenterCashierRentalController extends Controller
                 
                 if($rentalpayment->fully_paid == 'Y')
                 {
+                    $userlog = user_login_log::query()->create([
+                        'userid' => auth()->user()->userid,
+                        'username' => auth()->user()->username,
+                        'firstname' => auth()->user()->firstname,
+                        'middlename' => auth()->user()->middlename,
+                        'lastname' => auth()->user()->lastname,
+                        'email' => auth()->user()->email,
+                        'branchid' => auth()->user()->branchid,
+                        'branchname' => auth()->user()->branchname,
+                        'accesstype' => auth()->user()->accesstype,
+                        'timerecorded'  => $timenow,
+                        'created_by' => auth()->user()->email,
+                        'updated_by' => 'Null',
+                        'mod'  => 0,
+                        'notes' => 'Renter. Cashier. Rental. Create. Rental Month/Year has been paid.',
+                        'status'  => 'Failed',
+                    ]);
                     return redirect()->back()
                                     ->with('failed','Rental Month/Year has been paid.');
                 }
@@ -229,6 +266,24 @@ class RenterCashierRentalController extends Controller
                 
                 if($rentalpaymenthistory->fully_paid == 'Y')
                 {
+                    $userlog = user_login_log::query()->create([
+                        'userid' => auth()->user()->userid,
+                        'username' => auth()->user()->username,
+                        'firstname' => auth()->user()->firstname,
+                        'middlename' => auth()->user()->middlename,
+                        'lastname' => auth()->user()->lastname,
+                        'email' => auth()->user()->email,
+                        'branchid' => auth()->user()->branchid,
+                        'branchname' => auth()->user()->branchname,
+                        'accesstype' => auth()->user()->accesstype,
+                        'timerecorded'  => $timenow,
+                        'created_by' => auth()->user()->email,
+                        'updated_by' => 'Null',
+                        'mod'  => 0,
+                        'notes' => 'Renter. Cashier. Rental. Create. Rental Month/Year has been paid.',
+                        'status'  => 'Failed',
+                    ]);
+
                     return redirect()->back()
                                     ->with('failed','Rental Month/Year has been paid.');
                 }
@@ -237,11 +292,45 @@ class RenterCashierRentalController extends Controller
 
             if($request->paidamount <= 0)
             {
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'Renter. Cashier. Rental. Create. Total amount paid must not be equal 0.',
+                    'status'  => 'Failed',
+                ]);
                 return redirect()->back()
                                     ->with('failed','Total amount paid must not be equal 0.');
             }
             if($request->totalbalance < 0)
             {
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'Renter. Cashier. Rental. Create. Please pay exact amount.',
+                    'status'  => 'Failed',
+                ]);
                 return redirect()->back()
                                     ->with('failed','Please pay exact amount');
             }
@@ -341,9 +430,43 @@ class RenterCashierRentalController extends Controller
 
             if($RentalPayments)
             {
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'Renter. Cashier. Rental. Create',
+                    'status'  => 'Success',
+                ]);
                 return redirect()->route('rentercashierrental.index')
                                     ->with('success','Payment Successful.');
             }else{
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'Renter. Cashier. Rental. Create',
+                    'status'  => 'Failed',
+                ]);
                 return redirect()->route('rentercashierrental.index')
                                     ->with('failed','Payment Unsuccessful');
             }
