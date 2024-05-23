@@ -137,8 +137,7 @@ Route::middleware('auth')->group(function () {
     Route::get('eod/search', [EODController::class, 'search'])->name('eod.search');
     Route::resource('eod', EODController::class);
 
-    Route::get('User/Login/Log/search', [UserLoginLogController::class, 'search'])->name('userloginlog.search');
-    Route::resource('User/Login/Log', UserLoginLogController::class);
+    
 
 });
 
@@ -160,5 +159,13 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/counter', Counter::class);
+Route::get('User/Login/Log/search', [UserLoginLogController::class, 'search'])->name('userslog.search');
+Route::get('User/Login/Log', [UserLoginLogController::class, 'index'])->name('userslog.index');
+Route::post('User/Login/Log', [UserLoginLogController::class, 'store'])->name('userslog.store');
+Route::get('User/Login/Log/create', [UserLoginLogController::class, 'create'])->name('userslog.create');
+Route::get('User/Login/Log/{ullid}', [UserLoginLogController::class, 'show'])->name('userslog.show');
+Route::put('User/Login/Log/{ullid}', [UserLoginLogController::class, 'update'])->name('userslog.update');
+Route::delete('User/Login/Log/{ullid}', [UserLoginLogController::class, 'delete'])->name('userslog.delete');
+Route::get('User/Login/Log/{ullid}/edit', [UserLoginLogController::class, 'edit'])->name('userslog.edit');
 
 require __DIR__.'/auth.php';

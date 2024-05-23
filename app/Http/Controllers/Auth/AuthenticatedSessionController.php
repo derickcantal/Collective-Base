@@ -22,14 +22,12 @@ class AuthenticatedSessionController extends Controller
     {
         if (now()->isBetween('09:00:00', '21:00:00')) {
             $user = User::where('accesstype','Cashier')->where('accesstype','Active')->first();
-            if($user){
                 User::where('accesstype','Cashier')->where('status','Inactive')->update([
                     'status' => 'Active',
                 ]);
                 User::where('accesstype','Cashier')->where('status','Active')->update([
                     'BLID' => 0,
                 ]);
-            }
             
             #dd('Access Allowed',now());
 
@@ -51,12 +49,6 @@ class AuthenticatedSessionController extends Controller
                 }
             }
             
-               
-               
-                   
-            
-            
-
             #dd('Access Denied',now());
         }
         return view('auth.login');
@@ -67,8 +59,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         
         $request->authenticate();
 
@@ -91,8 +82,8 @@ class AuthenticatedSessionController extends Controller
                 'created_by' => auth()->user()->email,
                 'updated_by' => 'Null',
                 'mod'  => 0,
-                'notes' => 'Login',
-                'status'  => 'Login Failed. Inactive',
+                'notes' => 'Login Failed. Inactive',
+                'status'  => 'Failed',
             ]);
 
             Auth::guard('web')->logout();
@@ -117,8 +108,8 @@ class AuthenticatedSessionController extends Controller
                 'created_by' => auth()->user()->email,
                 'updated_by' => 'Null',
                 'mod'  => 0,
-                'notes' => 'Login',
-                'status'  => 'Login Failed. Crew Account',
+                'notes' => 'Login Failed. Crew Account',
+                'status'  => 'Failed',
             ]);
             Auth::guard('web')->logout();
 
@@ -144,7 +135,7 @@ class AuthenticatedSessionController extends Controller
                     'created_by' => auth()->user()->email,
                     'updated_by' => 'Null',
                     'mod'  => 0,
-                    'notes' => 'Login. Extended.hh',
+                    'notes' => 'Login. Extended Access.',
                     'status'  => 'Success',
                 ]);
             }
@@ -179,7 +170,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         
         $userlog = user_login_log::query()->create([
             'userid' => auth()->user()->userid,
@@ -196,7 +187,7 @@ class AuthenticatedSessionController extends Controller
             'updated_by' => 'Null',
             'mod'  => 0,
             'notes' => 'Login',
-            'status'  => 'Logout',
+            'status'  => 'Success',
         ]);
 
         Auth::guard('web')->logout();

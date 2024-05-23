@@ -24,10 +24,6 @@ class SalesEODController extends Controller
     
     public function storedata($request)
     {
-       
-        
-        
-
         
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         
