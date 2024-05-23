@@ -478,7 +478,20 @@ class RentalPaymentsController extends Controller
 
     public function create()
     {
-        return view('rentalpayments.create');
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return view('rentalpayments.create');   
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return view('rentalpayments.create');
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+        
     }
 
     /**
@@ -508,8 +521,22 @@ class RentalPaymentsController extends Controller
      */
     public function show($renters)
     {
-        $renters = Renters::findOrFail($renters);
-        return view('rentalpayments.show',['$renters' => $renters]);
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                $renters = Renters::findOrFail($renters);
+                return view('rentalpayments.show',['$renters' => $renters]); 
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                $renters = Renters::findOrFail($renters);
+                return view('rentalpayments.show',['$renters' => $renters]);
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+        
     }
     
     
@@ -518,8 +545,22 @@ class RentalPaymentsController extends Controller
      */
     public function edit($rentalPayments)
     {
-        $rentalPayments = RentalPayments::findOrFail($rentalPayments);
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                $rentalPayments = RentalPayments::findOrFail($rentalPayments);
+                return view('rentalpayments.edit',['rentalPayments' => $rentalPayments]); 
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                $rentalPayments = RentalPayments::findOrFail($rentalPayments);
         return view('rentalpayments.edit',['rentalPayments' => $rentalPayments]);
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+        
     }
 
     /**

@@ -276,7 +276,20 @@ class UsersController extends Controller
      */
     public function show(User $user)
     {
-        return view('users.show',['user' => $user]);
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return view('users.show',['user' => $user]);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return view('users.show',['user' => $user]);
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+        
     } 
      
     /**

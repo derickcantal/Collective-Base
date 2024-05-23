@@ -220,15 +220,36 @@ class CabinetController extends Controller
      */
     public function create()
     {
-        $rent = Renters::where('accesstype','Renters')
-        ->where(function(Builder $builder){
-            $builder->where('status','Active')
-                    ->orderBy('lastname','asc')
-                    ;
-        })->get();
-       
-        $branches = branch::all();
-        return view('cabinet.create',['branches' => $branches])->with(['rent' => $rent]);
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                $rent = Renters::where('accesstype','Renters')
+                                ->where(function(Builder $builder){
+                                    $builder->where('status','Active')
+                                            ->orderBy('lastname','asc')
+                                            ;
+                                })->get();
+                            
+                $branches = branch::all();
+                return view('cabinet.create',['branches' => $branches])->with(['rent' => $rent]);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                $rent = Renters::where('accesstype','Renters')
+                ->where(function(Builder $builder){
+                    $builder->where('status','Active')
+                            ->orderBy('lastname','asc')
+                            ;
+                })->get();
+            
+                $branches = branch::all();
+                return view('cabinet.create',['branches' => $branches])->with(['rent' => $rent]);
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+        
     }
 
     /**
@@ -258,7 +279,19 @@ class CabinetController extends Controller
      */
     public function show(cabinet $cabinet)
     {
-        //
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->loaddata();
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->loaddata();
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
 
     /**
@@ -266,21 +299,48 @@ class CabinetController extends Controller
      */
     public function edit($cabinet)
     {
-        $cab = cabinet::where('cabid',$cabinet)->first();                      
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                $cab = cabinet::where('cabid',$cabinet)->first();                      
                         
                         
-        $rent = Renters::where('accesstype','Renters')
-        ->where(function(Builder $builder){
-            $builder->where('status','Active')
-                    ->orderBy('lastname','asc')
-                    ;
-        })->get();
-       
-        $branches = branch::all();  
+                $rent = Renters::where('accesstype','Renters')
+                ->where(function(Builder $builder){
+                    $builder->where('status','Active')
+                            ->orderBy('lastname','asc')
+                            ;
+                })->get();
+            
+                $branches = branch::all();  
+                
+                return view('cabinet.edit',['branches' => $branches])
+                                    ->with(['rent' => $rent])
+                                    ->with(['cabinet' => $cab]);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                $cab = cabinet::where('cabid',$cabinet)->first();                      
+                        
+                        
+                $rent = Renters::where('accesstype','Renters')
+                ->where(function(Builder $builder){
+                    $builder->where('status','Active')
+                            ->orderBy('lastname','asc')
+                            ;
+                })->get();
+            
+                $branches = branch::all();  
+                
+                return view('cabinet.edit',['branches' => $branches])
+                                    ->with(['rent' => $rent])
+                                    ->with(['cabinet' => $cab]);
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
         
-        return view('cabinet.edit',['branches' => $branches])
-                            ->with(['rent' => $rent])
-                            ->with(['cabinet' => $cab]);
     }
 
     /**

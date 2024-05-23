@@ -313,9 +313,7 @@ class AttendanceController extends Controller
                 return $this->loaddata_cashier();
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboard.index');
-            }elseif(auth()->user()->accesstype =='Supervisor'){
-                return $this->loaddata();
-            }elseif(auth()->user()->accesstype =='Administrator'){
+            }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
                 return $this->loaddata();
             }
         }else{
@@ -328,6 +326,7 @@ class AttendanceController extends Controller
      */
     public function create()
     {
+        
         return redirect()->route('dashboard.index');
     }
 
@@ -341,9 +340,7 @@ class AttendanceController extends Controller
                 return $this->storedata($request);
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboard.index');
-            }elseif(auth()->user()->accesstype =='Supervisor'){
-                return $this->storedata($request);
-            }elseif(auth()->user()->accesstype =='Administrator'){
+            }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
                 return $this->storedata($request);
             }
         }else{
@@ -370,9 +367,7 @@ class AttendanceController extends Controller
                 return view('attendance.edit', ['attendance' => $attendance]);
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboard.index');
-            }elseif(auth()->user()->accesstype =='Supervisor'){
-                return view('attendance.edit', ['attendance' => $attendance]);
-            }elseif(auth()->user()->accesstype =='Administrator'){
+            }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
                 return view('attendance.edit', ['attendance' => $attendance]);
             }
         }else{
@@ -390,9 +385,7 @@ class AttendanceController extends Controller
                 return $this->updatedata($request,$attendance);
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboard.index');
-            }elseif(auth()->user()->accesstype =='Supervisor'){
-                return $this->updatedata($request,$attendance);
-            }elseif(auth()->user()->accesstype =='Administrator'){
+            }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
                 return $this->updatedata($request,$attendance);
             }
         }else{
@@ -410,9 +403,7 @@ class AttendanceController extends Controller
                 
             }elseif(auth()->user()->accesstype =='Renters'){
                 
-            }elseif(auth()->user()->accesstype =='Supervisor'){
-                
-            }elseif(auth()->user()->accesstype =='Administrator'){
+            }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
                 
             }
         }else{

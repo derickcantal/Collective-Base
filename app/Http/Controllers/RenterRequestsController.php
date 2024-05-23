@@ -251,7 +251,19 @@ class RenterRequestsController extends Controller
      */
     public function show(RenterRequests $RenterRequests)
     {
-        dd("Show Record");
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->loaddata();
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->loaddata();
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
 
     /**
@@ -259,17 +271,32 @@ class RenterRequestsController extends Controller
      */
     public function edit($salerid)
     {
-        
         $RenterRequests = RenterRequests::where('salesrid',$salerid)->first();
 
         $renter = Renters::where('userid',$RenterRequests->userid)->first();
 
         $fullname = $renter->lastname . ', ' . $renter->firstname . ' ' . $renter->middlename;
 
-        return view('rentersrequests.edit')
-                        ->with(['RenterRequests' => $RenterRequests])
-                        ->with(['renter' => $renter])
-                        ->with('fullname',$fullname);
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return view('rentersrequests.edit')
+                                ->with(['RenterRequests' => $RenterRequests])
+                                ->with(['renter' => $renter])
+                                ->with('fullname',$fullname);       
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return view('rentersrequests.edit')
+                                ->with(['RenterRequests' => $RenterRequests])
+                                ->with(['renter' => $renter])
+                                ->with('fullname',$fullname);       
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+        
     }
 
     /**

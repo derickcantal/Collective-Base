@@ -15,11 +15,9 @@ use App\Http\Controllers\SalesEODController;
 
 class SalesEODController extends Controller
 {
-    public function loaddata(){
-        
-        
-        return view('saleseod.index')
-        ;
+    public function loaddata()
+    {
+        return view('saleseod.index');
     }
     
     public function storedata($request)
@@ -211,35 +209,39 @@ class SalesEODController extends Controller
     public function create(Request $request)
     {
         if(Hash::check($request->password, auth()->user()->password)){
-            $sales = Sales::where('branchname',auth()->user()->branchname)
-            ->where(function(Builder $builder){
-                $builder->where('posted', "N");
-            })->get();
-           
-            $totalsales = collect($sales)->sum('total');
+            if(auth()->user()->accesstype =='Cashier'){
+                $sales = Sales::where('branchname',auth()->user()->branchname)
+                ->where(function(Builder $builder){
+                    $builder->where('posted', "N");
+                })->get();
+            
+                $totalsales = collect($sales)->sum('total');
 
-            $totalitem = collect($sales)->sum('qty');
-           
-            $RentalPayments = RentalPayments::where('branchname',auth()->user()->branchname)
-                        ->where(function(Builder $builder){
-                            $builder->where('posted', "N");
-                        })->get();
+                $totalitem = collect($sales)->sum('qty');
+            
+                $RentalPayments = RentalPayments::where('branchname',auth()->user()->branchname)
+                            ->where(function(Builder $builder){
+                                $builder->where('posted', "N");
+                            })->get();
 
-            $totalrentpay = collect($RentalPayments)->sum('rpamount');
+                $totalrentpay = collect($RentalPayments)->sum('rpamount');
 
-            $RenterRequests = RenterRequests::where('branchname',auth()->user()->branchname)
-                        ->where(function(Builder $builder){
-                            $builder->where('posted', "N");
-                        })->get();            
+                $RenterRequests = RenterRequests::where('branchname',auth()->user()->branchname)
+                            ->where(function(Builder $builder){
+                                $builder->where('posted', "N");
+                            })->get();            
 
-            $totalrequests = collect($RenterRequests)->sum('totalcollected');
-            return view('saleseod.create')
-                ->with('totalsales',$totalsales)
-                ->with('totalitem',$totalitem)
-                ->with('totalrentpay',$totalrentpay)
-                ->with('totalrequests',$totalrequests);
+                $totalrequests = collect($RenterRequests)->sum('totalcollected');
+                return view('saleseod.create')
+                    ->with('totalsales',$totalsales)
+                    ->with('totalitem',$totalitem)
+                    ->with('totalrentpay',$totalrentpay)
+                    ->with('totalrequests',$totalrequests);
+            }else{
+                return redirect()->route('dashboard.index');
+            }          
+            
         }else{
-            dd('show here');
             return redirect()->route('saleseod.index')->with('failed','Incorrect Password.');
         }
     }
@@ -416,10 +418,9 @@ class SalesEODController extends Controller
      */
     public function show(string $id)
     {
-        dd('show here');
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
@@ -437,10 +438,9 @@ class SalesEODController extends Controller
      */
     public function edit(string $id)
     {
-        dd('edit here');
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                
+                return redirect()->route('dashboard.index');;
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
@@ -460,7 +460,7 @@ class SalesEODController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                
+                return redirect()->route('dashboard.index');;
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
@@ -480,7 +480,7 @@ class SalesEODController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                
+                return redirect()->route('dashboard.index');;
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){

@@ -16,133 +16,162 @@ class MyRequestController extends Controller
 {
     public function search(Request $request)
     {
-        $cabinets = cabinet::where('userid',auth()->user()->userid)
+        if(auth()->user()->accesstype =='Renters'){
+            $cabinets = cabinet::where('userid',auth()->user()->userid)
                     ->orderBy('status','asc')
                     ->orderBy('cabid','asc')
                     ->orderBy('branchname','asc')
                     ->paginate($request->pagerow);
 
-        return view('myrequest.index',['cabinets' => $cabinets])
+            return view('myrequest.index',['cabinets' => $cabinets])
                     ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);   
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+        
     }
 
     public function loaddata(){
-        $cabinets = cabinet::where('userid',auth()->user()->userid)
+        if(auth()->user()->accesstype =='Renters'){
+            $cabinets = cabinet::where('userid',auth()->user()->userid)
                     ->orderBy('status','asc')
                     ->orderBy('cabid','asc')
                     ->orderBy('branchname','asc')
                     ->paginate(5);
 
-        return view('myrequest.index',['cabinets' => $cabinets])
-                    ->with('i', (request()->input('page', 1) - 1) * 5);
+            return view('myrequest.index',['cabinets' => $cabinets])
+                        ->with('i', (request()->input('page', 1) - 1) * 5);
 
-        $RenterRequests = RenterRequests::where('cabinetname',auth()->user()->cabinetname)
-                    ->where(function(Builder $builder){
-                        $builder->where('branchname',auth()->user()->branchname);
-                                
-                    })->paginate(5);
+            $RenterRequests = RenterRequests::where('cabinetname',auth()->user()->cabinetname)
+                        ->where(function(Builder $builder){
+                            $builder->where('branchname',auth()->user()->branchname);
+                                    
+                        })->paginate(5);
 
             return view('myrequest.index',compact('RenterRequests'))
                 ->with('i', (request()->input('page', 1) - 1) * 5);
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+        
     }
 
     public function sales($cabid){
-        $history_sales = history_sales::where('cabid',$cabid)
+        if(auth()->user()->accesstype =='Renters'){
+            $history_sales = history_sales::where('cabid',$cabid)
                     ->where(function(Builder $builder){
                         $builder->where('collected_status', "For Approval");
                     })->paginate(5);
 
-        $history_sales1 = history_sales::where('cabid',$cabid)
-                    ->where(function(Builder $builder){
-                        $builder->where('collected_status', "For Approval");
-                    })->get();
-                   
-        $totalsales = collect($history_sales1)->sum('total');
+            $history_sales1 = history_sales::where('cabid',$cabid)
+                        ->where(function(Builder $builder){
+                            $builder->where('collected_status', "For Approval");
+                        })->get();
+                    
+            $totalsales = collect($history_sales1)->sum('total');
 
-        if($totalsales == 0)
-        {
-            return redirect()->route('myrequest.index')
-                                ->with('failed','No Records Found.');
+            if($totalsales == 0)
+            {
+                return redirect()->route('myrequest.index')
+                                    ->with('failed','No Records Found.');
+            }
+
+            return view('myrequest.sales',compact('history_sales'))
+                    ->with('cabid',$cabid)
+                    ->with('i', (request()->input('page', 1) - 1) * 5);
+        }else{
+            return redirect()->route('dashboard.index');
         }
-
-        return view('myrequest.sales',compact('history_sales'))
-                ->with('cabid',$cabid)
-                ->with('i', (request()->input('page', 1) - 1) * 5);
+        
     }
     
     public function storedata($request,$cabid){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        if(auth()->user()->accesstype =='Renters'){
+            $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
 
-        $cabinet = cabinet::where('cabid',$cabid)
-        ->where(function(Builder $builder){
-            $builder->where('userid', auth()->user()->userid);
-        })->first();
+            $cabinet = cabinet::where('cabid',$cabid)
+            ->where(function(Builder $builder){
+                $builder->where('userid', auth()->user()->userid);
+            })->first();
 
-        $renter = Renters::where('userid',$cabinet->userid)->first();
+            $renter = Renters::where('userid',$cabinet->userid)->first();
 
-        $history_sales = history_sales::where('cabid',$cabid)
-                ->where(function(Builder $builder){
-                    $builder->where('collected_status', "Pending");
-                })->get();
-
-        $totalsales = collect($history_sales)->sum('total');
-        
-        if(empty($request->rnotes))
-        {
-            $rnotes = 'Null';
-        }
-        else
-        {
-            $rnotes =  $request->rnotes;
-        }
-
-        $RenterRequests = RenterRequests::create([
-            'branchid' => $cabinet->branchid,
-            'branchname' => $cabinet->branchname,
-            'cabid' => $cabinet->cabid,
-            'cabinetname' => $cabinet->cabinetname,
-            'totalsales' => $totalsales,
-            'totalcollected' => 0,
-            'avatarproof' => 'avatars/cash-default.jpg',
-            'rnotes' => $rnotes,
-            'userid' => $renter->userid,
-            'firstname' => $renter->firstname,
-            'lastname' => $renter->lastname,
-            'created_by' => Auth()->user()->email,
-            'updated_by' => 'Null',
-            'timerecorded' => $timenow,
-            'timerecorded_c' => 'Null',
-            'mod' => 0,
-            'posted' => 'N',
-            'status' => 'For Approval',
-        ]);
-
-        history_sales::where('cabid',$cabid)
+            $history_sales = history_sales::where('cabid',$cabid)
                     ->where(function(Builder $builder){
-                        $builder->where('collected_status', "Pending")
-                                ->where('total','!=', 0)
-                                ->where('returned', 'N');
-                    })->update([
-                        'collected_status' => 'For Approval',
-                        'updated_by' => auth()->user()->email,
-                    ]);
-    
-        if ($RenterRequests) {
-            //query successful
-            return redirect()->route('myrequest.index')
-                        ->with('success','Sales Request created successfully.');
+                        $builder->where('collected_status', "Pending");
+                    })->get();
+
+            $totalsales = collect($history_sales)->sum('total');
+            
+            if(empty($request->rnotes))
+            {
+                $rnotes = 'Null';
+            }
+            else
+            {
+                $rnotes =  $request->rnotes;
+            }
+
+            $RenterRequests = RenterRequests::create([
+                'branchid' => $cabinet->branchid,
+                'branchname' => $cabinet->branchname,
+                'cabid' => $cabinet->cabid,
+                'cabinetname' => $cabinet->cabinetname,
+                'totalsales' => $totalsales,
+                'totalcollected' => 0,
+                'avatarproof' => 'avatars/cash-default.jpg',
+                'rnotes' => $rnotes,
+                'userid' => $renter->userid,
+                'firstname' => $renter->firstname,
+                'lastname' => $renter->lastname,
+                'created_by' => Auth()->user()->email,
+                'updated_by' => 'Null',
+                'timerecorded' => $timenow,
+                'timerecorded_c' => 'Null',
+                'mod' => 0,
+                'posted' => 'N',
+                'status' => 'For Approval',
+            ]);
+
+            history_sales::where('cabid',$cabid)
+                        ->where(function(Builder $builder){
+                            $builder->where('collected_status', "Pending")
+                                    ->where('total','!=', 0)
+                                    ->where('returned', 'N');
+                        })->update([
+                            'collected_status' => 'For Approval',
+                            'updated_by' => auth()->user()->email,
+                        ]);
+        
+            if ($RenterRequests) {
+                //query successful
+                return redirect()->route('myrequest.index')
+                            ->with('success','Sales Request created successfully.');
+            }else{
+                return redirect()->route('myrequest.index')
+                            ->with('success','Sales Request creation failed');
+            }
+
         }else{
-            return redirect()->route('myrequest.index')
-                        ->with('success','Sales Request creation failed');
+            return redirect()->route('dashboard.index');
         }
+        
     }
     
     public function updatedata(){
-    
+        if(auth()->user()->accesstype =='Renters'){
+            return redirect()->route('dashboard.index');
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
     
     public function destroydata(){
-    
+        if(auth()->user()->accesstype =='Renters'){
+            return redirect()->route('dashboard.index');
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
     /**
      * Display a listing of the resource.
@@ -154,9 +183,7 @@ class MyRequestController extends Controller
                 return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
                 return $this->loaddata();
-            }elseif(auth()->user()->accesstype =='Supervisor'){
-                return redirect()->route('dashboard.index');
-            }elseif(auth()->user()->accesstype =='Administrator'){
+            }elseif(auth()->user()->accesstype =='Supervisor' or auth()->user()->accesstype =='Administrator'){
                 return redirect()->route('dashboard.index');
             }
         }else{
@@ -169,32 +196,36 @@ class MyRequestController extends Controller
      */
     public function create($cabid)
     {
-
-        $cabinet = cabinet::where('cabid',$cabid)
+        if(auth()->user()->accesstype =='Renters'){
+            $cabinet = cabinet::where('cabid',$cabid)
                     ->where(function(Builder $builder){
                         $builder->where('userid', auth()->user()->userid);
                     })->first();
         
-        $renter = Renters::where('userid',$cabinet->userid)->first();
+            $renter = Renters::where('userid',$cabinet->userid)->first();
 
+            
+
+            $history_sales = history_sales::where('cabid',$cabid)
+                        ->where(function(Builder $builder){
+                            $builder->where('collected_status', "Pending");
+                        })->get();
+
+
+                    
+            $totalsales = collect($history_sales)->sum('total');
+
+
+            return view('myrequest.create')
+                        ->with(['cabinet'=>$cabinet])
+                        ->with(['renter'=>$renter])
+                        ->with(['history_sales'=>$history_sales])
+                        ->with('totalsales',$totalsales)
+                        ->with('cabid',$cabid);
+        }else{
+            return redirect()->route('dashboard.index');
+        }
         
-
-        $history_sales = history_sales::where('cabid',$cabid)
-                    ->where(function(Builder $builder){
-                        $builder->where('collected_status', "Pending");
-                    })->get();
-
-
-                   
-        $totalsales = collect($history_sales)->sum('total');
-
-
-        return view('myrequest.create')
-                    ->with(['cabinet'=>$cabinet])
-                    ->with(['renter'=>$renter])
-                    ->with(['history_sales'=>$history_sales])
-                    ->with('totalsales',$totalsales)
-                    ->with('cabid',$cabid);
     }
 
     /**
@@ -202,14 +233,13 @@ class MyRequestController extends Controller
      */
     public function store(Request $request, $cabid)
     {
+
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
                 return $this->storedata($request, $cabid);
-            }elseif(auth()->user()->accesstype =='Supervisor'){
-                return redirect()->route('dashboard.index');
-            }elseif(auth()->user()->accesstype =='Administrator'){
+            }elseif(auth()->user()->accesstype =='Supervisor' or auth()->user()->accesstype =='Administrator'){
                 return redirect()->route('dashboard.index');
             }
         }else{
@@ -222,30 +252,34 @@ class MyRequestController extends Controller
      */
     public function show(string $cabid)
     {
-        
-        $history_sales = history_sales::where('cabid',$cabid)
-                    ->where(function(Builder $builder){
-                        $builder->where('collected_status', "Pending");
-                    })->paginate(5);
+        if(auth()->user()->accesstype =='Renters'){
+            $history_sales = history_sales::where('cabid',$cabid)
+            ->where(function(Builder $builder){
+                $builder->where('collected_status', "Pending");
+            })->paginate(5);
 
-        $history_sales1 = history_sales::where('cabid',$cabid)
-                    ->where(function(Builder $builder){
-                        $builder->where('collected_status', "Pending");
-                    })->get();
-                   
-        $totalsales = collect($history_sales1)->sum('total');
+            $history_sales1 = history_sales::where('cabid',$cabid)
+                        ->where(function(Builder $builder){
+                            $builder->where('collected_status', "Pending");
+                        })->get();
+                    
+            $totalsales = collect($history_sales1)->sum('total');
 
-        if($totalsales == 0)
-        {
-            return redirect()->route('myrequest.index')
-                                ->with('failed','No Sales to collect.');
+            if($totalsales == 0)
+            {
+                return redirect()->route('myrequest.index')
+                                    ->with('failed','No Sales to collect.');
+            }
+
+            return view('myrequest.show')
+                        ->with('history_sales',$history_sales)
+                        ->with('totalsales',$totalsales)
+                        ->with('cabid',$cabid)
+                        ->with('i', (request()->input('page', 1) - 1) * 5);
+        }else{
+            return redirect()->route('dashboard.index');
         }
 
-        return view('myrequest.show')
-                    ->with('history_sales',$history_sales)
-                    ->with('totalsales',$totalsales)
-                    ->with('cabid',$cabid)
-                    ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**
@@ -253,8 +287,13 @@ class MyRequestController extends Controller
      */
     public function edit(string $id)
     {
-        $RenterRequests = RenterRequests::findOrFail($id);
-        return view('myrequest.edit',['RenterRequests' => $RenterRequests]);
+        if(auth()->user()->accesstype =='Renters'){
+            $RenterRequests = RenterRequests::findOrFail($id);
+            return view('myrequest.edit',['RenterRequests' => $RenterRequests]);
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+        
     }
 
     /**
@@ -262,7 +301,11 @@ class MyRequestController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        if(auth()->user()->accesstype =='Renters'){
+            return redirect()->route('dashboard.index');
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
 
     /**
@@ -270,6 +313,10 @@ class MyRequestController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if(auth()->user()->accesstype =='Renters'){
+            return redirect()->route('dashboard.index');
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
 }

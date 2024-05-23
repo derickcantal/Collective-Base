@@ -13,15 +13,20 @@ class MyRentalController extends Controller
 {
     public function search(Request $request)
     {
-        $cabinets = cabinet::where('userid',auth()->user()->userid)
+        if(auth()->user()->accesstype =='Renters'){
+            $cabinets = cabinet::where('userid',auth()->user()->userid)
                     ->where(function(Builder $builder){
                         $builder->where('branchid',auth()->user()->branchid);
                     })
                     ->orderBy('cabid',$request->orderrow)
                     ->paginate($request->pagerow);
 
-        return view('myrental.index',['cabinets' => $cabinets])
-                    ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
+            return view('myrental.index',['cabinets' => $cabinets])
+                        ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+        
     }
     public function loaddata(){
         $cabinets = cabinet::where('userid',auth()->user()->userid)
@@ -75,21 +80,26 @@ class MyRentalController extends Controller
     }
 
     public function cabinetrental(){
-        $RentalPaymentsHistory = history_rental_payments::where('userid',auth()->user()->userid)
+        if(auth()->user()->accesstype =='Renters'){
+            $RentalPaymentsHistory = history_rental_payments::where('userid',auth()->user()->userid)
                     ->where(function(Builder $builder){
                         $builder->where('branchid',auth()->user()->branchid);
                     })->paginate(5);
 
-        if(!empty($RentalPaymentsHistory))
-        {
-            return view('myrental.index',['RentalPayments' => $RentalPaymentsHistory])
-                ->with('i', (request()->input('page', 1) - 1) * 5);
+            if(!empty($RentalPaymentsHistory))
+            {
+                return view('myrental.index',['RentalPayments' => $RentalPaymentsHistory])
+                    ->with('i', (request()->input('page', 1) - 1) * 5);
+            }
+            else
+            {
+                return redirect()->back()
+                                    ->with('failed','No Record Found.');
+            }
+        }else{
+            return redirect()->route('dashboard.index');
         }
-        else
-        {
-            return redirect()->back()
-                                ->with('failed','No Record Found.');
-        }
+        
     }
 
     /**
@@ -102,9 +112,7 @@ class MyRentalController extends Controller
                 return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
                 return $this->loaddata();
-            }elseif(auth()->user()->accesstype =='Supervisor'){
-                return redirect()->route('dashboard.index');
-            }elseif(auth()->user()->accesstype =='Administrator'){
+            }elseif(auth()->user()->accesstype =='Supervisor' or auth()->user()->accesstype =='Administrator'){
                 return redirect()->route('dashboard.index');
             }
         }else{
@@ -117,8 +125,13 @@ class MyRentalController extends Controller
      */
     public function create()
     {
+        if(auth()->user()->accesstype =='Renters'){
+            return view('myrental.create');
+        }else{
+            return redirect()->route('dashboard.index');
+        }
 
-        return view('myrental.create');
+        
     }
 
     /**
@@ -126,7 +139,11 @@ class MyRentalController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if(auth()->user()->accesstype =='Renters'){
+            return redirect()->route('dashboard.index');
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
 
     /**
@@ -134,45 +151,50 @@ class MyRentalController extends Controller
      */
     public function show(string $cabinet)
     {
-        $cabinet = cabinet::where('cabid',$cabinet)->first();
+        if(auth()->user()->accesstype =='Renters'){
+            $cabinet = cabinet::where('cabid',$cabinet)->first();
 
-        $RentalPayments = RentalPayments::where('cabid',$cabinet)->latest()->paginate(5);
-        
-        $RentalPaymentsHistory = history_rental_payments::where('cabid',$cabinet)->latest()->paginate(5);
+            $RentalPayments = RentalPayments::where('cabid',$cabinet)->latest()->paginate(5);
+            
+            $RentalPaymentsHistory = history_rental_payments::where('cabid',$cabinet)->latest()->paginate(5);
 
-        $RentalPayments1 = RentalPayments::where('cabid',$cabinet)->latest()->get();
-        
-        $RentalPaymentsHistory1 = history_rental_payments::where('cabid',$cabinet)->latest()->get();
+            $RentalPayments1 = RentalPayments::where('cabid',$cabinet)->latest()->get();
+            
+            $RentalPaymentsHistory1 = history_rental_payments::where('cabid',$cabinet)->latest()->get();
 
-        $totalsales = collect($RentalPayments1)->sum('total');
+            $totalsales = collect($RentalPayments1)->sum('total');
 
-        $totalsales1 = collect($RentalPaymentsHistory1)->sum('total');
+            $totalsales1 = collect($RentalPaymentsHistory1)->sum('total');
 
-        if(!empty($RentalPayments))
-        {
-            if($totalsales == 0){
-                return redirect()->back()
-                                ->with('failed','No Record Found.');
+            if(!empty($RentalPayments))
+            {
+                if($totalsales == 0){
+                    return redirect()->back()
+                                    ->with('failed','No Record Found.');
+                }
+                return view('myrental.show',['rentalpayments' => $RentalPayments])
+                    ->with(['cabid'=>$cabinet->cabinetname])
+                    ->with('i', (request()->input('page', 1) - 1) * 5);
             }
-            return view('myrental.show',['rentalpayments' => $RentalPayments])
-                ->with(['cabid'=>$cabinet->cabinetname])
-                ->with('i', (request()->input('page', 1) - 1) * 5);
-        }
-        elseif(!empty($RentalPaymentsHistory))
-        {
-            if($totalsales1 == 0){
-                return redirect()->back()
-                                ->with('failed','No Record Found.');
+            elseif(!empty($RentalPaymentsHistory))
+            {
+                if($totalsales1 == 0){
+                    return redirect()->back()
+                                    ->with('failed','No Record Found.');
+                }
+                return view('myrental.show',['rentalpayments' => $RentalPaymentsHistory])
+                    ->with(['cabid'=>$cabinet->cabinetname])
+                    ->with('i', (request()->input('page', 1) - 1) * 5);
             }
-            return view('myrental.show',['rentalpayments' => $RentalPaymentsHistory])
-                ->with(['cabid'=>$cabinet->cabinetname])
-                ->with('i', (request()->input('page', 1) - 1) * 5);
+            else
+            {
+                return redirect()->back()
+                                    ->with('failed','No Record Found.');
+            }
+        }else{
+            return redirect()->route('dashboard.index');
         }
-        else
-        {
-            return redirect()->back()
-                                ->with('failed','No Record Found.');
-        }
+        
     }
 
     /**
@@ -180,7 +202,11 @@ class MyRentalController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        if(auth()->user()->accesstype =='Renters'){
+            return redirect()->route('dashboard.index');
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
 
     /**
@@ -188,7 +214,11 @@ class MyRentalController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        if(auth()->user()->accesstype =='Renters'){
+            return redirect()->route('dashboard.index');
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
 
     /**
@@ -196,6 +226,10 @@ class MyRentalController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if(auth()->user()->accesstype =='Renters'){
+            return redirect()->route('dashboard.index');
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
 }

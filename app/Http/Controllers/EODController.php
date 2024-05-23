@@ -12,33 +12,43 @@ class EODController extends Controller
 {
     public function search(Request $request)
     {
-        $branch = branch::orderBy('branchid','asc')->get();
-        if($request->branchname == 'All'){
-            $saleseod = sales_eod::orderBy('seodid', $request->orderrow)
-                                ->paginate($request->pagerow);
+        if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
+            $branch = branch::orderBy('branchid','asc')->get();
+            if($request->branchname == 'All'){
+                $saleseod = sales_eod::orderBy('seodid', $request->orderrow)
+                                    ->paginate($request->pagerow);
 
+            }else{
+                $saleseod = sales_eod::where('branchid', $request->branchname)
+                                    ->orderBy('seodid', $request->orderrow)
+                                    ->paginate($request->pagerow);
+
+            }
+
+            return view('eod.index')->with(['saleseod' => $saleseod])
+                                    ->with(['branch' => $branch])
+                                    ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
         }else{
-            $saleseod = sales_eod::where('branchid', $request->branchname)
-                                ->orderBy('seodid', $request->orderrow)
-                                ->paginate($request->pagerow);
-
-        }
-
-        return view('eod.index')->with(['saleseod' => $saleseod])
-                                ->with(['branch' => $branch])
-                                ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
+            return redirect()->route('dashboard.index');
+        }  
+        
     }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $branch = branch::orderBy('branchid','asc')->get();
-        $saleseod = sales_eod::latest()->paginate(5);
+        if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
+            $branch = branch::orderBy('branchid','asc')->get();
+            $saleseod = sales_eod::latest()->paginate(5);
 
-        return view('eod.index')->with(['saleseod' => $saleseod])
-                                ->with(['branch' => $branch])
-                                ->with('i', (request()->input('page', 1) - 1) * 5);
+            return view('eod.index')->with(['saleseod' => $saleseod])
+                                    ->with(['branch' => $branch])
+                                    ->with('i', (request()->input('page', 1) - 1) * 5);
+        }else{
+            return redirect()->route('dashboard.index');
+        }  
+        
     }
 
     /**
@@ -46,7 +56,11 @@ class EODController extends Controller
      */
     public function create()
     {
-        //
+        if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
+            return redirect()->route('dashboard.index');
+        }else{
+            return redirect()->route('dashboard.index');
+        }  
     }
 
     /**
@@ -54,7 +68,11 @@ class EODController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
+            return redirect()->route('dashboard.index');
+        }else{
+            return redirect()->route('dashboard.index');
+        }  
     }
 
     /**
@@ -62,7 +80,11 @@ class EODController extends Controller
      */
     public function show(string $id)
     {
-        //
+        if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
+            return redirect()->route('dashboard.index');
+        }else{
+            return redirect()->route('dashboard.index');
+        }  
     }
 
     /**
@@ -70,7 +92,11 @@ class EODController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
+            return redirect()->route('dashboard.index');
+        }else{
+            return redirect()->route('dashboard.index');
+        }  
     }
 
     /**
@@ -78,7 +104,11 @@ class EODController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
+            return redirect()->route('dashboard.index');
+        }else{
+            return redirect()->route('dashboard.index');
+        }  
     }
 
     /**
@@ -86,6 +116,10 @@ class EODController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
+            return redirect()->route('dashboard.index');
+        }else{
+            return redirect()->route('dashboard.index');
+        }  
     }
 }

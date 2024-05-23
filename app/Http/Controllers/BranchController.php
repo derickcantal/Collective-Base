@@ -116,7 +116,19 @@ class BranchController extends Controller
      */
     public function create()
     {
-        return view('branch.create');
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return view('branch.create');
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return view('branch.create');
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
 
     /**
@@ -145,7 +157,19 @@ class BranchController extends Controller
      */
     public function show(branch $branch)
     {
-        //
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->loaddata();
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->loaddata();
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
 
     /**
@@ -153,8 +177,22 @@ class BranchController extends Controller
      */
     public function edit($branch)
     {
-        $branch = branch::findOrFail($branch);
-        return view('branch.edit',['branch' => $branch]);
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboard.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                $branch = branch::findOrFail($branch);
+                return view('branch.edit',['branch' => $branch]);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                $branch = branch::findOrFail($branch);
+                return view('branch.edit',['branch' => $branch]);
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+        
     }
 
     /**

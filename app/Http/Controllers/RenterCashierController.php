@@ -197,11 +197,19 @@ class RenterCashierController extends Controller
      */
     public function create()
     {
-        return view('rentercashier.create-renter-info');
+        if(auth()->user()->accesstype == 'Cashier'){
+            return view('rentercashier.create-renter-info');
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
     public function renterinfo()
     {
-        return view('rentercashier.create-renter-info');
+        if(auth()->user()->accesstype == 'Cashier'){
+            return view('rentercashier.create-renter-info');
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
     public function renterregister(Request $request)
     {
@@ -404,17 +412,21 @@ class RenterCashierController extends Controller
      */
     public function show(Renters $renter)
     {
-
-        $cabinets = cabinet::where('userid',$renter->userid)
-        ->where(function(Builder $builder){
-            $builder->where('branchname', auth()->user()->branchname)
-                    ->orderBy('status','asc')
-                    ->orderBy('branchname','asc');
-        })
-                    ->paginate(5);
-        return view('rentercashier.show',['renter' => $renter])
-            ->with(compact('cabinets'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+        if(auth()->user()->accesstype == 'Cashier'){
+            $cabinets = cabinet::where('userid',$renter->userid)
+                                ->where(function(Builder $builder){
+                                    $builder->where('branchname', auth()->user()->branchname)
+                                            ->orderBy('status','asc')
+                                            ->orderBy('branchname','asc');
+            })
+                        ->paginate(5);
+            return view('rentercashier.show',['renter' => $renter])
+                ->with(compact('cabinets'))
+                ->with('i', (request()->input('page', 1) - 1) * 5);
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+        
     }
 
     /**
@@ -422,8 +434,12 @@ class RenterCashierController extends Controller
      */
     public function edit(Renters $renter)
     {
-
-        return view('rentercashier.edit',['renter' => $renter]);
+        if(auth()->user()->accesstype == 'Cashier'){
+            return view('rentercashier.edit',['renter' => $renter]);
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+        
     }
 
     /**
@@ -431,43 +447,47 @@ class RenterCashierController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $renter = Renters::where('userid',$id)->first();
+        if(auth()->user()->accesstype == 'Cashier'){
+            $renter = Renters::where('userid',$id)->first();
 
-        $mod = 0;
-        $mod = $renter->mod;
+            $mod = 0;
+            $mod = $renter->mod;
 
-        if($request->password == null){
-            $renter =Renters::where('userid',$id)->update([
-                'username' => $request->username,
-                'email' => $request->email,
-                'firstname' => $request->firstname,
-                'middlename' => $request->middlename,
-                'lastname' => $request->lastname,
-                'birthdate' => $request->birthdate,
-                'updated_by' => auth()->user()->email,
-                'mod' => $mod + 1,
-            ]);
+            if($request->password == null){
+                $renter =Renters::where('userid',$id)->update([
+                    'username' => $request->username,
+                    'email' => $request->email,
+                    'firstname' => $request->firstname,
+                    'middlename' => $request->middlename,
+                    'lastname' => $request->lastname,
+                    'birthdate' => $request->birthdate,
+                    'updated_by' => auth()->user()->email,
+                    'mod' => $mod + 1,
+                ]);
+            }else{
+                $renter =Renters::where('userid',$id)->update([
+                    'username' => $request->username,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'firstname' => $request->firstname,
+                    'middlename' => $request->middlename,
+                    'lastname' => $request->lastname,
+                    'birthdate' => $request->birthdate,
+                    'updated_by' => auth()->user()->email,
+                    'mod' => $mod + 1,
+                ]);
+            }
+
+            if ($renter) {
+                //query successful
+                return redirect()->route('renter.index')
+                            ->with('success','Renter updated successfully.');
+            }else{
+                return redirect()->route('renter.index')
+                            ->with('failed','Renter update failed');
+            }
         }else{
-            $renter =Renters::where('userid',$id)->update([
-                'username' => $request->username,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'firstname' => $request->firstname,
-                'middlename' => $request->middlename,
-                'lastname' => $request->lastname,
-                'birthdate' => $request->birthdate,
-                'updated_by' => auth()->user()->email,
-                'mod' => $mod + 1,
-            ]);
-        }
-
-        if ($renter) {
-            //query successful
-            return redirect()->route('renter.index')
-                        ->with('success','Renter updated successfully.');
-        }else{
-            return redirect()->route('renter.index')
-                        ->with('failed','Renter update failed');
+            return redirect()->route('dashboard.index');
         }  
        
     }
@@ -477,31 +497,35 @@ class RenterCashierController extends Controller
      */
     public function destroy(string $id)
     {
-        $renter = Renters::where('userid',$id)->first();
+        if(auth()->user()->accesstype == 'Cashier'){
+            $renter = Renters::where('userid',$id)->first();
 
-        $mod = 0;
-        $mod = $renter->mod;
+            $mod = 0;
+            $mod = $renter->mod;
 
-        if($renter->status == 'Active')
-        {
-            Renters::where('userid', $renter->userid)
-            ->update([
-            'status' => 'Inactive'
-        ]);
+            if($renter->status == 'Active')
+            {
+                Renters::where('userid', $renter->userid)
+                ->update([
+                'status' => 'Inactive'
+            ]);
 
-        return redirect()->route('renter.index')
-            ->with('success','Renter Deactivated successfully'); 
-        }
-        elseif($renter->status == 'Inactive')
-        {
-            Renters::where('userid', $renter->userid)
-            ->update([
-            'status' => 'Active'
-        ]);
+            return redirect()->route('renter.index')
+                ->with('success','Renter Deactivated successfully'); 
+            }
+            elseif($renter->status == 'Inactive')
+            {
+                Renters::where('userid', $renter->userid)
+                ->update([
+                'status' => 'Active'
+            ]);
 
-        
-        return redirect()->route('renter.index')
-            ->with('success','User Activated successfully');
-        }
+            
+            return redirect()->route('renter.index')
+                ->with('success','User Activated successfully');
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }  
     }
 }
