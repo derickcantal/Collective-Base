@@ -23,6 +23,8 @@ use App\Http\Controllers\MyCabinetController;
 use App\Http\Controllers\RenterCashierRentalController;
 use App\Http\Controllers\EODController;
 use App\Http\Controllers\UserLoginLogController;
+use App\Http\Controllers\TestPagesController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -167,5 +169,8 @@ Route::get('User/Login/Log/{ullid}', [UserLoginLogController::class, 'show'])->n
 Route::put('User/Login/Log/{ullid}', [UserLoginLogController::class, 'update'])->name('userslog.update');
 Route::delete('User/Login/Log/{ullid}', [UserLoginLogController::class, 'delete'])->name('userslog.delete');
 Route::get('User/Login/Log/{ullid}/edit', [UserLoginLogController::class, 'edit'])->name('userslog.edit');
+
+
+Route::get('Test/Pages', [TestPagesController::class, 'index'])->name('testpages.index');
 
 require __DIR__.'/auth.php';
