@@ -302,7 +302,7 @@ class RenterCashierController extends Controller
                 'created_by' => auth()->user()->email,
                 'updated_by' => 'Null',
                 'mod'  => 0,
-                'notes' => 'Rnter. Cashier.',
+                'notes' => 'Renter. Cashier.',
                 'status'  => 'Success',
             ]);
             
@@ -645,7 +645,7 @@ class RenterCashierController extends Controller
      */
     public function store(Request $request)
     {
-
+        return redirect()->route('dashboard.index');
 
         return redirect()->route('renter.index')
          ->with('success','Renter created successfully.');

@@ -30,6 +30,7 @@ class MyRentalController extends Controller
         
     }
     public function loaddata(){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $cabinets = cabinet::where('userid',auth()->user()->userid)
                     ->orderBy('status','asc')
                     ->orderBy('cabid','asc')
@@ -87,15 +88,14 @@ class MyRentalController extends Controller
     
     public function storedata(){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
-    
     }
     
     public function updatedata(){
-    
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
     }
     
     public function destroydata(){
-    
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
     }
 
     public function cabinetrental(){

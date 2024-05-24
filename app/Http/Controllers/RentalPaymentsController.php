@@ -411,7 +411,7 @@ class RentalPaymentsController extends Controller
                 'created_by' => auth()->user()->email,
                 'updated_by' => 'Null',
                 'mod'  => 0,
-                'notes' => 'Rental Payments. Paid. Modification Not Allowed',
+                'notes' => 'Rental Payments. Paid. Modification Not Allowed' ,
                 'status'  => 'Failed',
             ]); 
             return redirect()->route('rentalpayments.index')

@@ -39,6 +39,7 @@ class EODController extends Controller
      */
     public function index()
     {
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
             $branch = branch::orderBy('branchid','asc')->get();
             $saleseod = sales_eod::latest()->paginate(5);

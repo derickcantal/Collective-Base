@@ -542,6 +542,7 @@ class RenterCashierRentalController extends Controller
      */
     public function edit(string $id)
     {
+        return redirect()->route('dashboard.index');
         if(auth()->user()->accesstype == 'Cashier'){
             $currentmonth = rental_active_month::query()->get();
 

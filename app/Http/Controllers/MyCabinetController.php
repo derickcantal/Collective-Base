@@ -33,6 +33,7 @@ class MyCabinetController extends Controller
         dd("Cabinet Search");
     }
     public function loaddata(){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $cabinets = cabinet::where('userid',auth()->user()->userid)
                     ->orderBy('status','asc')
                     ->orderBy('cabid','asc')
