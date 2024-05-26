@@ -12,6 +12,7 @@ use \Carbon\Carbon;
 class BranchController extends Controller
 {
     public function loaddata(){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $branches = branch::query()
                     ->orderBy('status','asc')
                     ->orderBy('branchname','asc')
@@ -100,6 +101,7 @@ class BranchController extends Controller
     }
     
     public function updatedata($request, $branch){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $branch = branch::findOrFail($branch);
         $mod = 0;
         $mod = $branch->mod;

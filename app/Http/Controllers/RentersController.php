@@ -475,6 +475,7 @@ class RentersController extends Controller
                         'branchid' => auth()->user()->branchid,
                         'accesstype' => 'Renters',
                         'timerecorded'  => $timenow,
+                        'cabcount' => 0,
                         'posted'  => 'N',
                         'created_by' => auth()->user()->email,
                         'updated_by' => 'Null',
@@ -670,9 +671,9 @@ class RentersController extends Controller
                                 ->where('birthdate',$request->birthdate);
                             })->first();
             if($renter){
-                return view('rentercashier.create-renter-register',['renter' => $renter])->with('success','Renter Record Found.');
+                return view('renters.create-renter-register',['renter' => $renter])->with('success','Renter Record Found.');
             }else{
-                return view('rentercashier.create-renter-login')->with(['renterinfo' => $request]);
+                return view('renters.create-renter-login')->with(['renterinfo' => $request]);
             }
             
         }else{
@@ -752,7 +753,7 @@ class RentersController extends Controller
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return view('renters.create-renter-info');
+                return view('renters.create-renter-info'); 
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return view('renters.create-renter-info');
 

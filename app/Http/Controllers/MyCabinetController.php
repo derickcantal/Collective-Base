@@ -78,12 +78,12 @@ class MyCabinetController extends Controller
                                 ->with('failed','please settle this account rental payment first.');
             }
         }
-        else
-        {
-            dd('not same');
-        }                   
+        // else
+        // {
+        //     dd('not same');
+        // }                   
 
-        dd($today->month, $today->year);
+        // dd($today->month, $today->year);
 
         $cabinetid = $cabinetsales;
 

@@ -1,7 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <a href="{{ route('mycabinet.index') }}">Cabinet</a> | <u><a href="{{ route('myrental.index') }}">Rental</a></u> | <a href="{{ route('myrequest.index') }}">Request</a>
+            <a href="{{ route('mycabinet.index') }}" class="inline-flex items-center text-lg font-high text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"> Cabinet</a> | 
+            <u><a href="{{ route('myrental.index') }}" class="inline-flex items-center text-lg font-high text-white-700 hover:text-blue-600 dark:text-white dark:hover:text-gray-400"> Rental</a></u> |
+            <a href="{{ route('myrequest.index') }}" class="inline-flex items-center text-lg font-high text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">Request</a>  
         </h2>
     </x-slot>
     <section>
@@ -10,35 +12,21 @@
                 
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="py-8">
-                        
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mt-4">
-                                
-                                @if ($message = Session::get('success'))
-                                <div class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800" role="alert">
-                                <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                                </svg>
-                                <span class="sr-only">Info</span>
-                                <div>
-                                    <span class="font-medium">Success!</span> {{ $message }}
-                                </div>
-                                </div>
-                                @endif
-
-                                @if ($message = Session::get('failed'))
-                                <div class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
-                                    <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                                    </svg>
-                                    <span class="sr-only">Info</span>
-                                    <div>
-                                        <span class="font-medium">Failed!</span> {{ $message }}
-                                    </div>
-                                </div>
-                                @endif
-                            </div>   
                             <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+                                <!-- Breadcrumb -->
+                                <nav class="flex px-5 py-3 text-gray-700  bg-gray-50 dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">
+                                    <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                                        <li class="inline-flex items-center">
+                                        <a href="{{ route('myrental.index') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                                            <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+                                            </svg>
+                                            Rental
+                                        </a>
+                                        </li>
+                                    </ol>
+                                </nav>
                                 <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
                                     <div>
                                         
@@ -81,7 +69,8 @@
                                     
                                 </div>
                             </div>
-                                 
+                                <!-- Error & Success Notification -->
+                                @include('layouts.notifications')  
 
                                 @csrf
                                 <div class="max-w-7xl overflow-x-auto shadow-md sm:rounded-lg mt-4" >

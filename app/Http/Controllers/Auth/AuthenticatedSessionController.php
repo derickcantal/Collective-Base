@@ -20,37 +20,38 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        if (now()->isBetween('09:00:00', '21:00:00')) {
-            $user = User::where('accesstype','Cashier')->where('accesstype','Active')->first();
-                User::where('accesstype','Cashier')->where('status','Inactive')->update([
-                    'status' => 'Active',
-                ]);
-                User::where('accesstype','Cashier')->where('status','Active')->update([
-                    'BLID' => 0,
-                ]);
+        // if (now()->isBetween('09:00:00', '21:00:00')) {
+        //     $user = User::where('accesstype','Cashier')->where('accesstype','Active')->first();
+        //         User::where('accesstype','Cashier')->where('status','Inactive')->update([
+        //             'status' => 'Active',
+        //         ]);
+        //         User::where('accesstype','Cashier')->where('status','Active')->update([
+        //             'BLID' => 0,
+        //         ]);
             
-            #dd('Access Allowed',now());
-
-        }
-        else
-        {
-            $user = User::where('accesstype','Cashier')->where('status','Active')->first();
-            if($user){
-                if(now()->isBetween('21:00:01', '23:59:59') or now()->isBetween('00:00:00', '08:59:59'))
-                {
-                    if($user->BLID == 0)
-                    {
-                        User::where('accesstype','Cashier')
-                        ->where('status','Active')
                         ->update([
-                            'status' => 'Inactive',
-                        ]);
-                    }
-                }
-            }
+        //     #dd('Access Allowed',now());
+
+        // }
+        // else
+        // {
+        //     $user = User::where('accesstype','Cashier')->where('status','Active')->first();
+        //     if($user){
+        //         if(now()->isBetween('21:00:01', '23:59:59') or now()->isBetween('00:00:00', '08:59:59'))
+        //         {
+        //             if($user->BLID == 0)
+        //             {
+        //                 User::where('accesstype','Cashier')
+        //                 ->where('status','Active')
+        //                 ->update([
+        //                     'status' => 'Inactive',
+        //                 ]);
+        //             }
+        //         }
+        //     }
             
-            #dd('Access Denied',now());
-        }
+        //     #dd('Access Denied',now());
+        // }
         return view('auth.login');
     }
 

@@ -100,6 +100,7 @@ class RenterCashierController extends Controller
     }
 
     public function cabinetstore(Request $request){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $cabuser = $request->cabuser;
         
         $renter = Renters::where('userid',$cabuser)->first();
@@ -375,7 +376,7 @@ class RenterCashierController extends Controller
                         'branchid' => auth()->user()->branchid,
                         'accesstype' => 'Renters',
                         'timerecorded'  => $timenow,
-                        'cabcount' => 0,
+                        'cabcount' => 0, 
                         'posted'  => 'N',
                         'created_by' => auth()->user()->email,
                         'updated_by' => 'Null',

@@ -14,6 +14,7 @@ use \Carbon\Carbon;
 class CabinetController extends Controller
 {
     public function loaddata(){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $cabinets = cabinet::query()
                     ->orderBy('status','asc')
                     ->orderBy('cabid','asc')
@@ -159,6 +160,7 @@ class CabinetController extends Controller
     }
     
     public function updatedata($request,$cabinet){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $rent = Renters::where('userid',$cabinet)->first();
          
         $cabinet = cabinet::findOrFail($cabinet);
@@ -317,6 +319,7 @@ class CabinetController extends Controller
     }
     
     public function destroydata($request ,$cabinet){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $cabinet = cabinet::findOrFail($cabinet);
         $mod = 0;
         $mod = $cabinet->mod;

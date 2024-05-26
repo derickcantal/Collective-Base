@@ -13,6 +13,8 @@
                         @csrf
                         @method('PUT')   
                             <div class="relative p-4 w-full max-w-full max-h-full">
+                                <!-- Error & Success Notification -->
+                                @include('layouts.notifications')   
                                 <!-- Modal content -->
                                 <div class="relative bg-white rounded-lg dark:bg-gray-800">
                                     <!-- Modal header -->
