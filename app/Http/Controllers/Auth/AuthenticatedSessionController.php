@@ -29,7 +29,6 @@ class AuthenticatedSessionController extends Controller
         //             'BLID' => 0,
         //         ]);
             
-                        ->update([
         //     #dd('Access Allowed',now());
 
         // }
