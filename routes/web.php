@@ -115,6 +115,7 @@ Route::middleware('auth')->group(function () {
     Route::put('renters/createrenter/{branchid}', [RentersController::class, 'createrenter'])->name('renters.createrenter');
     Route::put('renters/cabinet/modify/{cabinetid}', [RentersController::class, 'updatecabinet'])->name('renters.updatecabinet');
     Route::get('renters/cabinet/{cabinetid}', [RentersController::class, 'editcabinet'])->name('renters.editcabinet');
+    Route::get('renters/cabinet/status/{cabinetid}', [RentersController::class, 'statuscabinet'])->name('renters.statuscabinet');
     Route::get('renters/create/info', [RentersController::class, 'renterinfo'])->name('renters.renterinfo');
     Route::get('renters/create/login', [RentersController::class, 'renterlogin'])->name('renters.renterlogin');
     Route::post('renters/create/register', [RentersController::class, 'renterregister'])->name('renters.renterregister');
@@ -162,6 +163,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/counter', Counter::class);
 Route::get('User/Login/Log/search', [UserLoginLogController::class, 'search'])->name('userslog.search');
+Route::get('/', [UserLoginLogController::class, 'home'])->name('home');
 Route::get('User/Login/Log', [UserLoginLogController::class, 'index'])->name('userslog.index');
 Route::post('User/Login/Log', [UserLoginLogController::class, 'store'])->name('userslog.store');
 Route::get('User/Login/Log/create', [UserLoginLogController::class, 'create'])->name('userslog.create');

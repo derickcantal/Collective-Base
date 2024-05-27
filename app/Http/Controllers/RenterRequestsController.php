@@ -128,10 +128,14 @@ class RenterRequestsController extends Controller
         $validated = $request->validate([
             'avatarproof'=>'required|image|file',
         ]);
-
+        
         $RenterRequests = RenterRequests::where('salesrid',$salerid)->first();
 
         $renter = Renters::where('userid',$RenterRequests->userid)->first();
+        if($request->totalcollected > $RenterRequests->totalsales){
+            return redirect()->back()
+                            ->with('failed','Total Collected must not be greater than total sales');
+        }
 
         $manager2 = ImageManager::imagick();
         $name_gen2 = hexdec(uniqid()).'.'.$request->file('avatarproof')->getClientOriginalExtension();

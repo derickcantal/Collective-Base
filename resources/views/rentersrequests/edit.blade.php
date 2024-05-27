@@ -116,7 +116,14 @@
                                                     <x-input-error :messages="$errors->get('totalsales')" class="mt-2" />
                                                 </div>
                                             </div>
-                                            
+                                            <div class="col-span-2 sm:col-span-1">
+                                                    <!-- total sales -->
+                                                    <div class="form-group mt-4">
+                                                    <x-input-label for="totalcollected" :value="__('Total Collected')" />
+                                                    <x-text-input id="totalcollected" class="block mt-1 w-full" type="text" name="totalcollected" :value="old('totalcollected', number_format($RenterRequests->totalcollected,2))" required autofocus autocomplete="off" />
+                                                    <x-input-error :messages="$errors->get('totalcollected')" class="mt-2" />
+                                                </div>
+                                            </div>
 
                                             
                                             <div class="col-span-2 sm:col-span-1 ">

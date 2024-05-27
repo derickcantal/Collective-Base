@@ -1,7 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <a href="{{ route('reports.index') }}"> Reports</a> | <a href="{{ route('reports.topsalesbranch') }}"> Top Sales Branch</a>
+    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            <a href="{{ route('reports.index') }}" class="inline-flex items-center text-lg font-high text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">Reports</a> 
+            @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor') |
+            <u><a href="{{ route('reports.topsalesbranch') }}" class="inline-flex items-center text-lg font-high text-white hover:text-blue-600 dark:text-white dark:hover:text-gray-400">Top Sales Branch</a></u> 
+            @endif
         </h2>
     </x-slot>
     <div class="py-8">

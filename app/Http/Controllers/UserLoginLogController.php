@@ -11,6 +11,10 @@ use \Carbon\Carbon;
 
 class UserLoginLogController extends Controller
 {
+    public function home()
+    {
+        return view('welcome');
+    }
     public function search(Request $request)
     {
         $branch = branch::all();

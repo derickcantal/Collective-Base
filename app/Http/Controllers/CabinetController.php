@@ -333,7 +333,23 @@ class CabinetController extends Controller
             'mod' => $mod + 1,
         ]);
 
-
+        $userlog = user_login_log::query()->create([
+            'userid' => auth()->user()->userid,
+            'username' => auth()->user()->username,
+            'firstname' => auth()->user()->firstname,
+            'middlename' => auth()->user()->middlename,
+            'lastname' => auth()->user()->lastname,
+            'email' => auth()->user()->email,
+            'branchid' => auth()->user()->branchid,
+            'branchname' => auth()->user()->branchname,
+            'accesstype' => auth()->user()->accesstype,
+            'timerecorded'  => $timenow,
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'mod'  => 0,
+            'notes' => 'Cabinet. Deactivate',
+            'status'  => 'Success',
+        ]);  
         return redirect()->route('cabinet.index')
                             ->with('success','Cabinet Deactivated successfully');
         }
@@ -346,7 +362,23 @@ class CabinetController extends Controller
             'mod' => $mod + 1,
         ]);
 
-
+        $userlog = user_login_log::query()->create([
+            'userid' => auth()->user()->userid,
+            'username' => auth()->user()->username,
+            'firstname' => auth()->user()->firstname,
+            'middlename' => auth()->user()->middlename,
+            'lastname' => auth()->user()->lastname,
+            'email' => auth()->user()->email,
+            'branchid' => auth()->user()->branchid,
+            'branchname' => auth()->user()->branchname,
+            'accesstype' => auth()->user()->accesstype,
+            'timerecorded'  => $timenow,
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'mod'  => 0,
+            'notes' => 'Cabinet. Activate',
+            'status'  => 'Success',
+        ]);
         return redirect()->route('cabinet.index')
                             ->with('success','Cabinet Activated successfully');
         }

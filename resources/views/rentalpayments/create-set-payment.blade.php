@@ -1,7 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <a href="{{ route('rentalpayments.index') }}"> Rental Payments</a> / <u>{{ __('Set Payment Month') }}</u>
+            <a href="{{ route('renters.index') }}" class="inline-flex items-center text-lg font-high text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">Renters</a> |
+            <a href="{{ route('rentersrequests.index') }}" class="inline-flex items-center text-lg font-high text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">Renters Requests</a> |
+            <u><a href="{{ route('rentalpayments.index') }}" class="inline-flex items-center text-lg font-high text-white hover:text-blue-600 dark:text-white dark:hover:text-gray-400">Rental Payments</a></u>  
         </h2>
     </x-slot>
     <section>
@@ -12,6 +14,37 @@
                         <form action="{{ route('rentalpayments.storesetpayment') }}" enctype="multipart/form-data" method="get" class="p-4 md:p-5">
                         @csrf
                             <div class="relative p-4 w-full max-w-full max-h-full">
+                                <!-- Breadcrumb -->
+                                <nav class="flex px-5 py-3 text-gray-700  bg-gray-50 dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">
+                                    <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                                        <li class="inline-flex items-center">
+                                        <a href="{{ route('rentalpayments.index') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                                            <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+                                            </svg>
+                                            Rental Payments
+                                        </a>
+                                        </li>
+                                        <li>
+                                        <div class="flex items-center">
+                                            <svg class="rtl:rotate-180 block w-3 h-3 mx-1 text-gray-400 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                            </svg>
+                                            <a href="{{ route('rentalpayments.setpayment') }}" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
+                                                Create 
+                                            </a>
+                                        </div>
+                                        </li>
+                                        <li aria-current="page">
+                                        <div class="flex items-center">
+                                            <svg class="rtl:rotate-180  w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                            </svg>
+                                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Set Rental Month/Year </span>
+                                        </div>
+                                        </li>
+                                    </ol>
+                                </nav>
                                 <!-- Error & Success Notification -->
                                 @include('layouts.notifications') 
                                 <!-- Modal content -->
@@ -34,7 +67,7 @@
                                                     <x-text-input id="rpmonth" name="rpmonth" class="mt-1 w-1/2" type="text" :value="old('rpmonth',$cabinet->rpmonth)" readonly required/>
                                                     <x-input-error :messages="$errors->get('rpmonth')" class="mt-2" />
 
-                                                    <x-text-input id="rpyear" name="rpyear" type="text" class="form-select mt-1  border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('rpyear',$cabinet->rpyear)" readonly required/>
+                                                    <x-text-input id="rpyear" name="rpyear" type="text" class="mt-1 w-auto" :value="old('rpyear',$cabinet->rpyear)" readonly required/>
                                                     <x-input-error :messages="$errors->get('rpyear')" class="mt-2" />
                                                 </div>
                                             </div>

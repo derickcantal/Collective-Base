@@ -4,7 +4,6 @@
             <a href="{{ route('renters.index') }}" class="inline-flex items-center text-lg font-high text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">Renters</a> |
             <a href="{{ route('rentersrequests.index') }}" class="inline-flex items-center text-lg font-high text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">Renters Requests</a> |
             <u><a href="{{ route('rentalpayments.index') }}" class="inline-flex items-center text-lg font-high text-white hover:text-blue-600 dark:text-white dark:hover:text-gray-400">Rental Payments</a></u>  
-
         </h2>
     </x-slot>
     <section>

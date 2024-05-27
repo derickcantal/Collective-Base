@@ -49,7 +49,8 @@ class RentersController extends Controller
     public function editcabinet($cabinet){
         $cab = cabinet::where('cabid',$cabinet)->first();                      
                         
-                        
+        $renter = Renters::where('userid', $cab->userid)->first();
+                         
         $rent = Renters::where('accesstype','Renters')
         ->where(function(Builder $builder){
             $builder->where('status','Active')
@@ -61,6 +62,7 @@ class RentersController extends Controller
         
         return view('renters.cabinetedit',['branches' => $branches])
                             ->with(['rent' => $rent])
+                            ->with(['renter' => $renter])
                             ->with(['cabinet' => $cab]);
     }
 
@@ -219,6 +221,72 @@ class RentersController extends Controller
             ]);
             return redirect()->route('cabinet.index')
                             ->with('failed','Cabinet Inactive');
+        }
+    }
+
+    public function statuscabinet($cabid){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $cabinet = cabinet::findOrFail($cabid);
+        $mod = 0;
+        $mod = $cabinet->mod;
+
+        if($cabinet->status == 'Active')
+        {
+            cabinet::where('cabid', $cabinet->cabid)
+            ->update([
+            'status' => 'Inactive',
+            'updated_by' => auth()->user()->email,
+            'mod' => $mod + 1,
+        ]);
+
+        $userlog = user_login_log::query()->create([
+            'userid' => auth()->user()->userid,
+            'username' => auth()->user()->username,
+            'firstname' => auth()->user()->firstname,
+            'middlename' => auth()->user()->middlename,
+            'lastname' => auth()->user()->lastname,
+            'email' => auth()->user()->email,
+            'branchid' => auth()->user()->branchid,
+            'branchname' => auth()->user()->branchname,
+            'accesstype' => auth()->user()->accesstype,
+            'timerecorded'  => $timenow,
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'mod'  => 0,
+            'notes' => 'Renters. Cabinet. Deactivate',
+            'status'  => 'Success',
+        ]);  
+        return redirect()->route('renters.show',$cabinet->userid)
+                            ->with('success','Cabinet Deactivated successfully');
+        }
+        elseif($cabinet->status == 'Inactive')
+        {
+            cabinet::where('cabid', $cabinet->cabid)
+            ->update([
+            'status' => 'Active',
+            'updated_by' => auth()->user()->email,
+            'mod' => $mod + 1,
+        ]);
+
+        $userlog = user_login_log::query()->create([
+            'userid' => auth()->user()->userid,
+            'username' => auth()->user()->username,
+            'firstname' => auth()->user()->firstname,
+            'middlename' => auth()->user()->middlename,
+            'lastname' => auth()->user()->lastname,
+            'email' => auth()->user()->email,
+            'branchid' => auth()->user()->branchid,
+            'branchname' => auth()->user()->branchname,
+            'accesstype' => auth()->user()->accesstype,
+            'timerecorded'  => $timenow,
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'mod'  => 0,
+            'notes' => 'Renters. Cabinet. Activate',
+            'status'  => 'Success',
+        ]); 
+        return redirect()->route('renters.show',$cabinet->userid)
+                            ->with('success','Cabinet Activated successfully');
         }
     }
     
@@ -433,6 +501,7 @@ class RentersController extends Controller
     {
         return view('rentercashier.create-renter-info');
     }
+
     public function renterregister(Request $request)
     {
         
@@ -661,6 +730,7 @@ class RentersController extends Controller
         }
         
     }
+
     public function renterlogin(Request $request)
     {
         
@@ -700,9 +770,7 @@ class RentersController extends Controller
         return view('renters.index',compact('renter'))
             ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
     }
-    /**
-     * Display a listing of the resource.
-     */
+ 
     public function index()
     {
         if(auth()->user()->status =='Active'){
@@ -721,9 +789,6 @@ class RentersController extends Controller
        
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function selectbranch(){
         $branch = branch::orderBy('branchname', 'asc')->paginate(5);
 
@@ -745,6 +810,7 @@ class RentersController extends Controller
         return view('renters.create',['cabinet' => $cabinet])
                             ->with(['branch' => $branch]);
     }
+
     public function create()
     {
         if(auth()->user()->status =='Active'){
@@ -767,9 +833,6 @@ class RentersController extends Controller
         //sreturn view('renters.create',['branch' => $branch]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(RenterCreateRequests $request)
     {
         if(auth()->user()->status =='Active'){
@@ -787,9 +850,6 @@ class RentersController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Renters $renter)
     {
         if(auth()->user()->status =='Active'){

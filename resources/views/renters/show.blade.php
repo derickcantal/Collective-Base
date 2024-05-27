@@ -29,7 +29,7 @@
                                             <svg class="rtl:rotate-180  w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                                             </svg>
-                                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">{{ $renter->username }}</span>
+                                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Cabinet List</span>
                                         </div>
                                         </li>
                                         <li aria-current="page">
@@ -37,9 +37,10 @@
                                             <svg class="rtl:rotate-180  w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                                             </svg>
-                                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Cabinet List</span>
+                                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">{{ $renter->lastname }}, {{ $renter->firstname }} {{ $renter->middlename }}</span>
                                         </div>
                                         </li>
+                                        
                                     </ol>
                                 </nav>
                                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -123,10 +124,10 @@
                                                 </td>
                                                 <td class="px-6 py-4">
                                                     
-                                                    <form action="{{ route('cabinet.destroy',$cabinet->cabid) }}" method="POST">
+                                                    <form action="{{ route('renters.statuscabinet',$cabinet->cabid) }}" method="POST">
                                                     <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('renters.editcabinet',$cabinet->cabid) }}">Modify</a>
                                                         @csrf
-                                                        @method('DELETE')
+                                                        @method('GET')
                                                         @php
                                                         $txtbutton = '';
                                                         $colorbutton = '';
