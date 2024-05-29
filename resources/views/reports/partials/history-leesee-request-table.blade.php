@@ -14,10 +14,7 @@
                                 Sales RID
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Branch Name
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Cabinet Name
+                                Profile
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Total Sales
@@ -27,9 +24,6 @@
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Notes
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Full Name
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Updated By
@@ -48,25 +42,22 @@
                                 <x-input-label for="salesrid" :value="$sales_request->salesrid"/>
                             </th>
                             <td class="px-6 py-4">
-                                <x-input-label for="branchname" :value="$sales_request->branchname"/>
+                                <x-input-label for="totalcollected">{{ $sales_request->lastname }} , {{ $sales_request->firstname }}</x-input-label>
+                                <x-input-label for="totalcollected">Cab No. {{ $sales_request->cabinetname }}</x-input-label>
                             </td>
                             <td class="px-6 py-4">
-                                <x-input-label for="cabinetname" :value="$sales_request->cabinetname"/>
+                                <x-input-label for="totalsales">{{ number_format($sales_request->totalsales, 2) }}</x-input-label>
                             </td>
                             <td class="px-6 py-4">
-                                <x-input-label for="totalsales" :value="$sales_request->totalsales"/>
-                            </td>
-                            <td class="px-6 py-4">
-                                <x-input-label for="totalcollected" :value="$sales_request->totalcollected"/>
+                                <x-input-label for="totalcollected">{{ number_format($sales_request->totalcollected, 2) }}</x-input-label>
                             </td>
                             <td class="px-6 py-4">
                                 <x-input-label for="rnotes" :value="$sales_request->rnotes"/>
                             </td>
                             <td class="px-6 py-4">
-                                <x-input-label for="lastname" :value="$sales_request->lastname"/>, <x-input-label for="firstname" :value="$sales_request->firstname"/>
-                            </td>
-                            <td class="px-6 py-4">
+                                <x-input-label for="branchname" :value="$sales_request->branchname"/>
                                 <x-input-label for="updated_by" :value="$sales_request->updated_by"/>
+                                <x-input-label for="timerecorded" :value="$sales_request->timerecorded"/>
                             </td>
                             <td class="px-6 py-4">
                                 <x-input-label for="status" :value="$sales_request->status"/>
@@ -82,9 +73,6 @@
                     <tfoot>
                         <tr class="font-semibold text-gray-900 dark:text-white">
                             <th scope="row" class="px-6 py-3 text-base"></th>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
-                            <td class="px-6 py-3"></td>
                             <td class="px-6 py-3"></td>
                             <td class="px-6 py-3"></td>
                             <td class="px-6 py-3"></td>

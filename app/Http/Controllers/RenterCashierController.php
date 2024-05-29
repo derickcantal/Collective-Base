@@ -90,6 +90,7 @@ class RenterCashierController extends Controller
 
 
     public function cabinetdelete(Request $request){
+        return redirect()->route('dashboard.index');
         $cabinet = cabinet::where('cabid',$request->cabid)->first();
         dd('delete');
 
@@ -236,7 +237,7 @@ class RenterCashierController extends Controller
     }
 
     public function cabinetsearch(Request $request){
-     
+        
     }
     public function cabinetadd(Request $request){
         $cabuser = $request->cabuser;
@@ -657,6 +658,31 @@ class RenterCashierController extends Controller
      */
     public function show(Renters $renter)
     {
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $branchlists = branchlist::where('userid', $renter->userid)->first();
+
+        if(empty($branchlists)){
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Renter. Cashier. Info.',
+                'status'  => 'Failed',
+            ]);
+
+            return redirect()->route('renter.index')
+                            ->with('failed','Unknown Command');
+        }
         if(auth()->user()->accesstype == 'Cashier'){
             $cabinets = cabinet::where('userid',$renter->userid)
                                 ->where(function(Builder $builder){

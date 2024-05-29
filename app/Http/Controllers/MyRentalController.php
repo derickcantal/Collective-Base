@@ -41,9 +41,7 @@ class MyRentalController extends Controller
                     ->with('i', (request()->input('page', 1) - 1) * 5);
         
         $RentalPayments = RentalPayments::where('userid',auth()->user()->userid)
-                    ->where(function(Builder $builder){
-                        $builder->where('branchid',auth()->user()->branchid);
-                    })->paginate(5);
+                                        ->paginate(5);
         
         $RentalPaymentsHistory = history_rental_payments::where('userid',auth()->user()->userid)
                     ->where(function(Builder $builder){
@@ -99,6 +97,7 @@ class MyRentalController extends Controller
     }
 
     public function cabinetrental(){
+
         if(auth()->user()->accesstype =='Renters'){
             $RentalPaymentsHistory = history_rental_payments::where('userid',auth()->user()->userid)
                     ->where(function(Builder $builder){
@@ -170,6 +169,7 @@ class MyRentalController extends Controller
      */
     public function show(string $cabinet)
     {
+
         if(auth()->user()->accesstype =='Renters'){
             $cabinet = cabinet::where('cabid',$cabinet)->first();
 

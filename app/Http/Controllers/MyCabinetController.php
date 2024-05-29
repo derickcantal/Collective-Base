@@ -28,9 +28,92 @@ class MyCabinetController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
     }
 
-    public function cabinetsearch()
+    public function cabinetsearch(Request $request, $cabinetid)
     {
-        dd("Cabinet Search");
+        $cabinet = cabinet::where('cabid', $cabinetid)
+                            ->latest()
+                            ->first();
+
+        if($cabinet->userid != auth()->user()->userid)
+        {
+            return redirect()->route('dashboard.index')
+                                ->with('failed','Unknown Command.');
+        }
+        
+        if(empty($request->search)){
+            if(!empty($request->startdate) && empty($request->enddate))
+            {
+                return redirect()->back()
+                ->with('failed','Start and End Date are both Required input');  
+            }
+            elseif(empty($request->startdate) && !empty($request->enddate))
+            {
+                return redirect()->back()
+                ->with('failed','Start and End Date are both Required input');  
+            }
+            elseif(!empty($request->startdate) && !empty($request->enddate)){
+                $startDate = Carbon::parse($request->startdate)->format('Y-m-d');
+                $endDate = Carbon::parse($request->enddate)->format('Y-m-d');
+    
+    
+                $history_sales = history_sales::where('cabid', $cabinetid)
+                            ->where(function(Builder $builder) use($startDate,$endDate){
+                                $builder->where('total', '!=','0')
+                                        ->whereBetween('timerecorded', [$startDate .' 00:00:00', $endDate .' 23:59:59']);
+                            })
+                            ->paginate($request->pagerow);
+    
+                            
+            }else{
+                $history_sales = history_sales::where('cabid', $cabinetid)
+                        ->where(function(Builder $builder){
+                            $builder->where('total', '!=','0');
+                        })
+                        ->paginate($request->pagerow);
+            }
+            
+        }elseif(!empty($request->search)){
+            if(!empty($request->startdate) && empty($request->enddate)){
+                return redirect()->back()
+                ->with('failed','Start and End Date are both Required input');  
+            }
+            elseif(empty($request->startdate) && !empty($request->enddate))
+            {
+                return redirect()->back()
+                ->with('failed','Start and End Date are both Required input');  
+            }
+            elseif(!empty($request->startdate) && !empty($request->enddate)){
+                $startDate = Carbon::parse($request->startdate)->format('Y-m-d');
+                $endDate = Carbon::parse($request->enddate)->format('Y-m-d');
+    
+                $history_sales = history_sales::where('cabid', $cabinetid)
+                            ->where(function(Builder $builder) use($request,$startDate,$endDate){
+                                $builder->where('total', '!=','0')
+                                        ->whereBetween('timerecorded', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                                        ->where('productname','like',"%{$request->search}%")
+                                        ->orWhere('srp','like',"%{$request->search}%")
+                                        ->orWhere('total','like',"%{$request->search}%");
+                            })
+                            ->paginate($request->pagerow);
+    
+                            
+            }else{
+                $history_sales = history_sales::where('cabid', $cabinetid)
+                        ->where(function(Builder $builder) use($request){
+                            $builder->where('total', '!=','0')
+                                    ->where('productname','like',"%{$request->search}%")
+                                    ->orWhere('srp','like',"%{$request->search}%")
+                                    ->orWhere('total','like',"%{$request->search}%");
+                        })
+                        ->paginate($request->pagerow);
+            }
+            
+        }
+        
+        return view('mycabinet.cabsales',compact('history_sales'))
+                                    ->with(['cabinetid' => $cabinetid])
+                                    ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);  
+      
     }
     public function loaddata(){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
@@ -69,6 +152,11 @@ class MyCabinetController extends Controller
         $cabinet = cabinet::where('cabid', $cabinetsales)
                             ->latest()
                             ->first();
+        if($cabinet->userid != auth()->user()->userid)
+        {
+            return redirect()->route('mycabinet.index')
+                                ->with('failed','Unknown Command.');
+        }
 
         if($today->month == $cabinet->rpmonth && $today->year == $cabinet->rpyear)
         {
@@ -94,7 +182,7 @@ class MyCabinetController extends Controller
                                     ->paginate(5);
 
         return view('mycabinet.cabsales',compact('history_sales'))
-
+                            ->with(['cabinetid' => $cabinetid])
                             ->with('i', (request()->input('page', 1) - 1) * 5);                
 
     }

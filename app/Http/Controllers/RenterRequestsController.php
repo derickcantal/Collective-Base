@@ -8,7 +8,7 @@ use App\Http\Requests\SalesRequestsSearchRequest;
 use App\Models\Renters;
 use App\Models\branch;
 use App\Models\cabinet;
-use App\Models\Sales;
+use App\Models\history_sales;
 use App\Models\user_login_log;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -133,8 +133,47 @@ class RenterRequestsController extends Controller
 
         $renter = Renters::where('userid',$RenterRequests->userid)->first();
         if($request->totalcollected > $RenterRequests->totalsales){
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Renter Request. Update. TC > TS',
+                'status'  => 'Success',
+            ]);
             return redirect()->back()
                             ->with('failed','Total Collected must not be greater than total sales');
+        }
+        if($RenterRequests->totalsales == 0){
+
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Renter Request. Update. Zero Sales',
+                'status'  => 'Success',
+            ]);
+            return redirect()->route('rentersrequests.index')
+                            ->with('failed','Total Sales is 0.');
         }
 
         $manager2 = ImageManager::imagick();
@@ -144,6 +183,16 @@ class RenterRequestsController extends Controller
     
         $encoded = $image2->toWebp()->save(storage_path('app/public/rentersrequests/'.$name_gen2.'.webp'));
         $path = 'rentersrequests/'.$name_gen2.'.webp';
+
+        $oldavatar = $RenterRequests->avatarproof;
+
+        if($oldavatar == 'avatars/cash-default.jpg'){
+        
+        }
+        elseif(!empty($oldavatar))
+        {
+            Storage::disk('public')->delete($oldavatar);
+        }
 
         // $path = Storage::disk('public')->put('rentersrequests',$request->file('avatarproof'));
         // $path = $request->file('avatar')->store('avatars','public');
@@ -156,6 +205,16 @@ class RenterRequestsController extends Controller
                                     'timerecorded_c' => $timenow,
                                     'updated_by' => Auth()->user()->email,
                                     'status' => 'Completed',
+                                ]);
+
+        $history_sales =  history_sales::where('cabid',$RenterRequests->cabid)
+                                ->where(function(Builder $builder){
+                                    $builder->where('collected_status', "For Approval")
+                                            ->where('total','!=', 0)
+                                            ->where('returned', 'N');
+                                })->update([
+                                    'collected_status' => 'Completed',
+                                    'updated_by' => auth()->user()->email,
                                 ]);
 
         if($renterrequestupdate)
@@ -253,6 +312,7 @@ class RenterRequestsController extends Controller
     }
     
     public function destroydata($request,$RenterRequests){
+        return redirect()->route('dashboard.index');
         $RenterRequests->delete();
         
         $RenterRequests = RenterRequests::wherenot('accesstype', 'Renters')->get();
@@ -404,7 +464,10 @@ class RenterRequestsController extends Controller
 
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return redirect()->route('dashboard.index');
+                return view('rentersrequests.edit')
+                                ->with(['RenterRequests' => $RenterRequests])
+                                ->with(['renter' => $renter])
+                                ->with('fullname',$fullname);    
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){

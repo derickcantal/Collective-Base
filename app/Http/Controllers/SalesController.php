@@ -250,7 +250,11 @@ class SalesController extends Controller
                     $encoded = $image->toWebp()->save(storage_path('app/public/sales/'.$name_gen.'.webp'));
                     $path = 'sales/'.$name_gen.'.webp';
 
-                    Storage::disk('public')->delete($oldavatar);
+                    if($oldavatar = 'avatars/cash-default.jpg'){
+                        
+                    }else{  
+                        Storage::disk('public')->delete($oldavatar);
+                    }
                 }else{
                     $path = $oldavatar;
                 }
@@ -266,7 +270,11 @@ class SalesController extends Controller
                     $encoded1 = $image1->toWebp()->save(storage_path('app/public/salespayavatar/'.$name_gen1.'.webp'));
                     $path1 = 'salespayavatar/'.$name_gen1.'.webp';
 
-                    Storage::disk('public')->delete($oldavatar1);
+                    if($oldavatar1 = 'avatars/cash-default.jpg'){
+                        
+                    }else{  
+                        Storage::disk('public')->delete($oldavatar1);
+                    }
                 }else{
                     $path1 = $oldavatar1;
                 }

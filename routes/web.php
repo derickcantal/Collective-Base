@@ -83,7 +83,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('mycabinet/search', [MyCabinetController::class, 'search'])->name('mycabinet.search');
     Route::get('mycabinet/sales/{cabinetsales}', [MyCabinetController::class, 'cabinetsales'])->name('mycabinet.sales');
-    Route::get('mycabinet/search/cabinet', [MyCabinetController::class, 'cabinetsearch'])->name('mycabinet.cabinetsearch');
+    Route::get('mycabinet/search/{cabid}/cabinet', [MyCabinetController::class, 'cabinetsearch'])->name('mycabinet.cabinetsearch');
 
     Route::resource('mycabinet', MyCabinetController::class);
 

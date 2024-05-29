@@ -32,7 +32,8 @@ class DashboardController extends Controller
 
         $sales = Sales::where('userid',auth()->user()->userid)
                     ->where(function(Builder $builder){
-                        $builder->where('collected_status','Pending');
+                        $builder->where('collected_status','Pending')
+                                ->where('total','!=',0);
                     })->latest()->paginate(5);
 
         $RenterRequests = RenterRequests::where('userid',auth()->user()->userid)

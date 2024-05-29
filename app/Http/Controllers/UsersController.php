@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use \Carbon\Carbon;
-
+use League\CommonMark\Extension\Embed\Bridge\OscaroteroEmbedAdapter;
 
 class UsersController extends Controller
 {
@@ -176,7 +176,7 @@ class UsersController extends Controller
 
         if(auth()->user()->accesstype == 'Supervisor')
         {
-            if($request->accesstype == 'Adminstrator')
+            if($request->accesstype == 'Administrator')
             {
                 $userlog = user_login_log::query()->create([
                     'userid' => auth()->user()->userid,
@@ -340,6 +340,53 @@ class UsersController extends Controller
     
     public function destroydata($request,$user){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        if(auth()->user()->accesstype == 'Supervisor')
+        {
+            if($user->accesstype == 'Administrator')
+            {
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'Users. Activation. Admin Account',
+                    'status'  => 'Failed',
+                ]);
+                return redirect()->route('users.index')
+                        ->with('failed','User update failed');
+            }
+            elseif($user->accesstype == 'Supervisor')
+            {
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'Users. Activation. Supervisor Account.',
+                    'status'  => 'Failed',
+                ]);
+                return redirect()->route('users.index')
+                        ->with('failed','User update failed');
+            }
+        }
 
         if($user->status == 'Active')
         {

@@ -33,6 +33,7 @@ class MyRequestController extends Controller
     }
 
     public function loaddata(){
+
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         if(auth()->user()->accesstype =='Renters'){
             $cabinets = cabinet::where('userid',auth()->user()->userid)
@@ -77,6 +78,7 @@ class MyRequestController extends Controller
     }
 
     public function sales($cabid){
+        
         if(auth()->user()->accesstype =='Renters'){
             $history_sales = history_sales::where('cabid',$cabid)
                     ->where(function(Builder $builder){
@@ -122,6 +124,12 @@ class MyRequestController extends Controller
                     })->get();
 
             $totalsales = collect($history_sales)->sum('total');
+
+            if($totalsales == 0)
+            {
+                return redirect()->route('myrequest.index')
+                            ->with('failed','Sales Request creation failed');
+            }
             
             if(empty($request->rnotes))
             {
@@ -200,10 +208,10 @@ class MyRequestController extends Controller
                     'updated_by' => 'Null',
                     'mod'  => 0,
                     'notes' => 'My Request. Create',
-                    'status'  => 'Success',
+                    'status'  => 'Failed',
                 ]);  
                 return redirect()->route('myrequest.index')
-                            ->with('success','Sales Request creation failed');
+                            ->with('failed','Sales Request creation failed');
             }
 
         }else{
@@ -250,6 +258,34 @@ class MyRequestController extends Controller
      */
     public function create($cabid)
     {
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $cabinet = cabinet::where('cabid', $cabid)
+                            ->latest()
+                            ->first();
+
+        if($cabinet->userid != auth()->user()->userid)
+        {
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'My Request. Create. CID Error',
+                'status'  => 'Failed',
+            ]);  
+            return redirect()->route('myrequest.index')
+                                ->with('failed','Unknown Command.');
+        }
+
         if(auth()->user()->accesstype =='Renters'){
             $cabinet = cabinet::where('cabid',$cabid)
                     ->where(function(Builder $builder){
@@ -268,8 +304,31 @@ class MyRequestController extends Controller
 
                     
             $totalsales = collect($history_sales)->sum('total');
-                        
 
+            if($totalsales == 0)
+            {
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'My Request. Create. Zero Sales',
+                    'status'  => 'Failed',
+                ]); 
+
+                return redirect()->route('myrequest.index')
+                            ->with('failed','Sales Request creation failed');
+            }
+            
             return view('myrequest.create')
                         ->with(['cabinet'=>$cabinet])
                         ->with(['renter'=>$renter])
@@ -306,6 +365,33 @@ class MyRequestController extends Controller
      */
     public function show(string $cabid)
     {
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $cabinet = cabinet::where('cabid', $cabid)
+                            ->latest()
+                            ->first();
+        if($cabinet->userid != auth()->user()->userid)
+        {
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'My Request. Cabinet. CID Error',
+                'status'  => 'Failed',
+            ]); 
+
+            return redirect()->route('myrequest.index')
+                                ->with('failed','Unknown Command.');
+        }
         if(auth()->user()->accesstype =='Renters'){
             $history_sales = history_sales::where('cabid',$cabid)
             ->where(function(Builder $builder){
@@ -321,6 +407,23 @@ class MyRequestController extends Controller
 
             if($totalsales == 0)
             {
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'My Request. Cabinet. CID Error',
+                    'status'  => 'Failed',
+                ]);  
                 return redirect()->route('myrequest.index')
                                     ->with('failed','No Sales to collect.');
             }
