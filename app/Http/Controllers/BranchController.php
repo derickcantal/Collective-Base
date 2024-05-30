@@ -11,12 +11,8 @@ use \Carbon\Carbon;
 
 class BranchController extends Controller
 {
-    public function loaddata(){
+    public function userlog($notes,$status){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
-        $branches = branch::query()
-                    ->orderBy('status','asc')
-                    ->orderBy('branchname','asc')
-                    ->paginate(5);
         
         $userlog = user_login_log::query()->create([
             'userid' => auth()->user()->userid,
@@ -32,9 +28,19 @@ class BranchController extends Controller
             'created_by' => auth()->user()->email,
             'updated_by' => 'Null',
             'mod'  => 0,
-            'notes' => 'Branch',
-            'status'  => 'Success',
+            'notes' => $notes,
+            'status'  => $status,
         ]);
+    }
+
+    public function loaddata(){
+        $branches = branch::query()
+                    ->orderBy('status','asc')
+                    ->orderBy('branchname','asc')
+                    ->paginate(5);
+        $notes = 'Branch';
+        $status = 'Success';
+        $this->userlog($notes,$status);
         
         return view('branch.index',compact('branches'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -58,43 +64,17 @@ class BranchController extends Controller
     
         if ($branches) {
             //query successful
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Branch. Create',
-                'status'  => 'Success',
-            ]);
+            $notes = 'Branch. Create';
+            $status = 'Success';
+            $this->userlog($notes,$status);
+            
             return redirect()->route('branch.index')
                         ->with('success','Branch created successfully.');
         }else{
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Branch. Create',
-                'status'  => 'Failed',
-            ]);
+            $notes = 'Branch. Create';
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+            
             return redirect()->route('branch.index')
                         ->with('failed','Branch creation failed');
         }  
@@ -117,43 +97,17 @@ class BranchController extends Controller
                             'status' => 'Active',
                         ]);
         if($branchupdate){
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Branch. Update',
-                'status'  => 'Success',
-            ]);
+            $notes = 'Branch. Update';
+            $status = 'Success';
+            $this->userlog($notes,$status);
+            
             return redirect()->route('branch.index')
                             ->with('success','Branch updated successfully');
         }else{
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Branch. Update',
-                'status'  => 'Failed',
-            ]);
+            $notes = 'Branch. Update';
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+
             return redirect()->route('branch.index')
                             ->with('failed','Branch updated failed');
         }

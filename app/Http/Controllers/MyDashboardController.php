@@ -12,6 +12,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class MyDashboardController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      */

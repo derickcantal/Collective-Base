@@ -16,11 +16,9 @@ use Intervention\Image\Drivers\Imagick\Driver;
 
 class AttendanceController extends Controller
 {
-    public function loaddata(){
-        $attendance = attendance::latest()
-        ->paginate(5);
-
+    public function userlog($notes,$status){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        
         $userlog = user_login_log::query()->create([
             'userid' => auth()->user()->userid,
             'username' => auth()->user()->username,
@@ -35,9 +33,17 @@ class AttendanceController extends Controller
             'created_by' => auth()->user()->email,
             'updated_by' => 'Null',
             'mod'  => 0,
-            'notes' => 'Attendance',
-            'status'  => 'Success',
+            'notes' => $notes,
+            'status'  => $status,
         ]);
+    }
+    public function loaddata(){
+        $attendance = attendance::latest()
+        ->paginate(5);
+
+        $notes = 'Attendance';
+        $status = 'Success';
+        $this->userlog($notes,$status);
 
         return view('attendance.index',compact('attendance'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -50,24 +56,9 @@ class AttendanceController extends Controller
                                         ->orderBy('status','asc');
                                     })->paginate(5);
         
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
-        $userlog = user_login_log::query()->create([
-            'userid' => auth()->user()->userid,
-            'username' => auth()->user()->username,
-            'firstname' => auth()->user()->firstname,
-            'middlename' => auth()->user()->middlename,
-            'lastname' => auth()->user()->lastname,
-            'email' => auth()->user()->email,
-            'branchid' => auth()->user()->branchid,
-            'branchname' => auth()->user()->branchname,
-            'accesstype' => auth()->user()->accesstype,
-            'timerecorded'  => $timenow,
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'mod'  => 0,
-            'notes' => 'Attendance',
-            'status'  => 'Success',
-        ]);
+        $notes = 'Attendance';
+        $status = 'Success';
+        $this->userlog($notes,$status);
 
         return view('attendance.index',compact('attendance'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -132,26 +123,16 @@ class AttendanceController extends Controller
     
         if ($attendance) {
             //query successful
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Attendance. Create',
-                'status'  => 'Success',
-            ]);
+            $notes = 'Attendance. Create';
+            $status = 'Success';
+            $this->userlog($notes,$status);
+            
             return redirect()->route('attendance.index')
                         ->with('success','Attendance added successfully.');
         }else{
+            $notes = 'Attendance. Create';
+            $status = 'Failed';
+            $this->userlog($notes,$status);
             return redirect()->route('attendance.index')
                         ->with('failed','Attendance add failed');
         }  
@@ -230,50 +211,29 @@ class AttendanceController extends Controller
         
         if ($att) {
             //query successful
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Attendance. Update',
-                'status'  => 'Success',
-            ]);
+            $notes = 'Attendance. Update';
+            $status = 'Success';
+            $this->userlog($notes,$status);
+            
             return redirect()->route('attendance.index')
                         ->with('success','Attendance Updated successfully.');
         }else{
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Attendance. Update',
-                'status'  => 'Failed',
-            ]);
+            $notes = 'Attendance. Update';
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+          
             return redirect()->route('attendance.index')
                         ->with('failed','Attendance Update failed');
         }
     }
     
     public function destroydata(){
-    
+        $notes = 'Attendance. Destroy';
+        $status = 'Failed';
+        $this->userlog($notes,$status);
+        
+        return redirect()->route('attendance.index')
+                        ->with('failed','Unknown Command');
     }
 
 
@@ -386,6 +346,9 @@ class AttendanceController extends Controller
         if(empty($attendance->userid)){
             return view('attendance.create-put',['users' => $users]);
         }else{
+            $notes = 'Attendance. Create. Duplicate';
+            $status = 'Failed';
+            $this->userlog($notes,$status);
             return redirect()->route('attendance.index')
                         ->with('failed','Employee Already Added to Attendance');
         }

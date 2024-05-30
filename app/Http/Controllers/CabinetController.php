@@ -13,13 +13,8 @@ use \Carbon\Carbon;
 
 class CabinetController extends Controller
 {
-    public function loaddata(){
+    public function userlog($notes,$status){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
-        $cabinets = cabinet::query()
-                    ->orderBy('status','asc')
-                    ->orderBy('cabid','asc')
-                    ->orderBy('branchname','asc')
-                    ->paginate(5);
         
         $userlog = user_login_log::query()->create([
             'userid' => auth()->user()->userid,
@@ -35,9 +30,21 @@ class CabinetController extends Controller
             'created_by' => auth()->user()->email,
             'updated_by' => 'Null',
             'mod'  => 0,
-            'notes' => 'Cabinet',
-            'status'  => 'Success',
-        ]);            
+            'notes' => $notes,
+            'status'  => $status,
+        ]);
+    }
+    
+    public function loaddata(){
+        $cabinets = cabinet::query()
+                    ->orderBy('status','asc')
+                    ->orderBy('cabid','asc')
+                    ->orderBy('branchname','asc')
+                    ->paginate(5);
+        
+        $notes = 'Cabinet';
+        $status = 'Success';
+        $this->userlog($notes,$status);
 
         return view('cabinet.index',compact('cabinets'))
             ->with('i', (request()->input('page', 1) - 1) * 5);

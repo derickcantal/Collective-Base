@@ -17,6 +17,27 @@ use Intervention\Image\Drivers\Imagick\Driver;
 
 class RenterCashierRentalController extends Controller
 {
+    public function userlog($notes,$status){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        
+        $userlog = user_login_log::query()->create([
+            'userid' => auth()->user()->userid,
+            'username' => auth()->user()->username,
+            'firstname' => auth()->user()->firstname,
+            'middlename' => auth()->user()->middlename,
+            'lastname' => auth()->user()->lastname,
+            'email' => auth()->user()->email,
+            'branchid' => auth()->user()->branchid,
+            'branchname' => auth()->user()->branchname,
+            'accesstype' => auth()->user()->accesstype,
+            'timerecorded'  => $timenow,
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'mod'  => 0,
+            'notes' => $notes,
+            'status'  => $status,
+        ]);
+    }
     public function search(Request $request)
     {
         $cabinets = cabinet::where('branchname',auth()->user()->branchname)
@@ -179,10 +200,60 @@ class RenterCashierRentalController extends Controller
 
     public function select(Request $request,$cabid)
     {
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         if(auth()->user()->accesstype == 'Cashier'){
-            $cabinet = cabinet::where('cabid', $cabid)->first();
+            $cabinet = cabinet::where('cabid', $cabid)
+                                ->where(function(Builder $builder){
+                                    $builder->where('branchid',auth()->user()->branchid);
+                                })->first();
+            if(empty($cabinet))
+            {
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'Renter. Cashier. Rental. Invalid Account Header 1',
+                    'status'  => 'Failed',
+                ]); 
+                return redirect()->route('rentercashierrental.index')
+                    ->with('failed','Unknown Command. 1');
+            }
 
             $renter = Renters::where('userid', $cabinet->userid)->first();
+            
+            if(empty($renter))
+            {
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'Renter. Cashier. Rental. Invalid Account Header 2',
+                    'status'  => 'Failed',
+                ]);
+
+                return redirect()->route('rentercashierrental.index')
+                    ->with('failed','Unknown Command. 2');
+            }
 
             $rentername = $renter->lastname . ', ' . $renter->firstname;
 

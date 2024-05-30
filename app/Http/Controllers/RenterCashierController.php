@@ -22,6 +22,27 @@ use Illuminate\Support\Facades\DB;
 
 class RenterCashierController extends Controller
 {
+    public function userlog($notes,$status){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        
+        $userlog = user_login_log::query()->create([
+            'userid' => auth()->user()->userid,
+            'username' => auth()->user()->username,
+            'firstname' => auth()->user()->firstname,
+            'middlename' => auth()->user()->middlename,
+            'lastname' => auth()->user()->lastname,
+            'email' => auth()->user()->email,
+            'branchid' => auth()->user()->branchid,
+            'branchname' => auth()->user()->branchname,
+            'accesstype' => auth()->user()->accesstype,
+            'timerecorded'  => $timenow,
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'mod'  => 0,
+            'notes' => $notes,
+            'status'  => $status,
+        ]);
+    }
     public function cabinetupdate(Request $request)
     {
         $cabid = $request->cabid;
@@ -82,25 +103,85 @@ class RenterCashierController extends Controller
         
     }
 
-    public function cabinetmodify(Request $request){
-        $cabinet = cabinet::where('cabid',$request->cabid)->first();
+    public function cabinetmodify(Request $request)
+    {
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+
+        $cabinet = cabinet::where('cabid',$request->cabid)
+                        ->where(function(Builder $builder){
+                            $builder->where('branchid',auth()->user()->branchid);
+                        })->first();
+        if(empty($cabinet))
+        {
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Renter. Cashier. Cabinet. Modify. Account Not in Branch',
+                'status'  => 'Success',
+            ]);
+
+            return redirect()->route('renter.index')
+                    ->with('failed','Unknown Command.');
+        }
+        $branchlist = branchlist::where('userid', $cabinet->userid)
+                        ->where(function(Builder $builder){
+                            $builder->where('branchid',auth()->user()->branchid);
+                        })->first();
+
+        if(empty($branchlist))
+        {
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Renter. Cashier. Cabinet. Modify. Account Not in Branch',
+                'status'  => 'Success',
+            ]);
+
+            return redirect()->route('renter.index')
+                    ->with('failed','Unknown Command.');
+        }
 
         return view('rentercashier.show-cabinet-modify',['cabinet' => $cabinet]);
     }
 
 
-    public function cabinetdelete(Request $request){
+    public function cabinetdelete(Request $request)
+    {
         return redirect()->route('dashboard.index');
         $cabinet = cabinet::where('cabid',$request->cabid)->first();
         dd('delete');
 
     }
 
-    public function cabinetcreate(){
+    public function cabinetcreate()
+    {
 
     }
 
-    public function cabinetstore(Request $request){
+    public function cabinetstore(Request $request)
+    {
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $cabuser = $request->cabuser;
         
@@ -236,26 +317,62 @@ class RenterCashierController extends Controller
          ->with('success','Cabinet Assigned Successfully.');
     }
 
-    public function cabinetsearch(Request $request){
+    public function cabinetsearch(Request $request)
+    {
         
     }
-    public function cabinetadd(Request $request){
+    public function cabinetadd(Request $request)
+    {
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $cabuser = $request->cabuser;
 
-        $renter = Renters::where('userid',$request->cabuser)->first();
-        $cabinet = cabinet::where('branchname',auth()->user()->branchname)
+        $branchlist = branchlist::where('userid', $cabuser)
                         ->where(function(Builder $builder){
-                            $builder->where('email','=' ,'Vacant')
-                                    ->where('status','=' ,'Active');
-                        })
-        ->get();
+                            $builder->where('branchid',auth()->user()->branchid);
+                        })->first();
 
-        $rentername = $renter->lastname . ', ' . $renter->firstname;
+        if(empty($branchlist))
+        {
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Renter. Cashier. Cabinet. Assign. Account Not in Branch',
+                'status'  => 'Success',
+            ]);
 
-        return view('rentercashier.show-cabinet-create',compact('renter'))
-                                            ->with(compact('cabinet'))
-                                            ->with(['cabuser' => $cabuser])
-                                            ->with(['rentername' => $rentername]);
+            return redirect()->route('renter.index')
+                    ->with('failed','Unknown Command.');
+        }
+        else
+        {
+            $renter = Renters::where('userid',$request->cabuser)->first();
+
+            $cabinet = cabinet::where('branchname',auth()->user()->branchname)
+                            ->where(function(Builder $builder){
+                                $builder->where('email','=' ,'Vacant')
+                                        ->where('status','=' ,'Active');
+                            })->get();
+            
+
+            $rentername = $renter->lastname . ', ' . $renter->firstname;
+
+            return view('rentercashier.show-cabinet-create',compact('renter'))
+                                                ->with(compact('cabinet'))
+                                                ->with(['cabuser' => $cabuser])
+                                                ->with(['rentername' => $rentername]);
+        }
+        
     }
     public function search(Request $request)
     {
@@ -705,6 +822,37 @@ class RenterCashierController extends Controller
      */
     public function edit(Renters $renter)
     {
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+
+        $branchlist = branchlist::where('userid', $renter->userid)
+                        ->where(function(Builder $builder){
+                            $builder->where('branchid',auth()->user()->branchid);
+                        })->first();
+
+        if(empty($branchlist))
+        {
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'Renter. Cashier. Modify. Account Not in Branch',
+                'status'  => 'Success',
+            ]);
+
+            return redirect()->route('renter.index')
+                    ->with('failed','Unknown Command.');
+        }
+
         if(auth()->user()->accesstype == 'Cashier'){
             return view('rentercashier.edit',['renter' => $renter]);
         }else{
