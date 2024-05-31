@@ -68,24 +68,11 @@ class MyRentalController extends Controller
                     ->where(function(Builder $builder){
                         $builder->where('branchid',auth()->user()->branchid);
                     })->paginate(5);
-        
-        $userlog = user_login_log::query()->create([
-            'userid' => auth()->user()->userid,
-            'username' => auth()->user()->username,
-            'firstname' => auth()->user()->firstname,
-            'middlename' => auth()->user()->middlename,
-            'lastname' => auth()->user()->lastname,
-            'email' => auth()->user()->email,
-            'branchid' => auth()->user()->branchid,
-            'branchname' => auth()->user()->branchname,
-            'accesstype' => auth()->user()->accesstype,
-            'timerecorded'  => $timenow,
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'mod'  => 0,
-            'notes' => 'My Rental',
-            'status'  => 'Success',
-        ]);  
+
+        $notes = 'My Rental';
+        $status = 'Success';
+        $this->userlog($notes,$status);
+       
 
         if(!empty($RentalPayments))
         {
@@ -99,6 +86,9 @@ class MyRentalController extends Controller
         }
         else
         {
+            $notes = 'My Rental. No Record Found.';
+            $status = 'Failed';
+            $this->userlog($notes,$status);
             return redirect()->back()
                                 ->with('failed','No Record Found.');
         }
@@ -132,6 +122,10 @@ class MyRentalController extends Controller
             }
             else
             {
+                $notes = 'My Rental. No Record Found.';
+                $status = 'Failed.';
+                $this->userlog($notes,$status);
+
                 return redirect()->back()
                                     ->with('failed','No Record Found.');
             }
@@ -209,6 +203,10 @@ class MyRentalController extends Controller
             if(!empty($RentalPayments))
             {
                 if($totalsales == 0){
+                    $notes = 'My Rental. History. No Record Found.';
+                    $status = 'Failed';
+                    $this->userlog($notes,$status);
+
                     return redirect()->back()
                                     ->with('failed','No Record Found.');
                 }
@@ -219,6 +217,10 @@ class MyRentalController extends Controller
             elseif(!empty($RentalPaymentsHistory))
             {
                 if($totalsales1 == 0){
+                    $notes = 'My Rental. History. No Record Found.';
+                    $status = 'Failed';
+                    $this->userlog($notes,$status);
+
                     return redirect()->back()
                                     ->with('failed','No Record Found.');
                 }
@@ -228,6 +230,10 @@ class MyRentalController extends Controller
             }
             else
             {
+                    $notes = 'My Rental. History. No Record Found.';
+                    $status = 'Failed';
+                    $this->userlog($notes,$status);
+                    
                 return redirect()->back()
                                     ->with('failed','No Record Found.');
             }

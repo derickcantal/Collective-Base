@@ -47,23 +47,11 @@ class UsersController extends Controller
         $user = User::whereNot('accesstype',"Renters")
                     ->orderBy('status','asc')
                     ->paginate(5);
-        $userlog = user_login_log::query()->create([
-            'userid' => auth()->user()->userid,
-            'username' => auth()->user()->username,
-            'firstname' => auth()->user()->firstname,
-            'middlename' => auth()->user()->middlename,
-            'lastname' => auth()->user()->lastname,
-            'email' => auth()->user()->email,
-            'branchid' => auth()->user()->branchid,
-            'branchname' => auth()->user()->branchname,
-            'accesstype' => auth()->user()->accesstype,
-            'timerecorded'  => $timenow,
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'mod'  => 0,
-            'notes' => 'Users.',
-            'status'  => 'Success',
-        ]);
+
+        $notes = 'Users';
+        $status = 'Success';
+        $this->userlog($notes,$status);
+
         return view('users.index',compact('user'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -81,45 +69,19 @@ class UsersController extends Controller
         {
             if($request->accesstype == 'Adminstrator')
             {
-                $userlog = user_login_log::query()->create([
-                    'userid' => auth()->user()->userid,
-                    'username' => auth()->user()->username,
-                    'firstname' => auth()->user()->firstname,
-                    'middlename' => auth()->user()->middlename,
-                    'lastname' => auth()->user()->lastname,
-                    'email' => auth()->user()->email,
-                    'branchid' => auth()->user()->branchid,
-                    'branchname' => auth()->user()->branchname,
-                    'accesstype' => auth()->user()->accesstype,
-                    'timerecorded'  => $timenow,
-                    'created_by' => auth()->user()->email,
-                    'updated_by' => 'Null',
-                    'mod'  => 0,
-                    'notes' => 'Users. Create. Admin Account',
-                    'status'  => 'Success',
-                ]);
+                $notes = 'Users. Create. Admin Account';
+                $status = 'Failed';
+                $this->userlog($notes,$status);
+
                 return redirect()->route('users.index')
                         ->with('failed','User creation failed');
             }
             elseif($request->accesstype == 'Supervisor')
             {
-                $userlog = user_login_log::query()->create([
-                    'userid' => auth()->user()->userid,
-                    'username' => auth()->user()->username,
-                    'firstname' => auth()->user()->firstname,
-                    'middlename' => auth()->user()->middlename,
-                    'lastname' => auth()->user()->lastname,
-                    'email' => auth()->user()->email,
-                    'branchid' => auth()->user()->branchid,
-                    'branchname' => auth()->user()->branchname,
-                    'accesstype' => auth()->user()->accesstype,
-                    'timerecorded'  => $timenow,
-                    'created_by' => auth()->user()->email,
-                    'updated_by' => 'Null',
-                    'mod'  => 0,
-                    'notes' => 'Users. Create. Supervisor Account',
-                    'status'  => 'Success',
-                ]);
+                $notes = 'Users. Create. Supervisor Account';
+                $status = 'Failed';
+                $this->userlog($notes,$status);
+
                 return redirect()->route('users.index')
                         ->with('failed','User creation failed');
             }
@@ -147,43 +109,17 @@ class UsersController extends Controller
     
         if ($user) {
             //query successful
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Users. Create.',
-                'status'  => 'Success',
-            ]);
+            $notes = 'Users. Create.';
+            $status = 'Success';
+            $this->userlog($notes,$status);
+            
             return redirect()->route('users.index')
                         ->with('success','User created successfully.');
         }else{
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Users. Create.',
-                'status'  => 'Failed',
-            ]);
+            $notes = 'Users. Create.';
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+
             return redirect()->route('users.index')
                         ->with('failed','User creation failed');
         }  
@@ -199,45 +135,19 @@ class UsersController extends Controller
         {
             if($request->accesstype == 'Administrator')
             {
-                $userlog = user_login_log::query()->create([
-                    'userid' => auth()->user()->userid,
-                    'username' => auth()->user()->username,
-                    'firstname' => auth()->user()->firstname,
-                    'middlename' => auth()->user()->middlename,
-                    'lastname' => auth()->user()->lastname,
-                    'email' => auth()->user()->email,
-                    'branchid' => auth()->user()->branchid,
-                    'branchname' => auth()->user()->branchname,
-                    'accesstype' => auth()->user()->accesstype,
-                    'timerecorded'  => $timenow,
-                    'created_by' => auth()->user()->email,
-                    'updated_by' => 'Null',
-                    'mod'  => 0,
-                    'notes' => 'Users. Update. Admin Account',
-                    'status'  => 'Failed',
-                ]);
+                $notes = 'Users. Create. Admin Account';
+                $status = 'Failed';
+                $this->userlog($notes,$status);
+                
                 return redirect()->route('users.index')
                         ->with('failed','User update failed');
             }
             elseif($request->accesstype == 'Supervisor')
             {
-                $userlog = user_login_log::query()->create([
-                    'userid' => auth()->user()->userid,
-                    'username' => auth()->user()->username,
-                    'firstname' => auth()->user()->firstname,
-                    'middlename' => auth()->user()->middlename,
-                    'lastname' => auth()->user()->lastname,
-                    'email' => auth()->user()->email,
-                    'branchid' => auth()->user()->branchid,
-                    'branchname' => auth()->user()->branchname,
-                    'accesstype' => auth()->user()->accesstype,
-                    'timerecorded'  => $timenow,
-                    'created_by' => auth()->user()->email,
-                    'updated_by' => 'Null',
-                    'mod'  => 0,
-                    'notes' => 'Users. Update. Supervisor Account.',
-                    'status'  => 'Success',
-                ]);
+                $notes = 'Users. Create. Supervisor Account';
+                $status = 'Failed';
+                $this->userlog($notes,$status);
+                
                 return redirect()->route('users.index')
                         ->with('failed','User update failed');
             }
@@ -259,43 +169,17 @@ class UsersController extends Controller
                 'status' => $request->status,
             ]);
             if($user){
-                $userlog = user_login_log::query()->create([
-                    'userid' => auth()->user()->userid,
-                    'username' => auth()->user()->username,
-                    'firstname' => auth()->user()->firstname,
-                    'middlename' => auth()->user()->middlename,
-                    'lastname' => auth()->user()->lastname,
-                    'email' => auth()->user()->email,
-                    'branchid' => auth()->user()->branchid,
-                    'branchname' => auth()->user()->branchname,
-                    'accesstype' => auth()->user()->accesstype,
-                    'timerecorded'  => $timenow,
-                    'created_by' => auth()->user()->email,
-                    'updated_by' => 'Null',
-                    'mod'  => 0,
-                    'notes' => 'Users. Update',
-                    'status'  => 'Success',
-                ]);
+                $notes = 'Users. Update.';
+                $status = 'Success';
+                $this->userlog($notes,$status);
+               
                 return redirect()->route('users.index')
                             ->with('success','User updated successfully');
             }else{
-                $userlog = user_login_log::query()->create([
-                    'userid' => auth()->user()->userid,
-                    'username' => auth()->user()->username,
-                    'firstname' => auth()->user()->firstname,
-                    'middlename' => auth()->user()->middlename,
-                    'lastname' => auth()->user()->lastname,
-                    'email' => auth()->user()->email,
-                    'branchid' => auth()->user()->branchid,
-                    'branchname' => auth()->user()->branchname,
-                    'accesstype' => auth()->user()->accesstype,
-                    'timerecorded'  => $timenow,
-                    'created_by' => auth()->user()->email,
-                    'updated_by' => 'Null',
-                    'mod'  => 0,
-                    'notes' => 'Users. Update',
-                    'status'  => 'Failed',
-                ]);
+                $notes = 'Users. Update.';
+                $status = 'Failed';
+                $this->userlog($notes,$status);
+
                 return redirect()->route('users.index')
                             ->with('failed','User update failed');
             }
@@ -316,43 +200,18 @@ class UsersController extends Controller
                 'status' => $request->status,
             ]);
             if($user){
-                $userlog = user_login_log::query()->create([
-                    'userid' => auth()->user()->userid,
-                    'username' => auth()->user()->username,
-                    'firstname' => auth()->user()->firstname,
-                    'middlename' => auth()->user()->middlename,
-                    'lastname' => auth()->user()->lastname,
-                    'email' => auth()->user()->email,
-                    'branchid' => auth()->user()->branchid,
-                    'branchname' => auth()->user()->branchname,
-                    'accesstype' => auth()->user()->accesstype,
-                    'timerecorded'  => $timenow,
-                    'created_by' => auth()->user()->email,
-                    'updated_by' => 'Null',
-                    'mod'  => 0,
-                    'notes' => 'Users. Update',
-                    'status'  => 'Success',
-                ]);
+                $notes = 'Users. Update.';
+                $status = 'Success';
+                $this->userlog($notes,$status);
+
+                
                 return redirect()->route('users.index')
                             ->with('success','User updated successfully');
             }else{
-                $userlog = user_login_log::query()->create([
-                    'userid' => auth()->user()->userid,
-                    'username' => auth()->user()->username,
-                    'firstname' => auth()->user()->firstname,
-                    'middlename' => auth()->user()->middlename,
-                    'lastname' => auth()->user()->lastname,
-                    'email' => auth()->user()->email,
-                    'branchid' => auth()->user()->branchid,
-                    'branchname' => auth()->user()->branchname,
-                    'accesstype' => auth()->user()->accesstype,
-                    'timerecorded'  => $timenow,
-                    'created_by' => auth()->user()->email,
-                    'updated_by' => 'Null',
-                    'mod'  => 0,
-                    'notes' => 'Users. Update',
-                    'status'  => 'Failed',
-                ]);
+                $notes = 'Users. Update.';
+                $status = 'Failed';
+                $this->userlog($notes,$status);
+                
                 return redirect()->route('users.index')
                             ->with('failed','User update failed');
             }
@@ -360,50 +219,34 @@ class UsersController extends Controller
     }
     
     public function destroydata($request,$user){
+        $fullname = $user->lastname . ', ' . $user->firstname . ' ' . $user->middlename;
+
+        if($user->userid == auth()->user()->userid){
+            $notes = 'Users. Activation. Self Account. ' . $fullname;
+                $status = 'Failed';
+                $this->userlog($notes,$status);
+
+                return redirect()->route('users.index')
+                        ->with('failed','User Update on own account not allowed.');
+        }
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         if(auth()->user()->accesstype == 'Supervisor')
         {
             if($user->accesstype == 'Administrator')
             {
-                $userlog = user_login_log::query()->create([
-                    'userid' => auth()->user()->userid,
-                    'username' => auth()->user()->username,
-                    'firstname' => auth()->user()->firstname,
-                    'middlename' => auth()->user()->middlename,
-                    'lastname' => auth()->user()->lastname,
-                    'email' => auth()->user()->email,
-                    'branchid' => auth()->user()->branchid,
-                    'branchname' => auth()->user()->branchname,
-                    'accesstype' => auth()->user()->accesstype,
-                    'timerecorded'  => $timenow,
-                    'created_by' => auth()->user()->email,
-                    'updated_by' => 'Null',
-                    'mod'  => 0,
-                    'notes' => 'Users. Activation. Admin Account',
-                    'status'  => 'Failed',
-                ]);
+                $notes = 'Users. Activation. Admin Account. ' . $fullname;
+                $status = 'Failed';
+                $this->userlog($notes,$status);
+
                 return redirect()->route('users.index')
                         ->with('failed','User update failed');
             }
             elseif($user->accesstype == 'Supervisor')
             {
-                $userlog = user_login_log::query()->create([
-                    'userid' => auth()->user()->userid,
-                    'username' => auth()->user()->username,
-                    'firstname' => auth()->user()->firstname,
-                    'middlename' => auth()->user()->middlename,
-                    'lastname' => auth()->user()->lastname,
-                    'email' => auth()->user()->email,
-                    'branchid' => auth()->user()->branchid,
-                    'branchname' => auth()->user()->branchname,
-                    'accesstype' => auth()->user()->accesstype,
-                    'timerecorded'  => $timenow,
-                    'created_by' => auth()->user()->email,
-                    'updated_by' => 'Null',
-                    'mod'  => 0,
-                    'notes' => 'Users. Activation. Supervisor Account.',
-                    'status'  => 'Failed',
-                ]);
+                $notes = 'Users. Activation. Supervisor Account. ' . $fullname;
+                $status = 'Failed';
+                $this->userlog($notes,$status);
+
                 return redirect()->route('users.index')
                         ->with('failed','User update failed');
             }
@@ -419,23 +262,10 @@ class UsersController extends Controller
 
         $user = User::wherenot('accesstype', 'Renters')->get();
 
-        $userlog = user_login_log::query()->create([
-            'userid' => auth()->user()->userid,
-            'username' => auth()->user()->username,
-            'firstname' => auth()->user()->firstname,
-            'middlename' => auth()->user()->middlename,
-            'lastname' => auth()->user()->lastname,
-            'email' => auth()->user()->email,
-            'branchid' => auth()->user()->branchid,
-            'branchname' => auth()->user()->branchname,
-            'accesstype' => auth()->user()->accesstype,
-            'timerecorded'  => $timenow,
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'mod'  => 0,
-            'notes' => 'Users. Deactivate',
-            'status'  => 'Success',
-        ]);
+        $notes = 'Users. Deactivate. ' . $fullname;
+        $status = 'Success';
+        $this->userlog($notes,$status);
+
         return redirect()->route('users.index')
             ->with('success','User Decativated successfully');
         }
@@ -449,23 +279,10 @@ class UsersController extends Controller
 
         $user = User::wherenot('accesstype', 'Renters')->get();
 
-        $userlog = user_login_log::query()->create([
-            'userid' => auth()->user()->userid,
-            'username' => auth()->user()->username,
-            'firstname' => auth()->user()->firstname,
-            'middlename' => auth()->user()->middlename,
-            'lastname' => auth()->user()->lastname,
-            'email' => auth()->user()->email,
-            'branchid' => auth()->user()->branchid,
-            'branchname' => auth()->user()->branchname,
-            'accesstype' => auth()->user()->accesstype,
-            'timerecorded'  => $timenow,
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'mod'  => 0,
-            'notes' => 'Users. Activate',
-            'status'  => 'Success',
-        ]);
+        $notes = 'Users. Activate. ' . $fullname;
+        $status = 'Success';
+        $this->userlog($notes,$status);
+
         return redirect()->route('users.index')
             ->with('success','User Activated successfully');
         }

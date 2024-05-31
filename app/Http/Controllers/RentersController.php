@@ -40,28 +40,12 @@ class RentersController extends Controller
         ]);
     }
     public function loaddata(){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $renter = Renters::where('accesstype',"Renters")
                             ->orderBy('status','asc')
                             ->paginate(5);
-        
-         $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Renters.',
-                'status'  => 'Success',
-            ]);
+        $notes = 'Renter';
+        $status = 'Success';
+        $this->userlog($notes,$status);
 
         return view('renters.index',compact('renter'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -119,43 +103,17 @@ class RentersController extends Controller
                 
                 if ($cabinets) {
                     //query successful
-                    $userlog = user_login_log::query()->create([
-                        'userid' => auth()->user()->userid,
-                        'username' => auth()->user()->username,
-                        'firstname' => auth()->user()->firstname,
-                        'middlename' => auth()->user()->middlename,
-                        'lastname' => auth()->user()->lastname,
-                        'email' => auth()->user()->email,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'accesstype' => auth()->user()->accesstype,
-                        'timerecorded'  => $timenow,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod'  => 0,
-                        'notes' => 'Renters. Cabinet. Update',
-                        'status'  => 'Success',
-                    ]);
+                    $notes = 'Renter. Cabinet. Update, ' . $rent->lastname;
+                    $status = 'Success';
+                    $this->userlog($notes,$status);
+
                     return redirect()->route('renters.index')
                                 ->with('success','Cabinet updated successfully.');
                 }else{
-                    $userlog = user_login_log::query()->create([
-                        'userid' => auth()->user()->userid,
-                        'username' => auth()->user()->username,
-                        'firstname' => auth()->user()->firstname,
-                        'middlename' => auth()->user()->middlename,
-                        'lastname' => auth()->user()->lastname,
-                        'email' => auth()->user()->email,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'accesstype' => auth()->user()->accesstype,
-                        'timerecorded'  => $timenow,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod'  => 0,
-                        'notes' => 'Renters. Cabinet. Update',
-                        'status'  => 'Failed',
-                    ]);
+                    $notes = 'Renter. Cabinet. Update';
+                    $status = 'Failed';
+                    $this->userlog($notes,$status);
+
                     return redirect()->route('renters.update')
                                 ->with('failed','Cabinet update failed');
                 }
@@ -180,66 +138,27 @@ class RentersController extends Controller
 
                 if ($cabinets) {
                     //query successful
-                    $userlog = user_login_log::query()->create([
-                        'userid' => auth()->user()->userid,
-                        'username' => auth()->user()->username,
-                        'firstname' => auth()->user()->firstname,
-                        'middlename' => auth()->user()->middlename,
-                        'lastname' => auth()->user()->lastname,
-                        'email' => auth()->user()->email,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'accesstype' => auth()->user()->accesstype,
-                        'timerecorded'  => $timenow,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod'  => 0,
-                        'notes' => 'Renters. Cabinet. Update',
-                        'status'  => 'Success',
-                    ]);
+                    $notes = 'Renter. Cabinet. Update, ' . $rent->lastname;
+                    $status = 'Success';
+                    $this->userlog($notes,$status);
+
                     return redirect()->route('renters.index')
                                 ->with('success','Cabinet updated successfully.');
                 }else{
-                    $userlog = user_login_log::query()->create([
-                        'userid' => auth()->user()->userid,
-                        'username' => auth()->user()->username,
-                        'firstname' => auth()->user()->firstname,
-                        'middlename' => auth()->user()->middlename,
-                        'lastname' => auth()->user()->lastname,
-                        'email' => auth()->user()->email,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'accesstype' => auth()->user()->accesstype,
-                        'timerecorded'  => $timenow,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod'  => 0,
-                        'notes' => 'Renters. Cabinet. Update',
-                        'status'  => 'Failed',
-                    ]);
+                    $notes = 'Renter. Cabinet. Update, ' . $rent->lastname;
+                    $status = 'Failed';
+                    $this->userlog($notes,$status);
+
                     return redirect()->route('renters.update')
                                 ->with('failed','Cabinet update failed');
                 }
             }
             
         }else{
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Renters. Cabinet. Update. Inactive',
-                'status'  => 'Failed',
-            ]);
+            $notes = 'Renter. Cabinet. Update, Inactive. ' . $rent->lastname;
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+            
             return redirect()->route('cabinet.index')
                             ->with('failed','Cabinet Inactive');
         }
@@ -260,23 +179,10 @@ class RentersController extends Controller
             'mod' => $mod + 1,
         ]);
 
-        $userlog = user_login_log::query()->create([
-            'userid' => auth()->user()->userid,
-            'username' => auth()->user()->username,
-            'firstname' => auth()->user()->firstname,
-            'middlename' => auth()->user()->middlename,
-            'lastname' => auth()->user()->lastname,
-            'email' => auth()->user()->email,
-            'branchid' => auth()->user()->branchid,
-            'branchname' => auth()->user()->branchname,
-            'accesstype' => auth()->user()->accesstype,
-            'timerecorded'  => $timenow,
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'mod'  => 0,
-            'notes' => 'Renters. Cabinet. Deactivate',
-            'status'  => 'Success',
-        ]);  
+        $notes = 'Renter. Cabinet. Deactivate. ' . $cabinet->cabinetname;
+        $status = 'Success';
+        $this->userlog($notes,$status);
+
         return redirect()->route('renters.show',$cabinet->userid)
                             ->with('success','Cabinet Deactivated successfully');
         }
@@ -289,23 +195,11 @@ class RentersController extends Controller
             'mod' => $mod + 1,
         ]);
 
-        $userlog = user_login_log::query()->create([
-            'userid' => auth()->user()->userid,
-            'username' => auth()->user()->username,
-            'firstname' => auth()->user()->firstname,
-            'middlename' => auth()->user()->middlename,
-            'lastname' => auth()->user()->lastname,
-            'email' => auth()->user()->email,
-            'branchid' => auth()->user()->branchid,
-            'branchname' => auth()->user()->branchname,
-            'accesstype' => auth()->user()->accesstype,
-            'timerecorded'  => $timenow,
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'mod'  => 0,
-            'notes' => 'Renters. Cabinet. Activate',
-            'status'  => 'Success',
-        ]); 
+        $notes = 'Renter. Cabinet. Activate. ' . $cabinet->cabinetname;
+        $status = 'Success';
+        $this->userlog($notes,$status);
+
+        
         return redirect()->route('renters.show',$cabinet->userid)
                             ->with('success','Cabinet Activated successfully');
         }
@@ -336,45 +230,20 @@ class RentersController extends Controller
             'status' => 'Active',
         ]);
         
+        $fullname = $request->lastname . ', ' . $request->firstname . ' ' . $request->middlename;
         if ($renter) {
             //query successful
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Renters. Create',
-                'status'  => 'Success',
-            ]);
+            $notes = 'Renter. Create. ' . $fullname;
+            $status = 'Success';
+            $this->userlog($notes,$status);
+
             return redirect()->route('renters.index')
                         ->with('success','Renter created successfully.');
         }else{
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Renters. Create',
-                'status'  => 'Failed',
-            ]);
+            $notes = 'Renter. Create. ' . $fullname;
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+
             return redirect()->route('renters.index')
                         ->with('success','Renter creation failed');
         }  
@@ -385,6 +254,7 @@ class RentersController extends Controller
         $mod = 0;
         $mod = $renter->mod;
         $br = branch::where('branchname',$request->branchname)->first();
+        $fullname = $request->lastname . ', ' . $request->firstname . ' ' . $request->middlename;
 
         if($request->password == null){
             $renter =Renters::where('userid',$renter->userid)->update([
@@ -414,43 +284,17 @@ class RentersController extends Controller
         }
         
         if($renter){
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Renters. Update',
-                'status'  => 'Success',
-            ]);
+            $notes = 'Renter. Update. ' . $fullname;
+            $status = 'Success';
+            $this->userlog($notes,$status);
+            
             return redirect()->route('renters.index')
                         ->with('success','Renter updated successfully');
         }else{
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Renters. Update',
-                'status'  => 'Failed',
-            ]);
+            $notes = 'Renter. Update. ' . $fullname;
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+
             return redirect()->route('renters.index')
                         ->with('failed','Renter update failed');
         }
@@ -458,6 +302,10 @@ class RentersController extends Controller
     
     public function destroydata($renter){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+
+        $rent = Renters::where('userid', $renter->userid)->first();
+        $fullname = $rent->lastname . ', ' . $rent->firstname . ' ' . $rent->middlename;
+
         if($renter->status == 'Active')
         {
             Renters::where('userid', $renter->userid)
@@ -466,24 +314,11 @@ class RentersController extends Controller
         ]);
 
         $renter = Renters::wherenot('accesstype', 'Renters')->get();
+
+        $notes = 'Renter. Deactivate. ' . $fullname;
+        $status = 'Success';
+        $this->userlog($notes,$status);
         
-        $userlog = user_login_log::query()->create([
-            'userid' => auth()->user()->userid,
-            'username' => auth()->user()->username,
-            'firstname' => auth()->user()->firstname,
-            'middlename' => auth()->user()->middlename,
-            'lastname' => auth()->user()->lastname,
-            'email' => auth()->user()->email,
-            'branchid' => auth()->user()->branchid,
-            'branchname' => auth()->user()->branchname,
-            'accesstype' => auth()->user()->accesstype,
-            'timerecorded'  => $timenow,
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'mod'  => 0,
-            'notes' => 'Renters. Deactivate',
-            'status'  => 'Success',
-        ]);
         return redirect()->route('renters.index')
             ->with('success','User Deactivated successfully'); 
         }
@@ -496,23 +331,10 @@ class RentersController extends Controller
 
         $renter = Renters::wherenot('accesstype', 'Renters')->get();
 
-        $userlog = user_login_log::query()->create([
-            'userid' => auth()->user()->userid,
-            'username' => auth()->user()->username,
-            'firstname' => auth()->user()->firstname,
-            'middlename' => auth()->user()->middlename,
-            'lastname' => auth()->user()->lastname,
-            'email' => auth()->user()->email,
-            'branchid' => auth()->user()->branchid,
-            'branchname' => auth()->user()->branchname,
-            'accesstype' => auth()->user()->accesstype,
-            'timerecorded'  => $timenow,
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'mod'  => 0,
-            'notes' => 'Renters. Activate.',
-            'status'  => 'Success',
-        ]);
+        $notes = 'Renter. Activate. ' . $fullname;
+        $status = 'Success';
+        $this->userlog($notes,$status);
+
         return redirect()->route('renters.index')
             ->with('success','User Activated successfully');
         }
@@ -527,6 +349,7 @@ class RentersController extends Controller
     {
         
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $fullname = $request->lastname . ', ' . $request->firstname . ' ' . $request->middlename;
         if(auth()->user()->accesstype == 'Administrator'){
             if($request->newrenter == 'Y'){
                 if($request->password == $request->password_confirmation){
@@ -575,65 +398,26 @@ class RentersController extends Controller
 
 
                     if($renter){
-                        $userlog = user_login_log::query()->create([
-                            'userid' => auth()->user()->userid,
-                            'username' => auth()->user()->username,
-                            'firstname' => auth()->user()->firstname,
-                            'middlename' => auth()->user()->middlename,
-                            'lastname' => auth()->user()->lastname,
-                            'email' => auth()->user()->email,
-                            'branchid' => auth()->user()->branchid,
-                            'branchname' => auth()->user()->branchname,
-                            'accesstype' => auth()->user()->accesstype,
-                            'timerecorded'  => $timenow,
-                            'created_by' => auth()->user()->email,
-                            'updated_by' => 'Null',
-                            'mod'  => 0,
-                            'notes' => 'Renters. Register',
-                            'status'  => 'Success',
-                        ]);
+                        $notes = 'Renter. Register. ' . $fullname;
+                        $status = 'Success';
+                        $this->userlog($notes,$status);
+                        
                         return redirect()->route('renters.index')
                                 ->with('success','Renter Registered successfully.');
                     }else{
-                        $userlog = user_login_log::query()->create([
-                            'userid' => auth()->user()->userid,
-                            'username' => auth()->user()->username,
-                            'firstname' => auth()->user()->firstname,
-                            'middlename' => auth()->user()->middlename,
-                            'lastname' => auth()->user()->lastname,
-                            'email' => auth()->user()->email,
-                            'branchid' => auth()->user()->branchid,
-                            'branchname' => auth()->user()->branchname,
-                            'accesstype' => auth()->user()->accesstype,
-                            'timerecorded'  => $timenow,
-                            'created_by' => auth()->user()->email,
-                            'updated_by' => 'Null',
-                            'mod'  => 0,
-                            'notes' => 'Renters. Register',
-                            'status'  => 'Failed',
-                        ]);
+                        $notes = 'Renter. Register. ' . $fullname;
+                        $status = 'Failed';
+                        $this->userlog($notes,$status);
+
                         return redirect()->back()
                                     ->with('failed','Renter Registration failed. Save Error.');
                     }
         
                 }else{
-                    $userlog = user_login_log::query()->create([
-                        'userid' => auth()->user()->userid,
-                        'username' => auth()->user()->username,
-                        'firstname' => auth()->user()->firstname,
-                        'middlename' => auth()->user()->middlename,
-                        'lastname' => auth()->user()->lastname,
-                        'email' => auth()->user()->email,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'accesstype' => auth()->user()->accesstype,
-                        'timerecorded'  => $timenow,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod'  => 0,
-                        'notes' => 'Renters. Register. Password Mismatched',
-                        'status'  => 'Failed',
-                    ]);
+                    $notes = 'Renter. Register. Password Mismatched. ' . $fullname;
+                    $status = 'Failed';
+                    $this->userlog($notes,$status);
+                   
                     return redirect()->back()
                                     ->with('failed','Renter Registration failed. Password Mismatched.');
                 }
@@ -665,88 +449,36 @@ class RentersController extends Controller
 
                     if($branchlistadd)
                     {
-                        $userlog = user_login_log::query()->create([
-                            'userid' => auth()->user()->userid,
-                            'username' => auth()->user()->username,
-                            'firstname' => auth()->user()->firstname,
-                            'middlename' => auth()->user()->middlename,
-                            'lastname' => auth()->user()->lastname,
-                            'email' => auth()->user()->email,
-                            'branchid' => auth()->user()->branchid,
-                            'branchname' => auth()->user()->branchname,
-                            'accesstype' => auth()->user()->accesstype,
-                            'timerecorded'  => $timenow,
-                            'created_by' => auth()->user()->email,
-                            'updated_by' => 'Null',
-                            'mod'  => 0,
-                            'notes' => 'Renters. Register',
-                            'status'  => 'Success',
-                        ]);
+                        $notes = 'Renter. Register. ' . $fullname;
+                        $status = 'Success';
+                        $this->userlog($notes,$status);
+                        
                         return redirect()->route('renters.index')
                                 ->with('success','Renter Registered successfully.');
                     }else{
-                        $userlog = user_login_log::query()->create([
-                            'userid' => auth()->user()->userid,
-                            'username' => auth()->user()->username,
-                            'firstname' => auth()->user()->firstname,
-                            'middlename' => auth()->user()->middlename,
-                            'lastname' => auth()->user()->lastname,
-                            'email' => auth()->user()->email,
-                            'branchid' => auth()->user()->branchid,
-                            'branchname' => auth()->user()->branchname,
-                            'accesstype' => auth()->user()->accesstype,
-                            'timerecorded'  => $timenow,
-                            'created_by' => auth()->user()->email,
-                            'updated_by' => 'Null',
-                            'mod'  => 0,
-                            'notes' => 'Renters. Register',
-                            'status'  => 'Failed',
-                        ]);
+                        $notes = 'Renter. Register. ' . $fullname;
+                        $status = 'Failed';
+                        $this->userlog($notes,$status);
+
                         return redirect()->route('renters.index')
                                     ->with('failed','Renter Registration failed');
                     }  
                 }
                 else{
-                    $userlog = user_login_log::query()->create([
-                        'userid' => auth()->user()->userid,
-                        'username' => auth()->user()->username,
-                        'firstname' => auth()->user()->firstname,
-                        'middlename' => auth()->user()->middlename,
-                        'lastname' => auth()->user()->lastname,
-                        'email' => auth()->user()->email,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'accesstype' => auth()->user()->accesstype,
-                        'timerecorded'  => $timenow,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod'  => 0,
-                        'notes' => 'Renters. Register. Already Registered',
-                        'status'  => 'Failed',
-                    ]);
+                    $notes = 'Renter. Register. Already Registered. ' . $fullname;
+                    $status = 'Failed';
+                    $this->userlog($notes,$status);
+
                     return redirect()->route('renters.index')
                                     ->with('failed','Renter Registration failed: Already Registered.');
 
                 }
             }
         }else{
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Renters. Register',
-                'status'  => 'Failed',
-            ]);
+            $notes = 'Renter. Register. Already Registered. ' . $fullname;
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+
             return redirect()->route('dashboard.index')->with('failed','Renter Registration failed.');
         }
         

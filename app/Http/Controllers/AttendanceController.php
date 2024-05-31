@@ -16,7 +16,8 @@ use Intervention\Image\Drivers\Imagick\Driver;
 
 class AttendanceController extends Controller
 {
-    public function userlog($notes,$status){
+    public function userlog($notes,$status)
+    {
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         
         $userlog = user_login_log::query()->create([
@@ -37,7 +38,8 @@ class AttendanceController extends Controller
             'status'  => $status,
         ]);
     }
-    public function loaddata(){
+    public function loaddata()
+    {
         $attendance = attendance::latest()
         ->paginate(5);
 
@@ -49,7 +51,8 @@ class AttendanceController extends Controller
         ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
-    public function loaddata_cashier(){
+    public function loaddata_cashier()
+    {
         $attendance = attendance::where('branchname',auth()->user()->branchname)
                                 ->where(function(Builder $builder){
                                     $builder->where('status','Active')
@@ -64,7 +67,8 @@ class AttendanceController extends Controller
         ->with('i', (request()->input('page', 1) - 1) * 5);
     }
     
-    public function storedata($request){
+    public function storedata($request)
+    {
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $users = User::findOrFail($request->userid);
 
@@ -83,42 +87,28 @@ class AttendanceController extends Controller
         $path = 'att/'.$name_gen.'.webp';
 
         if(empty($request->attnotes)){
-            $attendance = attendance::create([
-                'userid' => $users->userid,
-                'username' =>  $users->username,
-                'email' =>  $users->email,
-                'avatarproof' => $path,
-                'firstname' => $users->firstname,
-                'lastname' => $users->lastname,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'attnotes' => 'Null',
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'timerecorded' => $timenow,
-                'posted' => 'N',
-                'mod' => 0,
-                'status' => 'Active',
-            ]);
+            $attnotes = 'Null';
         }else{
-            $attendance = attendance::create([
-                'userid' => $users->userid,
-                'username' =>  $users->username,
-                'email' =>  $users->email,
-                'avatarproof' => $path,
-                'firstname' => $users->firstname,
-                'lastname' => $users->lastname,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'attnotes' => $request->attnotes,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'timerecorded' => $timenow,
-                'posted' => 'N',
-                'mod' => 0,
-                'status' => 'Active',
-            ]);
+            $attnotes = $request->attnotes;
         }
+
+        $attendance = attendance::create([
+            'userid' => $users->userid,
+            'username' =>  $users->username,
+            'email' =>  $users->email,
+            'avatarproof' => $path,
+            'firstname' => $users->firstname,
+            'lastname' => $users->lastname,
+            'branchid' => auth()->user()->branchid,
+            'branchname' => auth()->user()->branchname,
+            'attnotes' =>  $attnotes,
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'timerecorded' => $timenow,
+            'posted' => 'N',
+            'mod' => 0,
+            'status' => 'Active',
+        ]);
         
     
         if ($attendance) {
@@ -138,7 +128,8 @@ class AttendanceController extends Controller
         }  
     }
     
-    public function updatedata($request, $attendance){
+    public function updatedata($request, $attendance)
+    {
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $att1 = attendance::where('attid',$attendance->attid)->first();
         $mod = 0;
@@ -206,9 +197,7 @@ class AttendanceController extends Controller
                 ]);
             }
         }
-        
             
-        
         if ($att) {
             //query successful
             $notes = 'Attendance. Update';
@@ -227,7 +216,8 @@ class AttendanceController extends Controller
         }
     }
     
-    public function destroydata(){
+    public function destroydata()
+    {
         $notes = 'Attendance. Destroy';
         $status = 'Failed';
         $this->userlog($notes,$status);
@@ -346,9 +336,10 @@ class AttendanceController extends Controller
         if(empty($attendance->userid)){
             return view('attendance.create-put',['users' => $users]);
         }else{
-            $notes = 'Attendance. Create. Duplicate';
+            $notes = 'Attendance. Create. Duplicate. ' . $users->lastname;
             $status = 'Failed';
             $this->userlog($notes,$status);
+
             return redirect()->route('attendance.index')
                         ->with('failed','Employee Already Added to Attendance');
         }
@@ -361,8 +352,6 @@ class AttendanceController extends Controller
      */
     public function index()
     {
-        
-
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->loaddata_cashier();
@@ -455,11 +444,11 @@ class AttendanceController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                
+                return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
-                
+                return redirect()->route('dashboard.index');
             }
         }else{
             return redirect()->route('dashboard.index');

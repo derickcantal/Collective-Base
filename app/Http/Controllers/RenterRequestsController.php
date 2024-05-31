@@ -42,27 +42,13 @@ class RenterRequestsController extends Controller
         ]);
     }
     public function loaddata(){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $RenterRequests = RenterRequests::query()
                             ->orderBy('status','desc')
                             ->paginate(5);
-        $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Renter Request',
-                'status'  => 'Success',
-            ]);
+
+        $notes = 'Renter Request';
+        $status = 'Success';
+        $this->userlog($notes,$status);
 
             return view('rentersrequests.index',compact('RenterRequests'))
                 ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -101,43 +87,17 @@ class RenterRequestsController extends Controller
     
         if ($RenterRequests) {
             //query successful
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Renter Request. Create',
-                'status'  => 'Success',
-            ]);
+            $notes = 'Renter Request. Create';
+            $status = 'Success';
+            $this->userlog($notes,$status);
+
             return redirect()->route('rentersrequests.create')
                         ->with('success','Sales Request created successfully.');
         }else{
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Renter Request. Create',
-                'status'  => 'Failed',
-            ]);
+            $notes = 'Renter Request. Create';
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+            
             return redirect()->route('rentersrequests.create')
                         ->with('success','Sales Request creation failed');
         }  
@@ -153,45 +113,19 @@ class RenterRequestsController extends Controller
 
         $renter = Renters::where('userid',$RenterRequests->userid)->first();
         if($request->totalcollected > $RenterRequests->totalsales){
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Renter Request. Update. TC > TS',
-                'status'  => 'Success',
-            ]);
+
+            $notes = 'Renter Request. Update. Total Collected must not be greater than total sales. ' . $renter->lastname;
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+
             return redirect()->back()
                             ->with('failed','Total Collected must not be greater than total sales');
         }
         if($RenterRequests->totalsales == 0){
+            $notes = 'Renter Request. Update. Zero Sales. ' . $renter->lastname;
+            $status = 'Failed';
+            $this->userlog($notes,$status);
 
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Renter Request. Update. Zero Sales',
-                'status'  => 'Success',
-            ]);
             return redirect()->route('rentersrequests.index')
                             ->with('failed','Total Sales is 0.');
         }
@@ -240,43 +174,17 @@ class RenterRequestsController extends Controller
         if($renterrequestupdate)
         {
             if(auth()->user()->accesstype = 'Cashier'){
-                $userlog = user_login_log::query()->create([
-                    'userid' => auth()->user()->userid,
-                    'username' => auth()->user()->username,
-                    'firstname' => auth()->user()->firstname,
-                    'middlename' => auth()->user()->middlename,
-                    'lastname' => auth()->user()->lastname,
-                    'email' => auth()->user()->email,
-                    'branchid' => auth()->user()->branchid,
-                    'branchname' => auth()->user()->branchname,
-                    'accesstype' => auth()->user()->accesstype,
-                    'timerecorded'  => $timenow,
-                    'created_by' => auth()->user()->email,
-                    'updated_by' => 'Null',
-                    'mod'  => 0,
-                    'notes' => 'Renter Request. Update',
-                    'status'  => 'Success',
-                ]);
+                $notes = 'Renter Request. Update. ' . $renter->lastname;
+                $status = 'Success';
+                $this->userlog($notes,$status);
+                
                 return redirect()->route('dashboard.index')
                             ->with('success','Sales Request updated successfully');
             }elseif(auth()->user()->accesstype = 'Administrator' or auth()->user()->accesstype = 'Supervisor'){
-                $userlog = user_login_log::query()->create([
-                    'userid' => auth()->user()->userid,
-                    'username' => auth()->user()->username,
-                    'firstname' => auth()->user()->firstname,
-                    'middlename' => auth()->user()->middlename,
-                    'lastname' => auth()->user()->lastname,
-                    'email' => auth()->user()->email,
-                    'branchid' => auth()->user()->branchid,
-                    'branchname' => auth()->user()->branchname,
-                    'accesstype' => auth()->user()->accesstype,
-                    'timerecorded'  => $timenow,
-                    'created_by' => auth()->user()->email,
-                    'updated_by' => 'Null',
-                    'mod'  => 0,
-                    'notes' => 'Renter Request. Create',
-                    'status'  => 'Success',
-                ]);
+                $notes = 'Renter Request. Update. ' . $renter->lastname;
+                $status = 'Success';
+                $this->userlog($notes,$status);
+
                 return redirect()->route('rentersrequests.index')
                             ->with('success','Sales Request updated successfully');
             }
@@ -284,43 +192,17 @@ class RenterRequestsController extends Controller
         else
         {
             if(auth()->user()->accesstype = 'Cashier'){
-                $userlog = user_login_log::query()->create([
-                    'userid' => auth()->user()->userid,
-                    'username' => auth()->user()->username,
-                    'firstname' => auth()->user()->firstname,
-                    'middlename' => auth()->user()->middlename,
-                    'lastname' => auth()->user()->lastname,
-                    'email' => auth()->user()->email,
-                    'branchid' => auth()->user()->branchid,
-                    'branchname' => auth()->user()->branchname,
-                    'accesstype' => auth()->user()->accesstype,
-                    'timerecorded'  => $timenow,
-                    'created_by' => auth()->user()->email,
-                    'updated_by' => 'Null',
-                    'mod'  => 0,
-                    'notes' => 'Renter Request. Create',
-                    'status'  => 'Failed',
-                ]);
+                $notes = 'Renter Request. Update. ' . $renter->lastname;
+                $status = 'Failed';
+                $this->userlog($notes,$status);
+
                 return redirect()->route('dashboard.index')
                             ->with('failed','Request Process Failed');
             }elseif(auth()->user()->accesstype = 'Administrator' or auth()->user()->accesstype = 'Supervisor'){
-                $userlog = user_login_log::query()->create([
-                    'userid' => auth()->user()->userid,
-                    'username' => auth()->user()->username,
-                    'firstname' => auth()->user()->firstname,
-                    'middlename' => auth()->user()->middlename,
-                    'lastname' => auth()->user()->lastname,
-                    'email' => auth()->user()->email,
-                    'branchid' => auth()->user()->branchid,
-                    'branchname' => auth()->user()->branchname,
-                    'accesstype' => auth()->user()->accesstype,
-                    'timerecorded'  => $timenow,
-                    'created_by' => auth()->user()->email,
-                    'updated_by' => 'Null',
-                    'mod'  => 0,
-                    'notes' => 'Renter Request. Create',
-                    'status'  => 'Failed',
-                ]);
+                $notes = 'Renter Request. Update. ' . $renter->lastname;
+                $status = 'Failed';
+                $this->userlog($notes,$status);
+                
                 return redirect()->route('rentersrequests.index')
                             ->with('failed','Request Process Failed');
             }

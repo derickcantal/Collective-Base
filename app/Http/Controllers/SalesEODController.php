@@ -38,24 +38,10 @@ class SalesEODController extends Controller
     }
     public function loaddata()
     {
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
-        $userlog = user_login_log::query()->create([
-            'userid' => auth()->user()->userid,
-            'username' => auth()->user()->username,
-            'firstname' => auth()->user()->firstname,
-            'middlename' => auth()->user()->middlename,
-            'lastname' => auth()->user()->lastname,
-            'email' => auth()->user()->email,
-            'branchid' => auth()->user()->branchid,
-            'branchname' => auth()->user()->branchname,
-            'accesstype' => auth()->user()->accesstype,
-            'timerecorded'  => $timenow,
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'mod'  => 0,
-            'notes' => 'Sales. EOD',
-            'status'  => 'Success',
-        ]);
+        $notes = 'Sales. EOD.';
+        $status = 'Success';
+        $this->userlog($notes,$status);
+
         return view('saleseod.index');
     }
     
@@ -162,43 +148,17 @@ class SalesEODController extends Controller
                     'posted' => 'N',
                 ]); 
                 if($saleseod){
-                    $userlog = user_login_log::query()->create([
-                        'userid' => auth()->user()->userid,
-                        'username' => auth()->user()->username,
-                        'firstname' => auth()->user()->firstname,
-                        'middlename' => auth()->user()->middlename,
-                        'lastname' => auth()->user()->lastname,
-                        'email' => auth()->user()->email,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'accesstype' => auth()->user()->accesstype,
-                        'timerecorded'  => $timenow,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod'  => 0,
-                        'notes' => 'Sales. EOD. Create',
-                        'status'  => 'Success',
-                    ]);
+                    $notes = 'Sales. EOD. Create.';
+                    $status = 'Success';
+                    $this->userlog($notes,$status);
+                   
                     return redirect()->route('saleseod.index')
                                     ->with('success','EOD Succesful');
                 }else{
-                    $userlog = user_login_log::query()->create([
-                        'userid' => auth()->user()->userid,
-                        'username' => auth()->user()->username,
-                        'firstname' => auth()->user()->firstname,
-                        'middlename' => auth()->user()->middlename,
-                        'lastname' => auth()->user()->lastname,
-                        'email' => auth()->user()->email,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'accesstype' => auth()->user()->accesstype,
-                        'timerecorded'  => $timenow,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod'  => 0,
-                        'notes' => 'Sales. EOD. Create',
-                        'status'  => 'Failed',
-                    ]);
+                    $notes = 'Sales. EOD. Create.';
+                    $status = 'Failed';
+                    $this->userlog($notes,$status);
+
                     return redirect()->route('saleseod.index')
                                     ->with('failed','EOD Failed');
                 }
@@ -219,43 +179,17 @@ class SalesEODController extends Controller
                     'posted' => 'N',
                 ]); 
                 if($saleseod){
-                    $userlog = user_login_log::query()->create([
-                        'userid' => auth()->user()->userid,
-                        'username' => auth()->user()->username,
-                        'firstname' => auth()->user()->firstname,
-                        'middlename' => auth()->user()->middlename,
-                        'lastname' => auth()->user()->lastname,
-                        'email' => auth()->user()->email,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'accesstype' => auth()->user()->accesstype,
-                        'timerecorded'  => $timenow,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod'  => 0,
-                        'notes' => 'Sales. EOD. Create',
-                        'status'  => 'Success',
-                    ]);
+                    $notes = 'Sales. EOD. Create.';
+                    $status = 'Success';
+                    $this->userlog($notes,$status);
+
                     return redirect()->route('saleseod.index')
                     ->with('success','EOD Succesful');
                 }else{
-                    $userlog = user_login_log::query()->create([
-                        'userid' => auth()->user()->userid,
-                        'username' => auth()->user()->username,
-                        'firstname' => auth()->user()->firstname,
-                        'middlename' => auth()->user()->middlename,
-                        'lastname' => auth()->user()->lastname,
-                        'email' => auth()->user()->email,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'accesstype' => auth()->user()->accesstype,
-                        'timerecorded'  => $timenow,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod'  => 0,
-                        'notes' => 'Sales. EOD. Create',
-                        'status'  => 'Failed',
-                    ]);
+                    $notes = 'Sales. EOD. Create.';
+                    $status = 'Failed';
+                    $this->userlog($notes,$status);
+
                     return redirect()->route('saleseod.index')
                                     ->with('failed','EOD Failed');
                 }
@@ -266,43 +200,17 @@ class SalesEODController extends Controller
         }
         
         if($saleseod){
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Sales. EOD. Create',
-                'status'  => 'Success',
-            ]);
+            $notes = 'Sales. EOD. Create.';
+            $status = 'Success';
+            $this->userlog($notes,$status);
+
             return redirect()->route('saleseod.index')
-            ->with('success','EOD Succesful');
+                ->with('success','EOD Succesful');
         }else{
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Sales. EOD. Create',
-                'status'  => 'Failed',
-            ]);
+            $notes = 'Sales. EOD. Create.';
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+
         return redirect()->route('saleseod.index')
                     ->with('failed','EOD Failed');
         }
@@ -379,23 +287,10 @@ class SalesEODController extends Controller
             }          
             
         }else{
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Sales. EOD. Incorrect Password.',
-                'status'  => 'Failed',
-            ]);
+            $notes = 'Sales. EOD. Incorrect Password.';
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+
             return redirect()->route('saleseod.index')->with('failed','Incorrect Password.');
         }
     }
@@ -507,43 +402,17 @@ class SalesEODController extends Controller
                             'posted' => 'N',
                         ]); 
                         if($saleseod){
-                            $userlog = user_login_log::query()->create([
-                                'userid' => auth()->user()->userid,
-                                'username' => auth()->user()->username,
-                                'firstname' => auth()->user()->firstname,
-                                'middlename' => auth()->user()->middlename,
-                                'lastname' => auth()->user()->lastname,
-                                'email' => auth()->user()->email,
-                                'branchid' => auth()->user()->branchid,
-                                'branchname' => auth()->user()->branchname,
-                                'accesstype' => auth()->user()->accesstype,
-                                'timerecorded'  => $timenow,
-                                'created_by' => auth()->user()->email,
-                                'updated_by' => 'Null',
-                                'mod'  => 0,
-                                'notes' => 'Sales EOD. Create',
-                                'status'  => 'Success',
-                            ]);
+                            $notes = 'Sales. EOD. Create.';
+                            $status = 'Success';
+                            $this->userlog($notes,$status);
+                         
                             return redirect()->route('saleseod.index')
                                             ->with('success','EOD Succesful');
                         }else{
-                            $userlog = user_login_log::query()->create([
-                                'userid' => auth()->user()->userid,
-                                'username' => auth()->user()->username,
-                                'firstname' => auth()->user()->firstname,
-                                'middlename' => auth()->user()->middlename,
-                                'lastname' => auth()->user()->lastname,
-                                'email' => auth()->user()->email,
-                                'branchid' => auth()->user()->branchid,
-                                'branchname' => auth()->user()->branchname,
-                                'accesstype' => auth()->user()->accesstype,
-                                'timerecorded'  => $timenow,
-                                'created_by' => auth()->user()->email,
-                                'updated_by' => 'Null',
-                                'mod'  => 0,
-                                'notes' => 'Sales EOD. Create',
-                                'status'  => 'Failed',
-                            ]);
+                            $notes = 'Sales. EOD. Create.';
+                            $status = 'Failed';
+                            $this->userlog($notes,$status);
+
                             return redirect()->route('saleseod.index')
                                             ->with('failed','EOD Failed');
                         }
@@ -564,44 +433,16 @@ class SalesEODController extends Controller
                             'posted' => 'N',
                         ]); 
                         if($saleseod){
-                            $userlog = user_login_log::query()->create([
-                                'userid' => auth()->user()->userid,
-                                'username' => auth()->user()->username,
-                                'firstname' => auth()->user()->firstname,
-                                'middlename' => auth()->user()->middlename,
-                                'lastname' => auth()->user()->lastname,
-                                'email' => auth()->user()->email,
-                                'branchid' => auth()->user()->branchid,
-                                'branchname' => auth()->user()->branchname,
-                                'accesstype' => auth()->user()->accesstype,
-                                'timerecorded'  => $timenow,
-                                'created_by' => auth()->user()->email,
-                                'updated_by' => 'Null',
-                                'mod'  => 0,
-                                'notes' => 'Sales EOD. Create',
-                                'status'  => 'Success',
-                            ]);                        
+                            $notes = 'Sales. EOD. Create.';
+                            $status = 'Success';
+                            $this->userlog($notes,$status);
 
                             return redirect()->route('saleseod.index')
                             ->with('success','EOD Succesful');
                         }else{
-                            $userlog = user_login_log::query()->create([
-                                'userid' => auth()->user()->userid,
-                                'username' => auth()->user()->username,
-                                'firstname' => auth()->user()->firstname,
-                                'middlename' => auth()->user()->middlename,
-                                'lastname' => auth()->user()->lastname,
-                                'email' => auth()->user()->email,
-                                'branchid' => auth()->user()->branchid,
-                                'branchname' => auth()->user()->branchname,
-                                'accesstype' => auth()->user()->accesstype,
-                                'timerecorded'  => $timenow,
-                                'created_by' => auth()->user()->email,
-                                'updated_by' => 'Null',
-                                'mod'  => 0,
-                                'notes' => 'Sales EOD. Create',
-                                'status'  => 'Failed',
-                            ]);
+                            $notes = 'Sales. EOD. Create.';
+                            $status = 'Failed';
+                            $this->userlog($notes,$status);
 
                             return redirect()->route('saleseod.index')
                                             ->with('failed','EOD Failed');
@@ -613,43 +454,17 @@ class SalesEODController extends Controller
                 }
                 
                 if($saleseod){
-                    $userlog = user_login_log::query()->create([
-                        'userid' => auth()->user()->userid,
-                        'username' => auth()->user()->username,
-                        'firstname' => auth()->user()->firstname,
-                        'middlename' => auth()->user()->middlename,
-                        'lastname' => auth()->user()->lastname,
-                        'email' => auth()->user()->email,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'accesstype' => auth()->user()->accesstype,
-                        'timerecorded'  => $timenow,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod'  => 0,
-                        'notes' => 'Sales EOD. Create',
-                        'status'  => 'Success',
-                    ]);
+                    $notes = 'Sales. EOD. Create.';
+                    $status = 'Success';
+                    $this->userlog($notes,$status);
+                   
                     return redirect()->route('saleseod.index')
                     ->with('success','EOD Succesful');
                 }else{
-                    $userlog = user_login_log::query()->create([
-                        'userid' => auth()->user()->userid,
-                        'username' => auth()->user()->username,
-                        'firstname' => auth()->user()->firstname,
-                        'middlename' => auth()->user()->middlename,
-                        'lastname' => auth()->user()->lastname,
-                        'email' => auth()->user()->email,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'accesstype' => auth()->user()->accesstype,
-                        'timerecorded'  => $timenow,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod'  => 0,
-                        'notes' => 'Sales EOD. Create',
-                        'status'  => 'Failed',
-                    ]);
+                    $notes = 'Sales. EOD. Create.';
+                    $status = 'Failed';
+                    $this->userlog($notes,$status);
+
                 return redirect()->route('saleseod.index')
                             ->with('failed','EOD Failed');
                 }

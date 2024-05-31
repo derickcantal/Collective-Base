@@ -80,87 +80,36 @@ class CabinetController extends Controller
             
                 if ($cabinets) {
                     //query successful
-                    $userlog = user_login_log::query()->create([
-                        'userid' => auth()->user()->userid,
-                        'username' => auth()->user()->username,
-                        'firstname' => auth()->user()->firstname,
-                        'middlename' => auth()->user()->middlename,
-                        'lastname' => auth()->user()->lastname,
-                        'email' => auth()->user()->email,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'accesstype' => auth()->user()->accesstype,
-                        'timerecorded'  => $timenow,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod'  => 0,
-                        'notes' => 'Cabinet. Create',
-                        'status'  => 'Success',
-                    ]);  
+
+                    $notes = 'Cabinet. Create ' . $request->cabinetname;
+                    $status = 'Success';
+                    $this->userlog($notes,$status);
+
                     return redirect()->route('cabinet.index')
                                 ->with('success','Cabinet created successfully.');
                 }else{
-                    $userlog = user_login_log::query()->create([
-                        'userid' => auth()->user()->userid,
-                        'username' => auth()->user()->username,
-                        'firstname' => auth()->user()->firstname,
-                        'middlename' => auth()->user()->middlename,
-                        'lastname' => auth()->user()->lastname,
-                        'email' => auth()->user()->email,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'accesstype' => auth()->user()->accesstype,
-                        'timerecorded'  => $timenow,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod'  => 0,
-                        'notes' => 'Cabinet. Create',
-                        'status'  => 'Failed',
-                    ]);  
+                    $notes = 'Cabinet. Create ' . $request->cabinetname;
+                    $status = 'Failed';
+                    $this->userlog($notes,$status);
+
                     return redirect()->route('cabinet.create')
                                 ->with('failed','Cabinet creation failed');
                 }
             }else{
-                $userlog = user_login_log::query()->create([
-                    'userid' => auth()->user()->userid,
-                    'username' => auth()->user()->username,
-                    'firstname' => auth()->user()->firstname,
-                    'middlename' => auth()->user()->middlename,
-                    'lastname' => auth()->user()->lastname,
-                    'email' => auth()->user()->email,
-                    'branchid' => auth()->user()->branchid,
-                    'branchname' => auth()->user()->branchname,
-                    'accesstype' => auth()->user()->accesstype,
-                    'timerecorded'  => $timenow,
-                    'created_by' => auth()->user()->email,
-                    'updated_by' => 'Null',
-                    'mod'  => 0,
-                    'notes' => 'Cabinet. Create. Duplicate',
-                    'status'  => 'Failed',
-                ]);  
+                $notes = 'Cabinet. Create. Duplicate ' . $request->cabinetname;
+                $status = 'Failed';
+                $this->userlog($notes,$status);
+ 
                 return redirect()->route('cabinet.create')
                                 ->with('failed','Already Exists.');
                 
             }  
             
         }else{
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Cabinet. Create. Max Capacity',
-                'status'  => 'Success',
-            ]);  
+            $notes = 'Cabinet. Create. Max Capacity' . $request->cabinetname;
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+            
             return redirect()->route('cabinet.create')
                                     ->with('failed','Branch Maximum Cabinet Capacity Reached');
         }
@@ -199,43 +148,18 @@ class CabinetController extends Controller
                 
                 if ($cabinets) {
                     //query successful
-                    $userlog = user_login_log::query()->create([
-                        'userid' => auth()->user()->userid,
-                        'username' => auth()->user()->username,
-                        'firstname' => auth()->user()->firstname,
-                        'middlename' => auth()->user()->middlename,
-                        'lastname' => auth()->user()->lastname,
-                        'email' => auth()->user()->email,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'accesstype' => auth()->user()->accesstype,
-                        'timerecorded'  => $timenow,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod'  => 0,
-                        'notes' => 'Cabinet. Update',
-                        'status'  => 'Success',
-                    ]);  
+                    $notes = 'Cabinet. Update ' . $cabinet->cabinetname;
+                    $status = 'Success';
+                    $this->userlog($notes,$status);
+
                     return redirect()->route('cabinet.index')
                                 ->with('success','Cabinet updated successfully.');
                 }else{
-                    $userlog = user_login_log::query()->create([
-                        'userid' => auth()->user()->userid,
-                        'username' => auth()->user()->username,
-                        'firstname' => auth()->user()->firstname,
-                        'middlename' => auth()->user()->middlename,
-                        'lastname' => auth()->user()->lastname,
-                        'email' => auth()->user()->email,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'accesstype' => auth()->user()->accesstype,
-                        'timerecorded'  => $timenow,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod'  => 0,
-                        'notes' => 'Cabinet. Update',
-                        'status'  => 'Failed',
-                    ]);  
+
+                    $notes = 'Cabinet. Update ' . $cabinet->cabinetname;
+                    $status = 'Failed';
+                    $this->userlog($notes,$status);
+ 
                     return redirect()->route('cabinet.index')
                                 ->with('failed','Cabinet update failed');
                 }
@@ -260,73 +184,33 @@ class CabinetController extends Controller
 
                 if ($cabinets) {
                     //query successful
-                    $userlog = user_login_log::query()->create([
-                        'userid' => auth()->user()->userid,
-                        'username' => auth()->user()->username,
-                        'firstname' => auth()->user()->firstname,
-                        'middlename' => auth()->user()->middlename,
-                        'lastname' => auth()->user()->lastname,
-                        'email' => auth()->user()->email,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'accesstype' => auth()->user()->accesstype,
-                        'timerecorded'  => $timenow,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod'  => 0,
-                        'notes' => 'Cabinet. Update',
-                        'status'  => 'Success',
-                    ]);  
+                    $notes = 'Cabinet. Update ' . $cabinet->cabinetname;
+                    $status = 'Success';
+                    $this->userlog($notes,$status);
+
                     return redirect()->route('cabinet.index')
                                 ->with('success','Cabinet updated successfully.');
                 }else{
-                    $userlog = user_login_log::query()->create([
-                        'userid' => auth()->user()->userid,
-                        'username' => auth()->user()->username,
-                        'firstname' => auth()->user()->firstname,
-                        'middlename' => auth()->user()->middlename,
-                        'lastname' => auth()->user()->lastname,
-                        'email' => auth()->user()->email,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'accesstype' => auth()->user()->accesstype,
-                        'timerecorded'  => $timenow,
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod'  => 0,
-                        'notes' => 'Cabinet. Update',
-                        'status'  => 'Failed',
-                    ]);  
+                    $notes = 'Cabinet. Update ' . $cabinet->cabinetname;
+                    $status = 'Failed';
+                    $this->userlog($notes,$status);
+
                     return redirect()->route('cabinet.index')
                                 ->with('failed','Cabinet update failed');
                 }
             }
             
         }else{
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Cabinet. Update. Inactive',
-                'status'  => 'Failed',
-            ]);  
+            $notes = 'Cabinet. Update. Inactive. ' . $cabinet->cabinetname;
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+            
             return redirect()->route('cabinet.index')
                             ->with('failed','Cabinet Inactive');
         }
     }
     
     public function destroydata($request ,$cabinet){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $cabinet = cabinet::findOrFail($cabinet);
         $mod = 0;
         $mod = $cabinet->mod;
@@ -340,23 +224,10 @@ class CabinetController extends Controller
             'mod' => $mod + 1,
         ]);
 
-        $userlog = user_login_log::query()->create([
-            'userid' => auth()->user()->userid,
-            'username' => auth()->user()->username,
-            'firstname' => auth()->user()->firstname,
-            'middlename' => auth()->user()->middlename,
-            'lastname' => auth()->user()->lastname,
-            'email' => auth()->user()->email,
-            'branchid' => auth()->user()->branchid,
-            'branchname' => auth()->user()->branchname,
-            'accesstype' => auth()->user()->accesstype,
-            'timerecorded'  => $timenow,
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'mod'  => 0,
-            'notes' => 'Cabinet. Deactivate',
-            'status'  => 'Success',
-        ]);  
+        $notes = 'Cabinet. Deactivate. ' . $cabinet->cabinetname;
+        $status = 'Success';
+        $this->userlog($notes,$status);
+ 
         return redirect()->route('cabinet.index')
                             ->with('success','Cabinet Deactivated successfully');
         }
@@ -368,24 +239,10 @@ class CabinetController extends Controller
             'updated_by' => auth()->user()->email,
             'mod' => $mod + 1,
         ]);
+        $notes = 'Cabinet. Activate. ' . $cabinet->cabinetname;
+        $status = 'Success';
+        $this->userlog($notes,$status);
 
-        $userlog = user_login_log::query()->create([
-            'userid' => auth()->user()->userid,
-            'username' => auth()->user()->username,
-            'firstname' => auth()->user()->firstname,
-            'middlename' => auth()->user()->middlename,
-            'lastname' => auth()->user()->lastname,
-            'email' => auth()->user()->email,
-            'branchid' => auth()->user()->branchid,
-            'branchname' => auth()->user()->branchname,
-            'accesstype' => auth()->user()->accesstype,
-            'timerecorded'  => $timenow,
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'mod'  => 0,
-            'notes' => 'Cabinet. Activate',
-            'status'  => 'Success',
-        ]);
         return redirect()->route('cabinet.index')
                             ->with('success','Cabinet Activated successfully');
         }

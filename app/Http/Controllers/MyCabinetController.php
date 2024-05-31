@@ -138,29 +138,16 @@ class MyCabinetController extends Controller
       
     }
     public function loaddata(){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $cabinets = cabinet::where('userid',auth()->user()->userid)
                     ->orderBy('status','asc')
                     ->orderBy('cabid','asc')
                     ->orderBy('branchname','asc')
                     ->paginate(5);
-        $userlog = user_login_log::query()->create([
-            'userid' => auth()->user()->userid,
-            'username' => auth()->user()->username,
-            'firstname' => auth()->user()->firstname,
-            'middlename' => auth()->user()->middlename,
-            'lastname' => auth()->user()->lastname,
-            'email' => auth()->user()->email,
-            'branchid' => auth()->user()->branchid,
-            'branchname' => auth()->user()->branchname,
-            'accesstype' => auth()->user()->accesstype,
-            'timerecorded'  => $timenow,
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'mod'  => 0,
-            'notes' => 'My Cabinet',
-            'status'  => 'Success',
-        ]);  
+
+        $notes = 'My Cabinet';
+        $status = 'Success';
+        $this->userlog($notes,$status);
+
         return view('mycabinet.index',compact('cabinets'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -176,6 +163,10 @@ class MyCabinetController extends Controller
                             ->first();
         if($cabinet->userid != auth()->user()->userid)
         {
+            $notes = 'My Cabinet. Accessing not own account cabinet';
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+
             return redirect()->route('mycabinet.index')
                                 ->with('failed','Unknown Command.');
         }
@@ -184,6 +175,9 @@ class MyCabinetController extends Controller
         {
             if($cabinet->fully_paid == 'N' or empty($cabinet->fully_paid))
             {
+                $notes = 'My Cabinet. Unsettled Account';
+                $status = 'Failed';
+                $this->userlog($notes,$status);
                 return redirect()->back()
                                 ->with('failed','please settle this account rental payment first.');
             }

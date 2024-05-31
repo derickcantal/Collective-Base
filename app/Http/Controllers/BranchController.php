@@ -38,6 +38,7 @@ class BranchController extends Controller
                     ->orderBy('status','asc')
                     ->orderBy('branchname','asc')
                     ->paginate(5);
+
         $notes = 'Branch';
         $status = 'Success';
         $this->userlog($notes,$status);
@@ -64,14 +65,14 @@ class BranchController extends Controller
     
         if ($branches) {
             //query successful
-            $notes = 'Branch. Create';
+            $notes = 'Branch. Create. ' . $request->branchname;
             $status = 'Success';
             $this->userlog($notes,$status);
             
             return redirect()->route('branch.index')
                         ->with('success','Branch created successfully.');
         }else{
-            $notes = 'Branch. Create';
+            $notes = 'Branch. Create ' . $request->branchname;
             $status = 'Failed';
             $this->userlog($notes,$status);
             
@@ -85,6 +86,7 @@ class BranchController extends Controller
         $branch = branch::findOrFail($branch);
         $mod = 0;
         $mod = $branch->mod;
+
         $branchupdate = branch::where('branchid', $branch->branchid)->update([
                             'branchname' => $request->branchname,
                             'branchaddress' => $request->branchaddress,
@@ -97,14 +99,14 @@ class BranchController extends Controller
                             'status' => 'Active',
                         ]);
         if($branchupdate){
-            $notes = 'Branch. Update';
+            $notes = 'Branch. Update. ' . $request->branchname;
             $status = 'Success';
             $this->userlog($notes,$status);
             
             return redirect()->route('branch.index')
                             ->with('success','Branch updated successfully');
         }else{
-            $notes = 'Branch. Update';
+            $notes = 'Branch. Update. ' . $request->branchname;
             $status = 'Failed';
             $this->userlog($notes,$status);
 
