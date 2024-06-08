@@ -416,12 +416,14 @@ class MyRequestController extends Controller
         if(auth()->user()->accesstype =='Renters'){
             $history_sales = history_sales::where('cabid',$cabid)
             ->where(function(Builder $builder){
-                $builder->where('collected_status', "Pending");
+                $builder->where('collected_status', "Pending")
+                        ->where('total','!=', 0);
             })->paginate(5);
 
             $history_sales1 = history_sales::where('cabid',$cabid)
                         ->where(function(Builder $builder){
-                            $builder->where('collected_status', "Pending");
+                            $builder->where('collected_status', "Pending")
+                            ->where('total','!=', 0);
                         })->get();
                     
             $totalsales = collect($history_sales1)->sum('total');

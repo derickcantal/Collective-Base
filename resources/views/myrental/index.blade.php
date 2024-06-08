@@ -133,11 +133,9 @@
                                                     @endphp
                                                             <div class="h-2.5 w-2.5 rounded-full bg-{{ $color; }}-500 me-2"></div> <x-input-label for="status" :value="$cabinet->status"/>
                                                     </div>
-                                                </td>
                                                 <td class="px-6 py-4">
-                                                    
-                                                    <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('myrental.show',$cabinet->cabid) }}">Payments History</a>
-                                                        
+                                                    <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('myrental.show',$cabinet->cabid) }}">Current Payment</a> |
+                                                    <a class="font-medium text-blue-800 dark:text-blue-700 hover:underline" href="{{ route('myrental.show_history',$cabinet->cabid) }}">Previous Payments</a>    
                                                 </td>
                                             </tr>
                                         

@@ -33,6 +33,8 @@ class MyRentalController extends Controller
             'status'  => $status,
         ]);
     }
+    
+
     public function search(Request $request)
     {
         if(auth()->user()->accesstype =='Renters'){
@@ -182,65 +184,110 @@ class MyRentalController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $cabinet)
-    {
+    public function show_search(Request $request, $cabinet){
+        $cabinet = cabinet::where('cabid',$cabinet)->first();
+        $RentalPayments = RentalPayments::where('cabid',$cabinet->cabid)
+                                        ->latest()->paginate($request->pagerow);
+        $RentalPayments1 = RentalPayments::where('cabid',$cabinet->cabid)
+                                        ->latest()->get();
+        $recordcount = collect($RentalPayments1)->count('rpid');
 
+        return view('myrental.show',['rentalpayments' => $RentalPayments])
+                ->with(['cabid'=>$cabinet->cabid])
+                ->with(['branchname'=>$cabinet->branchname])
+                ->with(['cabinetname'=>$cabinet->cabinetname])
+                ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
+    }
+
+    public function show($cabinet)
+    {
         if(auth()->user()->accesstype =='Renters'){
+            
             $cabinet = cabinet::where('cabid',$cabinet)->first();
 
-            $RentalPayments = RentalPayments::where('cabid',$cabinet)->latest()->paginate(5);
-            
-            $RentalPaymentsHistory = history_rental_payments::where('cabid',$cabinet)->latest()->paginate(5);
+            $RentalPayments = RentalPayments::where('cabid',$cabinet->cabid)->latest()->paginate(5);
 
-            $RentalPayments1 = RentalPayments::where('cabid',$cabinet)->latest()->get();
-            
-            $RentalPaymentsHistory1 = history_rental_payments::where('cabid',$cabinet)->latest()->get();
+            $RentalPayments1 = RentalPayments::where('cabid',$cabinet->cabid)->latest()->get();
 
-            $totalsales = collect($RentalPayments1)->sum('total');
+            $recordcount = collect($RentalPayments1)->count('rpid');
 
-            $totalsales1 = collect($RentalPaymentsHistory1)->sum('total');
-
-            if(!empty($RentalPayments))
+            if($recordcount == 0)
             {
-                if($totalsales == 0){
-                    $notes = 'My Rental. History. No Record Found.';
-                    $status = 'Failed';
-                    $this->userlog($notes,$status);
-
-                    return redirect()->back()
-                                    ->with('failed','No Record Found.');
-                }
-                return view('myrental.show',['rentalpayments' => $RentalPayments])
-                    ->with(['cabid'=>$cabinet->cabinetname])
-                    ->with('i', (request()->input('page', 1) - 1) * 5);
-            }
-            elseif(!empty($RentalPaymentsHistory))
-            {
-                if($totalsales1 == 0){
-                    $notes = 'My Rental. History. No Record Found.';
-                    $status = 'Failed';
-                    $this->userlog($notes,$status);
-
-                    return redirect()->back()
-                                    ->with('failed','No Record Found.');
-                }
-                return view('myrental.show',['rentalpayments' => $RentalPaymentsHistory])
-                    ->with(['cabid'=>$cabinet->cabinetname])
-                    ->with('i', (request()->input('page', 1) - 1) * 5);
-            }
-            else
-            {
-                    $notes = 'My Rental. History. No Record Found.';
-                    $status = 'Failed';
-                    $this->userlog($notes,$status);
+                $notes = 'My Rental. History. No Record Found. Current. ' . $cabinet->branchname . ', ' .$cabinet->cabinetname;
+                $status = 'Failed';
+                $this->userlog($notes,$status);
                     
                 return redirect()->back()
                                     ->with('failed','No Record Found.');
+            }
+            else
+            {
+                $notes = 'My Rental. Current Payment.';
+                $status = 'Success';
+                $this->userlog($notes,$status);
+
+            return view('myrental.show',['rentalpayments' => $RentalPayments])
+                ->with(['cabid'=>$cabinet->cabid])
+                ->with(['branchname'=>$cabinet->branchname])
+                ->with(['cabinetname'=>$cabinet->cabinetname])
+                ->with('i', (request()->input('page', 1) - 1) * 5);
             }
         }else{
             return redirect()->route('dashboard.index');
         }
         
+    }
+
+    public function show_history_search(Request $request, $cabinet){
+        $cabinet = cabinet::where('cabid',$cabinet)->first();
+        $RentalPaymentsHistory = history_rental_payments::where('cabid',$cabinet->cabid)
+                                        ->latest()->paginate($request->pagerow);
+        $RentalPaymentsHistory1 = history_rental_payments::where('cabid',$cabinet->cabid)
+                                        ->latest()->get();
+        $recordcount = collect($RentalPaymentsHistory1)->count('rpid');
+
+        return view('myrental.show-history',['rentalpayments' => $RentalPaymentsHistory])
+                    ->with(['cabinetname'=>$cabinet->cabinetname])
+                    ->with(['branchname'=>$cabinet->branchname])
+                    ->with(['cabid'=>$cabinet->cabid])
+                    ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+
+    public function show_history($cabinet){
+        if(auth()->user()->accesstype =='Renters'){
+            $cabinet = cabinet::where('cabid',$cabinet)->first();
+            
+            $RentalPaymentsHistory = history_rental_payments::where('cabid',$cabinet->cabid)->latest()->paginate(5);
+            
+            $RentalPaymentsHistory1 = history_rental_payments::where('cabid',$cabinet->cabid)->latest()->get();
+
+            $recordcount = collect($RentalPaymentsHistory1)->count('rpid');
+
+            if($recordcount == 0)
+            {
+                $notes = 'My Rental. History. No Record Found. Previous. ' . $cabinet->branchname . ', ' .$cabinet->cabinetname;
+                $status = 'Failed';
+                $this->userlog($notes,$status);
+                
+            return redirect()->back()
+                                ->with('failed','No Record Found.');
+            }
+            else
+            {
+                $notes = 'My Rental. Previous Payments.';
+                $status = 'Success';
+                $this->userlog($notes,$status);
+
+                return view('myrental.show-history',['rentalpayments' => $RentalPaymentsHistory])
+                    ->with(['cabinetname'=>$cabinet->cabinetname])
+                    ->with(['branchname'=>$cabinet->branchname])
+                    ->with(['cabid'=>$cabinet->cabid])
+                    ->with('i', (request()->input('page', 1) - 1) * 5);
+                    
+            }
+        }else{
+            return redirect()->route('dashboard.index');
+        }
     }
 
     /**

@@ -77,6 +77,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('myrequest', MyRequestController::class);
 
     Route::get('myrental/search', [MyRentalController::class, 'search'])->name('myrental.search');
+    Route::get('myrental/show/current/{cabid}/search', [MyRentalController::class, 'show_search'])->name('myrental.show_search');
+    Route::get('myrental/show/previous/{cabid}/search', [MyRentalController::class, 'show_history_search'])->name('myrental.show_history_search');
+    
+    Route::get('myrental/show/{cabid}', [MyRentalController::class, 'show_history'])->name('myrental.show_history');
     Route::resource('myrental', MyRentalController::class);
 
     Route::resource('mydashboard', MyDashboardController::class);

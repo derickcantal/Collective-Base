@@ -483,7 +483,7 @@ class RenterCashierRentalController extends Controller
             }
             else
             {
-                $notes = 'Renter. Cashier. Rental. No Record Found. '. $fullname;
+                $notes = 'Renter. Cashier. Rental. No Record Found.';
                 $status = 'Failed';
                 $this->userlog($notes,$status);
 
