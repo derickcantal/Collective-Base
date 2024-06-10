@@ -240,6 +240,10 @@ class RenterCashierRentalController extends Controller
         if(auth()->user()->accesstype == 'Cashier'){
             $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
 
+            $today = Carbon::now();
+            $today->month;
+            $today->year;
+
             $cabinet = cabinet::where('cabid', $request->cabid)->first();
 
             $renter = Renters::where('userid', $cabinet->userid)->first();
@@ -319,7 +323,11 @@ class RenterCashierRentalController extends Controller
             }
             if($totalbalance == 0)
             {
-                $fullypaid = 'Y';
+                if($today->month == $cabinet->rpmonth && $today->year == $cabinet->rpyear){
+                    $fullypaid = 'Y';
+                }else{
+                    $fullypaid = 'N';
+                }
             }
             elseif($totalbalance > 0)
             {
@@ -403,11 +411,14 @@ class RenterCashierRentalController extends Controller
                         })->update([
                             'fully_paid' => "Y",
                         ]);
-                        
-                $cabinetupdate = cabinet::where('cabid',$cabinet->cabid)
+                if($today->month == $cabinet->rpmonth && $today->year == $cabinet->rpyear){
+                    $fp = 'Y';
+                    $cabinetupdate = cabinet::where('cabid',$cabinet->cabid)
                         ->update([
-                            'fully_paid' => "Y",
+                            'fully_paid' => $fp,
                         ]);
+                }
+                
             
             }
 

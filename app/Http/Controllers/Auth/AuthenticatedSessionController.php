@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use \Carbon\Carbon;
 use App\Models\User;
+use App\Models\cabinet;
 use App\Models\user_login_log;
 
 class AuthenticatedSessionController extends Controller
@@ -20,6 +21,22 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
+        $today = Carbon::now();
+        $today->month;
+        $today->year;
+
+        $cabinetdata = cabinet::latest()->first();
+        // dd($today->month == $cabinetdata->rpmonth && $today->year == $cabinetdata->rpyear);
+        if($today->month == $cabinetdata->rpmonth && $today->year == $cabinetdata->rpyear){
+            
+        }else{
+            $cabinet = cabinet::query()->update([
+                'rpmonth' => $today->month,
+                'rpyear' => $today->year,
+                ]);
+        }
+
+        
         // if (now()->isBetween('09:00:00', '21:00:00')) {
         //     $user = User::where('accesstype','Cashier')->where('accesstype','Active')->first();
         //         User::where('accesstype','Cashier')->where('status','Inactive')->update([

@@ -155,12 +155,17 @@ class MyCabinetController extends Controller
     public function cabinetsales($cabinetsales)
     {
         $today = Carbon::now();
-        $today->month; 
+        $today->month;
         $today->year;
+
 
         $cabinet = cabinet::where('cabid', $cabinetsales)
                             ->latest()
                             ->first();
+
+        // dd($today->month == $cabinet->rpmonth,$today->year == $cabinet->rpyear);
+
+
         if($cabinet->userid != auth()->user()->userid)
         {
             $notes = 'My Cabinet. Accessing not own account cabinet';

@@ -92,6 +92,10 @@ class RentalPaymentsController extends Controller
     public function storedata($request){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
 
+        $today = Carbon::now();
+        $today->month;
+        $today->year;
+
         $cabinet = cabinet::where('cabid', $request->cabinetname)->first();
 
         $renter = Renters::where('userid', $cabinet->userid)->first();
@@ -171,7 +175,11 @@ class RentalPaymentsController extends Controller
         }
         if($totalbalance == 0)
         {
-            $fullypaid = 'Y';
+            if($today->month == $cabinet->rpmonth && $today->year == $cabinet->rpyear){
+                $fullypaid = 'Y';
+            }else{
+                $fullypaid = 'N';
+            }
         }
         elseif($totalbalance > 0)
         {
@@ -256,9 +264,15 @@ class RentalPaymentsController extends Controller
                         'fully_paid' => "Y",
                     ]);
             
+            if($today->month == $cabinet->rpmonth && $today->year == $cabinet->rpyear){
+                $fp = 'Y';
+            }else{
+                $fp = 'N';
+            }        
+
             $cabinetupdate = cabinet::where('cabid',$cabinet->cabid)
                     ->update([
-                        'fully_paid' => "Y",
+                        'fully_paid' => $fp,
                     ]);
             
         }
