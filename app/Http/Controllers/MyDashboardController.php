@@ -18,10 +18,7 @@ class MyDashboardController extends Controller
      */
     public function index()
     {
-        
-
-        return view('mydashboard.index')->with(['sales' => $sales])
-                    ->with('i', (request()->input('page', 1) - 1) * 5);
+        return view('mydashboard.index');
     }
 
     /**

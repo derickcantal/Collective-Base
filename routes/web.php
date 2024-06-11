@@ -24,6 +24,7 @@ use App\Http\Controllers\RenterCashierRentalController;
 use App\Http\Controllers\EODController;
 use App\Http\Controllers\UserLoginLogController;
 use App\Http\Controllers\TestPagesController;
+use App\Http\Controllers\CBMailController;
 
 
 /*
@@ -178,5 +179,10 @@ Route::get('User/Login/Log/{ullid}/edit', [UserLoginLogController::class, 'edit'
 
 
 Route::get('Test/Pages', [TestPagesController::class, 'index'])->name('testpages.index');
+
+
+Route::get('email', [CBMailController::class, 'index'])->name('cbmail.index');
+Route::post('email/send',[CBMailController::class, 'sendmail'])->name('cbmail.sendmail');
+
 
 require __DIR__.'/auth.php';
