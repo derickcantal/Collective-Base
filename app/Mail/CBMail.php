@@ -29,8 +29,8 @@ class CBMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'CB Mail',
-            from: new Address('test@mail.dev', 'Test Mail'),
+            subject: 'CB E-Mail System',
+            from: new Address('test@mail.dev', 'Cb Broadcast Mail'),
         );
     }
 

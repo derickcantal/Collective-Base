@@ -12,7 +12,7 @@ class CBMailController extends Controller
    
     public function index()
     {
-        return view('cbmail');
+        return view('cbmail.cbmail_content');
         
     }
 
