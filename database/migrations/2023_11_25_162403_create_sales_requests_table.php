@@ -24,6 +24,8 @@ return new class extends Migration
             $table->integer('userid');
             $table->string('firstname');
             $table->string('lastname');
+            $table->dateTime('rstartdate');
+            $table->dateTime('renddate');
             $table->timestamps();
             $table->string('created_by');
             $table->string('updated_by');

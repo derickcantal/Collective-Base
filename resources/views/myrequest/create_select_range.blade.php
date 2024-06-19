@@ -14,7 +14,7 @@
                     
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         
-                        <form action="{{ route('myrequest.stores',$cabid) }}" method="POST" class="p-4 md:p-5">
+                        <form action="{{ route('myrequest.creates',$cabid) }}" method="POST" class="p-4 md:p-5">
                         @csrf 
                         @method('GET')
 
@@ -51,7 +51,7 @@
                                             <svg class="rtl:rotate-180  w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                                             </svg>
-                                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Create Request</span>
+                                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Date Range</span>
                                         </div>
                                         </li>
                                     </ol>
@@ -72,7 +72,7 @@
                                             <!-- branchname -->
                                             <div class="form-group mt-4">
                                                 <x-input-label for="startdate" :value="__('Start Date')" />
-                                                <x-text-input id="startdate" class="block mt-1 w-full" type="text" name="startdate" value="{{ $startdate }}" required autofocus autocomplete="off" readonly/>
+                                                <x-text-input id="startdate" class="block mt-1 w-full" type="date" name="startdate" required autofocus autocomplete="off"/>
                                                 <x-input-error :messages="$errors->get('startdate')" class="mt-2" />
                                             </div>
                                         </div>
@@ -80,26 +80,9 @@
                                             <!-- cabinetnumber -->
                                             <div class="form-group mt-4">
                                                 <x-input-label for="enddate" :value="__('End Date')" />
-                                                <x-text-input id="enddate" class="block mt-1 w-full" type="text" name="enddate" value="{{ $enddate }}" required autofocus autocomplete="off" readonly/> 
+                                                <x-text-input id="enddate" class="block mt-1 w-full" type="date" name="enddate" required autofocus autocomplete="off"/> 
                                                 
                                                 <x-input-error :messages="$errors->get('enddate')" class="mt-2" />
-                                            </div>
-                                        </div>
-                                        <div class="col-span-2 sm:col-span-1">
-                                            <!-- branchname -->
-                                            <div class="form-group mt-4">
-                                                <x-input-label for="branchname" :value="__('Branch Name')" />
-                                                <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" value="{{ auth()->user()->branchname }}" required autofocus autocomplete="off" readonly/>
-                                                <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
-                                            </div>
-                                        </div>
-                                        <div class="col-span-2 sm:col-span-1">
-                                            <!-- cabinetnumber -->
-                                            <div class="form-group mt-4">
-                                                <x-input-label for="cabinetname" :value="__('Cabinet No.')" />
-                                                <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" value="{{ $cabinet->cabinetname }}" required autofocus autocomplete="off" readonly/> 
-                                                
-                                                <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
                                             </div>
                                         </div>
                                         <div class="col-span-2 sm:col-span-1">
@@ -111,27 +94,10 @@
                                             </div>
                                         </div>
                                         
-                                        <div class="col-span-2 sm:col-span-1">
-                                                <!-- total sales -->
-                                                <div class="form-group mt-4">
-                                                <x-input-label for="totalsales" :value="__('Total Sales')" />
-                                                <x-text-input id="totalsales" class="block mt-1 w-full" type="text" name="totalsales" value="{{ number_format($totalsales, 2) }}" required autofocus autocomplete="off" readonly />
-                                                <x-input-error :messages="$errors->get('totalsales')" class="mt-2" />
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="col-span-2 sm:col-span-1 ">
-                                            <!-- Notes -->
-                                            <div class="form-group mt-4">
-                                                <x-input-label for="rnotes" :value="__('Notes')" />
-                                                <x-text-input id="rnotes" class="block mt-1 w-full" type="text" name="rnotes" :value="old('rnotes')"  autofocus autocomplete="off" />
-                                                <x-input-error :messages="$errors->get('rnotes')" class="mt-2" />
-                                            </div>
-                                        </div>
                                         <div class="flex items-center justify-between col-span-2 sm:col-span-2">
                                             
                                             <x-primary-button class="ms-4">
-                                                <a class="btn btn-primary">Create Request</a>
+                                                <a class="btn btn-primary">Next</a>
                                             </x-primary-button>
                                             </div>
                                         </div>

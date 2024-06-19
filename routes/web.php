@@ -72,7 +72,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('rentersrequests', RenterRequestsController::class);
 
     Route::get('myrequest/search', [MyRequestController::class, 'search'])->name('myrequest.search');
-    Route::get('myrequest/{cabinet}/payments', [MyRequestController::class, 'create'])->name('myrequest.creates');
+    Route::get('myrequest/select/date/range/{cabinet}/payments', [MyRequestController::class, 'create'])->name('myrequest.creates');
+    Route::get('myrequest/select/date/range/{cabinet}', [MyRequestController::class, 'create_select_range'])->name('myrequest.create_select_range');
     Route::get('myrequest/{cabinet}/payments/process', [MyRequestController::class, 'store'])->name('myrequest.stores');
     Route::get('myrequest/{cabinet}/sales', [MyRequestController::class, 'sales'])->name('myrequest.sales');
     Route::resource('myrequest', MyRequestController::class);

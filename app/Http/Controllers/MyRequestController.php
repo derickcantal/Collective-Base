@@ -129,6 +129,8 @@ class MyRequestController extends Controller
     }
     
     public function storedata($request,$cabid){
+        $startdate = Carbon::parse($request->startdate)->format('Y-m-d');
+        $enddadte = Carbon::parse($request->enddate)->format('Y-m-d');
         if(auth()->user()->accesstype =='Renters'){
             $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
 
@@ -140,8 +142,9 @@ class MyRequestController extends Controller
             $renter = Renters::where('userid',$cabinet->userid)->first();
 
             $history_sales = history_sales::where('cabid',$cabid)
-                    ->where(function(Builder $builder){
-                        $builder->where('collected_status', "Pending");
+                    ->where(function(Builder $builder) use($startdate,$enddadte){
+                        $builder->whereBetween('created_at', [$startdate .' 00:00:00', $enddadte .' 23:59:59'])
+                                ->where('collected_status', "Pending");
                     })->get();
 
             $totalsales = collect($history_sales)->sum('total');
@@ -183,8 +186,9 @@ class MyRequestController extends Controller
             ]);
 
             history_sales::where('cabid',$cabid)
-                        ->where(function(Builder $builder){
-                            $builder->where('collected_status', "Pending")
+                        ->where(function(Builder $builder) use($startdate,$enddadte){
+                            $builder->whereBetween('created_at', [$startdate .' 00:00:00', $enddadte .' 23:59:59'])
+                                    ->where('collected_status', "Pending")
                                     ->where('total','!=', 0)
                                     ->where('returned', 'N');
                         })->update([
@@ -277,7 +281,7 @@ class MyRequestController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create($cabid)
+    public function create_select_range($cabid)
     {
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
         $cabinet = cabinet::where('cabid', $cabid)
@@ -350,12 +354,101 @@ class MyRequestController extends Controller
                             ->with('failed','Sales Request creation failed');
             }
             
-            return view('myrequest.create')
+            return view('myrequest.create_select_range')
                         ->with(['cabinet'=>$cabinet])
                         ->with(['renter'=>$renter])
                         ->with(['history_sales'=>$history_sales])
                         ->with('totalsales',$totalsales)
                         ->with('cabid',$cabid);
+        }else{
+            return redirect()->route('dashboard.index');
+        }
+    }
+    public function create(Request $request, $cabid)
+    {
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $cabinet = cabinet::where('cabid', $cabid)
+                            ->latest()
+                            ->first();
+
+        $startdate = Carbon::parse($request->startdate)->format('Y-m-d');
+        $enddadte = Carbon::parse($request->enddate)->format('Y-m-d');
+
+        if($cabinet->userid != auth()->user()->userid)
+        {
+            $userlog = user_login_log::query()->create([
+                'userid' => auth()->user()->userid,
+                'username' => auth()->user()->username,
+                'firstname' => auth()->user()->firstname,
+                'middlename' => auth()->user()->middlename,
+                'lastname' => auth()->user()->lastname,
+                'email' => auth()->user()->email,
+                'branchid' => auth()->user()->branchid,
+                'branchname' => auth()->user()->branchname,
+                'accesstype' => auth()->user()->accesstype,
+                'timerecorded'  => $timenow,
+                'created_by' => auth()->user()->email,
+                'updated_by' => 'Null',
+                'mod'  => 0,
+                'notes' => 'My Request. Create. CID Error',
+                'status'  => 'Failed',
+            ]);  
+            return redirect()->route('myrequest.index')
+                                ->with('failed','Unknown Command.');
+        }
+
+        if(auth()->user()->accesstype =='Renters'){
+            $cabinet = cabinet::where('cabid',$cabid)
+                    ->where(function(Builder $builder){
+                        $builder->where('userid', auth()->user()->userid);
+                    })->first();
+        
+            $renter = Renters::where('userid',$cabinet->userid)->first();
+
+            
+
+            $history_sales = history_sales::where('cabid',$cabid)
+                        ->where(function(Builder $builder) use($startdate,$enddadte){
+                            $builder->whereBetween('created_at', [$startdate .' 00:00:00', $enddadte .' 23:59:59'])
+                                    ->where('collected_status', "Pending");
+                        })->get();
+
+
+                    
+            $totalsales = collect($history_sales)->sum('total');
+
+            if($totalsales == 0)
+            {
+                $userlog = user_login_log::query()->create([
+                    'userid' => auth()->user()->userid,
+                    'username' => auth()->user()->username,
+                    'firstname' => auth()->user()->firstname,
+                    'middlename' => auth()->user()->middlename,
+                    'lastname' => auth()->user()->lastname,
+                    'email' => auth()->user()->email,
+                    'branchid' => auth()->user()->branchid,
+                    'branchname' => auth()->user()->branchname,
+                    'accesstype' => auth()->user()->accesstype,
+                    'timerecorded'  => $timenow,
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'mod'  => 0,
+                    'notes' => 'My Request. Create. Zero Sales',
+                    'status'  => 'Failed',
+                ]); 
+
+                return redirect()->route('myrequest.index')
+                            ->with('failed','Sales Request creation failed');
+            }
+            
+            return view('myrequest.create')
+                        ->with(['cabinet'=>$cabinet])
+                        ->with(['renter'=>$renter])
+                        ->with(['history_sales'=>$history_sales])
+                        ->with('totalsales',$totalsales)
+                        ->with('cabid',$cabid)
+                        ->with('startdate',$startdate)
+                        ->with('enddate',$enddadte);
         }else{
             return redirect()->route('dashboard.index');
         }
