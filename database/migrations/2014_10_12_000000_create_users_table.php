@@ -33,7 +33,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
             $table->string('accesstype');
-            $table->string('timerecorded');
+            $table->dateTime('timerecorded');
             $table->string('created_by');
             $table->string('updated_by');
             $table->integer('mod');

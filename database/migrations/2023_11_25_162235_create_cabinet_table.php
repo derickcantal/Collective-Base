@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('created_by');
             $table->string('updated_by');
-            $table->string('timerecorded');
+            $table->dateTime('timerecorded');
             $table->string('rpmonth');
             $table->string('rpyear');
             $table->string('fully_paid');

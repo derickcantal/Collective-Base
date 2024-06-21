@@ -19,7 +19,7 @@ use Intervention\Image\Drivers\Imagick\Driver;
 class RentalPaymentsController extends Controller
 {
     public function userlog($notes,$status){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
         
         $userlog = user_login_log::query()->create([
             'userid' => auth()->user()->userid,
@@ -72,7 +72,7 @@ class RentalPaymentsController extends Controller
     }
 
     public function loaddata(){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
         $rentalPayments = RentalPayments::orderBy('status','desc')
                 ->where(function(Builder $builder)  {
                     $builder->orderBy('branchname','asc')
@@ -90,7 +90,7 @@ class RentalPaymentsController extends Controller
     }
 
     public function storedata($request){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
 
         $today = Carbon::now();
         $today->month;
@@ -296,7 +296,7 @@ class RentalPaymentsController extends Controller
     }
 
     public function updatedata($request,$rentalPayments){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
         $rent = Renters::where('username',$request->username)->first();
         $br = Renters::where('branchname',$request->branchname)->first();
         $cab = cabinet::where('cabinetname',$request->cabinetname)

@@ -16,7 +16,7 @@ use \Carbon\Carbon;
 class MyRequestController extends Controller
 {
     public function userlog($notes,$status){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
         
         $userlog = user_login_log::query()->create([
             'userid' => auth()->user()->userid,
@@ -55,7 +55,7 @@ class MyRequestController extends Controller
 
     public function loaddata(){
 
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
         if(auth()->user()->accesstype =='Renters'){
             $cabinets = cabinet::where('userid',auth()->user()->userid)
                     ->orderBy('status','asc')
@@ -132,7 +132,7 @@ class MyRequestController extends Controller
         $startdate = Carbon::parse($request->startdate)->format('Y-m-d');
         $enddadte = Carbon::parse($request->enddate)->format('Y-m-d');
         if(auth()->user()->accesstype =='Renters'){
-            $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+            $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
 
             $cabinet = cabinet::where('cabid',$cabid)
             ->where(function(Builder $builder){
@@ -283,7 +283,7 @@ class MyRequestController extends Controller
      */
     public function create_select_range($cabid)
     {
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
         $cabinet = cabinet::where('cabid', $cabid)
                             ->latest()
                             ->first();
@@ -366,7 +366,7 @@ class MyRequestController extends Controller
     }
     public function create(Request $request, $cabid)
     {
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
         $cabinet = cabinet::where('cabid', $cabid)
                             ->latest()
                             ->first();
@@ -479,7 +479,7 @@ class MyRequestController extends Controller
      */
     public function show(string $cabid)
     {
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
         $cabinet = cabinet::where('cabid', $cabid)
                             ->latest()
                             ->first();

@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('renters', function (Blueprint $table) {
-            $table->increments('rentersid');
+        Schema::create('customers', function (Blueprint $table) {
+            $table->increments('cid');
             $table->string('avatar');
             $table->string('username');
             $table->string('firstname');
@@ -33,6 +33,9 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
             $table->string('accesstype');
+            $table->dateTime('tpointdatelast');
+            $table->decimal('tpointslast', $precision = 8, $scale = 2);
+            $table->decimal('tpoints', $precision = 8, $scale = 2);
             $table->dateTime('timerecorded');
             $table->string('created_by');
             $table->string('updated_by');
@@ -46,6 +49,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('renters');
+        Schema::dropIfExists('customers');
     }
 };

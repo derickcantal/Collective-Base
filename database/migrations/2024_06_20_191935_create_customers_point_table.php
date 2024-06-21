@@ -11,21 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('history_attendance', function (Blueprint $table) {
-            $table->increments('attid');
-            $table->integer('userid');
+        Schema::create('customers_point', function (Blueprint $table) {
+            $table->increments('cpid');
+            $table->integer('cid');
             $table->string('username');
-            $table->string('avatarproof');
             $table->string('firstname');
+            $table->string('middlename');
             $table->string('lastname');
-            $table->integer('branchid');
-            $table->string('branchname');
-            $table->string('attnotes');
+            $table->string('email')->unique(); 
             $table->timestamps();
+            $table->string('accesstype');
+            $table->dateTime('tpointdatelast');
+            $table->decimal('tpointslast', $precision = 8, $scale = 2);
+            $table->decimal('tpoints', $precision = 8, $scale = 2);
+            $table->dateTime('timerecorded');
             $table->string('created_by');
             $table->string('updated_by');
-            $table->dateTime('timerecorded');
-            $table->string('posted');
             $table->integer('mod');
             $table->string('status');
         });
@@ -36,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('history_attendance');
+        Schema::dropIfExists('customers_point');
     }
 };

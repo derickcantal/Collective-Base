@@ -13,7 +13,7 @@ use \Carbon\Carbon;
 class MyRentalController extends Controller
 {
     public function userlog($notes,$status){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
         
         $userlog = user_login_log::query()->create([
             'userid' => auth()->user()->userid,
@@ -53,7 +53,7 @@ class MyRentalController extends Controller
         
     }
     public function loaddata(){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
         $cabinets = cabinet::where('userid',auth()->user()->userid)
                     ->orderBy('status','asc')
                     ->orderBy('cabid','asc')
@@ -98,15 +98,15 @@ class MyRentalController extends Controller
     }
     
     public function storedata(){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
     }
     
     public function updatedata(){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
     }
     
     public function destroydata(){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
     }
 
     public function cabinetrental(){

@@ -18,7 +18,7 @@ use Intervention\Image\Drivers\Imagick\Driver;
 class RenterCashierRentalController extends Controller
 {
     public function userlog($notes,$status){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
         
         $userlog = user_login_log::query()->create([
             'userid' => auth()->user()->userid,
@@ -238,7 +238,7 @@ class RenterCashierRentalController extends Controller
     public function store(Request $request)
     { 
         if(auth()->user()->accesstype == 'Cashier'){
-            $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+            $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
 
             $today = Carbon::now();
             $today->month;

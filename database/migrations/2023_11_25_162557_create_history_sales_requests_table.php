@@ -29,8 +29,8 @@ return new class extends Migration
             $table->timestamps();
             $table->string('created_by');
             $table->string('updated_by');
-            $table->string('timerecorded');
-            $table->string('timerecorded_c');
+            $table->dateTime('timerecorded');
+            $table->dateTime('timerecorded_c');
             $table->string('posted');
             $table->integer('mod');
             $table->string('status');

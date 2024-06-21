@@ -18,7 +18,7 @@ class AttendanceController extends Controller
 {
     public function userlog($notes,$status)
     {
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
         
         $userlog = user_login_log::query()->create([
             'userid' => auth()->user()->userid,
@@ -130,7 +130,7 @@ class AttendanceController extends Controller
     
     public function updatedata($request, $attendance)
     {
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
         $att1 = attendance::where('attid',$attendance->attid)->first();
         $mod = 0;
         $mod = $attendance->mod;

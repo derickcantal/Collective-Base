@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('branchid');
             $table->integer('cabcount');
             $table->string('accesstype');
-            $table->string('timerecorded');
+            $table->dateTime('timerecorded');
             $table->string('posted');
             $table->string('created_by');
             $table->string('updated_by');

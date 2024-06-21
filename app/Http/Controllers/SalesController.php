@@ -15,7 +15,7 @@ use Intervention\Image\Drivers\Imagick\Driver;
 class SalesController extends Controller
 {
     public function userlog($notes,$status){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
         
         $userlog = user_login_log::query()->create([
             'userid' => auth()->user()->userid,
@@ -48,7 +48,7 @@ class SalesController extends Controller
     }
 
     public function loaddata_cashier(){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
         $sales = Sales::where('branchname',auth()->user()->branchname)
                         ->latest()
                         ->paginate(5);
@@ -115,7 +115,7 @@ class SalesController extends Controller
             $payref = $request->payref;
         }
 
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
                 
         $sales = Sales::create([
             'salesavatar' => $path,
@@ -166,7 +166,7 @@ class SalesController extends Controller
     }
     
     public function updatedata($request,$sales){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s A');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
         $cabn = cabinet::where('cabid',$request->cabid)
                         ->where(function(Builder $builder) use($request){
                             $builder->where('branchname',$request->branchname);

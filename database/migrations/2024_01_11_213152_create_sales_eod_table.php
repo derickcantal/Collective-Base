@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('notes');
             $table->string('created_by');
             $table->string('updated_by');
-            $table->string('timerecorded');
+            $table->dateTime('timerecorded');
             $table->string('posted');
             $table->timestamps();
         });

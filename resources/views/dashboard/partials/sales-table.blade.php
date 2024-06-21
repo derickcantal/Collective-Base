@@ -98,6 +98,7 @@
 										<x-input-label for="created_by" :value="$sale->created_by"/>
 										@endif
 										<x-input-label for="timerecorded" :value="$sale->timerecorded"/>
+
 									</td>
 									
 								</tr>
