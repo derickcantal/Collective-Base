@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
+use \Carbon\Carbon;
 
 class history_attendance extends Model
 {
@@ -12,6 +13,13 @@ class history_attendance extends Model
 
     protected $table = 'history_attendance';
     protected $primaryKey = 'attid';
+
+    protected $dates = [
+        'timerecorded',
+    ];
+    public function gettimerecordedAttribute($dates) {
+        return \Carbon\Carbon::parse($dates)->format('Y-m-d h:i:s A');
+    }
 
     protected $fillable = [
         'userid',

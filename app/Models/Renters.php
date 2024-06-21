@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use \Carbon\Carbon;
 
 class Renters extends Model
 {
@@ -13,6 +14,13 @@ class Renters extends Model
 
     protected $table = 'users';  
     protected $primaryKey = 'userid';
+
+    protected $dates = [
+        'timerecorded',
+    ];
+    public function gettimerecordedAttribute($dates) {
+        return \Carbon\Carbon::parse($dates)->format('Y-m-d h:i:s A');
+    }
  
     /**
      * The attributes that are mass assignable.

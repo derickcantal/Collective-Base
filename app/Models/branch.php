@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use \Carbon\Carbon;
 
 class branch extends Model
 {
@@ -11,6 +12,13 @@ class branch extends Model
 
     protected $primaryKey = 'branchid';
     protected $table = 'branch';
+
+    protected $dates = [
+        'timerecorded',
+    ];
+    public function gettimerecordedAttribute($dates) {
+        return \Carbon\Carbon::parse($dates)->format('Y-m-d h:i:s A');
+    }
 
     protected $fillable = [
         'branchname',

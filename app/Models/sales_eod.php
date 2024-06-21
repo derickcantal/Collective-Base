@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use \Carbon\Carbon;
 
 class sales_eod extends Model
 {
@@ -11,6 +12,13 @@ class sales_eod extends Model
 
     protected $primaryKey = 'seodid';
     protected $table = 'sales_eod';  
+
+    protected $dates = [
+        'timerecorded',
+    ];
+    public function gettimerecordedAttribute($dates) {
+        return \Carbon\Carbon::parse($dates)->format('Y-m-d h:i:s A');
+    }
 
     protected $fillable = [
         'seodid',
