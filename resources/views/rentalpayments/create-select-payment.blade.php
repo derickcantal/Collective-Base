@@ -40,9 +40,16 @@
                                             <svg class="rtl:rotate-180  w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                                             </svg>
-                                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Cabinet No. {{ $cabinet->cabid }}</span>
+                                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">{{ $cabinet->branchname }}</span>
                                         </div>
                                         </li>
+                                        <li aria-current="page">
+                                        <div class="flex items-center">
+                                            <svg class="rtl:rotate-180  w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                            </svg>
+                                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Cabinet No. {{ $cabinet->cabinetname }}</span>
+                                        </div>
                                         </li>
                                         <li aria-current="page">
                                         <div class="flex items-center">
@@ -84,8 +91,8 @@
                                             <div class="col-span-2 sm:col-span-1 ">
                                                 <!-- cabname -->
                                                 <div class="form-group mt-4">
-                                                    <x-input-label for="cabinetname" :value="__('Cabinet No.')" />
-                                                    <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" :value="old('cabinetname', $cabinet->cabid)" required autofocus autocomplete="off" readonly/>
+                                                    <x-input-label for="cabid" :value="__('Cabinet No.')" />
+                                                    <x-text-input id="cabid" class="block mt-1 w-full" type="text" name="cabid" :value="old('cabid', $cabinet->cabinetname)" required autofocus autocomplete="off" readonly/>
                                                     <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
                                                 </div>
                                             </div>
@@ -153,6 +160,13 @@
                                                     <x-input-label for="rpnotes" :value="__('Notes')" />
                                                     <x-text-input id="rpnotes" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="rpnotes" value="" autofocus autocomplete="off"/>
                                                     <x-input-error :messages="$errors->get('rpnotes')" class="mt-2" />
+                                                </div>
+                                            </div>
+                                            <div class="col-span-2 sm:col-span-1 ">
+                                                <!-- cabname -->
+                                                <div class="form-group mt-4">
+                                                    <x-text-input id="cabinetname" class="block mt-1 w-full" type="hidden" name="cabinetname" :value="old('cabinetname', $cabinet->cabid)" required autofocus autocomplete="off" readonly/>
+                                                    <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
                                                 </div>
                                             </div>
 

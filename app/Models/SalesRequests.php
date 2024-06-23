@@ -14,13 +14,6 @@ class SalesRequests extends Model
         protected $table = 'sales_requests';  
         protected $primaryKey = 'salesrid';
 
-        protected $dates = [
-            'timerecorded',
-        ];
-        public function gettimerecordedAttribute($dates) {
-            return \Carbon\Carbon::parse($dates)->format('Y-m-d h:i:s A');
-        }
-
         protected $fillable = [
             'branchid',
             'branchname',
@@ -43,5 +36,13 @@ class SalesRequests extends Model
             'mod',
             'status',
         ];
+
+        protected $casts = [
+            'rstartdate' => 'datetime',
+            'renddate' => 'datetime',
+            'timerecorded' => 'datetime:Y-m-d H:i A'
+        ];
+
+
     
 }

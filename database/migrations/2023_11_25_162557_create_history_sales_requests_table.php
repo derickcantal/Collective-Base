@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('created_by');
             $table->string('updated_by');
             $table->dateTime('timerecorded');
-            $table->dateTime('timerecorded_c');
+            $table->dateTime('timerecorded_c')->nullable();
             $table->string('posted');
             $table->integer('mod');
             $table->string('status');

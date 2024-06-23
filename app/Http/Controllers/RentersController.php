@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\DB;
 class RentersController extends Controller
 {
     public function userlog($notes,$status){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         
         $userlog = user_login_log::query()->create([
             'userid' => auth()->user()->userid,
@@ -72,7 +72,7 @@ class RentersController extends Controller
     }
 
     public function updatecabinet(Request $request,$cabinet){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $rent = Renters::where('userid',$cabinet)->first();
          
         $cabinet = cabinet::findOrFail($cabinet);
@@ -165,7 +165,7 @@ class RentersController extends Controller
     }
 
     public function statuscabinet($cabid){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $cabinet = cabinet::findOrFail($cabid);
         $mod = 0;
         $mod = $cabinet->mod;
@@ -206,7 +206,7 @@ class RentersController extends Controller
     }
     
     public function storedata(Request $request){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $br = branch::where('branchname',$request->branchname)->first();
 
         $renter = Renters::create([
@@ -250,7 +250,7 @@ class RentersController extends Controller
     }
     
     public function updatedata($request,$renter){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $mod = 0;
         $mod = $renter->mod;
         $br = branch::where('branchname',$request->branchname)->first();
@@ -301,7 +301,7 @@ class RentersController extends Controller
     }
     
     public function destroydata($renter){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
 
         $rent = Renters::where('userid', $renter->userid)->first();
         $fullname = $rent->lastname . ', ' . $rent->firstname . ' ' . $rent->middlename;
@@ -347,8 +347,14 @@ class RentersController extends Controller
 
     public function renterregister(Request $request)
     {
-        
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $n1 = strtoupper($request->firstname[0]);
+        $n2 = strtoupper($request->middlename[0]);
+        $n3 = strtoupper($request->lastname[0]);
+        $n4 = preg_replace('/[-]+/', '', $request->birthdate);
+
+        $newpassword = $n1 . $n2 . $n3 . $n4;
+
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $fullname = $request->lastname . ', ' . $request->firstname . ' ' . $request->middlename;
         if(auth()->user()->accesstype == 'Administrator'){
             if($request->newrenter == 'Y'){
@@ -357,7 +363,7 @@ class RentersController extends Controller
                         'avatar' => 'avatars/avatar-default.jpg',
                         'username' => $request->username,
                         'email' => $request->email,
-                        'password' => Hash::make($request->password),
+                        'password' => Hash::make($newpassword),
                         'firstname' => $request->firstname,
                         'middlename' => $request->middlename,
                         'lastname' => $request->lastname,

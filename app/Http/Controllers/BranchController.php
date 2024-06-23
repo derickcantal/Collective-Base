@@ -12,7 +12,7 @@ use \Carbon\Carbon;
 class BranchController extends Controller
 {
     public function userlog($notes,$status){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         
         $userlog = user_login_log::query()->create([
             'userid' => auth()->user()->userid,
@@ -48,7 +48,7 @@ class BranchController extends Controller
     }
     
     public function storedata($request){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $branches = branch::create([
             'branchname' => $request->branchname,
             'branchaddress' => $request->branchaddress,
@@ -82,7 +82,7 @@ class BranchController extends Controller
     }
     
     public function updatedata($request, $branch){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $branch = branch::findOrFail($branch);
         $mod = 0;
         $mod = $branch->mod;

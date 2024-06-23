@@ -81,6 +81,9 @@
                                                 <th scope="col" class="px-6 py-3">
                                                     Profile
                                                 </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Date Range
+                                                </th>
                                             
                                                 <th scope="col" class="px-6 py-3">
                                                     Total Sales
@@ -116,7 +119,10 @@
                                                     <x-input-label>{{ $RenterRequest->lastname }}, {{ $RenterRequest->firstname }} {{ $RenterRequest->middlename }}</x-input-label>
                                                     <x-input-label>Cab. No.: <b>{{ $RenterRequest->cabinetname }}</b></x-input-label>
                                                 </td>
-                                               
+                                                <td class="px-6 py-4">
+                                                    <x-input-label><b>{{ Carbon\Carbon::parse($RenterRequest->rstartdate)->format('Y-m-d') }}</b></x-input-label>
+                                                    <x-input-label> TO <b>{{ Carbon\Carbon::parse($RenterRequest->renddate)->format('Y-m-d') }}</b></x-input-label>
+                                                </td>
                                                 <td class="px-6 py-4">
                                                     <x-input-label for="totalsales">{{ number_format($RenterRequest->totalsales, 2)}}</x-input-label>
                                                 </td>

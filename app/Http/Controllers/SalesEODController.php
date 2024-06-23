@@ -16,7 +16,7 @@ use \Carbon\Carbon;
 class SalesEODController extends Controller
 {
     public function userlog($notes,$status){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         
         $userlog = user_login_log::query()->create([
             'userid' => auth()->user()->userid,
@@ -48,7 +48,7 @@ class SalesEODController extends Controller
     public function storedata($request)
     {
         
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         
         try{
             Sales::where('branchname',auth()->user()->branchname)
@@ -251,7 +251,7 @@ class SalesEODController extends Controller
      */
     public function create(Request $request)
     {
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
 
         if(Hash::check($request->password, auth()->user()->password)){
             if(auth()->user()->accesstype =='Cashier'){
@@ -303,7 +303,7 @@ class SalesEODController extends Controller
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 
-                $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+                $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         
                 try{
                     Sales::where('branchname',auth()->user()->branchname)

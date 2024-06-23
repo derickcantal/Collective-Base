@@ -21,7 +21,7 @@ use League\CommonMark\Extension\Embed\Bridge\OscaroteroEmbedAdapter;
 class UsersController extends Controller
 {
     public function userlog($notes,$status){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         
         $userlog = user_login_log::query()->create([
             'userid' => auth()->user()->userid,
@@ -42,7 +42,7 @@ class UsersController extends Controller
         ]);
     }
     public function loaddata(){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
 
         $user = User::whereNot('accesstype',"Renters")
                     ->orderBy('status','asc')
@@ -57,7 +57,7 @@ class UsersController extends Controller
     }
     
     public function storedata($request){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $br = branch::where('branchname',$request->branchname)->first();
 
         $cabn = cabinet::where('cabinetname',$request->cabinetname)
@@ -126,7 +126,7 @@ class UsersController extends Controller
     }
     
     public function updatedata($request,$user){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
 
         $mod = 0;
         $mod = $user->mod;
@@ -229,7 +229,7 @@ class UsersController extends Controller
                 return redirect()->route('users.index')
                         ->with('failed','User Update on own account not allowed.');
         }
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         if(auth()->user()->accesstype == 'Supervisor')
         {
             if($user->accesstype == 'Administrator')

@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('accesstype');
             $table->integer('branchid');
             $table->string('branchname');
+            $table->integer('cid')->nullable();
             $table->timestamps();
             $table->string('collected_status');
             $table->string('returned');

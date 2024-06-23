@@ -114,31 +114,6 @@
                                                 </div>
                                             </div>
                                             <div class="col-span-2 sm:col-span-1">
-                                                <!-- Password -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="password" :value="__('Password')" />
-
-                                                    <x-text-input id="password" class="block mt-1 w-full"
-                                                                    type="password"
-                                                                    name="password"
-                                                                    required autocomplete="new-password" />
-
-                                                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                                                </div>
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- Confirm Password -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-                                                    <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                                                    type="password"
-                                                                    name="password_confirmation" required autocomplete="new-password" />
-
-                                                    <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-                                                </div>                    
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
                                                 <!-- lastname -->
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="mobile_primary" :value="__('Mobile No. (1)')" />

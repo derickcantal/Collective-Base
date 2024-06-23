@@ -19,7 +19,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 class ReportsController extends Controller
 {
     public function userlog($notes,$status){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         
         $userlog = user_login_log::query()->create([
             'userid' => auth()->user()->userid,
@@ -614,7 +614,7 @@ class ReportsController extends Controller
 
     public function displayall()
     {  
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 $salesget = history_sales::where('branchname',auth()->user()->branchname)

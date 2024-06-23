@@ -21,7 +21,7 @@ use Intervention\Image\Drivers\Imagick\Driver;
 class RenterRequestsController extends Controller
 {
     public function userlog($notes,$status){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         
         $userlog = user_login_log::query()->create([
             'userid' => auth()->user()->userid,
@@ -55,7 +55,7 @@ class RenterRequestsController extends Controller
     }
     
     public function storedata($request){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $rent = Renters::where('username',$request->username)->first();
 
         $br = branch::where('branchname',$request->branchname)->first();
@@ -104,7 +104,7 @@ class RenterRequestsController extends Controller
     }
     
     public function updatedata($request,$salerid){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $validated = $request->validate([
             'avatarproof'=>'required|image|file',
         ]);

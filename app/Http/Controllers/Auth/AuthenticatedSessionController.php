@@ -16,6 +16,28 @@ use App\Models\user_login_log;
 
 class AuthenticatedSessionController extends Controller
 {
+    public function userlog($notes,$status)
+    {
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
+        
+        $userlog = user_login_log::query()->create([
+            'userid' => auth()->user()->userid,
+            'username' => auth()->user()->username,
+            'firstname' => auth()->user()->firstname,
+            'middlename' => auth()->user()->middlename,
+            'lastname' => auth()->user()->lastname,
+            'email' => auth()->user()->email,
+            'branchid' => auth()->user()->branchid,
+            'branchname' => auth()->user()->branchname,
+            'accesstype' => auth()->user()->accesstype,
+            'timerecorded'  => $timenow,
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'mod'  => 0,
+            'notes' => $notes,
+            'status'  => $status,
+        ]);
+    }
     /**
      * Display the login view.
      */
@@ -76,32 +98,15 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
-        
         $request->authenticate();
 
         $request->session()->regenerate();
 
         if(auth()->user()->status != "Active"){
 
-            
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Login Failed. Inactive',
-                'status'  => 'Failed',
-            ]);
+            $notes = 'Login Failed. Inactive';
+            $status = 'Failed';
+            $this->userlog($notes,$status);
 
             Auth::guard('web')->logout();
 
@@ -111,23 +116,10 @@ class AuthenticatedSessionController extends Controller
 
             return redirect('login')->with('failed','Account Inactive');
         }elseif(auth()->user()->accesstype == "Crew"){
-            $userlog = user_login_log::query()->create([
-                'userid' => auth()->user()->userid,
-                'username' => auth()->user()->username,
-                'firstname' => auth()->user()->firstname,
-                'middlename' => auth()->user()->middlename,
-                'lastname' => auth()->user()->lastname,
-                'email' => auth()->user()->email,
-                'branchid' => auth()->user()->branchid,
-                'branchname' => auth()->user()->branchname,
-                'accesstype' => auth()->user()->accesstype,
-                'timerecorded'  => $timenow,
-                'created_by' => auth()->user()->email,
-                'updated_by' => 'Null',
-                'mod'  => 0,
-                'notes' => 'Login Failed. Crew Account',
-                'status'  => 'Failed',
-            ]);
+            $notes = 'Login Failed. Crew Account';
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+           
             Auth::guard('web')->logout();
 
             $request->session()->invalidate();
@@ -138,43 +130,16 @@ class AuthenticatedSessionController extends Controller
         }else{
             if(auth()->user()->BLID == 1)
             {
-                $userlog = user_login_log::query()->create([
-                    'userid' => auth()->user()->userid,
-                    'username' => auth()->user()->username,
-                    'firstname' => auth()->user()->firstname,
-                    'middlename' => auth()->user()->middlename,
-                    'lastname' => auth()->user()->lastname,
-                    'email' => auth()->user()->email,
-                    'branchid' => auth()->user()->branchid,
-                    'branchname' => auth()->user()->branchname,
-                    'accesstype' => auth()->user()->accesstype,
-                    'timerecorded'  => $timenow,
-                    'created_by' => auth()->user()->email,
-                    'updated_by' => 'Null',
-                    'mod'  => 0,
-                    'notes' => 'Login. Extended Access.',
-                    'status'  => 'Success',
-                ]);
+                $notes = 'Login. Extended Access.';
+                $status = 'Success';
+                $this->userlog($notes,$status);
+
             }
             else
             {
-                $userlog = user_login_log::query()->create([
-                    'userid' => auth()->user()->userid,
-                    'username' => auth()->user()->username,
-                    'firstname' => auth()->user()->firstname,
-                    'middlename' => auth()->user()->middlename,
-                    'lastname' => auth()->user()->lastname,
-                    'email' => auth()->user()->email,
-                    'branchid' => auth()->user()->branchid,
-                    'branchname' => auth()->user()->branchname,
-                    'accesstype' => auth()->user()->accesstype,
-                    'timerecorded'  => $timenow,
-                    'created_by' => auth()->user()->email,
-                    'updated_by' => 'Null',
-                    'mod'  => 0,
-                    'notes' => 'Login',
-                    'status'  => 'Success',
-                ]);
+                $notes = 'Login';
+                $status = 'Success';
+                $this->userlog($notes,$status);
             }
             
             return redirect()->intended(RouteServiceProvider::HOME);
@@ -187,25 +152,9 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d h:i:s');
-        
-        $userlog = user_login_log::query()->create([
-            'userid' => auth()->user()->userid,
-            'username' => auth()->user()->username,
-            'firstname' => auth()->user()->firstname,
-            'middlename' => auth()->user()->middlename,
-            'lastname' => auth()->user()->lastname,
-            'email' => auth()->user()->email,
-            'branchid' => auth()->user()->branchid,
-            'branchname' => auth()->user()->branchname,
-            'accesstype' => auth()->user()->accesstype,
-            'timerecorded'  => $timenow,
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'mod'  => 0,
-            'notes' => 'Logout',
-            'status'  => 'Success',
-        ]);
+        $notes = 'Logout';
+        $status = 'Success';
+        $this->userlog($notes,$status);
 
         Auth::guard('web')->logout();
 

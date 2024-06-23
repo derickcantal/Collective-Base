@@ -33,6 +33,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
             $table->string('accesstype');
+            $table->integer('cpid');
             $table->dateTime('tpointdatelast');
             $table->decimal('tpointslast', $precision = 8, $scale = 2);
             $table->decimal('tpoints', $precision = 8, $scale = 2);
