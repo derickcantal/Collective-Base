@@ -143,7 +143,7 @@ class MyRequestController extends Controller
 
             $history_sales = history_sales::where('cabid',$cabid)
                     ->where(function(Builder $builder) use($startdate,$enddadte){
-                        $builder->whereBetween('created_at', [$startdate .' 00:00:00', $enddadte .' 23:59:59'])
+                        $builder->whereBetween('timerecorded', [$startdate .' 00:00:00', $enddadte .' 23:59:59'])
                                 ->where('collected_status', "Pending");
                     })->get();
 
@@ -188,7 +188,7 @@ class MyRequestController extends Controller
 
             history_sales::where('cabid',$cabid)
                         ->where(function(Builder $builder) use($startdate,$enddadte){
-                            $builder->whereBetween('created_at', [$startdate .' 00:00:00', $enddadte .' 23:59:59'])
+                            $builder->whereBetween('timerecorded', [$startdate .' 00:00:00', $enddadte .' 23:59:59'])
                                     ->where('collected_status', "Pending")
                                     ->where('total','!=', 0)
                                     ->where('returned', 'N');
@@ -410,7 +410,7 @@ class MyRequestController extends Controller
 
             $history_sales = history_sales::where('cabid',$cabid)
                         ->where(function(Builder $builder) use($startdate,$enddadte){
-                            $builder->whereBetween('created_at', [$startdate .' 00:00:00', $enddadte .' 23:59:59'])
+                            $builder->whereBetween('timerecorded', [$startdate .' 00:00:00', $enddadte .' 23:59:59'])
                                     ->where('collected_status', "Pending");
                         })->get();
 

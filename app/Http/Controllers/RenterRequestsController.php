@@ -65,6 +65,12 @@ class RenterRequestsController extends Controller
             $builder->where('branchname',$request->branchname);
         })->first();
 
+        if(empty($request->rnotes)){
+            $rnotes = 'Null';
+        }else{
+            $rnotes = $request->rnotes;
+        }
+
         $RenterRequests = RenterRequests::create([
             'branchid' => $br->branchid,
             'branchname' => $request->branchname,
@@ -73,7 +79,7 @@ class RenterRequestsController extends Controller
             'totalsales' => $request->totalsales,
             'totalcollected' => $request->totalcollected,
             'avatarproof' => 'avatars/cash-default.jpg',
-            'rnotes' => $request->rnotes,
+            'rnotes' => $rnotes,
             'userid' => $rent->userid,
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
@@ -105,6 +111,7 @@ class RenterRequestsController extends Controller
     
     public function updatedata($request,$salerid){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
+
         $validated = $request->validate([
             'avatarproof'=>'required|image|file',
         ]);
@@ -112,6 +119,9 @@ class RenterRequestsController extends Controller
         $RenterRequests = RenterRequests::where('salesrid',$salerid)->first();
 
         $renter = Renters::where('userid',$RenterRequests->userid)->first();
+        $startdate = Carbon::parse($RenterRequests->rstartdate)->format('Y-m-d');
+        $enddadte = Carbon::parse($RenterRequests->renddate)->format('Y-m-d');
+
         if($request->totalcollected > $RenterRequests->totalsales){
 
             $notes = 'Renter Request. Update. Total Collected must not be greater than total sales. ' . $renter->lastname;
@@ -150,20 +160,31 @@ class RenterRequestsController extends Controller
 
         // $path = Storage::disk('public')->put('rentersrequests',$request->file('avatarproof'));
         // $path = $request->file('avatar')->store('avatars','public');
-        
+        if(empty($request->rnotes)){
+            $rnotes = 'Null';
+        }else{
+            $rnotes = $request->rnotes;
+        }
+
+        if(empty($request->totalcollected) or $request->totalcollected == 0){
+            $tcollected = $RenterRequests->totalsales;
+        }else{
+            $tcollected = $request->totalcollected;
+        }
 
         $renterrequestupdate = RenterRequests::where('salesrid', $salerid)->update([
-                                    'totalcollected' => $RenterRequests->totalsales,
+                                    'totalcollected' => $tcollected,
                                     'avatarproof' => $path,
-                                    'rnotes' => $request->rnotes,
+                                    'rnotes' => $rnotes,
                                     'timerecorded_c' => $timenow,
                                     'updated_by' => Auth()->user()->email,
                                     'status' => 'Completed',
                                 ]);
 
         $history_sales =  history_sales::where('cabid',$RenterRequests->cabid)
-                                ->where(function(Builder $builder){
-                                    $builder->where('collected_status', "For Approval")
+                                ->where(function(Builder $builder) use($startdate,$enddadte){
+                                    $builder->whereBetween('timerecorded', [$startdate .' 00:00:00', $enddadte .' 23:59:59'])
+                                            ->where('collected_status', "For Approval")
                                             ->where('total','!=', 0)
                                             ->where('returned', 'N');
                                 })->update([
