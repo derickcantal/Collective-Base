@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Renters;
+use App\Models\Renter;
 use App\Models\branch;
 use App\Models\cabinet;
 use App\Models\branchlist;
@@ -357,6 +358,30 @@ class RenterCashierController extends Controller
                         'status' => 'Active',
                     ]);
 
+                    $renter_n = Renter::create([
+                        'avatar' => 'avatars/avatar-default.jpg',
+                        'username' => $request->username,
+                        'email' => $request->email,
+                        'password' => Hash::make($newpassword),
+                        'firstname' => $request->firstname,
+                        'middlename' => $request->middlename,
+                        'lastname' => $request->lastname,
+                        'birthdate' => $request->birthdate,
+                        'mobile_primary' => $request->mobile_primary,
+                        'mobile_secondary' => $request->mobile_secondary,
+                        'homeno' => $request->homeno,
+                        'branchid' => auth()->user()->branchid,
+                        'branchname' => auth()->user()->branchname,
+                        'cabid' => 0,
+                        'cabinetname' => 'Null',
+                        'accesstype' => 'Renters',
+                        'created_by' => auth()->user()->email,
+                        'updated_by' => 'Null',
+                        'timerecorded' => $timenow,
+                        'mod' => 0,
+                        'status' => 'Active',
+                    ]);
+
                     $rentersearch = Renters::where('firstname', $request->firstname)
                             ->where(function(Builder $builder) use($request){
                             $builder->where('lastname',$request->lastname)
@@ -647,8 +672,31 @@ class RenterCashierController extends Controller
                     'updated_by' => auth()->user()->email,
                     'mod' => $mod + 1,
                 ]);
+
+                $renter_n =Renter::where('userid',$id)->update([
+                    'username' => $request->username,
+                    'email' => $request->email,
+                    'firstname' => $request->firstname,
+                    'middlename' => $request->middlename,
+                    'lastname' => $request->lastname,
+                    'birthdate' => $request->birthdate,
+                    'updated_by' => auth()->user()->email,
+                    'mod' => $mod + 1,
+                ]);
             }else{
                 $renter =Renters::where('userid',$id)->update([
+                    'username' => $request->username,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'firstname' => $request->firstname,
+                    'middlename' => $request->middlename,
+                    'lastname' => $request->lastname,
+                    'birthdate' => $request->birthdate,
+                    'updated_by' => auth()->user()->email,
+                    'mod' => $mod + 1,
+                ]);
+
+                $renter_n =Renter::where('userid',$id)->update([
                     'username' => $request->username,
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
@@ -699,7 +747,12 @@ class RenterCashierController extends Controller
                 Renters::where('userid', $renter->userid)
                 ->update([
                 'status' => 'Inactive'
-            ]);
+                ]);
+
+                Renter::where('userid', $renter->userid)
+                ->update([
+                'status' => 'Inactive'
+                ]);
 
             $notes = 'Renter. Cashier. Deactivate. ' . $renter->lastname;
             $status = 'Success';
@@ -713,7 +766,12 @@ class RenterCashierController extends Controller
                 Renters::where('userid', $renter->userid)
                 ->update([
                 'status' => 'Active'
-            ]);
+                ]);
+
+                Renter::where('userid', $renter->userid)
+                ->update([
+                'status' => 'Active'
+                ]);
 
             $notes = 'Renter. Cashier. Activate. ' . $renter->lastname;
             $status = 'Success';

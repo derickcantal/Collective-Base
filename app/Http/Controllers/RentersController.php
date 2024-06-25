@@ -6,6 +6,7 @@ use App\Http\Requests\RenterCreateRequests;
 use App\Http\Requests\RenterSearchRequests;
 use App\Http\Requests\RenterUpdateRequests;
 use App\Models\Renters;
+use App\Models\Renter;
 use App\Models\branch;
 use App\Models\cabinet;
 use App\Models\branchlist;
@@ -229,6 +230,27 @@ class RentersController extends Controller
             'mod' => 0,
             'status' => 'Active',
         ]);
+
+        $renter_n = Renter::create([
+            'avatar' => 'avatars/avatar-default.jpg',
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'firstname' => $request->firstname,
+            'middlename' => $request->middlename,
+            'lastname' => $request->lastname,
+            'birthdate' => $request->birthdate,
+            'branchid' => $br->branchid,
+            'branchname' => $br->branchname,
+            'cabid' => 0,
+            'cabinetname' => 'Null',
+            'accesstype' => 'Renters',
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'timerecorded' => $timenow,
+            'mod' => 0,
+            'status' => 'Active',
+        ]);
         
         $fullname = $request->lastname . ', ' . $request->firstname . ' ' . $request->middlename;
         if ($renter) {
@@ -268,8 +290,33 @@ class RentersController extends Controller
                 'mod' => $mod + 1,
                 'status' => $request->status,
             ]);
+
+            $renter_n =Renter::where('userid',$renter->userid)->update([
+                'username' => $request->username,
+                'email' => $request->email,
+                'firstname' => $request->firstname,
+                'middlename' => $request->middlename,
+                'lastname' => $request->lastname,
+                'birthdate' => $request->birthdate,
+                'updated_by' => auth()->user()->email,
+                'mod' => $mod + 1,
+                'status' => $request->status,
+            ]);
         }else{
             $renter =Renters::where('userid',$renter->userid)->update([
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'firstname' => $request->firstname,
+                'middlename' => $request->middlename,
+                'lastname' => $request->lastname,
+                'birthdate' => $request->birthdate,
+                'updated_by' => auth()->user()->email,
+                'mod' => $mod + 1,
+                'status' => $request->status,
+            ]);
+
+            $renter_n = Renter::where('userid',$renter->userid)->update([
                 'username' => $request->username,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
@@ -311,7 +358,11 @@ class RentersController extends Controller
             Renters::where('userid', $renter->userid)
             ->update([
             'status' => 'Inactive'
-        ]);
+            ]);
+            Renter::where('userid', $renter->userid)
+            ->update([
+            'status' => 'Inactive'
+            ]);
 
         $renter = Renters::wherenot('accesstype', 'Renters')->get();
 
@@ -327,7 +378,11 @@ class RentersController extends Controller
             Renters::where('userid', $renter->userid)
             ->update([
             'status' => 'Active'
-        ]);
+            ]);
+            Renter::where('userid', $renter->userid)
+            ->update([
+            'status' => 'Active'
+            ]);
 
         $renter = Renters::wherenot('accesstype', 'Renters')->get();
 
@@ -360,6 +415,30 @@ class RentersController extends Controller
             if($request->newrenter == 'Y'){
                 if($request->password == $request->password_confirmation){
                     $renter = Renters::create([
+                        'avatar' => 'avatars/avatar-default.jpg',
+                        'username' => $request->username,
+                        'email' => $request->email,
+                        'password' => Hash::make($newpassword),
+                        'firstname' => $request->firstname,
+                        'middlename' => $request->middlename,
+                        'lastname' => $request->lastname,
+                        'birthdate' => $request->birthdate,
+                        'mobile_primary' => $request->mobile_primary,
+                        'mobile_secondary' => $request->mobile_secondary,
+                        'homeno' => $request->homeno,
+                        'branchid' => auth()->user()->branchid,
+                        'branchname' => auth()->user()->branchname,
+                        'cabid' => 0,
+                        'cabinetname' => 'Null',
+                        'accesstype' => 'Renters',
+                        'created_by' => auth()->user()->email,
+                        'updated_by' => 'Null',
+                        'timerecorded' => $timenow,
+                        'mod' => 0,
+                        'status' => 'Active',
+                    ]);
+
+                    $renter_n = Renter::create([
                         'avatar' => 'avatars/avatar-default.jpg',
                         'username' => $request->username,
                         'email' => $request->email,
