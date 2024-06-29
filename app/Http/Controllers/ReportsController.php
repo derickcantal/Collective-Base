@@ -101,27 +101,27 @@ class ReportsController extends Controller
                 if(empty($request->branchname) or $request->branchname == 'All'){
                     $sales = history_sales::groupBy('cabid','cabinetname','branchname')
                     ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
-                    ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                    ->whereBetween('timerecorded', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
                     ->orderBy($orderby,$orderrow)
                     ->paginate($request->pagerow);
         
                     $salesget = history_sales::groupBy('cabid','cabinetname','branchname')
                     ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
-                    ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                    ->whereBetween('timerecorded', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
                     ->orderBy($orderby,$orderrow)
                     ->get();
                 }elseif(!empty($request->branchname)){
                     $sales = history_sales::groupBy('cabid','cabinetname','branchname')
                     ->where('branchname', $request->branchname)
                     ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
-                    ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                    ->whereBetween('timerecorded', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
                     ->orderBy($orderby,$orderrow)
                     ->paginate($request->pagerow);
         
                     $salesget = history_sales::groupBy('cabid','cabinetname','branchname')
                     ->where('branchname', $request->branchname)
                     ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
-                    ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                    ->whereBetween('timerecorded', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
                     ->orderBy($orderby,$orderrow)
                     ->get();
                 }
@@ -258,11 +258,11 @@ class ReportsController extends Controller
                 $endDate = Carbon::parse($request->enddate)->format('Y-m-d');
 
                 $salesget = history_sales::where('branchname',auth()->user()->branchname)
-                                            ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                                            ->whereBetween('timerecorded', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
                                             ->orderBy($orderby,$orderrow)
                                             ->get();
                 $sales = history_sales::where('branchname',auth()->user()->branchname)
-                                        ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                                        ->whereBetween('timerecorded', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
                                         ->orderBy($orderby,$orderrow)
                                         ->paginate($request->pagerow);
                 
@@ -398,11 +398,11 @@ class ReportsController extends Controller
                 $endDate = Carbon::parse($request->enddate)->format('Y-m-d');
 
                 $salesget = history_sales::where('userid',auth()->user()->userid)
-                                            ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                                            ->whereBetween('timerecorded', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
                                             ->orderBy($orderby,$orderrow)
                                             ->get();
                 $sales = history_sales::where('userid',auth()->user()->userid)
-                                        ->whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                                        ->whereBetween('timerecorded', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
                                         ->orderBy($orderby,$orderrow)
                                         ->paginate($request->pagerow);
                 
@@ -534,10 +534,10 @@ class ReportsController extends Controller
                 $startDate = Carbon::parse($request->startdate)->format('Y-m-d');
                 $endDate = Carbon::parse($request->enddate)->format('Y-m-d');
 
-                $salesget = history_sales::whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                $salesget = history_sales::whereBetween('timerecorded', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
                                             ->orderBy($orderby,$orderrow)
                                             ->get();
-                $sales = history_sales::whereBetween('created_at', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                $sales = history_sales::whereBetween('timerecorded', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
                                         ->orderBy($orderby,$orderrow)
                                         ->paginate($request->pagerow);
                 

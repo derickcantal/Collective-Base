@@ -57,6 +57,14 @@ class UsersController extends Controller
     }
     
     public function storedata($request){
+        $n1 = strtoupper($request->firstname[0]);
+        $n2 = strtoupper($request->middlename[0]);
+        $n3 = strtoupper($request->lastname[0]);
+        $n4 = preg_replace('/[-]+/', '', $request->birthdate);
+
+        $newpassword = $n1 . $n2 . $n3 . $n4;
+        //dd($newpassword);
+
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $br = branch::where('branchname',$request->branchname)->first();
 
@@ -90,7 +98,7 @@ class UsersController extends Controller
             'avatar' => 'avatars/avatar-default.jpg',
             'username' => $request->username,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($newpassword),
             'firstname' => $request->firstname,
             'middlename' => $request->middlename,
             'lastname' => $request->lastname,
@@ -152,7 +160,14 @@ class UsersController extends Controller
                         ->with('failed','User update failed');
             }
         }
-
+        if(!empty($request->password) != !empty($request->password_confirmation)){
+            $notes = 'Users. Create. Password Mismatched. ' . $request->lastname;
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+            
+            return redirect()->route('users.index')
+                    ->with('failed','User update failed');
+        }
         if(empty($request->password)){
             $user =User::where('userid',$user->userid)->update([
                 'username' => $request->username,

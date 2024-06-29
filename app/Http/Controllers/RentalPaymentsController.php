@@ -551,7 +551,7 @@ class RentalPaymentsController extends Controller
                                     ->orWhere('rpnotes','like',"%{$request->search}%")
                                     ->orWhere('firstname','like',"%{$request->search}%")
                                     ->orWhere('lastname','like',"%{$request->search}%")
-                                    ->orWhere('created_at','like',"%{$request->search}%")
+                                    ->orWhere('timerecorded','like',"%{$request->search}%")
                                     ->orWhere('updated_by','like',"%{$request->search}%")
                                     ->orWhere('status','like',"%{$request->search}%")
                                     ->orderBy('branchname','asc')
