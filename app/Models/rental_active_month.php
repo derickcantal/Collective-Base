@@ -29,6 +29,7 @@ class rental_active_month extends Model
         'timerecorded',
         'posted',
         'mod',
+        'copied',
         'status',
     ];
 }

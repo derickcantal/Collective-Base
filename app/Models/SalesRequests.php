@@ -34,6 +34,7 @@ class SalesRequests extends Model
             'timerecorded_c',
             'posted',
             'mod',
+            'copied',
             'status',
         ];
 

@@ -27,6 +27,8 @@ return new class extends Migration
             $table->string('branchname');
             $table->integer('cabid');
             $table->string('cabinetname');
+            $table->date('duedate')->nullable();
+            $table->string('rnotes')->nullable();
             $table->integer('BLID')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
@@ -37,6 +39,7 @@ return new class extends Migration
             $table->string('created_by');
             $table->string('updated_by');
             $table->integer('mod');
+            $table->string('copied')->nullable();
             $table->string('status');
         });
     }

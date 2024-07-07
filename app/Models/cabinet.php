@@ -35,6 +35,7 @@ class cabinet extends Model
         'fully_paid',
         'posted',
         'mod',
+        'copied',
         'status',
     ];
 }

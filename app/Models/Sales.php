@@ -53,6 +53,7 @@ class Sales extends Model
         'timerecorded',
         'posted',
         'mod',
+        'copied',
         'status',
     ];
 

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('updated_by');
             $table->integer('mod');
             $table->string('status');
+            $table->string('copied')->nullable();
             $table->timestamps();
         });
     }

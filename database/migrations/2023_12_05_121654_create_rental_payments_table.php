@@ -35,6 +35,7 @@ return new class extends Migration
             $table->string('posted');
             $table->string('fully_paid');
             $table->integer('mod');
+            $table->string('copied')->nullable();
             $table->string('status');
         });
     }

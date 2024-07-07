@@ -24,6 +24,7 @@ return new class extends Migration
             $table->dateTime('timerecorded');
             $table->string('posted');
             $table->integer('mod');
+            $table->string('copied')->nullable();
             $table->string('status');
         });
     }

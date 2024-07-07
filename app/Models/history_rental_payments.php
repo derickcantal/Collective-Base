@@ -40,6 +40,7 @@ class history_rental_payments extends Model
         'posted',
         'fully_paid',
         'mod',
+        'copied',
         'status',
     ];
 

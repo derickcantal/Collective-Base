@@ -31,6 +31,7 @@ class customer_point extends Model
             'created_by',
             'updated_by',
             'mod',
+            'copied',
             'status',
     ];
 }

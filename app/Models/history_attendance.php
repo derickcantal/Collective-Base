@@ -34,6 +34,7 @@ class history_attendance extends Model
         'timerecorded',
         'posted',
         'mod',
+        'copied',
         'status',
     ];
 

@@ -34,6 +34,7 @@ class user_login_log extends Model
                 'updated_by',
                 'mod',
                 'notes',
+                'copied',
                 'status',
             ];
             

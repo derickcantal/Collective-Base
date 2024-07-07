@@ -47,6 +47,7 @@ class history_sales extends Model
         'timerecorded',
         'posted',
         'mod',
+        'copied',
         'status',
     ];
 

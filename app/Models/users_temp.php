@@ -32,6 +32,7 @@ class users_temp extends Model
         'updated_by',
         'timerecorded',
         'mod',
+        'copied',
         'status',
     ];
 

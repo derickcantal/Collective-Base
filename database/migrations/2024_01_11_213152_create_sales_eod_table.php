@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('updated_by');
             $table->dateTime('timerecorded');
             $table->string('posted');
+            $table->string('copied')->nullable();
             $table->timestamps();
         });
     }

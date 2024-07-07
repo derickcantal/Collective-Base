@@ -34,5 +34,6 @@ class sales_eod extends Model
         'updated_by',
         'timerecorded',
         'posted',
+        'copied',
     ];
 }

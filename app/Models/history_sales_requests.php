@@ -42,6 +42,7 @@ class history_sales_requests extends Model
         'timerecorded_c',
         'posted',
         'mod',
+        'copied',
         'status',
     ];
 

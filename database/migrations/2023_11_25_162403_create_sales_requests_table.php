@@ -33,6 +33,7 @@ return new class extends Migration
             $table->dateTime('timerecorded_c')->nullable();
             $table->string('posted');
             $table->integer('mod');
+            $table->string('copied')->nullable();
             $table->string('status');
         });
     }

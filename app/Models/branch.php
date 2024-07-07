@@ -31,6 +31,7 @@ class branch extends Model
         'timerecorded',
         'posted',
         'mod',
+        'copied',
         'status',
     ];
 }

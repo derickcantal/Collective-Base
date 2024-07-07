@@ -28,6 +28,7 @@ return new class extends Migration
             $table->integer('mod');
             $table->string('notes');
             $table->string('status');
+            $table->string('copied')->nullable();
             $table->timestamps();
         });
     }

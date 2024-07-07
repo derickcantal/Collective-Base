@@ -44,12 +44,15 @@ class User extends Authenticatable
         'branchname',
         'cabid',
         'cabinetname',
+        'duedate',
+        'rnotes',
         'BLID',
         'accesstype',
         'created_by',
         'updated_by',
         'timerecorded',
         'mod',
+        'copied',
         'status',
     ];
 

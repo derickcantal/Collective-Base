@@ -43,6 +43,7 @@ class RentalPayments extends Model
         'posted',
         'fully_paid',
         'mod',
+        'copied',
         'status',
     ];
 
