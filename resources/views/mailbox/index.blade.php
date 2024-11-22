@@ -1,7 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <u><a href="{{ route('mailbox.index') }}" class="inline-flex items-center text-lg font-high text-white-700 hover:text-blue-600 dark:text-white dark:hover:text-gray-400"> Mail Box</a></u> |
+            <a href="{{ route('branch.index') }} " class="inline-flex items-center text-lg font-high text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"> Branch</a> |
+            <a href="{{ route('cabinet.index') }}" class="inline-flex items-center text-lg font-high text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"> Cabinet</a> |
+            <u><a href="{{ route('mailbox.index') }}" class="inline-flex items-center text-lg font-high text-white-700 hover:text-blue-600 dark:text-white dark:hover:text-gray-400"> Mail Box</a></u> 
         </h2>
     </x-slot>
     <section>
@@ -89,9 +91,7 @@
                                                 <th scope="col" class="px-6 py-3">
                                                     Phone
                                                 </th>
-                                                <th scope="col" class="px-6 py-3">
-                                                    Other Email
-                                                </th>
+                                               
                                                 <th scope="col" class="px-6 py-3">
                                                     Status
                                                 </th>
@@ -119,9 +119,7 @@
                                                 <td class="px-6 py-4">
                                                     <x-input-label for="Phone" :value="$mailboxes->phone"/>
                                                 </td>
-                                                <td class="px-6 py-4">
-                                                    <x-input-label for="Phone" :value="$mailboxes->email_other"/>
-                                                </td>
+                                              
                                                 <td class="px-6 py-4">
                                                     <div class="flex items-center">
                                                     @php
@@ -135,7 +133,28 @@
                                                             <div class="h-2.5 w-2.5 rounded-full bg-{{ $color; }}-500 me-2"></div> <x-input-label for="status" value=""/>
                                                     </div>
                                                 <td class="px-6 py-4">
-                                                    <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('mailbox.edit',$mailboxes->username) }}">Modify</a> 
+                                                    <form action="{{ route('mailbox.destroy',$mailboxes->username) }}" method="POST">
+                                                        <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('mailbox.edit',$mailboxes->username) }}">Modify</a> 
+                                                        @csrf
+                                                            @method('DELETE')
+                                                            @php
+                                                            $txtbutton = '';
+                                                            $colorbutton = '';
+                                                            
+                                                            if ($mailboxes->active == 1):
+                                                                $txtbutton = 'Decativate';
+                                                                
+                                                            elseif ($mailboxes->active == 0):
+                                                                $txtbutton = 'Activate';
+                                                                $colorbutton = 'dark:text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800';
+                                                            endif
+                                                            
+                                                            @endphp
+                                                            
+                                                            <x-danger-button class="ms-3 {{ $colorbutton }}">
+                                                                {{ $txtbutton }}
+                                                            </x-danger-button>
+                                                    </form>
                                                 </td>
                                             </tr>
                                         

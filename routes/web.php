@@ -106,6 +106,7 @@ Route::middleware('auth')->group(function () {
     Route::post('mailbox/store', [MailboxController::class, 'store'])->name('mailbox.store');
     Route::get('mailbox/{mailbox}/edit', [MailboxController::class, 'edit'])->name('mailbox.edit');
     Route::put('mailbox/{mailbox}', [MailboxController::class, 'update'])->name('mailbox.update');
+    Route::delete('mailbox/{mailbox}/destroy', [MailboxController::class, 'destroy'])->name('mailbox.destroy');
     Route::get('mailbox/{mailbox}/history', [MailboxController::class, 'show'])->name('mailbox.show');
 
     Route::get('renter/search', [RenterCashierController::class, 'search'])->name('renter.search');
