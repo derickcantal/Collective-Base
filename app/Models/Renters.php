@@ -12,7 +12,8 @@ class Renters extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $table = 'users';  
+    protected $connection = 'mysql';
+    protected $table = 'collective-base.users';  
     protected $primaryKey = 'userid';
 
     protected $dates = [

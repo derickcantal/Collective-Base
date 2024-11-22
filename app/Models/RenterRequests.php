@@ -10,7 +10,8 @@ class RenterRequests extends Model
 {
     use HasFactory;
 
-    protected $table = 'sales_requests';  
+    protected $connection = 'mysql';
+    protected $table = 'collective-base.sales_requests';  
     protected $primaryKey = 'salesrid';
 
     protected $dates = [

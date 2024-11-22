@@ -9,7 +9,9 @@ use \Carbon\Carbon;
 class user_login_log extends Model
 {
     use HasFactory;
-            protected $table = 'user_login_log';  
+
+    protected $connection = 'mysql';
+            protected $table = 'collective-base.user_login_log';  
             protected $primaryKey = 'ullid';
 
             protected $dates = [

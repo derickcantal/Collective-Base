@@ -11,7 +11,8 @@ class history_rental_payments extends Model
 {
     use HasFactory;
 
-    protected $table = 'history_rental_payments';
+    protected $connection = 'mysql';
+    protected $table = 'collective-base.history_rental_payments';
     protected $primaryKey = 'rpid';
 
     protected $dates = [

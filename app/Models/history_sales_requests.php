@@ -11,7 +11,8 @@ class history_sales_requests extends Model
 {
     use HasFactory;
 
-    protected $table = 'history_sales_requests';   
+    protected $connection = 'mysql';
+    protected $table = 'collective-base.history_sales_requests';   
     protected $primaryKey = 'salesrid';
 
     protected $dates = [

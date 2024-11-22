@@ -10,7 +10,8 @@ class users_temp extends Model
 {
     use HasFactory;
 
-    protected $table = 'users_temp';  
+    protected $connection = 'mysql';
+    protected $table = 'collective-base.users_temp';  
     protected $primaryKey = 'userid';
 
     protected $dates = [

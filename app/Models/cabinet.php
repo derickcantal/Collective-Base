@@ -10,8 +10,9 @@ class cabinet extends Model
 {
     use HasFactory;
 
+    protected $connection = 'mysql';
     protected $primaryKey = 'cabid';
-    protected $table = 'cabinet';
+    protected $table = 'collective-base.cabinet';
 
     protected $dates = [
         'timerecorded',

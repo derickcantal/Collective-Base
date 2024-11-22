@@ -10,7 +10,8 @@ class rental_active_month extends Model
 {
     use HasFactory;
 
-    protected $table = 'rental_active_month';  
+    protected $connection = 'mysql';
+    protected $table = 'collective-base.rental_active_month';  
     protected $primaryKey = 'ramid';
 
     protected $dates = [

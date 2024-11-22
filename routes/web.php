@@ -25,6 +25,7 @@ use App\Http\Controllers\EODController;
 use App\Http\Controllers\UserLoginLogController;
 use App\Http\Controllers\TestPagesController;
 use App\Http\Controllers\CBMailController;
+use App\Http\Controllers\MailboxController;
 
 
 /*
@@ -98,6 +99,14 @@ Route::middleware('auth')->group(function () {
     Route::put('saleseod', [SalesEODController::class, 'store'])->name('saleseod.store');
     Route::get('saleseod/{saleseod}/edit', [SalesEODController::class, 'edit'])->name('saleseod.edit');
     Route::put('saleseod/{saleseod}', [SalesEODController::class, 'update'])->name('saleseod.update');
+
+    Route::get('mailbox/search', [MailboxController::class, 'search'])->name('mailbox.search');
+    Route::get('mailbox', [MailboxController::class, 'index'])->name('mailbox.index');
+    Route::get('mailbox/create', [MailboxController::class, 'create'])->name('mailbox.create');
+    Route::post('mailbox/store', [MailboxController::class, 'store'])->name('mailbox.store');
+    Route::get('mailbox/{mailbox}/edit', [MailboxController::class, 'edit'])->name('mailbox.edit');
+    Route::put('mailbox/{mailbox}', [MailboxController::class, 'update'])->name('mailbox.update');
+    Route::get('mailbox/{mailbox}/history', [MailboxController::class, 'show'])->name('mailbox.show');
 
     Route::get('renter/search', [RenterCashierController::class, 'search'])->name('renter.search');
     Route::get('renter/cabinet/search', [RenterCashierController::class, 'cabinetsearch'])->name('renter.cabinetsearch');

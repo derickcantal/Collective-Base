@@ -10,8 +10,9 @@ class branchlist extends Model
 {
     use HasFactory;
 
+    protected $connection = 'mysql';
     protected $primaryKey = 'BLID';
-    protected $table = 'branchlist';
+    protected $table = 'collective-base.branchlist';
 
     protected $dates = [
         'timerecorded',

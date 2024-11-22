@@ -11,7 +11,8 @@ class attendance extends Model
 {
     use HasFactory;
 
-    protected $table = 'attendance';
+    protected $connection = 'mysql';
+    protected $table = 'collective-base.attendance';
     protected $primaryKey = 'attid';
 
     protected $dates = [

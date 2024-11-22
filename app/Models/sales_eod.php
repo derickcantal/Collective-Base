@@ -10,8 +10,9 @@ class sales_eod extends Model
 {
     use HasFactory;
 
+    protected $connection = 'mysql';
     protected $primaryKey = 'seodid';
-    protected $table = 'sales_eod';  
+    protected $table = 'collective-base.sales_eod';  
 
     protected $dates = [
         'timerecorded',

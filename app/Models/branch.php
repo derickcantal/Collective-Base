@@ -10,8 +10,9 @@ class branch extends Model
 {
     use HasFactory;
 
+    protected $connection = 'mysql';
     protected $primaryKey = 'branchid';
-    protected $table = 'branch';
+    protected $table = 'collective-base.branch';
 
     protected $dates = [
         'timerecorded',

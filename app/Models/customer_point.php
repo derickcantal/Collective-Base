@@ -9,8 +9,9 @@ class customer_point extends Model
 {
     use HasFactory;
 
+    protected $connection = 'mysql';
     protected $primaryKey = 'cpid';
-    protected $table = 'customers_point';
+    protected $table = 'collective-base.customers_point';
 
     protected $dates = [
         'timerecorded',
