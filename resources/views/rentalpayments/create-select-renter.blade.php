@@ -152,7 +152,7 @@
                                                             <td class="px-6 py-4">
                                                                 @php
                                                                 @endphp
-                                                                <form action="{{ route('rentalpayments.selectcabinet',  ['renters' => $renters->userid]) }}" enctype="multipart/form-data" method="POST">
+                                                                <form action="{{ route('rentalpayments.selectcabinet',  ['renters' => $renters->rentersid]) }}" enctype="multipart/form-data" method="POST">
                                                                     @csrf
                                                                     @method('GET')
                                                                     @php

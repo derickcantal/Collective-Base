@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Renters;
 use App\Models\Renter;
 use App\Models\branch;
 use App\Models\cabinet;
@@ -136,7 +135,7 @@ class RenterCashierController extends Controller
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $cabuser = $request->cabuser;
         
-        $renter = Renters::where('userid',$cabuser)->first();
+        $renter = Renter::where('rentersid',$cabuser)->first();
 
         $cabinet = cabinet::where('cabid',$request->cabinetname)->first();
 
@@ -150,7 +149,7 @@ class RenterCashierController extends Controller
             $status = 'Failed';
             $this->userlog($notes,$status);
             
-            return redirect()->route('renter.show',$renter->userid)
+            return redirect()->route('renter.show',$renter->rentersid)
          ->with('failed','Inactive Cabinet.');
         }
 
@@ -161,22 +160,22 @@ class RenterCashierController extends Controller
             $status = 'Failed';
             $this->userlog($notes,$status);
 
-            return redirect()->route('renter.show',$renter->userid)
+            return redirect()->route('renter.show',$renter->rentersid)
          ->with('failed','Cabinet Occupied.');
         }
 
-        $cabrenter = cabinet::where('userid', $renter->userid)->get();
+        $cabrenter = cabinet::where('userid', $renter->rentersid)->get();
         
         $totalcabown = count($cabrenter);
 
-        Renters::where('userid',$renter->userid)
+        Renter::where('rentersid',$renter->rentersid)
         ->update([
             'cabid' => $totalcabown + 1,
         ]);
 
         $cabinets = cabinet::where('cabid', $cabinet->cabid)
         ->update([
-        'userid' => $renter->userid,
+        'userid' => $renter->rentersid,
         'email' => $renter->email,
         'cabinetprice' => $request->cabinetprice,
         'updated_by' => auth()->user()->email,
@@ -185,12 +184,12 @@ class RenterCashierController extends Controller
 
         $sales_history = history_sales::where('cabid', $cabinet->cabid)
         ->update([
-        'userid' => $renter->userid,
+        'userid' => $renter->rentersid,
         ]);
 
         $sales = Sales::where('cabid', $cabinet->cabid)
         ->update([
-        'userid' => $renter->userid,
+        'userid' => $renter->rentersid,
         ]);
 
         if ($cabinets) {
@@ -200,18 +199,18 @@ class RenterCashierController extends Controller
             $status = 'Success';
             $this->userlog($notes,$status);
 
-            return redirect()->route('renter.show',$renter->userid)
+            return redirect()->route('renter.show',$renter->rentersid)
                         ->with('success','Cabinet Assigned successfully.');
         }else{
             $notes = 'Renter. Cashier. Cabinet. Assign.';
             $status = 'Failed';
             $this->userlog($notes,$status);
 
-            return redirect()->route('renter.show',$renter->userid)
+            return redirect()->route('renter.show',$renter->rentersid)
                         ->with('failed','Cabinet Assigned failed');
         }
 
-        return redirect()->route('renter.show',$renter->userid)
+        return redirect()->route('renter.show',$renter->rentersid)
          ->with('success','Cabinet Assigned Successfully.');
     }
 
@@ -240,7 +239,7 @@ class RenterCashierController extends Controller
         }
         else
         {
-            $renter = Renters::where('userid',$request->cabuser)->first();
+            $renter = Renter::where('rentersid',$request->cabuser)->first();
 
             $cabinet = cabinet::where('branchname',auth()->user()->branchname)
                             ->where(function(Builder $builder){
@@ -264,10 +263,10 @@ class RenterCashierController extends Controller
         if(auth()->user()->accesstype == 'Cashier'){
 
             $renter = DB::table('branchlist')
-                    ->leftJoin('users', 'users.userid', '=', 'branchlist.userid')
-                    ->where('users.accesstype', 'Renters')
+                    ->leftJoin('renters', 'renters.rentersid', '=', 'branchlist.userid')
+                    ->where('renters.accesstype', 'Renters')
                     ->where('branchlist.branchid', auth()->user()->branchid)
-                    ->orderBy('users.lastname',$request->orderrow)
+                    ->orderBy('renters.lastname',$request->orderrow)
                     ->paginate($request->pagerow);
 
             
@@ -285,8 +284,8 @@ class RenterCashierController extends Controller
         if(auth()->user()->accesstype == 'Cashier'){
 
             $renter = DB::table('branchlist')
-                    ->leftJoin('users', 'users.userid', '=', 'branchlist.userid')
-                    ->where('users.accesstype', 'Renters')
+                    ->leftJoin('renters', 'renters.rentersid', '=', 'branchlist.userid')
+                    ->where('renters.accesstype', 'Renters')
                     ->where('branchlist.branchid', auth()->user()->branchid)
                     ->paginate(5);
 
@@ -334,7 +333,7 @@ class RenterCashierController extends Controller
         if(auth()->user()->accesstype == 'Cashier'){
             if($request->newrenter == 'Y'){
                 if($request->password == $request->password_confirmation){
-                    $renter = Renters::create([
+                    $renter = Renter::create([
                         'avatar' => 'avatars/avatar-default.jpg',
                         'username' => $request->username,
                         'email' => $request->email,
@@ -382,14 +381,15 @@ class RenterCashierController extends Controller
                         'status' => 'Active',
                     ]);
 
-                    $rentersearch = Renters::where('firstname', $request->firstname)
+                    $rentersearch = Renter::where('firstname', $request->firstname)
                             ->where(function(Builder $builder) use($request){
-                            $builder->where('lastname',$request->lastname)
+                            $builder->where('middlename',$request->middlename)
+                                    ->where('lastname',$request->lastname)
                                     ->where('birthdate',$request->birthdate);
                                 })->first();
 
                     $branchlistadd =branchlist::create([
-                        'userid' => $rentersearch->userid,
+                        'userid' => $rentersearch->rentersid,
                         'branchid' => auth()->user()->branchid,
                         'accesstype' => 'Renters',
                         'timerecorded'  => $timenow,
@@ -443,7 +443,7 @@ class RenterCashierController extends Controller
                                 $builder->where('branchid',auth()->user()->branchid);
                                 })->first();
                                 
-                $branch = Renters::where('userid', $request->userid)->first();
+                $branch = Renter::where('rentersid', $request->userid)->first();
 
 
                 if(empty($branchlist))
@@ -512,15 +512,17 @@ class RenterCashierController extends Controller
     {
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         if(auth()->user()->accesstype == 'Cashier'){
-            $renter = Renters::where('firstname', $request->firstname)
+            $renter = Renter::where('firstname', $request->firstname)
                         ->where(function(Builder $builder) use($request){
-                        $builder->where('lastname',$request->lastname)
+                        $builder->where('middlename',$request->middlename)
+                                ->where('lastname',$request->lastname)
                                 ->where('birthdate',$request->birthdate);
                             })->first();
             
             $usertemp = users_temp::where('firstname', $request->firstname)
             ->where(function(Builder $builder) use($request){
-            $builder->where('lastname',$request->lastname)
+            $builder->where('middlename',$request->middlename)
+                    ->where('lastname',$request->lastname)
                     ->where('birthdate',$request->birthdate);
                 })->first();
             if($renter){
@@ -589,10 +591,10 @@ class RenterCashierController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Renters $renter)
+    public function show(Renter $renter)
     {
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
-        $branchlists = branchlist::where('userid', $renter->userid)->first();
+        $branchlists = branchlist::where('userid', $renter->rentersid)->first();
 
         if(empty($branchlists)){
             $notes = 'Renter. Cashier. Access to other Account.';
@@ -603,7 +605,7 @@ class RenterCashierController extends Controller
                             ->with('failed','Unknown Command');
         }
         if(auth()->user()->accesstype == 'Cashier'){
-            $cabinets = cabinet::where('userid',$renter->userid)
+            $cabinets = cabinet::where('userid',$renter->rentersid)
                                 ->where(function(Builder $builder){
                                     $builder->where('branchname', auth()->user()->branchname)
                                             ->orderBy('status','asc')
@@ -622,11 +624,11 @@ class RenterCashierController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Renters $renter)
+    public function edit(Renter $renter)
     {
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
 
-        $branchlist = branchlist::where('userid', $renter->userid)
+        $branchlist = branchlist::where('userid', $renter->rentersid)
                         ->where(function(Builder $builder){
                             $builder->where('branchid',auth()->user()->branchid);
                         })->first();
@@ -656,13 +658,13 @@ class RenterCashierController extends Controller
     {
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         if(auth()->user()->accesstype == 'Cashier'){
-            $renter = Renters::where('userid',$id)->first();
+            $renter = Renter::where('rentersid',$id)->first();
 
             $mod = 0;
             $mod = $renter->mod;
 
             if($request->password == null){
-                $renter =Renters::where('userid',$id)->update([
+                $renter =Renter::where('rentersid',$id)->update([
                     'username' => $request->username,
                     'email' => $request->email,
                     'firstname' => $request->firstname,
@@ -673,7 +675,7 @@ class RenterCashierController extends Controller
                     'mod' => $mod + 1,
                 ]);
 
-                $renter_n =Renter::where('userid',$id)->update([
+                $renter_n =Renter::where('rentersid',$id)->update([
                     'username' => $request->username,
                     'email' => $request->email,
                     'firstname' => $request->firstname,
@@ -684,7 +686,7 @@ class RenterCashierController extends Controller
                     'mod' => $mod + 1,
                 ]);
             }else{
-                $renter =Renters::where('userid',$id)->update([
+                $renter =Renter::where('rentersid',$id)->update([
                     'username' => $request->username,
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
@@ -696,7 +698,7 @@ class RenterCashierController extends Controller
                     'mod' => $mod + 1,
                 ]);
 
-                $renter_n =Renter::where('userid',$id)->update([
+                $renter_n =Renter::where('rentersid',$id)->update([
                     'username' => $request->username,
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
@@ -737,19 +739,19 @@ class RenterCashierController extends Controller
     public function destroy(string $id)
     {
         if(auth()->user()->accesstype == 'Cashier'){
-            $renter = Renters::where('userid',$id)->first();
+            $renter = Renter::where('rentersid',$id)->first();
 
             $mod = 0;
             $mod = $renter->mod;
 
             if($renter->status == 'Active')
             {
-                Renters::where('userid', $renter->userid)
+                Renter::where('rentersid', $renter->rentersid)
                 ->update([
                 'status' => 'Inactive'
                 ]);
 
-                Renter::where('userid', $renter->userid)
+                Renter::where('rentersid', $renter->rentersid)
                 ->update([
                 'status' => 'Inactive'
                 ]);
@@ -763,12 +765,12 @@ class RenterCashierController extends Controller
             }
             elseif($renter->status == 'Inactive')
             {
-                Renters::where('userid', $renter->userid)
+                Renter::where('rentersid', $renter->rentersid)
                 ->update([
                 'status' => 'Active'
                 ]);
 
-                Renter::where('userid', $renter->userid)
+                Renter::where('rentersid', $renter->rentersid)
                 ->update([
                 'status' => 'Active'
                 ]);

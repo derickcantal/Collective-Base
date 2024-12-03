@@ -119,7 +119,7 @@
                                             <div class="col-span-2 sm:col-span-1">
                                                 <!-- firstname -->
                                                 <div class="form-group mt-4">
-                                                    <x-text-input id="userid" class="block mt-1 w-full" type="hidden" name="userid" value="{{ $renters->userid }}" required autofocus readonly/>
+                                                    <x-text-input id="userid" class="block mt-1 w-full" type="hidden" name="userid" value="{{ $renters->rentersid }}" required autofocus readonly/>
                                                     <x-input-error :messages="$errors->get('fullname')" class="mt-2" />
                                                 </div>
                                             </div>

@@ -14,7 +14,7 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <form action="{{ route('renter.update',$renter->userid) }}" method="POST" class="p-4 md:p-5">
+                        <form action="{{ route('renter.update',$renter->rentersid) }}" method="POST" class="p-4 md:p-5">
                         @csrf
                         @method('PUT') 
                             <div class="relative p-4 w-full max-w-full max-h-full">

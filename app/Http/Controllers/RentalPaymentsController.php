@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\branch;
 use App\Models\cabinet;
 use App\Models\RentalPayments;
-use App\Models\Renters;
+use App\Models\Renter;
 use App\Models\history_rental_payments;
 use App\Models\user_login_log;
 use Illuminate\Http\Request;
@@ -98,9 +98,9 @@ class RentalPaymentsController extends Controller
 
         $cabinet = cabinet::where('cabid', $request->cabinetname)->first();
 
-        $renter = Renters::where('userid', $cabinet->userid)->first();
+        $renter = Renter::where('rentersid', $cabinet->userid)->first();
 
-        $rentalpayment = RentalPayments::where('userid',$renter->userid)
+        $rentalpayment = RentalPayments::where('userid',$renter->rentersid)
                 ->where(function(Builder $builder) use($request,$cabinet) {
                     $builder->where('cabid',$cabinet->cabid)
                         ->where('rpmonth',$request->rpmonth)
@@ -108,7 +108,7 @@ class RentalPaymentsController extends Controller
                     })
                     ->latest()->first();
 
-        $rentalpaymenthistory = history_rental_payments::where('userid',$renter->userid)
+        $rentalpaymenthistory = history_rental_payments::where('userid',$renter->rentersid)
                     ->where(function(Builder $builder) use($request,$cabinet) {
                         $builder->where('cabid',$cabinet->cabid)
                             ->where('rpmonth',$request->rpmonth)
@@ -214,7 +214,7 @@ class RentalPaymentsController extends Controller
 
 
         $RentalPayments = RentalPayments::create([
-            'userid' => $renter->userid,
+            'userid' => $renter->rentersid,
             'username' => $renter->username,
             'firstname' => $renter->firstname,
             'lastname' => $renter->lastname,
@@ -243,7 +243,7 @@ class RentalPaymentsController extends Controller
                         'fully_paid' => $fullypaid,
                     ]);
 
-        $rentalpaymentupdate = RentalPayments::where('userid',$renter->userid)
+        $rentalpaymentupdate = RentalPayments::where('userid',$renter->rentersid)
                 ->where(function(Builder $builder) use($request,$cabinet) {
                     $builder->where('cabid',$cabinet->cabid)
                         ->where('rpmonth',$request->rpmonth)
@@ -255,7 +255,7 @@ class RentalPaymentsController extends Controller
         {
             $rpu = RentalPayments::where('branchname',auth()->user()->branchname)
                     ->where(function(Builder $builder)use($request,$cabinet,$renter){
-                        $builder->where('userid',$renter->userid)
+                        $builder->where('userid',$renter->rentersid)
                                 ->where('cabid',$cabinet->cabid)
                                 ->where('rpmonth',$request->rpmonth)
                                 ->where('rpyear',$request->rpyear)
@@ -297,8 +297,8 @@ class RentalPaymentsController extends Controller
 
     public function updatedata($request,$rentalPayments){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
-        $rent = Renters::where('username',$request->username)->first();
-        $br = Renters::where('branchname',$request->branchname)->first();
+        $rent = Renter::where('username',$request->username)->first();
+        $br = Renter::where('branchname',$request->branchname)->first();
         $cab = cabinet::where('cabinetname',$request->cabinetname)
         ->where(function(Builder $builder) use($request){
             $builder->where('branchname',$request->branchname);
@@ -328,7 +328,7 @@ class RentalPaymentsController extends Controller
         
 
             $rpayment = RentalPayments::where('rpid', $rentalPayments)->update([
-                'userid' => $rent->userid,
+                'userid' => $rent->rentersid,
                 'username' => $request->username,
                 'firstname' => $request->firstname,
                 'lastname' => $request->lastname,
@@ -392,7 +392,7 @@ class RentalPaymentsController extends Controller
         $pagerow = $request->pagerow;
 
 
-        $renter = Renters::where('accesstype',"Renters")->orderBy('status','asc')
+        $renter = Renter::where('accesstype',"Renters")->orderBy('status','asc')
                     ->where(function(Builder $builder) use($request){
                         $builder
                                 ->where('username','like',"%{$request->searchrbc}%")
@@ -412,7 +412,7 @@ class RentalPaymentsController extends Controller
     }
     public function selectrenter()
     {
-        $renter = Renters::where('accesstype',"Renters")
+        $renter = Renter::where('accesstype',"Renters")
                     ->orderBy('status','asc')
                     ->paginate(5);
     
@@ -423,9 +423,9 @@ class RentalPaymentsController extends Controller
 
     public function selectcabinet($renters)
     {
-        $renter = Renters::findOrFail($renters);
+        $renter = Renter::findOrFail($renters);
 
-        $cabinet = cabinet::where('userid', $renter->userid)->get();
+        $cabinet = cabinet::where('userid', $renter->rentersid)->get();
 
         return view('rentalpayments.create-select-cabinet')
                     ->with(['renters' => $renter])
@@ -442,7 +442,7 @@ class RentalPaymentsController extends Controller
             return redirect()->route('rentalpayments.selectcabinet',$request->userid)
                                 ->with('failed','No Active Cabinet Selected.');
         }
-        $renter = Renters::where('userid',$request->userid)->first();
+        $renter = Renter::where('rentersid',$request->userid)->first();
 
         $cabinet = cabinet::where('cabid', $request->cabinetname)->first();
 
@@ -641,10 +641,10 @@ class RentalPaymentsController extends Controller
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboard.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                $renters = Renters::findOrFail($renters);
+                $renters = Renter::findOrFail($renters);
                 return view('rentalpayments.show',['$renters' => $renters]); 
             }elseif(auth()->user()->accesstype =='Administrator'){
-                $renters = Renters::findOrFail($renters);
+                $renters = Renter::findOrFail($renters);
                 return view('rentalpayments.show',['$renters' => $renters]);
             }
         }else{

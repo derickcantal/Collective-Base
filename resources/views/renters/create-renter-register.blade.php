@@ -11,7 +11,7 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <form action="{{ route('renters.renterregister',$renter->userid) }}" method="POST" class="p-4 md:p-5">
+                        <form action="{{ route('renters.renterregister',$renter->rentersid) }}" method="POST" class="p-4 md:p-5">
                         @csrf
                         @method('PUT') 
                             <div class="relative p-4 w-full max-w-full max-h-full">
@@ -60,7 +60,7 @@
                                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                                             Renters Profile Information 
-                                            <x-text-input id="userid" class="block mt-1 w-full" type="hidden" name="userid" :value="old('userid', $renter->userid)" required autofocus />
+                                            <x-text-input id="userid" class="block mt-1 w-full" type="hidden" name="userid" :value="old('userid', $renter->rentersid)" required autofocus />
 
                                         </h3>
                                     </div>

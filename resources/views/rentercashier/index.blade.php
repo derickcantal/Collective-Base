@@ -126,9 +126,9 @@
                                                         @php
                                                             
                                                         @endphp
-                                                        <form action="{{ route('renter.destroy',$renters->userid) }}" method="POST">
-                                                            <a class="font-medium text-white-600 dark:text-white-500 hover:underline" href="{{ route('renter.show',$renters->userid) }}">Cabinets</a>
-                                                            | <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('renter.edit',$renters->userid) }}">Modify</a>
+                                                        <form action="{{ route('renter.destroy',$renters->rentersid) }}" method="POST">
+                                                            <a class="font-medium text-white-600 dark:text-white-500 hover:underline" href="{{ route('renter.show',$renters->rentersid) }}">Cabinets</a>
+                                                            | <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('renter.edit',$renters->rentersid) }}">Modify</a>
                                                             @csrf
                                                             @method('DELETE')
                                                             @php

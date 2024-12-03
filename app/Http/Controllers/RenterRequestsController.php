@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\RenterRequests;
 use Illuminate\Http\Request;
 use App\Http\Requests\SalesRequestsSearchRequest;
-use App\Models\Renters;
+use App\Models\Renter;
 use App\Models\branch;
 use App\Models\cabinet;
 use App\Models\history_sales;
@@ -56,7 +56,7 @@ class RenterRequestsController extends Controller
     
     public function storedata($request){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
-        $rent = Renters::where('username',$request->username)->first();
+        $rent = Renter::where('username',$request->username)->first();
 
         $br = branch::where('branchname',$request->branchname)->first();
 
@@ -118,7 +118,7 @@ class RenterRequestsController extends Controller
         
         $RenterRequests = RenterRequests::where('salesrid',$salerid)->first();
 
-        $renter = Renters::where('userid',$RenterRequests->userid)->first();
+        $renter = Renter::where('rentersid',$RenterRequests->userid)->first();
         $startdate = Carbon::parse($RenterRequests->rstartdate)->format('Y-m-d');
         $enddadte = Carbon::parse($RenterRequests->renddate)->format('Y-m-d');
 
@@ -381,7 +381,7 @@ class RenterRequestsController extends Controller
     {
         $RenterRequests = RenterRequests::where('salesrid',$salerid)->first();
 
-        $renter = Renters::where('userid',$RenterRequests->userid)->first();
+        $renter = Renter::where('rentersid',$RenterRequests->userid)->first();
 
         $fullname = $renter->lastname . ', ' . $renter->firstname . ' ' . $renter->middlename;
 

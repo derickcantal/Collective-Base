@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\cabinet;
 use App\Models\branch;
-use App\Models\Renters;
+use App\Models\Renter;
 use App\Models\history_sales;
 use App\Models\user_login_log;
 

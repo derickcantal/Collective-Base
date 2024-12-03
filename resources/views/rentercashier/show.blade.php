@@ -50,7 +50,7 @@
                             <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                                 <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
                                     <form class="flex items-center" action="{{ route('renter.cabinetadd') }}" method="get">
-                                    <x-text-input id="cabuser" class="block mt-1 w-full" type="hidden" name="cabuser" :value="old('userid', $renter->userid)" autofocus/>
+                                    <x-text-input id="cabuser" class="block mt-1 w-full" type="hidden" name="cabuser" :value="old('userid', $renter->rentersid)" autofocus/>
                                     
                                     <x-primary-button class="ms-4">
                                         <a class="btn btn-primary">Add Cabinet</a>

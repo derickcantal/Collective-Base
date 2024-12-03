@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RenterCreateRequests;
 use App\Http\Requests\RenterSearchRequests;
 use App\Http\Requests\RenterUpdateRequests;
-use App\Models\Renters;
 use App\Models\Renter;
 use App\Models\branch;
 use App\Models\cabinet;
@@ -41,7 +40,7 @@ class RentersController extends Controller
         ]);
     }
     public function loaddata(){
-        $renter = Renters::where('accesstype',"Renters")
+        $renter = Renter::where('accesstype',"Renters")
                             ->orderBy('status','asc')
                             ->paginate(5);
         $notes = 'Renter';
@@ -55,9 +54,9 @@ class RentersController extends Controller
     public function editcabinet($cabinet){
         $cab = cabinet::where('cabid',$cabinet)->first();                      
                         
-        $renter = Renters::where('userid', $cab->userid)->first();
+        $renter = Renter::where('rentersid', $cab->userid)->first();
                          
-        $rent = Renters::where('accesstype','Renters')
+        $rent = Renter::where('accesstype','Renters')
         ->where(function(Builder $builder){
             $builder->where('status','Active')
                     ->orderBy('lastname','asc')
@@ -74,7 +73,7 @@ class RentersController extends Controller
 
     public function updatecabinet(Request $request,$cabinet){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
-        $rent = Renters::where('userid',$cabinet)->first();
+        $rent = Renter::where('rentersid',$cabinet)->first();
          
         $cabinet = cabinet::findOrFail($cabinet);
 
@@ -96,7 +95,7 @@ class RentersController extends Controller
 
                 $totalcabown = cabinet::where('userid', $cabinet->userid)->count();
         
-                Renters::where('userid',$rent->userid)
+                Renter::where('rentersid',$rent->userid)
                 ->update([
                     'cabid' => $totalcabown + 1,
                 ]);
@@ -131,7 +130,7 @@ class RentersController extends Controller
 
                 $totalcabown = cabinet::where('userid', $cabinet->userid)->count();
                 
-                $rentercabUpdate = Renters::where('userid',$cabinet->userid)
+                $rentercabUpdate = Renter::where('rentersid',$cabinet->userid)
                             ->update([
                                 'cabid' => $totalcabown - 1,
                             ]);
@@ -210,7 +209,7 @@ class RentersController extends Controller
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $br = branch::where('branchname',$request->branchname)->first();
 
-        $renter = Renters::create([
+        $renter = Renter::create([
             'avatar' => 'avatars/avatar-default.jpg',
             'username' => $request->username,
             'email' => $request->email,
@@ -279,7 +278,7 @@ class RentersController extends Controller
         $fullname = $request->lastname . ', ' . $request->firstname . ' ' . $request->middlename;
 
         if($request->password == null){
-            $renter =Renters::where('userid',$renter->userid)->update([
+            $renter =Renter::where('rentersid',$renter->userid)->update([
                 'username' => $request->username,
                 'email' => $request->email,
                 'firstname' => $request->firstname,
@@ -291,7 +290,7 @@ class RentersController extends Controller
                 'status' => $request->status,
             ]);
 
-            $renter_n =Renter::where('userid',$renter->userid)->update([
+            $renter_n =Renter::where('rentersid',$renter->userid)->update([
                 'username' => $request->username,
                 'email' => $request->email,
                 'firstname' => $request->firstname,
@@ -303,7 +302,7 @@ class RentersController extends Controller
                 'status' => $request->status,
             ]);
         }else{
-            $renter =Renters::where('userid',$renter->userid)->update([
+            $renter =Renter::where('rentersid',$renter->userid)->update([
                 'username' => $request->username,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
@@ -316,7 +315,7 @@ class RentersController extends Controller
                 'status' => $request->status,
             ]);
 
-            $renter_n = Renter::where('userid',$renter->userid)->update([
+            $renter_n = Renter::where('rentersid',$renter->userid)->update([
                 'username' => $request->username,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
@@ -350,21 +349,21 @@ class RentersController extends Controller
     public function destroydata($renter){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
 
-        $rent = Renters::where('userid', $renter->userid)->first();
+        $rent = Renter::where('rentersid', $renter->userid)->first();
         $fullname = $rent->lastname . ', ' . $rent->firstname . ' ' . $rent->middlename;
 
         if($renter->status == 'Active')
         {
-            Renters::where('userid', $renter->userid)
+            Renter::where('rentersid', $renter->userid)
             ->update([
             'status' => 'Inactive'
             ]);
-            Renter::where('userid', $renter->userid)
+            Renter::where('rentersid', $renter->userid)
             ->update([
             'status' => 'Inactive'
             ]);
 
-        $renter = Renters::wherenot('accesstype', 'Renters')->get();
+        $renter = Renter::wherenot('accesstype', 'Renters')->get();
 
         $notes = 'Renter. Deactivate. ' . $fullname;
         $status = 'Success';
@@ -375,16 +374,16 @@ class RentersController extends Controller
         }
         elseif($renter->status == 'Inactive')
         {
-            Renters::where('userid', $renter->userid)
+            Renter::where('rentersid', $renter->userid)
             ->update([
             'status' => 'Active'
             ]);
-            Renter::where('userid', $renter->userid)
+            Renter::where('rentersid', $renter->userid)
             ->update([
             'status' => 'Active'
             ]);
 
-        $renter = Renters::wherenot('accesstype', 'Renters')->get();
+        $renter = Renter::wherenot('accesstype', 'Renters')->get();
 
         $notes = 'Renter. Activate. ' . $fullname;
         $status = 'Success';
@@ -414,7 +413,7 @@ class RentersController extends Controller
         if(auth()->user()->accesstype == 'Administrator'){
             if($request->newrenter == 'Y'){
                 if($request->password == $request->password_confirmation){
-                    $renter = Renters::create([
+                    $renter = Renter::create([
                         'avatar' => 'avatars/avatar-default.jpg',
                         'username' => $request->username,
                         'email' => $request->email,
@@ -462,7 +461,7 @@ class RentersController extends Controller
                         'status' => 'Active',
                     ]);
 
-                    $rentersearch = Renters::where('firstname', $request->firstname)
+                    $rentersearch = Renter::where('firstname', $request->firstname)
                             ->where(function(Builder $builder) use($request){
                             $builder->where('lastname',$request->lastname)
                                     ->where('birthdate',$request->birthdate);
@@ -514,7 +513,7 @@ class RentersController extends Controller
                                 $builder->where('branchid',auth()->user()->branchid);
                                 })->first();
                                 
-                $branch = Renters::where('userid', $request->userid)->first();
+                $branch = Renter::where('rentersid', $request->userid)->first();
 
 
                 if(empty($branchlist))
@@ -573,7 +572,7 @@ class RentersController extends Controller
     {
         
         if(auth()->user()->accesstype == 'Administrator'){
-            $renter = Renters::where('firstname', $request->firstname)
+            $renter = Renter::where('firstname', $request->firstname)
                         ->where(function(Builder $builder) use($request){
                         $builder->where('lastname',$request->lastname)
                                 ->where('birthdate',$request->birthdate);
@@ -592,7 +591,7 @@ class RentersController extends Controller
 
     public function search(Request $request)
     {
-        $renter = Renters::where('accesstype',"Renters")
+        $renter = Renter::where('accesstype',"Renters")
                     ->where(function(Builder $builder) use($request){
                         $builder->where('username','like',"%{$request->search}%")
                                 ->orWhere('firstname','like',"%{$request->search}%")
@@ -688,7 +687,7 @@ class RentersController extends Controller
         }
     }
 
-    public function show(Renters $renter)
+    public function show(Renter $renter)
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
@@ -721,7 +720,7 @@ class RentersController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Renters $renter)
+    public function edit(Renter $renter)
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
@@ -750,7 +749,7 @@ class RentersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(RenterUpdateRequests $request, Renters $renter)
+    public function update(RenterUpdateRequests $request, Renter $renter)
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
@@ -771,7 +770,7 @@ class RentersController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Renters $renter)
+    public function destroy(Renter $renter)
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){

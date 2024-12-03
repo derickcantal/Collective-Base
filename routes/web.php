@@ -166,8 +166,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/top/salesbranch', [ReportsController::class, 'topsalesbranch'])->name('reports.topsalesbranch');
     Route::get('/top/search/salesbranch', [ReportsController::class, 'searchtopsalesbranch'])->name('reports.searchtopsalesbranch');
     
-     
-    
 });
 
 Route::middleware('auth')->group(function () {
