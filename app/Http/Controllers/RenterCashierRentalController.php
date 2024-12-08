@@ -198,6 +198,7 @@ class RenterCashierRentalController extends Controller
                                 ->where(function(Builder $builder){
                                     $builder->where('branchid',auth()->user()->branchid);
                                 })->first();
+                                
             if(empty($cabinet))
             {
                 $notes = 'Renter. Cashier. Invalid Account Header 1. '. $cabid;
@@ -208,7 +209,7 @@ class RenterCashierRentalController extends Controller
                     ->with('failed','Unknown Command. 1');
             }
 
-            $renter = Renters::where('userid', $cabinet->userid)->first();
+            $renter = Renter::where('rentersid', $cabinet->userid)->first();
             
             if(empty($renter))
             {
@@ -246,9 +247,9 @@ class RenterCashierRentalController extends Controller
 
             $cabinet = cabinet::where('cabid', $request->cabid)->first();
 
-            $renter = Renters::where('userid', $cabinet->userid)->first();
+            $renter = Renter::where('rentersid', $cabinet->userid)->first();
 
-            $rentalpayment = RentalPayments::where('userid',$renter->userid)
+            $rentalpayment = RentalPayments::where('userid',$renter->rentersid)
                     ->where(function(Builder $builder) use($request,$cabinet) {
                         $builder->where('cabid',$cabinet->cabid)
                             ->where('rpmonth',$request->rpmonth)
@@ -256,7 +257,7 @@ class RenterCashierRentalController extends Controller
                         })
                         ->latest()->first();
 
-            $rentalpaymenthistory = history_rental_payments::where('userid',$renter->userid)
+            $rentalpaymenthistory = history_rental_payments::where('userid',$renter->rentersid)
                         ->where(function(Builder $builder) use($request,$cabinet) {
                             $builder->where('cabid',$cabinet->cabid)
                                 ->where('rpmonth',$request->rpmonth)
@@ -362,7 +363,7 @@ class RenterCashierRentalController extends Controller
 
 
             $RentalPayments = RentalPayments::create([
-                'userid' => $renter->userid,
+                'userid' => $renter->rentersid,
                 'username' => $renter->username,
                 'firstname' => $renter->firstname,
                 'lastname' => $renter->lastname,
@@ -391,7 +392,7 @@ class RenterCashierRentalController extends Controller
                             'fully_paid' => $fullypaid,
                         ]);
 
-            $rentalpaymentupdate = RentalPayments::where('userid',$renter->userid)
+            $rentalpaymentupdate = RentalPayments::where('userid',$renter->rentersid)
                     ->where(function(Builder $builder) use($request,$cabinet) {
                         $builder->where('cabid',$cabinet->cabid)
                             ->where('rpmonth',$request->rpmonth)
@@ -403,7 +404,7 @@ class RenterCashierRentalController extends Controller
             {
                 $rpu = RentalPayments::where('branchname',auth()->user()->branchname)
                         ->where(function(Builder $builder)use($request,$cabinet,$renter){
-                            $builder->where('userid',$renter->userid)
+                            $builder->where('userid',$renter->rentersid)
                                     ->where('cabid',$cabinet->cabid)
                                     ->where('rpmonth',$request->rpmonth)
                                     ->where('rpyear',$request->rpyear)
