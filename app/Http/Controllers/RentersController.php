@@ -349,16 +349,16 @@ class RentersController extends Controller
     public function destroydata($renter){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
 
-        $rent = Renter::where('rentersid', $renter->userid)->first();
+        $rent = Renter::where('rentersid', $renter->rentersid)->first();
         $fullname = $rent->lastname . ', ' . $rent->firstname . ' ' . $rent->middlename;
 
         if($renter->status == 'Active')
         {
-            Renter::where('rentersid', $renter->userid)
+            Renter::where('rentersid', $rent->rentersid)
             ->update([
             'status' => 'Inactive'
             ]);
-            Renter::where('rentersid', $renter->userid)
+            Renter::where('rentersid', $rent->rentersid)
             ->update([
             'status' => 'Inactive'
             ]);
@@ -374,11 +374,11 @@ class RentersController extends Controller
         }
         elseif($renter->status == 'Inactive')
         {
-            Renter::where('rentersid', $renter->userid)
+            Renter::where('rentersid', $rent->rentersid)
             ->update([
             'status' => 'Active'
             ]);
-            Renter::where('rentersid', $renter->userid)
+            Renter::where('rentersid', $rent->rentersid)
             ->update([
             'status' => 'Active'
             ]);

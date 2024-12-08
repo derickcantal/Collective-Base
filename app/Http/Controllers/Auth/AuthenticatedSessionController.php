@@ -49,7 +49,9 @@ class AuthenticatedSessionController extends Controller
 
         $cabinetdata = cabinet::latest()->first();
         // dd($today->month == $cabinetdata->rpmonth && $today->year == $cabinetdata->rpyear);
-        if($today->month == $cabinetdata->rpmonth && $today->year == $cabinetdata->rpyear){
+        if(empty($cabinedata)){
+
+        }elseif($today->month == $cabinetdata->rpmonth && $today->year == $cabinetdata->rpyear){
             
         }else{
             $cabinet = cabinet::query()->update([
