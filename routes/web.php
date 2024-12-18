@@ -7,9 +7,28 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RentersController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportsController;
+use App\Http\Controllers\Reports\ReportAttendanceController;
+use App\Http\Controllers\Reports\ReportRentalsController;
+use App\Http\Controllers\Reports\ReportRequestsController;
+use App\Http\Controllers\Reports\ReportSalesController;
+use App\Http\Controllers\Reports\ReportTopSalesController;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Counter;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Manage\ManageBranchController;
+use App\Http\Controllers\Manage\ManageCabinetController;
+use App\Http\Controllers\Manage\ManageRenterController;
+use App\Http\Controllers\Manage\ManageUserController;
+use App\Http\Controllers\Manage\ManageMailboxController;
+use App\Http\Controllers\Transaction\TransactionAttendanceController;
+use App\Http\Controllers\Transaction\TransactionRentalController;
+use App\Http\Controllers\Transaction\TransactionRequestController;
+use App\Http\Controllers\Transaction\TransactionSalesController;
+use App\Http\Controllers\Transaction\TransactionEODController;
+use App\Http\Controllers\Dashboard\DashboardOverviewController;
+use App\Http\Controllers\Dashboard\DashboardRentalsController;
+use App\Http\Controllers\Dashboard\DashboardRequestsController;
+use App\Http\Controllers\Dashboard\DashboardSalesController;
 use App\Http\Controllers\MyRentalController;
 use App\Http\Controllers\MyRequestController;
 use App\Http\Controllers\MyDashboardController;
@@ -45,6 +64,41 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'displayall'])->name('dashboard.index');
+
+    Route::get('/dashboard/overview', [DashboardOverviewController::class, 'index'])->name('dashboardoverview.index');
+
+    Route::get('/dashboard/rentals', [DashboardRentalsController::class, 'index'])->name('dashboardrentals.index');
+
+    Route::get('/dashboard/requests', [DashboardRequestsController::class, 'index'])->name('dashboardrequests.index');
+
+    Route::get('/dashboard/sales', [DashboardSalesController::class, 'index'])->name('dashboardsales.index');
+
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/manage/branch', [ManageBranchController::class, 'index'])->name('managebranch.index');
+
+    Route::get('/manage/renters', [ManageCabinetController::class, 'index'])->name('managecabinet.index');
+
+    Route::get('/manage/cabinet', [ManageRenterController::class, 'index'])->name('managerenter.index');
+
+    Route::get('/manage/user', [ManageUserController::class, 'index'])->name('manageuser.index');
+
+    Route::get('/manage/mailbox', [ManageMailboxController::class, 'index'])->name('managemailbox.index');
+
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/transaction/attendance', [TransactionAttendanceController::class, 'index'])->name('transactionattendance.index');
+
+    Route::get('/transaction/rental', [TransactionRentalController::class, 'index'])->name('transactionrental.index');
+
+    Route::get('/transaction/request', [TransactionRequestController::class, 'index'])->name('transactionrequest.index');
+
+    Route::get('/transaction/sales', [TransactionSalesController::class, 'index'])->name('transactionsales.index');
+
+    Route::get('/transaction/eod', [TransactionEODController::class, 'index'])->name('transactioneod.index');
+
 });
 Route::middleware('auth')->group(function () {
     Route::get('users/search', [UsersController::class, 'search'])->name('users.search');
@@ -166,6 +220,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/top/salesbranch', [ReportsController::class, 'topsalesbranch'])->name('reports.topsalesbranch');
     Route::get('/top/search/salesbranch', [ReportsController::class, 'searchtopsalesbranch'])->name('reports.searchtopsalesbranch');
     
+    Route::get('/reports/attendance', [ReportAttendanceController::class, 'index'])->name('reportsattendance.index');
+
+    Route::get('/reports/rentals', [ReportRentalsController::class, 'index'])->name('reportsrentals.index');
+
+    Route::get('/reports/requests', [ReportRequestsController::class, 'index'])->name('reportsrequests.index');
+
+    Route::get('/reports/sales', [ReportSalesController::class, 'index'])->name('reportssales.index');
+
+    Route::get('/reports/sales/top/branch', [ReportTopSalesController::class, 'index'])->name('reportstopsales.index');
+
 });
 
 Route::middleware('auth')->group(function () {
