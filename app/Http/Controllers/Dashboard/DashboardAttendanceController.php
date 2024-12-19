@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\RenterRequests;
+use App\Models\attendance;
 use App\Models\user_login_log;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use \Carbon\Carbon;
 
-class DashboardRequestsController extends Controller
+class DashboardAttendanceController extends Controller
 {
     public function userlog($notes,$status){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
@@ -31,25 +31,23 @@ class DashboardRequestsController extends Controller
             'notes' => $notes,
             'status'  => $status,
         ]);
-    }
+    } 
     public function administrator(){
-        $RenterRequests = RenterRequests::where('status','For Approval')->latest()->paginate(5);
-        
 
-        return view('dashboard.Requests.index')
-                                        ->with(['RenterRequests' => $RenterRequests])
+        $attendance = attendance::latest()->paginate(5); 
+
+        return view('dashboard.Attendance.index')
+                                        ->with(['attendance' => $attendance])
                                         ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     public function cashier(){
 
-        $RenterRequests = RenterRequests::where('branchname',auth()->user()->branchname)
-                    ->paginate(5);
+        $attendance = attendance::where('branchname',auth()->user()->branchname)->latest()->paginate(5);
 
-
-        return view('dashboard.Requests.index')
-                                        ->with(['RenterRequests' => $RenterRequests])
-                                        ->with('i', (request()->input('page', 1) - 1) * 5);            
+        return view('dashboard.Attendance.index')
+                    ->with(['attendance' => $attendance])
+                    ->with('i', (request()->input('page', 1) - 1) * 5);             
     }
     /**
      * Display a listing of the resource.
@@ -67,7 +65,6 @@ class DashboardRequestsController extends Controller
         }else{
             return view('login')->with('failed','Account Inactive');
         }
-        return view('dashboard.Requests.index');
     }
 
     /**

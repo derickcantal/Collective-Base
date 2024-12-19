@@ -4,6 +4,12 @@ namespace App\Http\Controllers\Reports;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\history_sales;
+use App\Models\branch;
+use App\Models\user_login_log;
+use \Carbon\Carbon;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class ReportTopSalesController extends Controller
 {
@@ -12,6 +18,29 @@ class ReportTopSalesController extends Controller
      */
     public function index()
     {
+        if(auth()->user()->accesstype == 'Cashier'){
+            return redirect()->route('dashboard.index');
+        }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor'){
+            $sales = history_sales::groupBy('cabid','cabinetname','branchname')
+            ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
+            ->orderBy('total_sum','desc')
+            ->paginate(10);
+
+            $salesget = history_sales::groupBy('cabid','cabinetname','branchname')
+            ->select(DB::raw("SUM(`total`) AS `total_sum`,SUM(`qty`) AS `qty_sum`"), 'cabid', 'cabinetname','branchname')
+            ->orderBy('total_sum','desc')
+            ->get();
+        }
+        $branch = branch::orderBy('branchname', 'asc')->get();
+
+        $totalqty = collect($salesget)->sum('qty_sum');
+        $totalsales = collect($salesget)->sum('total_sum');
+
+        return view('reports.TopSales.index')->with(['sales' => $sales])
+                                    ->with(['totalsales' => $totalsales])
+                                    ->with(['totalqty' => $totalqty])
+                                    ->with(['branch' => $branch])
+                                    ->with('i', (request()->input('page', 1) - 1) * 10);
         return view('reports.TopSales.index');
     }
 

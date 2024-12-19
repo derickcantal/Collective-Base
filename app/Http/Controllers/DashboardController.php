@@ -33,7 +33,7 @@ class DashboardController extends Controller
             'notes' => $notes,
             'status'  => $status,
         ]);
-    }
+    } 
     public function administrator(){
         $sales = Sales::latest()->paginate(5);
         $RenterRequests = RenterRequests::where('status','For Approval')->latest()->paginate(5);
@@ -49,6 +49,25 @@ class DashboardController extends Controller
                                         ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
+    public function cashier(){
+        $sales = Sales::where('branchname',auth()->user()->branchname)
+                        ->latest()
+                        ->paginate(5);
+        $RenterRequests = RenterRequests::where('branchname',auth()->user()->branchname)
+                    ->paginate(5);
+
+        $rentalpayments = rentalpayments::where('branchname',auth()->user()->branchname)
+                    ->where(function(Builder $builder){
+                    })->latest()->paginate(5);
+
+        $attendance = attendance::where('branchname',auth()->user()->branchname)->latest()->paginate(5);
+
+        return view('dashboard.index')->with(['sales' => $sales])
+                    ->with(['RenterRequests' => $RenterRequests])
+                    ->with(['rentalpayments' => $rentalpayments])
+                    ->with(['attendance' => $attendance])
+                    ->with('i', (request()->input('page', 1) - 1) * 5);             
+    }
     public function renters(){
 
         $sales = Sales::where('userid',auth()->user()->userid)
@@ -79,25 +98,6 @@ class DashboardController extends Controller
 
     }
 
-    public function cashier(){
-        $sales = Sales::where('branchname',auth()->user()->branchname)
-                        ->latest()
-                        ->paginate(5);
-        $RenterRequests = RenterRequests::where('branchname',auth()->user()->branchname)
-                    ->paginate(5);
-
-        $rentalpayments = rentalpayments::where('branchname',auth()->user()->branchname)
-                    ->where(function(Builder $builder){
-                    })->latest()->paginate(5);
-
-        $attendance = attendance::where('branchname',auth()->user()->branchname)->latest()->paginate(5);
-
-        return view('dashboard.index')->with(['sales' => $sales])
-                    ->with(['RenterRequests' => $RenterRequests])
-                    ->with(['rentalpayments' => $rentalpayments])
-                    ->with(['attendance' => $attendance])
-                    ->with('i', (request()->input('page', 1) - 1) * 5);             
-    }
     public function displayall()
     {
        

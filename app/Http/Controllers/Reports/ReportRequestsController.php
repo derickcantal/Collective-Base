@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Reports;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\history_sales_requests;
+use App\Models\user_login_log;
+use \Carbon\Carbon;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class ReportRequestsController extends Controller
 {
@@ -12,7 +16,9 @@ class ReportRequestsController extends Controller
      */
     public function index()
     {
-        return view('reports.Requests.index');
+        $sales_requests = history_sales_requests::latest()->paginate(5);
+
+        return view('reports.Requests.index')->with(['sales_requests' => $sales_requests]);
     }
 
     /**

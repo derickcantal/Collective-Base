@@ -4,15 +4,64 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\user_login_log;
+use App\Models\Sales;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use \Carbon\Carbon;
 
 class DashboardSalesController extends Controller
 {
+    public function userlog($notes,$status){
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
+        
+        $userlog = user_login_log::query()->create([
+            'userid' => auth()->user()->userid,
+            'username' => auth()->user()->username,
+            'firstname' => auth()->user()->firstname,
+            'middlename' => auth()->user()->middlename,
+            'lastname' => auth()->user()->lastname,
+            'email' => auth()->user()->email,
+            'branchid' => auth()->user()->branchid,
+            'branchname' => auth()->user()->branchname,
+            'accesstype' => auth()->user()->accesstype,
+            'timerecorded'  => $timenow,
+            'created_by' => auth()->user()->email,
+            'updated_by' => 'Null',
+            'mod'  => 0,
+            'notes' => $notes,
+            'status'  => $status,
+        ]);
+    }
+    public function administrator(){
+        $sales = Sales::latest()->paginate(5);
+
+        return view('dashboard.Sales.index')->with(['sales' => $sales])
+                                        ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+    public function cashier(){
+        $sales = Sales::where('branchname',auth()->user()->branchname)
+                        ->latest()
+                        ->paginate(5);
+
+        return view('dashboard.Sales.index')->with(['sales' => $sales])
+                    ->with('i', (request()->input('page', 1) - 1) * 5);             
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('dashboard.Sales.index');
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return $this->cashier();
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->administrator();
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->administrator();
+            }
+        }else{
+            return view('login')->with('failed','Account Inactive');
+        }
     }
 
     /**

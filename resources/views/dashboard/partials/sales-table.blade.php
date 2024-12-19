@@ -112,9 +112,9 @@
 							</tbody>
 						</table>
 					</div>
-						<div class="mt-4">
-							{!! $sales->appends(request()->query())->links() !!}
-						</div>
+					<div class="mt-4">
+						{!! $sales->appends(request()->query())->links() !!}
+					</div>
 					
 				</div>
 			</div>

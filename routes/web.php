@@ -29,6 +29,7 @@ use App\Http\Controllers\Dashboard\DashboardOverviewController;
 use App\Http\Controllers\Dashboard\DashboardRentalsController;
 use App\Http\Controllers\Dashboard\DashboardRequestsController;
 use App\Http\Controllers\Dashboard\DashboardSalesController;
+use App\Http\Controllers\Dashboard\DashboardAttendanceController;
 use App\Http\Controllers\MyRentalController;
 use App\Http\Controllers\MyRequestController;
 use App\Http\Controllers\MyDashboardController;
@@ -73,18 +74,63 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard/sales', [DashboardSalesController::class, 'index'])->name('dashboardsales.index');
 
+    Route::get('/dashboard/attendance', [DashboardAttendanceController::class, 'index'])->name('dashboardattendance.index');
+
 });
 
 Route::middleware('auth')->group(function () {
     Route::get('/manage/branch', [ManageBranchController::class, 'index'])->name('managebranch.index');
+    Route::post('/manage/branch', [ManageBranchController::class, 'store'])->name('managebranch.store');
+    Route::get('/manage/branch/create', [ManageBranchController::class, 'create'])->name('managebranch.create');
+    Route::get('/manage/branch/search', [ManageBranchController::class, 'search'])->name('managebranch.search');
+    Route::get('/manage/branch/{branch}', [ManageBranchController::class, 'show'])->name('managebranch.show');
+    Route::patch('/manage/branch/{branch}', [ManageBranchController::class, 'update'])->name('managebranch.update');
+    Route::delete('/manage/branch/{branch}', [ManageBranchController::class, 'destroy'])->name('managebranch.destroy');
+    Route::get('/manage/branch/{branch}/edit', [ManageBranchController::class, 'edit'])->name('managebranch.edit');
 
-    Route::get('/manage/renters', [ManageCabinetController::class, 'index'])->name('managecabinet.index');
+    Route::get('/manage/renters', [ManageRenterController::class, 'index'])->name('managerenter.index');
+    Route::post('/manage/renters', [ManageRenterController::class, 'store'])->name('managerenter.store');
+    Route::get('/manage/renters/create', [ManageRenterController::class, 'create'])->name('managerenter.create');
+    Route::get('/manage/renters/search', [ManageRenterController::class, 'search'])->name('managerenter.search');
+    Route::get('/manage/renters/{renters}', [ManageRenterController::class, 'show'])->name('managerenter.show');
+    Route::patch('/manage/renters/{renters}', [ManageRenterController::class, 'update'])->name('managerenter.update');
+    Route::delete('/manage/renters/{renters}', [ManageRenterController::class, 'destroy'])->name('managerenter.destroy');
+    Route::get('/manage/renters/{renters}/edit', [ManageRenterController::class, 'edit'])->name('managerenter.edit');
+    Route::get('/manage/renters/selectbranch', [ManageRenterController::class, 'selectbranch'])->name('managerenter.selectbranch');
+    Route::put('/manage/renters/createrenter/{branchid}', [ManageRenterController::class, 'createrenter'])->name('managerenter.createrenter');
+    Route::put('/manage/renters/cabinet/modify/{cabinetid}', [ManageRenterController::class, 'updatecabinet'])->name('managerenter.updatecabinet');
+    Route::get('/manage/renters/cabinet/{cabinetid}', [ManageRenterController::class, 'editcabinet'])->name('managerenter.editcabinet');
+    Route::get('/manage/renters/cabinet/status/{cabinetid}', [ManageRenterController::class, 'statuscabinet'])->name('managerenter.statuscabinet');
+    Route::get('/manage/renters/create/info', [ManageRenterController::class, 'renterinfo'])->name('managerenter.renterinfo');
+    Route::get('/manage/renters/create/login', [ManageRenterController::class, 'renterlogin'])->name('managerenter.renterlogin');
+    Route::put('/manage/renters/create/register/{renter}', [ManageRenterController::class, 'renterregister'])->name('managerenter.renterregister');
 
-    Route::get('/manage/cabinet', [ManageRenterController::class, 'index'])->name('managerenter.index');
+    Route::get('/manage/cabinet', [ManageCabinetController::class, 'index'])->name('managecabinet.index');
+    Route::post('/manage/cabinet', [ManageCabinetController::class, 'store'])->name('managecabinet.store');
+    Route::get('/manage/cabinet/create', [ManageCabinetController::class, 'create'])->name('managecabinet.create');
+    Route::get('/manage/cabinet/search', [ManageCabinetController::class, 'search'])->name('managecabinet.search');
+    Route::get('/manage/cabinet/{cabinet}', [ManageCabinetController::class, 'show'])->name('managecabinet.show');
+    Route::patch('/manage/cabinet/{cabinet}', [ManageCabinetController::class, 'update'])->name('managecabinet.update');
+    Route::delete('/manage/cabinet/{cabinet}', [ManageCabinetController::class, 'destroy'])->name('managecabinet.destroy');
+    Route::get('/manage/cabinet/{cabinet}/edit', [ManageCabinetController::class, 'edit'])->name('managecabinet.edit');
 
     Route::get('/manage/user', [ManageUserController::class, 'index'])->name('manageuser.index');
+    Route::post('/manage/user', [ManageUserController::class, 'store'])->name('manageuser.store');
+    Route::get('/manage/user/create', [ManageUserController::class, 'create'])->name('manageuser.create');
+    Route::get('/manage/user/search', [ManageUserController::class, 'search'])->name('manageuser.search');
+    Route::get('/manage/user/{user}', [ManageUserController::class, 'show'])->name('manageuser.show');
+    Route::patch('/manage/user/{user}', [ManageUserController::class, 'update'])->name('manageuser.update');
+    Route::delete('/manage/user/{user}', [ManageUserController::class, 'destroy'])->name('manageuser.destroy');
+    Route::get('/manage/user/{user}/edit', [ManageUserController::class, 'edit'])->name('manageuser.edit');
 
     Route::get('/manage/mailbox', [ManageMailboxController::class, 'index'])->name('managemailbox.index');
+    Route::post('/manage/mailbox', [ManageMailboxController::class, 'store'])->name('managemailbox.store');
+    Route::get('/manage/mailbox/create', [ManageMailboxController::class, 'create'])->name('managemailbox.create');
+    Route::get('/manage/mailbox/search', [ManageMailboxController::class, 'search'])->name('managemailbox.search');
+    Route::get('/manage/mailbox/{mailbox}', [ManageMailboxController::class, 'show'])->name('managemailbox.show');
+    Route::patch('/manage/mailbox/{mailbox}', [ManageMailboxController::class, 'update'])->name('managemailbox.update');
+    Route::delete('/manage/mailbox/{mailbox}', [ManageMailboxController::class, 'destroy'])->name('managemailbox.destroy');
+    Route::get('/manage/mailbox/{mailbox}/edit', [ManageMailboxController::class, 'edit'])->name('managemailbox.edit');
 
 });
 

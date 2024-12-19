@@ -10,7 +10,7 @@ use App\Http\Requests\UserUpdateTableRequest;
 use App\Models\User;
 use App\Models\branch;
 use App\Models\cabinet;
-use App\Models\user_login_log;
+use App\Models\user_login_log; 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -364,7 +364,7 @@ class UsersController extends Controller
             }
         }else{
             return redirect()->route('dashboard.index');
-        }
+        } 
         
     }
     

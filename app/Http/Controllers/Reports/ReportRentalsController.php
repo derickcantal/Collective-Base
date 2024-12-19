@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Reports;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\history_rental_payments;
+use App\Models\user_login_log;
+use \Carbon\Carbon;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class ReportRentalsController extends Controller
 {
@@ -12,7 +16,9 @@ class ReportRentalsController extends Controller
      */
     public function index()
     {
-        return view('reports.Rentals.index');
+        $rentalpayments = history_rental_payments::latest()->paginate(5);
+
+        return view('reports.Rentals.index')->with(['rentalpayments' => $rentalpayments]);
     }
 
     /**

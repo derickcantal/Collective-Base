@@ -11,9 +11,9 @@ use App\Models\history_sales;
 use App\Models\history_sales_requests;
 use App\Models\history_attendance;
 use App\Models\history_rental_payments;
+use App\Models\branch;
 use App\Models\user_login_log;
 use \Carbon\Carbon;
-use App\Models\branch;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class ReportsController extends Controller
