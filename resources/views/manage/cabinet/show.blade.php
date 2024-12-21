@@ -1,15 +1,16 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <u><a href="{{ route('users.index') }}"> Users</a></u> / {{ __('Show User Information') }} / {{ $user->username }}
-        </h2>
-    </x-slot>
-    <section>
-    <div class="py-8">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <form action="{{ route('users.update',$user->userid) }}" method="POST" class="p-4 md:p-5">
+    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @include('layouts.manage.navigation')
+        </div>
+    </div>
+<div class="py-8">
+	<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+		<div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+			<div class="py-8">
+				<div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+					<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                        <form action="{{ route('managecabinet.update',$user->userid) }}" method="POST" class="p-4 md:p-5">
                             @csrf
                             @method('PUT')   
                             <div class="relative p-4 w-full max-w-full max-h-full">
@@ -149,5 +150,6 @@
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</div>
 </x-app-layout>

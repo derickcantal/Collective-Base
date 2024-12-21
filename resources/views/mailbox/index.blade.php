@@ -167,9 +167,9 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                    <div class="mt-4">
-                                        {!! $mailbox->appends(request()->query())->links() !!}
-                                    </div>
+                                <div class="mt-4">
+                                    {!! $mailbox->appends(request()->query())->links() !!}
+                                </div>
                                     
                                 </div>
                             </div>

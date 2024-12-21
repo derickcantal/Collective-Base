@@ -136,6 +136,16 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/transaction/attendance', [TransactionAttendanceController::class, 'index'])->name('transactionattendance.index');
+    Route::post('/transaction/attendance', [TransactionAttendanceController::class, 'store'])->name('transactionattendance.store');
+    Route::get('/transaction/attendance/create', [TransactionAttendanceController::class, 'create'])->name('transactionattendance.create');
+    Route::get('/transaction/attendance/search', [TransactionAttendanceController::class, 'search'])->name('transactionattendance.search');
+    Route::get('/transaction/attendance/{attendance}', [TransactionAttendanceController::class, 'show'])->name('transactionattendance.show');
+    Route::patch('/transaction/attendance/{attendance}', [TransactionAttendanceController::class, 'update'])->name('transactionattendance.update');
+    Route::delete('/transaction/attendance/{attendance}', [TransactionAttendanceController::class, 'destroy'])->name('transactionattendance.destroy');
+    Route::get('/transaction/attendance/{attendance}/edit', [TransactionAttendanceController::class, 'edit'])->name('transactionattendance.edit');
+    Route::get('/transaction/attendance/select/employee', [TransactionAttendanceController::class, 'selectemp'])->name('transactionattendance.selectemp');
+    Route::get('/transaction/attendance/select/employee/search', [TransactionAttendanceController::class, 'searchemp'])->name('transactionattendance.searchemp');
+    Route::put('/transaction/attendance/select/employee/{users}', [TransactionAttendanceController::class, 'putemp'])->name('transactionattendance.putemp');
 
     Route::get('/transaction/rental', [TransactionRentalController::class, 'index'])->name('transactionrental.index');
 
@@ -144,6 +154,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/transaction/sales', [TransactionSalesController::class, 'index'])->name('transactionsales.index');
 
     Route::get('/transaction/eod', [TransactionEODController::class, 'index'])->name('transactioneod.index');
+    Route::post('/transaction/eod', [TransactionEODController::class, 'store'])->name('transactioneod.store');
+    Route::get('/transaction/eod/create', [TransactionEODController::class, 'create'])->name('transactioneod.create');
+    Route::get('/transaction/eod/search', [TransactionEODController::class, 'search'])->name('transactioneod.search');
+    Route::get('/transaction/eod/{eod}', [TransactionEODController::class, 'show'])->name('transactioneod.show');
+    Route::patch('/transaction/eod/{eod}', [TransactionEODController::class, 'update'])->name('transactioneod.update');
+    Route::delete('/transaction/eod/{eod}', [TransactionEODController::class, 'destroy'])->name('transactioneod.destroy');
+    Route::get('/transaction/eod/{eod}/edit', [TransactionEODController::class, 'edit'])->name('transactioneod.edit');
 
 });
 Route::middleware('auth')->group(function () {

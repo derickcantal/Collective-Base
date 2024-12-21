@@ -33,7 +33,7 @@ class CabinetController extends Controller
             'notes' => $notes,
             'status'  => $status,
         ]);
-    }
+    } 
     
     public function loaddata(){
         $cabinets = cabinet::query()

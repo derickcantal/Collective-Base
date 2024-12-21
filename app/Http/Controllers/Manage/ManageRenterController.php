@@ -72,11 +72,13 @@ class ManageRenterController extends Controller
                             ->with(['cabinet' => $cab]);
     }
 
-    public function updatecabinet(Request $request,$cabinet){
+    public function updatecabinet(Request $request,$cabinets){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
-        $rent = Renter::where('rentersid',$cabinet)->first();
+       
+        $cabinet = cabinet::findOrFail($cabinets);
+        $rent = Renter::where('rentersid',$cabinet->userid)->first();
          
-        $cabinet = cabinet::findOrFail($cabinet);
+        
 
         $mod = 0;
         $mod = $cabinet->mod;
@@ -85,9 +87,9 @@ class ManageRenterController extends Controller
         if($cabinet->status == 'Active')
         {
             if($request->renter != 'Vacant'){
-                $cabinets = cabinet::where('cabid', $rent->userid)
+                $cabinets = cabinet::where('cabid', $rent->rentersid)
                 ->update([
-                'userid' => $rent->userid,
+                'userid' => $rent->rentersid,
                 'email' => $rent->email,
                 'cabinetprice' => $request->cabinetprice,
                 'updated_by' => auth()->user()->email,
@@ -96,7 +98,7 @@ class ManageRenterController extends Controller
 
                 $totalcabown = cabinet::where('userid', $cabinet->userid)->count();
         
-                Renter::where('rentersid',$rent->userid)
+                Renter::where('rentersid',$rent->rentersid)
                 ->update([
                     'cabid' => $totalcabown + 1,
                 ]);
