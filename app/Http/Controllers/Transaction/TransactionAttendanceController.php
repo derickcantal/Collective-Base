@@ -243,7 +243,7 @@ class TransactionAttendanceController extends Controller
                     })
                     ->paginate(5);
         }elseif(auth()->user()->accesstype =='Renters'){
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }elseif(auth()->user()->accesstype =='Supervisor'){
             $attendance = attendance::where('status',"Active")
                     ->where(function(Builder $builder) use($request){
@@ -356,12 +356,12 @@ class TransactionAttendanceController extends Controller
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->loaddata_cashier();
             }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
                 return $this->loaddata();
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
     }
 
@@ -371,7 +371,7 @@ class TransactionAttendanceController extends Controller
     public function create()
     {
         
-        return redirect()->route('dashboard.index');
+        return redirect()->route('dashboardoverview.index');
     }
 
     /**
@@ -383,12 +383,12 @@ class TransactionAttendanceController extends Controller
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->storedata($request);
             }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
                 return $this->storedata($request);
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
       
     }
@@ -398,7 +398,7 @@ class TransactionAttendanceController extends Controller
      */
     public function show(attendance $attendance)
     {
-        return redirect()->route('dashboard.index');
+        return redirect()->route('dashboardoverview.index');
     }
 
     /**
@@ -410,12 +410,12 @@ class TransactionAttendanceController extends Controller
             if(auth()->user()->accesstype =='Cashier'){
                 return view('transaction.attendance.edit', ['attendance' => $attendance]);
             }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
                 return view('transaction.attendance.edit', ['attendance' => $attendance]);
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
     }
 
@@ -428,12 +428,12 @@ class TransactionAttendanceController extends Controller
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->updatedata($request,$attendance);
             }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
                 return $this->updatedata($request,$attendance);
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
     }
 
@@ -444,14 +444,14 @@ class TransactionAttendanceController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
     }
 }

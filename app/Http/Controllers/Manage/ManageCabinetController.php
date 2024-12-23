@@ -274,16 +274,16 @@ class ManageCabinetController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->loaddata();
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->loaddata();
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
         return view('manage.cabinet.index');
     }
@@ -295,9 +295,9 @@ class ManageCabinetController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 $rent = Renters::where('accesstype','Renters')
                                 ->where(function(Builder $builder){
@@ -320,7 +320,7 @@ class ManageCabinetController extends Controller
                 return view('manage.cabinet.create',['branches' => $branches])->with(['rent' => $rent]);
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
     }
 
@@ -331,16 +331,16 @@ class ManageCabinetController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->storedata($request);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->storedata($request);
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
     }
 
@@ -351,16 +351,16 @@ class ManageCabinetController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->loaddata();
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->loaddata();
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
     }
 
@@ -371,9 +371,9 @@ class ManageCabinetController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 $cab = cabinet::where('cabid',$cabinet)->first();                      
                         
@@ -408,7 +408,7 @@ class ManageCabinetController extends Controller
                                     ->with(['cabinet' => $cab]);
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
     }
 
@@ -419,16 +419,16 @@ class ManageCabinetController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->updatedata($request, $cabinet);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->updatedata($request, $cabinet);
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
     }
 
@@ -439,16 +439,16 @@ class ManageCabinetController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 return $this->destroydata($request, $cabinet);
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->destroydata($request, $cabinet);
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
     }
 }

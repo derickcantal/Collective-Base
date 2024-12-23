@@ -32,6 +32,53 @@ class ReportAttendanceController extends Controller
             'status'  => $status,
         ]);
     }
+    public function search(Request $request)
+    {
+        if(auth()->user()->accesstype =='Cashier'){
+            $attendance = history_attendance::where('branchname',auth()->user()->branchname)->where('status',"Active")
+                    ->where(function(Builder $builder) use($request){
+                        $builder
+                                ->where('username','like',"%{$request->search}%")
+                                ->orWhere('firstname','like',"%{$request->search}%")
+                                ->orWhere('lastname','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('attnotes','like',"%{$request->search}%")
+                                ->orWhere('status','like',"%{$request->search}%") 
+                                ->orderBy('status','asc');
+                    })
+                    ->paginate(5);
+        }elseif(auth()->user()->accesstype =='Renters'){
+            return redirect()->route('dashboardoverview.index');
+        }elseif(auth()->user()->accesstype =='Supervisor'){
+            $attendance = history_attendance::where('status',"Active")
+                    ->where(function(Builder $builder) use($request){
+                        $builder->where('username','like',"%{$request->search}%")
+                                ->orWhere('firstname','like',"%{$request->search}%")
+                                ->orWhere('lastname','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('attnotes','like',"%{$request->search}%")
+                                ->orWhere('status','like',"%{$request->search}%") 
+                                ->orderBy('status','asc');
+                    })
+                    ->paginate(5);
+        }elseif(auth()->user()->accesstype =='Administrator'){
+            $attendance = history_attendance::where('status',"Active")
+                    ->where(function(Builder $builder) use($request){
+                        $builder->where('username','like',"%{$request->search}%")
+                                ->orWhere('firstname','like',"%{$request->search}%")
+                                ->orWhere('lastname','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('attnotes','like',"%{$request->search}%")
+                                ->orWhere('status','like',"%{$request->search}%") 
+                                ->orderBy('status','asc');
+                    })
+                    ->paginate(5);
+        }
+        
+
+                    return view('reports.Attendance.index',compact('attendance'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
     /**
      * Display a listing of the resource.
      */

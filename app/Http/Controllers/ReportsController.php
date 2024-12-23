@@ -611,7 +611,7 @@ class ReportsController extends Controller
                 ->with(['totalqty' => $totalqty]);
         }
     }
-
+  
     public function displayall()
     {  
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');

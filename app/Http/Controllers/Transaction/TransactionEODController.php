@@ -53,7 +53,7 @@ class TransactionEODController extends Controller
                                     ->with(['branch' => $branch])
                                     ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }  
         
     }
@@ -74,7 +74,7 @@ class TransactionEODController extends Controller
                                     ->with(['branch' => $branch])
                                     ->with('i', (request()->input('page', 1) - 1) * 5);
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }  
         
     }
@@ -85,9 +85,9 @@ class TransactionEODController extends Controller
     public function create()
     {
         if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }  
     }
 
@@ -97,9 +97,9 @@ class TransactionEODController extends Controller
     public function store(Request $request)
     {
         if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }  
     }
 
@@ -109,9 +109,9 @@ class TransactionEODController extends Controller
     public function show(string $id)
     {
         if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }  
     }
 
@@ -121,9 +121,9 @@ class TransactionEODController extends Controller
     public function edit(string $id)
     {
         if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }  
     }
 
@@ -133,9 +133,9 @@ class TransactionEODController extends Controller
     public function update(Request $request, string $id)
     {
         if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }  
     }
 
@@ -145,9 +145,9 @@ class TransactionEODController extends Controller
     public function destroy(string $id)
     {
         if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype =='Supervisor'){
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }  
     }
 }

@@ -148,10 +148,37 @@ Route::middleware('auth')->group(function () {
     Route::put('/transaction/attendance/select/employee/{users}', [TransactionAttendanceController::class, 'putemp'])->name('transactionattendance.putemp');
 
     Route::get('/transaction/rental', [TransactionRentalController::class, 'index'])->name('transactionrental.index');
+    Route::post('/transaction/rental', [TransactionRentalController::class, 'store'])->name('transactionrental.store');
+    Route::get('/transaction/rental/create', [TransactionRentalController::class, 'create'])->name('transactionrental.create');
+    Route::get('/transaction/rental/search', [TransactionRentalController::class, 'search'])->name('transactionrental.search');
+    Route::get('/transaction/rental/{rental}', [TransactionRentalController::class, 'show'])->name('transactionrental.show');
+    Route::patch('/transaction/rental/{rental}', [TransactionRentalController::class, 'update'])->name('transactionrental.update');
+    Route::delete('/transaction/rental/{rental}', [TransactionRentalController::class, 'destroy'])->name('transactionrental.destroy');
+    Route::get('/transaction/rental/{rental}/edit', [TransactionRentalController::class, 'edit'])->name('transactionrental.edit');
+    Route::get('/transaction/rental/payments/select/renter', [TransactionRentalController::class, 'selectrenter'])->name('transactionrental.selectrenter');
+    Route::get('/transaction/rental/payments/search/renter', [TransactionRentalController::class, 'searchrenter'])->name('transactionrental.searchrenter');
+    Route::get('/transaction/rental/payments/select/{renters}/cabinet', [TransactionRentalController::class, 'selectcabinet'])->name('transactionrental.selectcabinet');
+    Route::get('/transaction/rental/payments/select/payment', [TransactionRentalController::class, 'selectpayment'])->name('transactionrental.selectpayment');
+    Route::get('/transaction/rental/payments/set/payment/month', [TransactionRentalController::class, 'setpayment'])->name('transactionrental.setpayment');
+    Route::get('/transaction/rental/payments/set/payment/month/store', [TransactionRentalController::class, 'storesetpayment'])->name('transactionrental.storesetpayment');
 
     Route::get('/transaction/request', [TransactionRequestController::class, 'index'])->name('transactionrequest.index');
+    Route::post('/transaction/request', [TransactionRequestController::class, 'store'])->name('transactionrequest.store');
+    Route::get('/transaction/request/create', [TransactionRequestController::class, 'create'])->name('transactionrequest.create');
+    Route::get('/transaction/request/search', [TransactionRequestController::class, 'search'])->name('transactionrequest.search');
+    Route::get('/transaction/request/{request}', [TransactionRequestController::class, 'show'])->name('transactionrequest.show');
+    Route::patch('/transaction/request/{request}', [TransactionRequestController::class, 'update'])->name('transactionrequest.update');
+    Route::delete('/transaction/request/{request}', [TransactionRequestController::class, 'destroy'])->name('transactionrequest.destroy');
+    Route::get('/transaction/request/{request}/edit', [TransactionRequestController::class, 'edit'])->name('transactionrequest.edit');
 
     Route::get('/transaction/sales', [TransactionSalesController::class, 'index'])->name('transactionsales.index');
+    Route::post('/transaction/sales', [TransactionSalesController::class, 'store'])->name('transactionsales.store');
+    Route::get('/transaction/sales/create', [TransactionSalesController::class, 'create'])->name('transactionsales.create');
+    Route::get('/transaction/sales/search', [TransactionSalesController::class, 'search'])->name('transactionsales.search');
+    Route::get('/transaction/sales/{sales}', [TransactionSalesController::class, 'show'])->name('transactionsales.show');
+    Route::patch('/transaction/sales/{sales}', [TransactionSalesController::class, 'update'])->name('transactionsales.update');
+    Route::delete('/transaction/sales/{sales}', [TransactionSalesController::class, 'destroy'])->name('transactionsales.destroy');
+    Route::get('/transaction/sales/{sales}/edit', [TransactionSalesController::class, 'edit'])->name('transactionsales.edit');
 
     Route::get('/transaction/eod', [TransactionEODController::class, 'index'])->name('transactioneod.index');
     Route::post('/transaction/eod', [TransactionEODController::class, 'store'])->name('transactioneod.store');
@@ -163,6 +190,24 @@ Route::middleware('auth')->group(function () {
     Route::get('/transaction/eod/{eod}/edit', [TransactionEODController::class, 'edit'])->name('transactioneod.edit');
 
 });
+
+Route::middleware('auth')->group(function () {
+    Route::get('/reports/attendance', [ReportAttendanceController::class, 'index'])->name('reportsattendance.index');
+    Route::get('/reports/attendance/search', [ReportAttendanceController::class, 'search'])->name('reportsattendance.search');
+
+    Route::get('/reports/rentals', [ReportRentalsController::class, 'index'])->name('reportsrentals.index');
+    Route::get('/reports/rentals/search', [ReportRentalsController::class, 'search'])->name('reportsrentals.search');
+
+    Route::get('/reports/requests', [ReportRequestsController::class, 'index'])->name('reportsrequests.index');
+    Route::get('/reports/requests/search', [ReportRequestsController::class, 'search'])->name('reportsrequests.search');
+
+    Route::get('/reports/sales', [ReportSalesController::class, 'index'])->name('reportssales.index');
+    Route::get('/reports/sales/search', [ReportSalesController::class, 'search'])->name('reportssales.search');
+
+    Route::get('/reports/sales/top/branch', [ReportTopSalesController::class, 'index'])->name('reportstopsales.index');
+    Route::get('/reports/sales/top/branch/search', [ReportTopSalesController::class, 'search'])->name('reportstopsales.search');
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('users/search', [UsersController::class, 'search'])->name('users.search');
     Route::resource('users', UsersController::class);
@@ -277,22 +322,12 @@ Route::middleware('auth')->group(function () {
 
 });
 
+
 Route::middleware('auth')->group(function () {
     Route::get('/reports', [ReportsController::class, 'displayall'])->name('reports.index');
     Route::get('reports/search', [ReportsController::class, 'searchhsales'])->name('reports.search');
     Route::get('/top/salesbranch', [ReportsController::class, 'topsalesbranch'])->name('reports.topsalesbranch');
     Route::get('/top/search/salesbranch', [ReportsController::class, 'searchtopsalesbranch'])->name('reports.searchtopsalesbranch');
-    
-    Route::get('/reports/attendance', [ReportAttendanceController::class, 'index'])->name('reportsattendance.index');
-
-    Route::get('/reports/rentals', [ReportRentalsController::class, 'index'])->name('reportsrentals.index');
-
-    Route::get('/reports/requests', [ReportRequestsController::class, 'index'])->name('reportsrequests.index');
-
-    Route::get('/reports/sales', [ReportSalesController::class, 'index'])->name('reportssales.index');
-
-    Route::get('/reports/sales/top/branch', [ReportTopSalesController::class, 'index'])->name('reportstopsales.index');
-
 });
 
 Route::middleware('auth')->group(function () {

@@ -12,6 +12,242 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class ReportSalesController extends Controller
 {
+    public function search(Request $request)
+    {  
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return $this->cashiersearch($request);  
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return $this->adminsearch($request);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return $this->adminsearch($request);
+            }
+        }else{
+            return redirect()->route('dashboardoverview.index');
+        }
+
+    }
+
+    public function cashiersearch($request){
+        if($request->orderrow == 'H-L'){
+            $orderby = "total";
+            $orderrow = 'desc';
+        }elseif($request->orderrow == 'L-H'){
+            $orderby = "total";
+            $orderrow = 'asc';
+        }elseif($request->orderrow == 'A-Z'){
+            $orderby = "productname";
+            $orderrow = 'asc';
+        }elseif($request->orderrow == 'Z-A'){
+            $orderby = "productname";
+            $orderrow = 'desc';
+        }elseif($request->orderrow == 'Latest'){
+            $orderby = "salesid";
+            $orderrow = 'desc';
+        }elseif($request->orderrow == 'Oldest'){
+            $orderby = "salesid";
+            $orderrow = 'asc';
+        }
+        
+        if(empty($request->search)){
+            if(empty($request->startdate) && empty($request->enddate)){
+                $salesget = history_sales::where('branchname',auth()->user()->branchname)
+                                        ->orderBy($orderby,$orderrow)
+                                        ->get();
+                $sales = history_sales::where('branchname',auth()->user()->branchname)
+                                        ->orderBy($orderby,$orderrow)
+                                        ->paginate($request->pagerow);
+
+                $totalqty = collect($salesget)->sum('qty');
+                $totalsales = collect($salesget)->sum('total');
+
+                $branch = branch::orderBy('branchname', 'asc')->get();
+    
+    
+                return view('reports.Sales.index')->with(['sales' => $sales])
+                    ->with(['totalsales' => $totalsales])
+                    ->with(['totalqty' => $totalqty])
+                    ->with(['branch' => $branch]);
+            }
+            elseif(empty($request->startdate) or empty($request->enddate)){
+                
+                return redirect()->back()
+                    
+                    ->with('failed','Start & End Dates Required');
+            }
+            else{
+                $startDate = Carbon::parse($request->startdate)->format('Y-m-d');
+                $endDate = Carbon::parse($request->enddate)->format('Y-m-d');
+
+                $salesget = history_sales::where('branchname',auth()->user()->branchname)
+                                            ->whereBetween('timerecorded', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                                            ->orderBy($orderby,$orderrow)
+                                            ->get();
+                $sales = history_sales::where('branchname',auth()->user()->branchname)
+                                        ->whereBetween('timerecorded', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                                        ->orderBy($orderby,$orderrow)
+                                        ->paginate($request->pagerow);
+                
+                $totalqty = collect($salesget)->sum('qty');
+                $totalsales = collect($salesget)->sum('total');
+    
+                $branch = branch::orderBy('branchname', 'asc')->get();
+
+                return view('reports.Sales.index')->with(['sales' => $sales])
+                    ->with(['totalsales' => $totalsales])
+                    ->with(['totalqty' => $totalqty])
+                    ->with(['branch' => $branch]);
+                
+            }
+        }else{
+
+            $sales = history_sales::where('branchname', auth()->user()->branchname)
+                    ->where(function(Builder $builder) use($request){
+                        $builder
+                                ->where('cabinetname','like',"%{$request->search}%")
+                                ->orWhere('productname','like',"%{$request->search}%")
+                                ->orWhere('qty','like',"%{$request->search}%")
+                                ->orWhere('srp','like',"%{$request->search}%")
+                                ->orWhere('total','like',"%{$request->search}%")
+                                ->orWhere('username','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('snotes','like',"%{$request->search}%");
+                    })
+                    ->orderBy($orderby,$orderrow)
+                    ->paginate($request->pagerow);
+
+            $salesget = history_sales::where('branchname', auth()->user()->branchname)
+                    ->where(function(Builder $builder) use($request){
+                        $builder
+                                ->where('cabinetname','like',"%{$request->search}%")
+                                ->orWhere('productname','like',"%{$request->search}%")
+                                ->orWhere('qty','like',"%{$request->search}%")
+                                ->orWhere('srp','like',"%{$request->search}%")
+                                ->orWhere('total','like',"%{$request->search}%")
+                                ->orWhere('username','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('snotes','like',"%{$request->search}%");
+                    })
+                    ->orderBy($orderby,$orderrow)
+                    ->get();
+
+            $totalsales = collect($salesget)->sum('total');
+            $totalqty = collect($salesget)->sum('qty');
+
+            return view('reports.Sales.index')->with(['sales' => $sales])
+                ->with(['totalsales' => $totalsales])
+                ->with(['totalqty' => $totalqty]);
+        }
+        
+    }
+
+    public function adminsearch($request){
+        if($request->orderrow == 'H-L'){
+            $orderby = "total";
+            $orderrow = 'desc';
+        }elseif($request->orderrow == 'L-H'){
+            $orderby = "total";
+            $orderrow = 'asc';
+        }elseif($request->orderrow == 'A-Z'){
+            $orderby = "productname";
+            $orderrow = 'asc';
+        }elseif($request->orderrow == 'Z-A'){
+            $orderby = "productname";
+            $orderrow = 'desc';
+        }elseif($request->orderrow == 'Latest'){
+            $orderby = "salesid";
+            $orderrow = 'desc';
+        }elseif($request->orderrow == 'Oldest'){
+            $orderby = "salesid";
+            $orderrow = 'asc';
+        }
+        
+        if(empty($request->search)){
+            if(empty($request->startdate) && empty($request->enddate)){
+                $salesget = history_sales::orderBy($orderby,$orderrow)
+                                        ->get();
+                $sales = history_sales::orderBy($orderby,$orderrow)
+                                        ->paginate($request->pagerow);
+
+                $totalqty = collect($salesget)->sum('qty'); 
+                $totalsales = collect($salesget)->sum('total');
+
+                $branch = branch::orderBy('branchname', 'asc')->get();
+    
+                return view('reports.Sales.index')->with(['sales' => $sales])
+                    ->with(['totalsales' => $totalsales])
+                    ->with(['totalqty' => $totalqty])
+                    ->with(['branch' => $branch]);
+            }
+            elseif(empty($request->startdate) or empty($request->enddate)){
+                
+                return redirect()->back()
+                    
+                    ->with('failed','Start & End Dates Required');
+            }
+            else{
+                $startDate = Carbon::parse($request->startdate)->format('Y-m-d');
+                $endDate = Carbon::parse($request->enddate)->format('Y-m-d');
+
+                $salesget = history_sales::whereBetween('timerecorded', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                                            ->orderBy($orderby,$orderrow)
+                                            ->get();
+                $sales = history_sales::whereBetween('timerecorded', [$startDate .' 00:00:00', $endDate .' 23:59:59'])
+                                        ->orderBy($orderby,$orderrow)
+                                        ->paginate($request->pagerow);
+                
+                $totalqty = collect($salesget)->sum('qty');
+                $totalsales = collect($salesget)->sum('total');
+    
+                $branch = branch::orderBy('branchname', 'asc')->get();
+
+                return view('reports.Sales.index')->with(['sales' => $sales])
+                    ->with(['totalsales' => $totalsales])
+                    ->with(['totalqty' => $totalqty])
+                    ->with(['branch' => $branch]);
+                
+            }
+        }else{
+
+            $sales = history_sales::where('cabinetname','like',"%{$request->search}%")
+                    ->where(function(Builder $builder) use($request){
+                        $builder
+                                ->orWhere('productname','like',"%{$request->search}%")
+                                ->orWhere('qty','like',"%{$request->search}%")
+                                ->orWhere('srp','like',"%{$request->search}%")
+                                ->orWhere('total','like',"%{$request->search}%")
+                                ->orWhere('username','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('snotes','like',"%{$request->search}%");
+                    })
+                    ->orderBy($orderby,$orderrow)
+                    ->paginate($request->pagerow);
+
+            $salesget = history_sales::where('cabinetname','like',"%{$request->search}%")
+                    ->where(function(Builder $builder) use($request){
+                        $builder
+                                ->orWhere('productname','like',"%{$request->search}%")
+                                ->orWhere('qty','like',"%{$request->search}%")
+                                ->orWhere('srp','like',"%{$request->search}%")
+                                ->orWhere('total','like',"%{$request->search}%")
+                                ->orWhere('username','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('snotes','like',"%{$request->search}%");
+                    })
+                    ->orderBy($orderby,$orderrow)
+                    ->get();
+
+            $totalsales = collect($salesget)->sum('total');
+            $totalqty = collect($salesget)->sum('qty');
+
+            $branch = branch::orderBy('branchname', 'asc')->get();
+
+            return view('reports.Sales.index')->with(['sales' => $sales])
+                ->with(['branch' => $branch])
+                ->with(['totalsales' => $totalsales])
+                ->with(['totalqty' => $totalqty]);
+        }
+    }
     /**
      * Display a listing of the resource.
      */
