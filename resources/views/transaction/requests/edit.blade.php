@@ -12,7 +12,7 @@
 					<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <form action="{{ route('transactionrequest.update',$RenterRequests->salesrid) }}" enctype="multipart/form-data" method="POST" class="p-4 md:p-5">
                             @csrf
-                            @method('PUT')   
+                            @method('PATCH')   
                             <div class="relative p-4 w-full max-w-full max-h-full">
                                 <!-- Breadcrumb -->
                                 <nav class="flex px-5 py-3 text-gray-700  bg-gray-50 dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">

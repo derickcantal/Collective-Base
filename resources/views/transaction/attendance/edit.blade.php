@@ -12,7 +12,7 @@
 					<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <form action="{{ route('attendance.update',$attendance->attid) }}" enctype="multipart/form-data" method="POST" class="p-4 md:p-5">
                             @csrf
-                            @method('PUT')   
+                            @method('PATCH')   
                             <div class="relative p-4 w-full max-w-full max-h-full">
                                 <!-- Modal content -->
                                 <div class="relative bg-white rounded-lg dark:bg-gray-800">

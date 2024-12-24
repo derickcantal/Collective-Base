@@ -91,6 +91,7 @@ class TransactionRentalController extends Controller
     }
 
     public function storedata($request){
+        
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
 
         $today = Carbon::now();
@@ -487,7 +488,7 @@ class TransactionRentalController extends Controller
             if($rentalpayment->rpbal != 0)
             {
                 
-                return view('rentercashierrental.create')
+                return view('transaction.rental.create')
                                 ->with(['cabinet' => $cabinet])
                                 ->with(['renters' => $renter])
                                 ->with('rpbal', $rpbal)
@@ -562,7 +563,7 @@ class TransactionRentalController extends Controller
                         })
                         ->paginate(5);
         
-            return view('transactionrental.index',compact('rentalPayments'))
+            return view('transaction.rental.index',compact('rentalPayments'))
                 ->with('i', (request()->input('page', 1) - 1) * 5);
         
     }
