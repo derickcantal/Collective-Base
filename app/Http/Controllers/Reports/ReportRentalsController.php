@@ -13,7 +13,7 @@ class ReportRentalsController extends Controller
 {
     public function search(Request $request)
     {
-        $rentalPayments = history_rental_payments::orderBy('status','desc')
+        $rentalpayments = history_rental_payments::orderBy('status','desc')
                         ->where(function(Builder $builder) use($request){
                             $builder->where('branchname','like',"%{$request->search}%")
                                     ->orWhere('cabinetname','like',"%{$request->search}%")
@@ -34,7 +34,7 @@ class ReportRentalsController extends Controller
                         })
                         ->paginate(5);
         
-            return view('reports.Rentals.index',compact('rentalPayments'))
+            return view('reports.Rentals.index',compact('rentalpayments'))
                 ->with('i', (request()->input('page', 1) - 1) * 5);
         
     }

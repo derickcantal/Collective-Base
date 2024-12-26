@@ -142,7 +142,7 @@ class TransactionAttendanceController extends Controller
         $oldavatar = $att1->avatarproof;
 
         if($mod != 0){
-            return redirect()->route('attendance.index')
+            return redirect()->route('transactionattendance.index')
                                 ->with('failed','Attendance Update not allowed. Maximum Modification: Once.');
         }
 

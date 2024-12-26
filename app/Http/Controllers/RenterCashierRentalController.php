@@ -241,7 +241,7 @@ class RenterCashierRentalController extends Controller
         if(auth()->user()->accesstype == 'Cashier'){
             $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
 
-            $today = Carbon::now();
+            $today = Carbon::now(); 
             $today->month;
             $today->year;
 

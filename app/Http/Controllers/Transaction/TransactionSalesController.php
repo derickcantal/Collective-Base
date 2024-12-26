@@ -310,10 +310,10 @@ class TransactionSalesController extends Controller
     public function searchall($request)
     {
         if($request->orderrow == 'H-L'){
-            $orderby = "total_sum";
+            $orderby = "total";
             $orderrow = 'desc';
         }elseif($request->orderrow == 'L-H'){
-            $orderby = "total_sum";
+            $orderby = "total";
             $orderrow = 'asc';
         }elseif($request->orderrow == 'A-Z'){
             $orderby = "cabid";

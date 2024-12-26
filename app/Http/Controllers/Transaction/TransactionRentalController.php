@@ -117,7 +117,6 @@ class TransactionRentalController extends Controller
                             ->where('rpyear',$request->rpyear);
                         })
                         ->latest()->first();
-
         if(empty($rentalpayment))
         {
             $totalbalance = $cabinet->cabinetprice - $request->paidamount; 
@@ -125,6 +124,7 @@ class TransactionRentalController extends Controller
         else{
             $totalbalance = $rentalpayment->rpbal - $request->paidamount; 
         }
+        dd($totalbalance);
 
 
         if($rentalpayment)
@@ -268,15 +268,13 @@ class TransactionRentalController extends Controller
             
             if($today->month == $cabinet->rpmonth && $today->year == $cabinet->rpyear){
                 $fp = 'Y';
+                $cabinetupdate = cabinet::where('cabid',$cabinet->cabid)
+                        ->update([
+                            'fully_paid' => $fp,
+                        ]);
             }else{
                 $fp = 'N';
             }        
-
-            $cabinetupdate = cabinet::where('cabid',$cabinet->cabid)
-                    ->update([
-                        'fully_paid' => $fp,
-                    ]);
-            
         }
 
         if($RentalPayments)
@@ -450,32 +448,32 @@ class TransactionRentalController extends Controller
 
         $rentername = $renter->lastname . ', ' . $renter->firstname;
 
-        $rentalpayment = RentalPayments::where('userid',$request->userid)
-                ->where(function(Builder $builder) use($request) {
-                    $builder->where('cabid',$request->cabinetname)
+        $rentalpayment = RentalPayments::where('userid',$renter->rentersid)
+                ->where(function(Builder $builder) use($request,$cabinet) {
+                    $builder->where('cabid',$cabinet->cabid)
                         ->where('rpmonth',$request->rpmonth)
                         ->where('rpyear',$request->rpyear);
                     })
                     ->latest()->first();
 
-        $rentalpaymenthistory = history_rental_payments::where('userid',$request->userid)
-                    ->where(function(Builder $builder) use($request) {
-                        $builder->where('cabid',$request->cabinetname)
+        $rentalpaymenthistory = history_rental_payments::where('userid',$renter->rentersid)
+                    ->where(function(Builder $builder) use($request,$cabinet) {
+                        $builder->where('cabid',$cabinet->cabid)
                             ->where('rpmonth',$request->rpmonth)
                             ->where('rpyear',$request->rpyear);
                         })
                         ->latest()->first();
-        
-       
+      
         if(!empty($rentalpayment))
         {
             $rpbal = $rentalpayment->rpbal;
         }
-        elseif(!empty($rentalpaymenthistory))
+        if(!empty($rentalpaymenthistory))
         {
             $rpbal = $rentalpaymenthistory->rpbal;
+            
         }
-        else
+        if(empty($rentalpayment) && empty($rentalpaymenthistory))
         {
             $rpbal = $cabinet->cabinetprice;
         }

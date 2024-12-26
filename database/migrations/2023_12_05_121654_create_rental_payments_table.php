@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('lastname');
             $table->decimal('rpamount', $precision = 8, $scale = 2);
             $table->decimal('rpbal', $precision = 8, $scale = 2);
+            $table->decimal('rptotaldue', $precision = 8, $scale = 2);
             $table->string('rppaytype');
             $table->integer('rpmonth');
             $table->integer('rpyear');
