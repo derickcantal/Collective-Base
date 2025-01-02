@@ -53,7 +53,7 @@ class ManageCabinetController extends Controller
     
     public function storedata($request){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
-        $cabcount = cabinet::where('branchname',$request->branchname)->count();
+        $cabcount = (cabinet::where('branchname',$request->branchname)->count()) + 1;
 
         $br = branch::where('branchname',$request->branchname)->first();
 
@@ -61,18 +61,21 @@ class ManageCabinetController extends Controller
         ->where(function(Builder $builder) use($request){
             $builder->where('branchname',$request->branchname);
         })->first();
-
-        
+        //dd($br->cabinetcount >= $cabcount,$br->cabinetcount,$cabcount);
         if($br->cabinetcount >= $cabcount){
             if(empty($cabn->cabid)){      
                 $cabinets = cabinet::create([
                     'cabinetname' => $request->cabinetname,
+                    'cabinetprice' => $request->cabinetprice,
                     'branchid' => $br->branchid,
                     'branchname' => $br->branchname,
+                    'rpmonth' => 0,
+                    'rpyear'=> 0,
                     'userid' => 0,
                     'email' => 'Vacant',
                     'created_by' => auth()->user()->email,
                     'updated_by' => 'Null',
+                    'fully_paid' => 'N',
                     'timerecorded' => $timenow,
                     'posted' => 'N',
                     'mod' => 0,
@@ -162,11 +165,10 @@ class ManageCabinetController extends Controller
                     $this->userlog($notes,$status);
  
                     return redirect()->route('managecabinet.index')
-                                ->with('failed','Cabinet update failed');
+                                ->with('failed','Cabinet update failed. 1');
                 }
             }else{
-
-                $cabinets = cabinet::where('cabid', $cabinet->userid)
+                $cabinets = cabinet::where('cabid', $cabinet->cabid)
                 ->update([
                 'userid' => 0,
                 'email' => 'Vacant',
@@ -175,13 +177,6 @@ class ManageCabinetController extends Controller
                 'mod' => $mod + 1,
                 ]);
 
-                $totalcabown = cabinet::where('userid', $cabinet->userid)->count();
-                
-                $rentercabUpdate = Renters::where('userid',$cabinet->userid)
-                            ->update([
-                                'cabid' => $totalcabown - 1,
-                            ]);
-                
 
                 if ($cabinets) {
                     //query successful
@@ -197,7 +192,7 @@ class ManageCabinetController extends Controller
                     $this->userlog($notes,$status);
 
                     return redirect()->route('managecabinet.index')
-                                ->with('failed','Cabinet update failed');
+                                ->with('failed','Cabinet update failed. 2');
                 }
             }
             

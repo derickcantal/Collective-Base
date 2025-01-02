@@ -10,7 +10,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <form action="{{ route('managecabinet.update',$cabinet->cabid) }}" method="POST" class="p-4 md:p-5">
                     @csrf
-                    @method('PUT')   
+                    @method('PATCH')   
                     <div class="relative p-4 w-full max-w-full max-h-full">
                         <!-- Breadcrumb -->
                         <nav class="flex px-5 py-3 text-gray-700  bg-gray-50 dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">

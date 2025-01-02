@@ -10,7 +10,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <form action="{{ route('managerenter.update',$renter->rentersid) }}" method="POST" class="p-4 md:p-5">
                     @csrf
-                    @method('PUT') 
+                    @method('PATCH') 
                     <div class="relative p-4 w-full max-w-full max-h-full">
                         <!-- Error & Success Notification -->
                         @include('layouts.notifications') 
