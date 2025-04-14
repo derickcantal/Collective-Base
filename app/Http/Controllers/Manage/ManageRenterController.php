@@ -574,7 +574,7 @@ class ManageRenterController extends Controller
     public function renterlogin(Request $request)
     {
         
-        if(auth()->user()->accesstype == 'Administrator'){
+        if(auth()->user()->accesstype == 'Renters'){
             $renter = Renter::where('firstname', $request->firstname)
                         ->where(function(Builder $builder) use($request){
                         $builder->where('lastname',$request->lastname)

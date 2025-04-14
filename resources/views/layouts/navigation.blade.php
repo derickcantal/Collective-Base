@@ -23,6 +23,13 @@
                     </x-nav-link>
                 </div>
                 @endif
+                @if(auth()->user()->accesstype == 'Cashier')
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('managecr.index')" :active="request()->routeIs('managecr.index')">
+                            {{ __('Manage') }}
+                        </x-nav-link>
+                    </div>
+                @endif
                 @if(auth()->user()->accesstype == 'Renters')
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('mycabinet.index')" :active="request()->routeIs('mycabinet.index')">
@@ -64,11 +71,13 @@
                             {{ __('Dashboard') }}
                         </x-dropdown-link>
                         @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
-                        <x-dropdown-link :href="route('users.index')" :active="request()->routeIs('users.index')">
-                            {{ __('Users') }}
+                        <x-dropdown-link :href="route('manageuser.index')" :active="request()->routeIs('manageuser.index')">
+                            {{ __('Manage') }}
                         </x-dropdown-link>
-                        <x-dropdown-link :href="route('renters.index')" :active="request()->routeIs('renters.index')">
-                            {{ __('Renters') }}
+                        @endif
+                        @if(auth()->user()->accesstype == 'Cashier')
+                        <x-dropdown-link :href="route('managecr.index')" :active="request()->routeIs('managecr.index')">
+                            {{ __('Manage') }}
                         </x-dropdown-link>
                         @endif
                         @if(auth()->user()->accesstype == 'Renters')
@@ -77,11 +86,11 @@
                         </x-dropdown-link>
                         @endif
                         @if(auth()->user()->accesstype != 'Renters')
-                        <x-dropdown-link :href="route('sales.index')" :active="request()->routeIs('sales.index')">
-                            {{ __('Cashier') }}
+                        <x-dropdown-link :href="route('transactionsales.index')" :active="request()->routeIs('transactionsales.index')">
+                            {{ __('Transaction') }}
                         </x-dropdown-link>
                         @endif
-                        <x-dropdown-link :href="route('reports.index')" :active="request()->routeIs('reports.index')">
+                        <x-dropdown-link :href="route('reportssales.index')" :active="request()->routeIs('reportssales.index')">
                             {{ __('Reports') }}
                         </x-dropdown-link>
                         <div class="pt-1 pb-1 border-t border-gray-200 dark:border-gray-600">
@@ -90,11 +99,7 @@
                                 {{ __('EOD') }}
                             </x-dropdown-link>
                             @endif
-                            @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
-                            <x-dropdown-link :href="route('branch.index')">
-                                {{ __('Settings') }}
-                            </x-dropdown-link>
-                            @endif
+                           
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Profile') }}
                             </x-dropdown-link>
@@ -133,13 +138,15 @@
         </div>
         @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
-                {{ __('Users') }}
+            <x-responsive-nav-link :href="route('manageuser.index')" :active="request()->routeIs('manageuser.index')">
+                {{ __('Manage') }}
             </x-responsive-nav-link>
         </div>
+        @endif
+        @if(auth()->user()->accesstype == 'Cashier')
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('renters.index')" :active="request()->routeIs('renters.index')">
-                {{ __('Renters') }}
+            <x-responsive-nav-link :href="route('managecr.index')" :active="request()->routeIs('managecr.index')">
+                {{ __('Manage') }}
             </x-responsive-nav-link>
         </div>
         @endif
@@ -152,13 +159,13 @@
         @endif
         @if(auth()->user()->accesstype != 'Renters')
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('sales.index')" :active="request()->routeIs('sales.index')">
-                {{ __('Cashier') }}
+            <x-responsive-nav-link :href="route('transactionsales.index')" :active="request()->routeIs('transactionsales.index')">
+                {{ __('Transaction') }}
             </x-responsive-nav-link>
         </div>
         @endif
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.index')">
+            <x-responsive-nav-link :href="route('reportssales.index')" :active="request()->routeIs('reportssales.index')">
                 {{ __('Reports') }}
             </x-responsive-nav-link>
         </div>
@@ -175,7 +182,7 @@
                     <x-responsive-nav-link :href="route('saleseod.index')">
                         {{ __('EOD') }}
                     </x-responsive-nav-link>
-                @endif
+                    @endif
                 @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
                 <x-responsive-nav-link :href="route('branch.index')">
                     {{ __('Settings') }}

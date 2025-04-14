@@ -6,6 +6,7 @@
         <x-nav-link :href="route('transactionattendance.index')" :active="request()->routeIs('transactionattendance.index')">
             {{ __('Attendance') }}
         </x-nav-link>
+        @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
         <x-nav-link :href="route('transactionrental.index')" :active="request()->routeIs('transactionrental.index')">
             {{ __('Rental Payment') }}
         </x-nav-link>
@@ -15,5 +16,6 @@
         <x-nav-link :href="route('transactioneod.index')" :active="request()->routeIs('transactioneod.index')">
             {{ __('EOD') }}
         </x-nav-link>
+        @endif
     </ul>
 </div>

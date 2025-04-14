@@ -3,9 +3,11 @@
         <x-nav-link :href="route('reportssales.index')" :active="request()->routeIs('reportssales.index')">
             {{ __('Sales') }}
         </x-nav-link>
+        @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
         <x-nav-link :href="route('reportstopsales.index')" :active="request()->routeIs('reportstopsales.index')">
             {{ __('Top Sales') }}
         </x-nav-link>
+        @endif
         <x-nav-link :href="route('reportsrequests.index')" :active="request()->routeIs('reportsrequests.index')">
             {{ __('Requests') }}
         </x-nav-link>
