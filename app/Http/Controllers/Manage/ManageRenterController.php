@@ -280,6 +280,8 @@ class ManageRenterController extends Controller
         $br = branch::where('branchname',$request->branchname)->first();
         $fullname = $request->lastname . ', ' . $request->firstname . ' ' . $request->middlename;
 
+        dd($renter->userid);
+
         if($request->password == null){
             $renter =Renter::where('rentersid',$renter->userid)->update([
                 'username' => $request->username,

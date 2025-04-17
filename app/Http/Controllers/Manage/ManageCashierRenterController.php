@@ -79,6 +79,7 @@ class ManageCashierRenterController extends Controller
 
     public function cabinetmodify(Request $request)
     {
+
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
 
         $cabinet = cabinet::where('cabid',$request->cabid)
@@ -127,11 +128,13 @@ class ManageCashierRenterController extends Controller
 
     public function cabinetcreate()
     {
+
         return redirect()->route('dashboard.index');
     }
 
     public function cabinetstore(Request $request)
     {
+
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $cabuser = $request->cabuser;
         
@@ -199,7 +202,7 @@ class ManageCashierRenterController extends Controller
             $status = 'Success';
             $this->userlog($notes,$status);
 
-            return redirect()->route('renter.show',$renter->rentersid)
+            return redirect()->route('managecr.show',$renter->rentersid)
                         ->with('success','Cabinet Assigned successfully.');
         }else{
             $notes = 'Renter. Cashier. Cabinet. Assign.';
@@ -220,6 +223,7 @@ class ManageCashierRenterController extends Controller
     }
     public function cabinetadd(Request $request)
     {
+
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $cabuser = $request->cabuser;
 
@@ -569,8 +573,10 @@ class ManageCashierRenterController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Renter $renter)
+    public function show($rentersid)
     {
+        $renter = Renter::where('rentersid',$rentersid)->first();
+
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $branchlists = branchlist::where('userid', $renter->rentersid)->first();
 
@@ -602,8 +608,10 @@ class ManageCashierRenterController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Renter $renter)
+    public function edit($rentersid)
     {
+        $renter = Renter::where('rentersid',$rentersid)->first();
+
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
 
         $branchlist = branchlist::where('userid', $renter->rentersid)
@@ -632,17 +640,17 @@ class ManageCashierRenterController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
+
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         if(auth()->user()->accesstype == 'Cashier'){
             $renter = Renter::where('rentersid',$id)->first();
-
             $mod = 0;
             $mod = $renter->mod;
 
             if($request->password == null){
-                $renter =Renter::where('rentersid',$id)->update([
+                $renters =Renter::where('rentersid',$renter->rentersid)->update([
                     'username' => $request->username,
                     'email' => $request->email,
                     'firstname' => $request->firstname,
@@ -655,7 +663,7 @@ class ManageCashierRenterController extends Controller
 
                
             }else{
-                $renter =Renter::where('rentersid',$id)->update([
+                $renters =Renter::where('rentersid',$renter->rentersid)->update([
                     'username' => $request->username,
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
@@ -670,7 +678,7 @@ class ManageCashierRenterController extends Controller
                
             }
 
-            if ($renter) {
+            if ($renters) {
                 //query successful
                 $notes = 'Renter. Cashier. Update. ' . $renter->lastname;
                 $status = 'Success';

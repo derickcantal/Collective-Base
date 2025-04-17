@@ -145,7 +145,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/manage/cashier/renter', [ManageCashierRenterController::class, 'store'])->name('managecr.store');
     Route::get('/manage/cashier/renter/create', [ManageCashierRenterController::class, 'create'])->name('managecr.create');
     Route::get('/manage/cashier/renter/{renters}', [ManageCashierRenterController::class, 'show'])->name('managecr.show');
-    Route::patch('/manage/cashier/renter/{renters}', [ManageCashierRenterController::class, 'update'])->name('managecr.update');
+    Route::put('/manage/cashier/renter/{renters}', [ManageCashierRenterController::class, 'update'])->name('managecr.update');
     Route::delete('/manage/cashier/renter/{renters}', [ManageCashierRenterController::class, 'destroy'])->name('managecr.destroy');
     Route::get('/manage/cashier/renter/{renters}/edit', [ManageCashierRenterController::class, 'edit'])->name('managecr.edit');
     Route::get('/manage/cashier/renter/search', [ManageCashierRenterController::class, 'search'])->name('managecr.search');
