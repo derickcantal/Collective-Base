@@ -344,7 +344,6 @@ class ManageCashierRenterController extends Controller
                         'email' => $request->email,
                         'password' => Hash::make($newpassword),
                         'firstname' => $request->firstname,
-                        'middlename' => $request->middlename,
                         'middlename' => 'Null',
                         'lastname' => $request->lastname,
                         'birthdate' => $request->birthdate,
