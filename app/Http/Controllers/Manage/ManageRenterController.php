@@ -218,7 +218,7 @@ class ManageRenterController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'firstname' => $request->firstname,
-            'middlename' => $request->middlename,
+            'middlename' => 'Null',
             'lastname' => $request->lastname,
             'birthdate' => $request->birthdate,
             'branchid' => $br->branchid,
@@ -233,28 +233,10 @@ class ManageRenterController extends Controller
             'status' => 'Active',
         ]);
 
-        $renter_n = Renter::create([
-            'avatar' => 'avatars/avatar-default.jpg',
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'firstname' => $request->firstname,
-            'middlename' => $request->middlename,
-            'lastname' => $request->lastname,
-            'birthdate' => $request->birthdate,
-            'branchid' => $br->branchid,
-            'branchname' => $br->branchname,
-            'cabid' => 0,
-            'cabinetname' => 'Null',
-            'accesstype' => 'Renters',
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'timerecorded' => $timenow,
-            'mod' => 0,
-            'status' => 'Active',
-        ]);
+        //$fullname = $request->lastname . ', ' . $request->firstname . ' ' . $request->middlename;
+        $fullname = $request->lastname . ', ' . $request->firstname;
         
-        $fullname = $request->lastname . ', ' . $request->firstname . ' ' . $request->middlename;
+
         if ($renter) {
             //query successful
             $notes = 'Renter. Create. ' . $fullname;
@@ -278,7 +260,8 @@ class ManageRenterController extends Controller
         $mod = 0;
         $mod = $renter->mod;
         $br = branch::where('branchname',$request->branchname)->first();
-        $fullname = $request->lastname . ', ' . $request->firstname . ' ' . $request->middlename;
+       // $fullname = $request->lastname . ', ' . $request->firstname . ' ' . $request->middlename;
+        $fullname = $request->lastname . ', ' . $request->firstname;
 
         dd($renter->userid);
 
@@ -287,7 +270,7 @@ class ManageRenterController extends Controller
                 'username' => $request->username,
                 'email' => $request->email,
                 'firstname' => $request->firstname,
-                'middlename' => $request->middlename,
+                'middlename' => 'Null',
                 'lastname' => $request->lastname,
                 'birthdate' => $request->birthdate,
                 'updated_by' => auth()->user()->email,
@@ -295,24 +278,14 @@ class ManageRenterController extends Controller
                 'status' => $request->status,
             ]);
 
-            $renter_n =Renter::where('rentersid',$renter->userid)->update([
-                'username' => $request->username,
-                'email' => $request->email,
-                'firstname' => $request->firstname,
-                'middlename' => $request->middlename,
-                'lastname' => $request->lastname,
-                'birthdate' => $request->birthdate,
-                'updated_by' => auth()->user()->email,
-                'mod' => $mod + 1,
-                'status' => $request->status,
-            ]);
+        
         }else{
             $renter =Renter::where('rentersid',$renter->userid)->update([
                 'username' => $request->username,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'firstname' => $request->firstname,
-                'middlename' => $request->middlename,
+                'middlename' => 'Null',
                 'lastname' => $request->lastname,
                 'birthdate' => $request->birthdate,
                 'updated_by' => auth()->user()->email,
@@ -320,18 +293,7 @@ class ManageRenterController extends Controller
                 'status' => $request->status,
             ]);
 
-            $renter_n = Renter::where('rentersid',$renter->userid)->update([
-                'username' => $request->username,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'firstname' => $request->firstname,
-                'middlename' => $request->middlename,
-                'lastname' => $request->lastname,
-                'birthdate' => $request->birthdate,
-                'updated_by' => auth()->user()->email,
-                'mod' => $mod + 1,
-                'status' => $request->status,
-            ]);
+            
         }
         
         if($renter){
@@ -355,7 +317,8 @@ class ManageRenterController extends Controller
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
 
         $rent = Renter::where('rentersid', $renter->rentersid)->first();
-        $fullname = $rent->lastname . ', ' . $rent->firstname . ' ' . $rent->middlename;
+        //$fullname = $rent->lastname . ', ' . $rent->firstname . ' ' . $rent->middlename;
+        $fullname = $rent->lastname . ', ' . $rent->firstname;
 
         if($renter->status == 'Active')
         {
@@ -407,14 +370,17 @@ class ManageRenterController extends Controller
     public function renterregister(Request $request)
     {
         $n1 = strtoupper($request->firstname[0]);
-        $n2 = strtoupper($request->middlename[0]);
+        //$n2 = strtoupper($request->middlename[0]);
         $n3 = strtoupper($request->lastname[0]);
         $n4 = preg_replace('/[-]+/', '', $request->birthdate);
 
-        $newpassword = $n1 . $n2 . $n3 . $n4;
+        //$newpassword = $n1 . $n2 . $n3 . $n4;
+        $newpassword = $n1 . $n3 . $n4;
 
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
-        $fullname = $request->lastname . ', ' . $request->firstname . ' ' . $request->middlename;
+        //$fullname = $request->lastname . ', ' . $request->firstname . ' ' . $request->middlename;
+        $fullname = $request->lastname . ', ' . $request->firstname;
+        
         if(auth()->user()->accesstype == 'Administrator'){
             if($request->newrenter == 'Y'){
                 if($request->password == $request->password_confirmation){
@@ -424,12 +390,12 @@ class ManageRenterController extends Controller
                         'email' => $request->email,
                         'password' => Hash::make($newpassword),
                         'firstname' => $request->firstname,
-                        'middlename' => $request->middlename,
+                        'middlename' => 'Null',
                         'lastname' => $request->lastname,
                         'birthdate' => $request->birthdate,
                         'mobile_primary' => $request->mobile_primary,
-                        'mobile_secondary' => $request->mobile_secondary,
-                        'homeno' => $request->homeno,
+                        'mobile_secondary' => 'Null',
+                        'homeno' => 'Null',
                         'branchid' => auth()->user()->branchid,
                         'branchname' => auth()->user()->branchname,
                         'cabid' => 0,
@@ -442,54 +408,32 @@ class ManageRenterController extends Controller
                         'status' => 'Active',
                     ]);
 
-                    $renter_n = Renter::create([
-                        'avatar' => 'avatars/avatar-default.jpg',
-                        'username' => $request->username,
-                        'email' => $request->email,
-                        'password' => Hash::make($newpassword),
-                        'firstname' => $request->firstname,
-                        'middlename' => $request->middlename,
-                        'lastname' => $request->lastname,
-                        'birthdate' => $request->birthdate,
-                        'mobile_primary' => $request->mobile_primary,
-                        'mobile_secondary' => $request->mobile_secondary,
-                        'homeno' => $request->homeno,
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'cabid' => 0,
-                        'cabinetname' => 'Null',
-                        'accesstype' => 'Renters',
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'timerecorded' => $timenow,
-                        'mod' => 0,
-                        'status' => 'Active',
-                    ]);
-
-                    $rentersearch = Renter::where('firstname', $request->firstname)
-                            ->where(function(Builder $builder) use($request){
-                            $builder->where('lastname',$request->lastname)
-                                    ->where('birthdate',$request->birthdate);
-                                })->first();
-
-                    $branchlistadd =branchlist::create([
-                        'userid' => $rentersearch->userid,
-                        'branchid' => auth()->user()->branchid,
-                        'accesstype' => 'Renters',
-                        'timerecorded'  => $timenow,
-                        'cabcount' => 0,
-                        'posted'  => 'N',
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod' => 0,
-                        'status' => 'Active',
-                    ]);
+                    
 
 
                     if($renter){
                         $notes = 'Renter. Register. ' . $fullname;
                         $status = 'Success';
                         $this->userlog($notes,$status);
+
+                        $rentersearch = Renter::where('firstname', $request->firstname)
+                            ->where(function(Builder $builder) use($request){
+                            $builder->where('lastname',$request->lastname)
+                                    ->where('birthdate',$request->birthdate);
+                                })->first();
+
+                        $branchlistadd =branchlist::create([
+                            'userid' => $rentersearch->userid,
+                            'branchid' => auth()->user()->branchid,
+                            'accesstype' => 'Renters',
+                            'timerecorded'  => $timenow,
+                            'cabcount' => 0,
+                            'posted'  => 'N',
+                            'created_by' => auth()->user()->email,
+                            'updated_by' => 'Null',
+                            'mod' => 0,
+                            'status' => 'Active',
+                        ]);
                         
                         return redirect()->route('managerenter.index')
                                 ->with('success','Renter Registered successfully.');
@@ -601,7 +545,7 @@ class ManageRenterController extends Controller
                         $builder->where('username','like',"%{$request->search}%")
                                 ->orWhere('firstname','like',"%{$request->search}%")
                                 ->orWhere('lastname','like',"%{$request->search}%")
-                                ->orWhere('middlename','like',"%{$request->search}%")
+                                //->orWhere('middlename','like',"%{$request->search}%")
                                 ->orWhere('branchname','like',"%{$request->search}%")
                                 ->orWhere('email','like',"%{$request->search}%")
                                 ->orWhere('status','like',"%{$request->search}%");

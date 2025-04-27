@@ -56,7 +56,7 @@
                                         <!-- nn -->
                                         <div class="form-group mt-4">
                                             <x-input-label for="cabinetprice" :value="__('Rent Price')" />
-                                            <x-text-input id="cabinetprice" class="block mt-1 w-full" type="number" name="cabinetprice" :value="old('cabinetprice')" required autofocus autocomplete="off" />
+                                            <x-text-input id="cabinetprice" class="block mt-1 w-full" type="number" name="cabinetprice" value="0" required autofocus autocomplete="off" />
                                             <x-input-error :messages="$errors->get('cabinetprice')" class="mt-2" />
                                         </div>
                                     </div>

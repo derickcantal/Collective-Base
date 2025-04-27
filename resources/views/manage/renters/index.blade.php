@@ -115,7 +115,11 @@
                                             <img class="w-10 h-10 rounded-full" src="{{ asset("/storage/$renters->avatar") }}" alt="avatar">
                                             <div class="ps-3">
                                                 <div class="text-base font-semibold"><x-input-label for="username" :value="$renters->username"/></div>
-                                                <x-input-label>{{ $renters->lastname }}, {{ $renters->firstname }} {{ $renters->middlename }}</x-input-label>
+                                                @if($renters->middlename != null or $renters->middlename != 'Null')
+                                                    <x-input-label>{{ $renters->lastname }}, {{ $renters->firstname }} </x-input-label> 
+                                                @else
+                                                    <x-input-label>{{ $renters->lastname }}, {{ $renters->firstname }} {{ $renters->middlename }}</x-input-label>
+                                                @endif
                                                 <x-input-label for="email" :value="$renters->email"/>
                                         </th>
                                         <td class="px-6 py-4">

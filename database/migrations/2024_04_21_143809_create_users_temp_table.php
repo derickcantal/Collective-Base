@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('userid');
             $table->string('firstname');
             $table->string('middlename');
-            $table->string('lastname');
+            $table->string('lastname')->nullable();
             $table->date('birthdate');
             $table->integer('branchid');
             $table->string('branchname');

@@ -45,7 +45,7 @@
                                         </h3>
                                     </div>
                                     <!-- Modal body -->
-                                    <div class="grid gap-4 mb-4 grid-cols-2" x-data="{ srp: 0, qty: 0,  total: 0}" x-effect="total = qty * srp">
+                                    <div class="grid gap-4 mb-4 grid-cols-2" x-data="{ srp: 0, qty: 1,  total: 0}" x-effect="total = qty * srp">
                                         <div class="col-span-2 sm:col-span-1">
                                             <!-- avatar -->
                                             <div class="form-group mt-4">

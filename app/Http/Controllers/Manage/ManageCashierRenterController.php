@@ -327,11 +327,12 @@ class ManageCashierRenterController extends Controller
     public function renterregister(Request $request)
     {
         $n1 = strtoupper($request->firstname[0]);
-        $n2 = strtoupper($request->middlename[0]);
+        //$n2 = strtoupper($request->middlename[0]);
         $n3 = strtoupper($request->lastname[0]);
         $n4 = preg_replace('/[-]+/', '', $request->birthdate);
 
-        $newpassword = $n1 . $n2 . $n3 . $n4;
+        //$newpassword = $n1 . $n2 . $n3 . $n4;
+        $newpassword = $n1 . $n3 . $n4;
 
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         if(auth()->user()->accesstype == 'Cashier'){
@@ -344,11 +345,12 @@ class ManageCashierRenterController extends Controller
                         'password' => Hash::make($newpassword),
                         'firstname' => $request->firstname,
                         'middlename' => $request->middlename,
+                        'middlename' => 'Null',
                         'lastname' => $request->lastname,
                         'birthdate' => $request->birthdate,
                         'mobile_primary' => $request->mobile_primary,
-                        'mobile_secondary' => $request->mobile_secondary,
-                        'homeno' => $request->homeno,
+                        'mobile_secondary' => 'Null',
+                        'homeno' => 'Null',
                         'branchid' => auth()->user()->branchid,
                         'branchname' => auth()->user()->branchname,
                         'cabid' => 0,
@@ -361,33 +363,32 @@ class ManageCashierRenterController extends Controller
                         'status' => 'Active',
                     ]);
 
-                    
-
-                    $rentersearch = Renter::where('firstname', $request->firstname)
+                    if($renter){
+                        $rentersearch = Renter::where('firstname', $request->firstname)
                             ->where(function(Builder $builder) use($request){
-                            $builder->where('middlename',$request->middlename)
+                            $builder
+                                    //->where('middlename',$request->middlename)
                                     ->where('lastname',$request->lastname)
                                     ->where('birthdate',$request->birthdate);
                                 })->first();
 
-                    $branchlistadd =branchlist::create([
-                        'userid' => $rentersearch->rentersid,
-                        'branchid' => auth()->user()->branchid,
-                        'accesstype' => 'Renters',
-                        'timerecorded'  => $timenow,
-                        'cabcount' => 0, 
-                        'posted'  => 'N',
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod' => 0,
-                        'status' => 'Active',
-                    ]);
+                        $branchlistadd =branchlist::create([
+                            'userid' => $rentersearch->rentersid,
+                            'branchid' => auth()->user()->branchid,
+                            'accesstype' => 'Renters',
+                            'timerecorded'  => $timenow,
+                            'cabcount' => 0, 
+                            'posted'  => 'N',
+                            'created_by' => auth()->user()->email,
+                            'updated_by' => 'Null',
+                            'mod' => 0,
+                            'status' => 'Active',
+                        ]);
 
-
-                    if($renter){
                         users_temp::where('firstname',$request->firstname)
                         ->where(function(Builder $builder) use($request){
-                            $builder->where('middlename',$request->middlename)
+                            $builder
+                                    //->where('middlename',$request->middlename)
                                     ->where('lastname',$request->lastname)
                                     ->where('birthdate',$request->birthdate);
                             })
@@ -449,7 +450,8 @@ class ManageCashierRenterController extends Controller
                     {
                         users_temp::where('firstname',$request->firstname)
                         ->where(function(Builder $builder) use($request){
-                            $builder->where('middlename',$request->middlename)
+                            $builder
+                                    //->where('middlename',$request->middlename)
                                     ->where('lastname',$request->lastname)
                                     ->where('birthdate',$request->birthdate);
                             })
@@ -496,14 +498,16 @@ class ManageCashierRenterController extends Controller
         if(auth()->user()->accesstype == 'Cashier'){
             $renter = Renter::where('firstname', $request->firstname)
                         ->where(function(Builder $builder) use($request){
-                        $builder->where('middlename',$request->middlename)
+                        $builder
+                                //->where('middlename',$request->middlename)
                                 ->where('lastname',$request->lastname)
                                 ->where('birthdate',$request->birthdate);
                             })->first();
             
             $usertemp = users_temp::where('firstname', $request->firstname)
             ->where(function(Builder $builder) use($request){
-            $builder->where('middlename',$request->middlename)
+            $builder
+                    //->where('middlename',$request->middlename)
                     ->where('lastname',$request->lastname)
                     ->where('birthdate',$request->birthdate);
                 })->first();
@@ -513,7 +517,7 @@ class ManageCashierRenterController extends Controller
                 
                     $usertempadd =users_temp::create([
                         'firstname' => $request->firstname,
-                        'middlename' => $request->middlename,
+                        'middlename' => 'Null',
                         'lastname' => $request->lastname,
                         'birthdate' => $request->birthdate,
                         'branchid' => auth()->user()->branchid,
@@ -654,7 +658,7 @@ class ManageCashierRenterController extends Controller
                     'username' => $request->username,
                     'email' => $request->email,
                     'firstname' => $request->firstname,
-                    'middlename' => $request->middlename,
+                    //'middlename' => $request->middlename,
                     'lastname' => $request->lastname,
                     'birthdate' => $request->birthdate,
                     'updated_by' => auth()->user()->email,
@@ -668,7 +672,7 @@ class ManageCashierRenterController extends Controller
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
                     'firstname' => $request->firstname,
-                    'middlename' => $request->middlename,
+                    //'middlename' => $request->middlename,
                     'lastname' => $request->lastname,
                     'birthdate' => $request->birthdate,
                     'updated_by' => auth()->user()->email,

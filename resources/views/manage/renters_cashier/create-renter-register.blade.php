@@ -90,14 +90,6 @@
                                                 </div>
                                             </div>
                                             <div class="col-span-2 sm:col-span-1">
-                                                <!-- middlename -->
-                                                <div class="form-group mt-4">
-                                                    <x-input-label for="middlename" :value="__('Middle Name')" />
-                                                    <x-text-input id="middlename" class="block mt-1 w-full" type="text" name="middlename" :value="old('middlename', $renter->middlename)" required autofocus readonly/>
-                                                    <x-input-error :messages="$errors->get('username')" class="mt-2" />
-                                                </div>
-                                            </div>
-                                            <div class="col-span-2 sm:col-span-1">
                                                     <!-- lastname -->
                                                     <div class="form-group mt-4">
                                                     <x-input-label for="lastname" :value="__('Last Name')" />
@@ -123,24 +115,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-span-2 sm:col-span-1">
-                                                    <!-- lastname -->
-                                                    <div class="form-group mt-4">
-                                                    <x-input-label for="mobile_secondary" :value="__('Mobile No. (2)')" />
-                                                    <x-text-input id="mobile_secondary" class="block mt-1 w-full" type="text" name="mobile_secondary" :value="old('mobile_secondary', $renter->mobile_secondary)" required readonly/>
-                                                    <x-input-error :messages="$errors->get('mobile_secondary')" class="mt-2" />
-                                                </div>
-                                            </div>
-
-                                            <div class="col-span-2 sm:col-span-1">
-                                                    <!-- lastname -->
-                                                    <div class="form-group mt-4">
-                                                    <x-input-label for="homeno" :value="__('Home No.')" />
-                                                    <x-text-input id="homeno" class="block mt-1 w-full" type="text" name="homeno" :value="old('homeno', $renter->homeno)" required readonly/>
-                                                    <x-input-error :messages="$errors->get('homeno')" class="mt-2" />
-                                                </div>
-                                            </div>
-                                        
+                                                                 
                                             <div class="flex items-center justify-between col-span-2 sm:col-span-2">
                                                 
                                                 <x-primary-button class="ms-4">

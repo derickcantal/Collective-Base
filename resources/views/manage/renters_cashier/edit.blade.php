@@ -41,7 +41,7 @@
                                                 <svg class="rtl:rotate-180  w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                                                 </svg>
-                                                <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">{{ $renter->username }}</span>
+                                                <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">{{ $renter->lastname }}, {{ $renter->firstname }}</span>
                                             </div>
                                             </li>
                                         </ol>
@@ -104,14 +104,14 @@
                                                     <x-input-error :messages="$errors->get('firstname')" class="mt-2" />
                                                 </div>
                                             </div>
-                                            <div class="col-span-2 sm:col-span-1">
-                                                <!-- middlename -->
+                                            <!-- <div class="col-span-2 sm:col-span-1">
+                                                middlename
                                                 <div class="form-group mt-4">
                                                     <x-input-label for="middlename" :value="__('Middle Name')" />
                                                     <x-text-input id="middlename" class="block mt-1 w-full" type="text" name="middlename" :value="old('middlename', $renter->middlename)" required autofocus />
                                                     <x-input-error :messages="$errors->get('username')" class="mt-2" />
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div class="col-span-2 sm:col-span-1">
                                                     <!-- lastname -->
                                                     <div class="form-group mt-4">
