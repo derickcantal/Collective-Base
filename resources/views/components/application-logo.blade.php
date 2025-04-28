@@ -1,1 +1,1 @@
-<img width="80" height="80" class="rounded-sm mt-4" src="{{ asset("/img/collective-base-logo.jpg") }}" alt="logo" />
+<img width="80" height="80" class="rounded-sm mt-4" src="{{ asset("/img/collective-base-logo.png") }}" alt="logo" />
