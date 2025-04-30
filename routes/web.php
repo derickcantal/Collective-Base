@@ -24,6 +24,7 @@ use App\Http\Controllers\Manage\ManageCashierRenterController;
 use App\Http\Controllers\Transaction\TransactionAttendanceController;
 use App\Http\Controllers\Transaction\TransactionRentalController;
 use App\Http\Controllers\Transaction\TransactionRequestController;
+use App\Http\Controllers\Transaction\TransactionRenterSalesController;
 use App\Http\Controllers\Transaction\TransactionSalesController;
 use App\Http\Controllers\Transaction\TransactionEODController;
 use App\Http\Controllers\Dashboard\DashboardOverviewController;
@@ -207,6 +208,15 @@ Route::middleware('auth')->group(function () {
     Route::patch('/transaction/sales/{sales}', [TransactionSalesController::class, 'update'])->name('transactionsales.update');
     Route::delete('/transaction/sales/{sales}', [TransactionSalesController::class, 'destroy'])->name('transactionsales.destroy');
     Route::get('/transaction/sales/{sales}/edit', [TransactionSalesController::class, 'edit'])->name('transactionsales.edit');
+
+    Route::get('/transaction/renter/sales', [TransactionRenterSalesController::class, 'index'])->name('transactionrentersales.index');
+    Route::post('/transaction/renter/sales', [TransactionRenterSalesController::class, 'store'])->name('transactionrentersales.store');
+    Route::get('/transaction/renter/sales/create', [TransactionRenterSalesController::class, 'create'])->name('transactionrentersales.create');
+    Route::get('/transaction/renter/sales/search', [TransactionRenterSalesController::class, 'search'])->name('transactionrentersales.search');
+    Route::get('/transaction/renter/sales/{sales}', [TransactionRenterSalesController::class, 'show'])->name('transactionrentersales.show');
+    Route::patch('/transaction/renter/sales/{sales}', [TransactionRenterSalesController::class, 'update'])->name('transactionrentersales.update');
+    Route::delete('/transaction/renter/sales/{sales}', [TransactionRenterSalesController::class, 'destroy'])->name('transactionrentersales.destroy');
+    Route::get('/transaction/renter/sales/{sales}/edit', [TransactionRenterSalesController::class, 'edit'])->name('transactionrentersales.edit');
 
     Route::get('/transaction/eod', [TransactionEODController::class, 'index'])->name('transactioneod.index');
     Route::post('/transaction/eod', [TransactionEODController::class, 'store'])->name('transactioneod.store');

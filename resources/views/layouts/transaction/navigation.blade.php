@@ -10,9 +10,12 @@
         <x-nav-link :href="route('transactionrental.index')" :active="request()->routeIs('transactionrental.index')">
             {{ __('Rental Payment') }}
         </x-nav-link>
-        <x-nav-link :href="route('transactionrequest.index')" :active="request()->routeIs('transactionrequest.index')">
-            {{ __('Request') }}
+        <x-nav-link :href="route('transactionrentersales.index')" :active="request()->routeIs('transactionrentersales.index')">
+            {{ __('Renter Sales') }}
         </x-nav-link>
+        <!-- <x-nav-link :href="route('transactionrequest.index')" :active="request()->routeIs('transactionrequest.index')">
+            {{ __('Request') }}
+        </x-nav-link> -->
         <x-nav-link :href="route('transactioneod.index')" :active="request()->routeIs('transactioneod.index')">
             {{ __('EOD') }}
         </x-nav-link>
