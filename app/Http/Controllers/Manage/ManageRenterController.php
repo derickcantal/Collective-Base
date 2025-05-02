@@ -255,22 +255,19 @@ class ManageRenterController extends Controller
         }  
     }
     
-    public function updatedata($request,$renter){
+    public function updatedata($request,$renters){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $mod = 0;
-        $mod = $renter->mod;
+        $mod = $renters->mod;
         $br = branch::where('branchname',$request->branchname)->first();
        // $fullname = $request->lastname . ', ' . $request->firstname . ' ' . $request->middlename;
         $fullname = $request->lastname . ', ' . $request->firstname;
 
-        dd($renter->userid);
-
         if($request->password == null){
-            $renter =Renter::where('rentersid',$renter->userid)->update([
+            $renter =Renter::where('rentersid',$renters->rentersid)->update([
                 'username' => $request->username,
                 'email' => $request->email,
                 'firstname' => $request->firstname,
-                'middlename' => 'Null',
                 'lastname' => $request->lastname,
                 'birthdate' => $request->birthdate,
                 'updated_by' => auth()->user()->email,
@@ -280,12 +277,11 @@ class ManageRenterController extends Controller
 
         
         }else{
-            $renter =Renter::where('rentersid',$renter->userid)->update([
+            $renter =Renter::where('rentersid',$renters->rentersid)->update([
                 'username' => $request->username,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'firstname' => $request->firstname,
-                'middlename' => 'Null',
                 'lastname' => $request->lastname,
                 'birthdate' => $request->birthdate,
                 'updated_by' => auth()->user()->email,
@@ -704,7 +700,7 @@ class ManageRenterController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(RenterUpdateRequests $request, Renter $renter)
+    public function update(RenterUpdateRequests $request, Renter $renters)
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
@@ -712,9 +708,9 @@ class ManageRenterController extends Controller
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return $this->updatedata($request,$renter);
+                return $this->updatedata($request,$renters);
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return $this->updatedata($request,$renter);
+                return $this->updatedata($request,$renters);
             }
             
         }else{

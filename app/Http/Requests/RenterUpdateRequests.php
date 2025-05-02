@@ -27,7 +27,6 @@ class RenterUpdateRequests extends FormRequest
             'username' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
             'firstname' => ['required', 'string', 'max:255'],
-            'middlename' => ['required', 'string', 'max:255'],
             'lastname' => ['required', 'string', 'max:255'],
             'birthdate' => ['required', 'date', 'max:255'],
             'status' => ['string', 'max:255'],
