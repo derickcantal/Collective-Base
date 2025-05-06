@@ -4,6 +4,17 @@ namespace App\Http\Controllers\Transaction;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\history_sales;
+use App\Models\user_login_log;
+use App\Models\Renter;
+use App\Models\branch;
+use App\Models\cabinet;
+use App\Models\renter_monthly_sales;
+use Illuminate\Support\Facades\Storage;
+use \Carbon\Carbon;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Imagick\Driver;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class TransactionRenterSalesController extends Controller
 {
@@ -29,20 +40,20 @@ class TransactionRenterSalesController extends Controller
         ]);
     }
     public function loaddata(){
-        $sales = Sales::latest()
+        $sales = history_sales::latest()
                     ->paginate(5);
 
         $notes = 'Sales';
         $status = 'Success';
         $this->userlog($notes,$status);
 
-        return view('transaction.sales.index',compact('sales'))
+        return view('transaction.rentersales.index',compact('sales'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     public function loaddata_cashier(){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
-        $sales = Sales::where('branchname',auth()->user()->branchname)
+        $sales = history_sales::where('branchname',auth()->user()->branchname)
                         ->latest()
                         ->paginate(5);
 
@@ -50,7 +61,7 @@ class TransactionRenterSalesController extends Controller
         $status = 'Success';
         $this->userlog($notes,$status);
 
-        return view('transaction.sales.index',compact('sales'))
+        return view('transaction.rentersales.index',compact('sales'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
     
@@ -332,7 +343,7 @@ class TransactionRenterSalesController extends Controller
 
 
 
-        return view('transaction.sales.index',compact('sales'))
+        return view('transaction.rentersales.index',compact('sales'))
                 ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
     }
     
@@ -353,7 +364,7 @@ class TransactionRenterSalesController extends Controller
         })
         ->paginate($request->pagerow);
 
-        return view('transaction.sales.index',compact('sales'))
+        return view('transaction.rentersales.index',compact('sales'))
             ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
     }
 
@@ -403,7 +414,7 @@ class TransactionRenterSalesController extends Controller
             if(auth()->user()->accesstype =='Cashier'){
                 $cabinet = cabinet::where('branchname',auth()->user()->branchname)->get();
 
-                return view('transaction.sales.create',['cabinet' => $cabinet]);
+                return view('transaction.rentersales.create',['cabinet' => $cabinet]);
             }
             else{
                 return redirect()->route('dashboardoverview.index');
@@ -443,7 +454,7 @@ class TransactionRenterSalesController extends Controller
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 $sales = Sales::findOrFail($sales);
-                return view('transaction.sales.show',['sales' => $sales]);
+                return view('transaction.rentersales.show',['sales' => $sales]);
             }
             else{
                 return redirect()->route('dashboardoverview.index');
@@ -466,11 +477,11 @@ class TransactionRenterSalesController extends Controller
             }elseif(auth()->user()->accesstype =='Supervisor'){
                 $sales = Sales::findOrFail($sales);
 
-                return view('transaction.sales.edit',['sales' => $sales]);       
+                return view('transaction.rentersales.edit',['sales' => $sales]);       
             }elseif(auth()->user()->accesstype =='Administrator'){
                 $sales = Sales::findOrFail($sales);
 
-                return view('transaction.sales.edit',['sales' => $sales]);
+                return view('transaction.rentersales.edit',['sales' => $sales]);
             }
         }else{
             return redirect()->route('dashboardoverview.index');
