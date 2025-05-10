@@ -263,16 +263,34 @@ class ManageCashierRenterController extends Controller
     }
     public function search(Request $request)
     {
-       
         if(auth()->user()->accesstype == 'Cashier'){
-
-            $renter = DB::table('branchlist')
-                    ->leftJoin('renters', 'renters.rentersid', '=', 'branchlist.userid')
-                    ->where('renters.accesstype', 'Renters')
+            if($request->orderrow == 'asc'){
+                $orderby = "lastname";
+                $orderrow = 'asc';
+            }elseif($request->orderrow == 'desc'){
+                $orderby = "lastname";
+                $orderrow = 'desc';
+            }
+            
+            $renter = branchlist::leftJoin('renters', function($join) use($request){
+                $join->on('branchlist.userid','=','renters.rentersid' )
                     ->where('branchlist.branchid', auth()->user()->branchid)
-                    ->orderBy('renters.lastname',$request->orderrow)
-                    ->paginate($request->pagerow);
+                    ->where('renters.accesstype', 'Renters');
+              })->where(function(Builder $builder) use($request){
+                $builder
+                ->where('renters.username','like',"%{$request->search}%")
+                ->orWhere('renters.firstname','like',"%{$request->search}%")
+                ->orWhere('renters.lastname','like',"%{$request->search}%");
+                })
+              ->orderBy($orderby,$orderrow)
+              ->paginate($request->pagerow);
 
+            // $renter = DB::table('branchlist')
+            //         ->leftJoin('renters', 'renters.rentersid', '=', 'branchlist.userid')
+            //         ->where('renters.accesstype', 'Renters')
+            //         ->where('branchlist.branchid', auth()->user()->branchid)
+            //         ->orderBy('renters.lastname',$request->orderrow)
+            //         ->paginate($request->pagerow);
             
             return view('manage.renters_cashier.index',compact('renter'))
                             ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
@@ -287,12 +305,24 @@ class ManageCashierRenterController extends Controller
     {
         if(auth()->user()->accesstype == 'Cashier'){
 
-            $renter = DB::table('branchlist')
-                    ->leftJoin('renters', 'renters.rentersid', '=', 'branchlist.userid')
-                    ->where('renters.accesstype', 'Renters')
-                    ->where('branchlist.branchid', auth()->user()->branchid)
-                    ->paginate(5);
+            $renter = branchlist::leftJoin('renters', function($join) {
+                $join->on('branchlist.userid','=','renters.rentersid' );
+                    })
+                    ->where(function(Builder $builder){
+                        $builder
+                        ->where('renters.accesstype', 'Renters')
+                        ->where('branchlist.branchid', auth()->user()->branchid);
+                        })
+              
+              ->paginate(5);
 
+            // $renter = DB::table('branchlist')
+            //         ->leftJoin('renters', 'renters.rentersid', '=', 'branchlist.userid')
+            //         ->where('renters.accesstype', 'Renters')
+            //         ->where('branchlist.branchid', auth()->user()->branchid)
+            //         ->paginate(5);
+
+            // dd($renter);
             $notes = 'Renter. Cashier.';
             $status = 'Success';
             $this->userlog($notes,$status);

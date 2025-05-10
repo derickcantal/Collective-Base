@@ -36,9 +36,10 @@
                         </nav>
                         <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                             <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
-                                    <x-primary-button class="ms-4">
+                                    <!-- <x-primary-button class="ms-4">
                                         <a class="btn btn-primary" href="{{ route('transactionrentersales.create') }}"> Create New Renter Sales</a>
-                                    </x-primary-button>
+                                    </x-primary-button> -->
+                                    <div></div>
                                 <form class="flex items-center" action="{{ route('transactionrentersales.search') }}" method="get">
                                     @csrf
                                     <div class="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
@@ -51,8 +52,6 @@
                                             <option value = "250">250</option>            
                                         </select>
                                         <select id="orderrow" name="orderrow" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" :value="old('orderrow')">
-                                            <option value = "H-L">H-L</option>    
-                                            <option value = "L-H">L-H</option>    
                                             <option value = "A-Z">A-Z</option>
                                             <option value = "Z-A">Z-A</option>        
                                         </select>
@@ -81,7 +80,110 @@
                             @include('layouts.notifications') 
                         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mt-4">
                             @csrf
-                            
+                            <div class="max-w-7xl overflow-x-auto shadow-md sm:rounded-lg mt-4" >
+                                        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                                <tr>
+                                                    <th scope="col" class="px-6 py-3">
+                                                        No
+                                                    </th>
+                                                    <th scope="col" class="px-6 py-3">
+                                                        Profile
+                                                    </th>
+                                                    
+                                                    <th scope="col" class="px-6 py-3">
+                                                        Branch
+                                                    </th>
+                                                    <th scope="col" class="px-6 py-3">
+                                                        Status
+                                                    </th>
+                                                    <th scope="col" class="px-6 py-3">
+                                                        Action
+                                                    </th>
+                                                    
+                                                </tr>
+                                            </thead>
+                                                @forelse ($renter as $renters)
+                                                
+                                            <tbody>
+                                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                
+                                                    <td class="px-6 py-4">
+                                                        <x-input-label>{{ ++$i }}</x-input-label>
+                                                    </td>
+                                                    <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                                                        <img class="w-10 h-10 rounded-full" src="{{ asset("/storage/$renters->avatar") }}" alt="avatar">
+                                                        <div class="ps-3">
+                                                            <div class="text-base font-semibold"><x-input-label for="username" :value="$renters->username"/></div>
+                                                            @if($renters->middlename != null or $renters->middlename != 'Null')
+                                                                <x-input-label>{{ $renters->lastname }}, {{ $renters->firstname }} </x-input-label> 
+                                                            @else
+                                                                <x-input-label>{{ $renters->lastname }}, {{ $renters->firstname }} {{ $renters->middlename }}</x-input-label>
+                                                            @endif
+                                                            <x-input-label for="email" :value="$renters->email"/>
+                                                    </th>
+                                                   
+                                                    <td class="px-6 py-4">
+                                                        <x-input-label for="branchname" :value="$renters->branchname"/>
+                                                    </td>
+                                                    
+                                                    <td class="px-6 py-4">
+                                                        <div class="flex items-center">
+                                                        @php
+                                                            $color = '';
+                                                            if ($renters->status == 'Active'):
+                                                                $color = 'green';
+                                                            elseif ($renters->status == 'Inactive'):
+                                                                $color = 'red';
+                                                            endif;
+                                                        @endphp
+                                                                <div class="h-2.5 w-2.5 rounded-full bg-{{ $color; }}-500 me-2"></div> <x-input-label for="status" :value="$renters->status"/>
+                                                        </div>
+                                                    </td>
+                                                    <td class="px-6 py-4">
+                                                        @php
+                                                            
+                                                        @endphp
+                                                        @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
+                                                            <a class="font-medium text-white-600 dark:text-white-500 hover:underline" href="{{ route('transactionrentersales.show',$renters->rentersid) }}">Weekly Sales</a>
+                                                            | <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('transactionrentersales.edit',$renters->rentersid) }}">Completed Sales</a>
+                                                        @endif
+                                                        @if(auth()->user()->accesstype == 'Cashier')
+                                                            <a class="font-medium text-white-600 dark:text-white-500 hover:underline" href="{{ route('transactionrentersales.show',$renters->userid) }}">Weekly Sales</a>
+                                                            | <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('transactionrentersales.edit',$renters->userid) }}">Completed Sales</a>
+                                                        @endif
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            @php
+                                                            $txtbutton = '';
+                                                            $colorbutton = '';
+                                                            
+                                                            if ($renters->status == 'Active'):
+                                                                $txtbutton = 'Decativate';
+                                                                
+                                                            elseif ($renters->status == 'Inactive'):
+                                                                $txtbutton = 'Activate';
+                                                                $colorbutton = 'dark:text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800';
+                                                            endif
+                                                            
+                                                            @endphp
+                                                            
+                                              
+                                                    </td>
+                                                </tr>
+                                            
+                                                @empty
+                                                <td scope="row" class="px-6 py-4">
+                                                    No Records Found.
+                                                </td>	
+                                                @endforelse
+                                                    
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="mt-4">
+                                        {!! $renter->appends(request()->query())->links() !!}
+                                    </div>
                                 
                         </div>
                     </div>

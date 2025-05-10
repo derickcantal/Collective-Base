@@ -8,6 +8,7 @@ use App\Models\history_sales;
 use App\Models\user_login_log;
 use App\Models\Renter;
 use App\Models\branch;
+use App\Models\branchlist;
 use App\Models\cabinet;
 use App\Models\renter_monthly_sales;
 use Illuminate\Support\Facades\Storage;
@@ -40,28 +41,35 @@ class TransactionRenterSalesController extends Controller
         ]);
     }
     public function loaddata(){
-        $sales = history_sales::latest()
-                    ->paginate(5);
 
-        $notes = 'Sales';
+        $renter = Renter::where('renters.accesstype', 'Renters')
+                        ->paginate(5);
+
+        $notes = 'Renter';
         $status = 'Success';
         $this->userlog($notes,$status);
 
-        return view('transaction.rentersales.index',compact('sales'))
+        return view('transaction.rentersales.index',compact('renter'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     public function loaddata_cashier(){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
-        $sales = history_sales::where('branchname',auth()->user()->branchname)
-                        ->latest()
-                        ->paginate(5);
 
-        $notes = 'Sales';
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
+
+        $renter = branchlist::leftJoin('renters', function($join)  {
+            $join->on('branchlist.userid','=','renters.rentersid')
+            ->where('branchlist.branchid', auth()->user()->branchid);
+            })->where(function(Builder $builder){
+            $builder->where('renters.accesstype', 'Renters')
+                    ;
+            })->paginate(5);
+
+        $notes = 'Renter';
         $status = 'Success';
         $this->userlog($notes,$status);
 
-        return view('transaction.rentersales.index',compact('sales'))
+        return view('transaction.rentersales.index',compact('renter'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
     
@@ -312,60 +320,55 @@ class TransactionRenterSalesController extends Controller
 
     public function searchall($request)
     {
-        if($request->orderrow == 'H-L'){
-            $orderby = "total";
-            $orderrow = 'desc';
-        }elseif($request->orderrow == 'L-H'){
-            $orderby = "total";
-            $orderrow = 'asc';
-        }elseif($request->orderrow == 'A-Z'){
-            $orderby = "cabid";
+        if($request->orderrow == 'A-Z'){
+            $orderby = "lastname";
             $orderrow = 'asc';
         }elseif($request->orderrow == 'Z-A'){
-            $orderby = "cabid";
+            $orderby = "lastname";
             $orderrow = 'desc';
         }
 
-        $sales = Sales::query()
-        ->where(function(Builder $builder) use($request){
-            $builder
-                    ->where('cabinetname','like',"%{$request->search}%")
-                    ->orWhere('productname','like',"%{$request->search}%")
-                    ->orWhere('qty','like',"%{$request->search}%")
-                    ->orWhere('srp','like',"%{$request->search}%")
-                    ->orWhere('total','like',"%{$request->search}%")
-                    ->orWhere('username','like',"%{$request->search}%")
-                    ->orWhere('branchname','like',"%{$request->search}%")
-                    ->orWhere('snotes','like',"%{$request->search}%");
-        })
-        ->orderBy($orderby,$orderrow)
-        ->paginate($request->pagerow);
+        $renter = Renter::where('renters.accesstype', 'Renters')
+            ->where(function(Builder $builder) use($request){
+            $builder->where('renters.branchname','like',"%{$request->search}%")
+                    ->orWhere('renters.username','like',"%{$request->search}%")
+                    ->orWhere('renters.firstname','like',"%{$request->search}%")
+                    ->orWhere('renters.lastname','like',"%{$request->search}%");
+            })
+          ->orderBy($orderby,$orderrow)
+          ->paginate($request->pagerow);
 
-
-
-        return view('transaction.rentersales.index',compact('sales'))
+          return view('transaction.rentersales.index',compact('renter'))
                 ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
+
     }
     
     public function searchbybranch($request)
     {
-        $sales = Sales::where('branchname',auth()->user()->branchname)
-        ->where(function(Builder $builder) use($request){
+        if($request->orderrow == 'A-Z'){
+            $orderby = "lastname";
+            $orderrow = 'asc';
+        }elseif($request->orderrow == 'Z-A'){
+            $orderby = "lastname";
+            $orderrow = 'desc';
+        }
+        
+        $renter = branchlist::leftJoin('renters', function($join) use($request){
+            $join->on('branchlist.userid','=','renters.rentersid')
+            ->where('branchlist.branchid', auth()->user()->branchid);
+          })->where(function(Builder $builder) use($request){
             $builder
-                    ->where('cabinetname','like',"%{$request->search}%")
-                    ->orWhere('productname','like',"%{$request->search}%")
-                    ->orWhere('qty','like',"%{$request->search}%")
-                    ->orWhere('srp','like',"%{$request->search}%")
-                    ->orWhere('total','like',"%{$request->search}%")
-                    ->orWhere('username','like',"%{$request->search}%")
-                    ->orWhere('branchname','like',"%{$request->search}%")
-                    ->orWhere('snotes','like',"%{$request->search}%") 
-                    ->latest();
-        })
-        ->paginate($request->pagerow);
+                ->where('renters.accesstype', 'Renters')
+                ->where('renters.username','like',"%{$request->search}%")
+                ->orWhere('renters.firstname','like',"%{$request->search}%")
+                ->orWhere('renters.lastname','like',"%{$request->search}%");
+            })
+          ->orderBy($orderby,$orderrow)
+          ->paginate($request->pagerow);
 
-        return view('transaction.rentersales.index',compact('sales'))
-            ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
+        return view('transaction.rentersales.index',compact('renter'))
+          ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
+
     }
 
     public function search(Request $request)
@@ -410,6 +413,7 @@ class TransactionRenterSalesController extends Controller
      */
     public function create()
     {
+        return redirect()->route('dashboardoverview.index');
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 $cabinet = cabinet::where('branchname',auth()->user()->branchname)->get();
@@ -430,6 +434,7 @@ class TransactionRenterSalesController extends Controller
      */
     public function store(Request $request)
     {
+        return redirect()->route('dashboardoverview.index');
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->storedata($request); 
@@ -469,6 +474,7 @@ class TransactionRenterSalesController extends Controller
      */
     public function edit($sales)
     {
+        return redirect()->route('dashboardoverview.index');
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 return redirect()->route('dashboardoverview.index');
@@ -494,6 +500,7 @@ class TransactionRenterSalesController extends Controller
      */
     public function update(Request $request, $sales)
     {
+        return redirect()->route('dashboardoverview.index');
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->updatedata($request, $sales);
