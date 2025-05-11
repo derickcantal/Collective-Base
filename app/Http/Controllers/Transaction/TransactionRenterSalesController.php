@@ -40,6 +40,27 @@ class TransactionRenterSalesController extends Controller
             'status'  => $status,
         ]);
     }
+
+    public function weeklysales($userid){
+        $renter = Renter::where('rentersid',$userid)->first();
+
+        $thisweek = history_sales::where('userid',$renter->rentersid)
+                                            ->where(function(Builder $builder) {            
+                                                $builder->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+                                                        ->where('collected_status','Pending');
+                                                })->get();
+        
+        $thisweeksales = collect($thisweek)->sum('total');
+
+        // dd($renter->lastname, $thisweeksales);
+
+
+        return view('transaction.rentersales.weeklysales')
+                            ->with(['thisweeksales' => $thisweeksales])
+                            ->with(['renter' => $renter]);
+
+    }
+
     public function loaddata(){
 
         $renter = Renter::where('renters.accesstype', 'Renters')

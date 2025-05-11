@@ -145,11 +145,11 @@
                                                             
                                                         @endphp
                                                         @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
-                                                            <a class="font-medium text-white-600 dark:text-white-500 hover:underline" href="{{ route('transactionrentersales.show',$renters->rentersid) }}">Weekly Sales</a>
+                                                            <a class="font-medium text-white-600 dark:text-white-500 hover:underline" href="{{ route('transactionrentersales.weeklysales',$renters->rentersid) }}">Weekly Sales</a>
                                                             | <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('transactionrentersales.edit',$renters->rentersid) }}">Completed Sales</a>
                                                         @endif
                                                         @if(auth()->user()->accesstype == 'Cashier')
-                                                            <a class="font-medium text-white-600 dark:text-white-500 hover:underline" href="{{ route('transactionrentersales.show',$renters->userid) }}">Weekly Sales</a>
+                                                            <a class="font-medium text-white-600 dark:text-white-500 hover:underline" href="{{ route('transactionrentersales.weeklysales',$renters->userid) }}">Weekly Sales</a>
                                                             | <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('transactionrentersales.edit',$renters->userid) }}">Completed Sales</a>
                                                         @endif
                                                             @csrf

@@ -214,6 +214,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/transaction/renter/sales/create', [TransactionRenterSalesController::class, 'create'])->name('transactionrentersales.create');
     Route::get('/transaction/renter/sales/search', [TransactionRenterSalesController::class, 'search'])->name('transactionrentersales.search');
     Route::get('/transaction/renter/sales/{sales}', [TransactionRenterSalesController::class, 'show'])->name('transactionrentersales.show');
+    Route::get('/transaction/renter/sales/{sales}/weekly', [TransactionRenterSalesController::class, 'weeklysales'])->name('transactionrentersales.weeklysales');
     Route::patch('/transaction/renter/sales/{sales}', [TransactionRenterSalesController::class, 'update'])->name('transactionrentersales.update');
     Route::delete('/transaction/renter/sales/{sales}', [TransactionRenterSalesController::class, 'destroy'])->name('transactionrentersales.destroy');
     Route::get('/transaction/renter/sales/{sales}/edit', [TransactionRenterSalesController::class, 'edit'])->name('transactionrentersales.edit');
