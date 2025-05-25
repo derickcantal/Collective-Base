@@ -61,6 +61,15 @@ class ManageRenterController extends Controller
 
         $totalsales = collect($sales)->sum('total');
         // dd($cabinet->userid,$renter);
+
+        $lastweek = history_sales::where('userid',$renter->rentersid)
+                                            ->where(function(Builder $builder) {            
+                                                $builder->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])
+                                                        ->where('collected_status','Pending');
+                                                })->get();
+
+        $lastweeksales = collect($lastweek)->sum('total');
+
         $thisweek = history_sales::where('userid',$renter->rentersid)
                                             ->where(function(Builder $builder) {            
                                                 $builder->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
@@ -180,6 +189,7 @@ class ManageRenterController extends Controller
                     ->with(['novsales' => $novsales])
                     ->with(['decsales' => $decsales])
                     ->with(['thisweeksales' => $thisweeksales])
+                    ->with(['lastweeksales' => $lastweeksales])
                     ->with(['tyear' => $tyear])
                     ->with(['totalsales' => $totalsales])
                     ->with(['renter' => $renter]);

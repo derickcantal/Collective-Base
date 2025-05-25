@@ -79,6 +79,14 @@
                                             <x-input-label>Last 7 Days Total</x-input-label>
                                         </th>
                                         <td class="px-6 py-4">
+                                            <x-input-label>{{ number_format($lastweeksales, 2); }}</x-input-label>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-white dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        <th class="px-6 py-4">
+                                            <x-input-label>Current 7 Days Total</x-input-label>
+                                        </th>
+                                        <td class="px-6 py-4">
                                             <x-input-label>{{ number_format($thisweeksales, 2); }}</x-input-label>
                                         </td>
                                     </tr>
