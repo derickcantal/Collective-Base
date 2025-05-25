@@ -70,6 +70,8 @@ class ManageRenterController extends Controller
 
         $lastweeksales = collect($lastweek)->sum('total');
 
+
+
         $thisweek = history_sales::where('userid',$renter->rentersid)
                                             ->where(function(Builder $builder) {            
                                                 $builder->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
@@ -77,6 +79,13 @@ class ManageRenterController extends Controller
                                                 })->get();
 
         $thisweeksales = collect($thisweek)->sum('total');
+
+        $lwstartweek = Carbon::now()->subWeek()->startOfWeek()->format('Y-m-d') ;
+        $lwendweek = Carbon::now()->subWeek()->endOfWeek()->format('Y-m-d') ;
+        $curstartweek = Carbon::now()->startOfWeek()->format('Y-m-d') ;
+        $curendweek = Carbon::now()->endOfWeek()->format('Y-m-d') ;
+
+        // dd($lwstartweek,$lwendweek,$curstartweek,$curendweek);
 
 
         $jan =  history_sales::where('userid',$renter->rentersid)
@@ -192,7 +201,11 @@ class ManageRenterController extends Controller
                     ->with(['lastweeksales' => $lastweeksales])
                     ->with(['tyear' => $tyear])
                     ->with(['totalsales' => $totalsales])
-                    ->with(['renter' => $renter]);
+                    ->with(['renter' => $renter])
+                    ->with(['lwstartweek' => $lwstartweek])
+                    ->with(['lwendweek' => $lwendweek])
+                    ->with(['curstartweek' => $curstartweek])
+                    ->with(['curendweek' => $curendweek]);
     }
     public function loaddata(){
         $renter = Renter::where('accesstype',"Renters")
