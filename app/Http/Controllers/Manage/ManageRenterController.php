@@ -83,7 +83,7 @@ class ManageRenterController extends Controller
         $lwstartweek = Carbon::now()->subWeek()->startOfWeek()->format('Y-m-d') ;
         $lwendweek = Carbon::now()->subWeek()->endOfWeek()->format('Y-m-d') ;
         $curstartweek = Carbon::now()->startOfWeek()->format('Y-m-d') ;
-        $curendweek = Carbon::now()->endOfWeek()->format('Y-m-d') ;
+        $curendweek = Carbon::now()->startOfWeek()->addDays(5)->format('Y-m-d') ;
 
         // dd($lwstartweek,$lwendweek,$curstartweek,$curendweek);
 
