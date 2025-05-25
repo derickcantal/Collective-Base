@@ -111,6 +111,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/manage/renters/create/info', [ManageRenterController::class, 'renterinfo'])->name('managerenter.renterinfo');
     Route::get('/manage/renters/create/login', [ManageRenterController::class, 'renterlogin'])->name('managerenter.renterlogin');
     Route::put('/manage/renters/create/register/{renter}', [ManageRenterController::class, 'renterregister'])->name('managerenter.renterregister');
+    Route::get('/manage/renters/cabinet/sales/{renter}', [ManageRenterController::class, 'cabinetsales'])->name('managerenter.cabinetsales');
 
     Route::get('/manage/cabinet', [ManageCabinetController::class, 'index'])->name('managecabinet.index');
     Route::post('/manage/cabinet', [ManageCabinetController::class, 'store'])->name('managecabinet.store');

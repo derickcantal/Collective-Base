@@ -148,6 +148,7 @@
                                             @endphp
                                             <form action="{{ route('managerenter.destroy',$renters->rentersid) }}" method="POST">
                                                 @csrf
+                                                <a class="font-medium text-green-600 dark:text-green-500 hover:underline" href="{{ route('managerenter.cabinetsales',$renters->rentersid) }}">Sales |</a>
                                                 <a class="font-medium text-white-600 dark:text-white-500 hover:underline" href="{{ route('managerenter.show',$renters->rentersid) }}">Cabinets</a>
                                                 | <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('managerenter.edit',$renters->rentersid) }}">Modify</a>
                                                 

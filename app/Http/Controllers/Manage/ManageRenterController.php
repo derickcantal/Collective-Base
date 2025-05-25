@@ -12,6 +12,8 @@ use App\Models\branch;
 use App\Models\cabinet;
 use App\Models\branchlist;
 use App\Models\user_login_log;
+use App\Models\history_sales;
+use App\Models\Sales;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use \Carbon\Carbon;
@@ -39,6 +41,148 @@ class ManageRenterController extends Controller
             'notes' => $notes,
             'status'  => $status,
         ]);
+    }
+
+    public function cabinetsales($rentersid){
+        
+        $today = Carbon::now();
+        $tmonth = $today->month;
+        $tyear = $today->year;
+
+        $renter = Renter::where('rentersid',$rentersid)->first();
+
+        $sales = Sales::where('userid',$renter->rentersid)
+                    ->where(function(Builder $builder){
+                        $builder->where('collected_status','Pending')
+                                ->where('total','!=',0);
+                    })->get();
+
+        
+
+        $totalsales = collect($sales)->sum('total');
+        // dd($cabinet->userid,$renter);
+        $thisweek = history_sales::where('userid',$renter->rentersid)
+                                            ->where(function(Builder $builder) {            
+                                                $builder->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+                                                        ->where('collected_status','Pending');
+                                                })->get();
+
+        $thisweeksales = collect($thisweek)->sum('total');
+
+
+        $jan =  history_sales::where('userid',$renter->rentersid)
+                                ->where(function(Builder $builder) use($tyear) {  
+                                    $builder->whereYear('created_at', $tyear)
+                                            ->whereMonth('created_at', 1);
+                                })->get();
+
+        $jansales = collect($jan)->sum('total');
+
+        $feb =  history_sales::where('userid',$renter->rentersid)
+                                ->where(function(Builder $builder) use($tyear) {  
+                                    $builder->whereYear('created_at', $tyear)
+                                            ->whereMonth('created_at', 2);
+                                })->get();
+
+        $febsales = collect($feb)->sum('total');
+
+        $mar =  history_sales::where('userid',$renter->rentersid)
+                                ->where(function(Builder $builder) use($tyear) {  
+                                    $builder->whereYear('created_at', $tyear)
+                                            ->whereMonth('created_at', 3);
+                                })->get();
+
+        $marsales = collect($mar)->sum('total');
+
+        $apr =  history_sales::where('userid',$renter->rentersid)
+                                ->where(function(Builder $builder) use($tyear) {  
+                                    $builder->whereYear('created_at', $tyear)
+                                            ->whereMonth('created_at', 4);
+                                })->get();
+
+        $aprsales = collect($apr)->sum('total');
+
+        $may =  history_sales::where('userid',$renter->rentersid)
+                                ->where(function(Builder $builder) use($tyear) {  
+                                    $builder->whereYear('created_at', $tyear)
+                                            ->whereMonth('created_at', 5);
+                                })->get();
+
+        $maysales = collect($may)->sum('total');
+
+        $jun =  history_sales::where('userid',$renter->rentersid)
+                                ->where(function(Builder $builder) use($tyear) {  
+                                    $builder->whereYear('created_at', $tyear)
+                                            ->whereMonth('created_at', 6);
+                                })->get();
+
+        $junsales = collect($jun)->sum('total');
+
+        $jul =  history_sales::where('userid',$renter->rentersid)
+                                ->where(function(Builder $builder) use($tyear) {  
+                                    $builder->whereYear('created_at', $tyear)
+                                            ->whereMonth('created_at', 7);
+                                })->get();
+
+        $julsales = collect($jul)->sum('total');
+
+        $aug =  history_sales::where('userid',$renter->rentersid)
+                                ->where(function(Builder $builder) use($tyear) {  
+                                    $builder->whereYear('created_at', $tyear)
+                                            ->whereMonth('created_at', 8);
+                                })->get();
+
+        $augsales = collect($aug)->sum('total');
+
+        $sept =  history_sales::where('userid',$renter->rentersid)
+                                ->where(function(Builder $builder) use($tyear) {  
+                                    $builder->whereYear('created_at', $tyear)
+                                            ->whereMonth('created_at', 9);
+                                })->get();
+
+        $septsales = collect($sept)->sum('total');
+
+        $oct =  history_sales::where('userid',$renter->rentersid)
+                                ->where(function(Builder $builder) use($tyear) {  
+                                    $builder->whereYear('created_at', $tyear)
+                                            ->whereMonth('created_at', 10);
+                                })->get();
+
+        $octsales = collect($oct)->sum('total');
+
+        $nov =  history_sales::where('userid',$renter->rentersid)
+                                ->where(function(Builder $builder) use($tyear) {  
+                                    $builder->whereYear('created_at', $tyear)
+                                            ->whereMonth('created_at', 11);
+                                })->get();
+
+        $novsales = collect($nov)->sum('total');
+
+        $dec =  history_sales::where('userid',$renter->rentersid)
+                                ->where(function(Builder $builder) use($tyear) {  
+                                    $builder->whereYear('created_at', $tyear)
+                                            ->whereMonth('created_at', 12);
+                                })->get();
+
+        $decsales = collect($dec)->sum('total');
+        
+         return view('manage.renters.cabinet-sales')
+                    ->with(['jansales' => $jansales])
+                    ->with(['febsales' => $febsales])
+                    ->with(['marsales' => $marsales])
+                    ->with(['aprsales' => $aprsales])
+                    ->with(['maysales' => $maysales])
+                    ->with(['junsales' => $junsales])
+                    ->with(['julsales' => $julsales])
+                    ->with(['augsales' => $augsales])
+                    ->with(['septsales' => $septsales])
+                    ->with(['octsales' => $octsales])
+                    ->with(['novsales' => $novsales])
+                    ->with(['decsales' => $decsales])
+                    ->with(['thisweeksales' => $thisweeksales])
+                    ->with(['tyear' => $tyear])
+                    ->with(['totalsales' => $totalsales])
+                    ->with(['renter' => $renter]);
     }
     public function loaddata(){
         $renter = Renter::where('accesstype',"Renters")

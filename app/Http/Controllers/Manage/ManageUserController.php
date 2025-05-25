@@ -57,11 +57,12 @@ class ManageUserController extends Controller
     
     public function storedata($request){
         $n1 = strtoupper($request->firstname[0]);
-        $n2 = strtoupper($request->middlename[0]);
+        // $n2 = strtoupper($request->middlename[0]);
         $n3 = strtoupper($request->lastname[0]);
         $n4 = preg_replace('/[-]+/', '', $request->birthdate);
 
-        $newpassword = $n1 . $n2 . $n3 . $n4;
+        // $newpassword = $n1 . $n2 . $n3 . $n4;
+        $newpassword = $n1 . $n3 . $n4;
         //dd($newpassword);
 
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');

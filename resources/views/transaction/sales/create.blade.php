@@ -46,8 +46,8 @@
                                     </div>
                                     <!-- Modal body -->
                                     <div class="grid gap-4 mb-4 grid-cols-2" x-data="{ srp: 0, qty: 1,  total: 0}" x-effect="total = qty * srp">
+                                        <!-- avatar -->
                                         <div class="col-span-2 sm:col-span-1">
-                                            <!-- avatar -->
                                             <div class="form-group mt-4">
                                                 <x-input-label for="name" value="Upload Product Image" />
                                                 <x-text-input id="salesavatar" name="salesavatar" type="file"  class="mt-1 block w-full mt-1" :value="old('salesavatar')" autofocus autocomplete="off" required/>
