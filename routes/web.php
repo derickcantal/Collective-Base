@@ -66,22 +66,22 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'displayall'])->name('dashboard.index');
+    Route::get('/dashboard', [DashboardController::class, 'displayall'])->name('dashboard.index'); 
 
     Route::get('/dashboard/overview', [DashboardOverviewController::class, 'index'])->name('dashboardoverview.index');
-    Route::get('/dashboard/overview/search', [ManageBranchController::class, 'search'])->name('dashboardoverview.search');
+    Route::get('/dashboard/overview/search', [DashboardOverviewController::class, 'search'])->name('dashboardoverview.search');
 
     Route::get('/dashboard/rentals', [DashboardRentalsController::class, 'index'])->name('dashboardrentals.index');
-    Route::get('/dashboard/rentals/search', [ManageBranchController::class, 'search'])->name('dashboardrentals.search');
+    Route::get('/dashboard/rentals/search', [DashboardRentalsController::class, 'search'])->name('dashboardrentals.search');
 
     Route::get('/dashboard/requests', [DashboardRequestsController::class, 'index'])->name('dashboardrequests.index');
-    Route::get('/dashboard/requests/search', [ManageBranchController::class, 'search'])->name('dashboardrequests.search');
+    Route::get('/dashboard/requests/search', [DashboardRequestsController::class, 'search'])->name('dashboardrequests.search');
 
     Route::get('/dashboard/sales', [DashboardSalesController::class, 'index'])->name('dashboardsales.index');
-    Route::get('/dashboard/sales/search', [ManageBranchController::class, 'search'])->name('dashboardsales.search');
+    Route::get('/dashboard/sales/search', [DashboardSalesController::class, 'search'])->name('dashboardsales.search');
 
     Route::get('/dashboard/attendance', [DashboardAttendanceController::class, 'index'])->name('dashboardattendance.index');
-    Route::get('/dashboard/attendance/search', [ManageBranchController::class, 'search'])->name('dashboardattendance.search');
+    Route::get('/dashboard/attendance/search', [DashboardAttendanceController::class, 'search'])->name('dashboardattendance.search');
 
 });
 

@@ -1,11 +1,11 @@
 <x-app-layout>
     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
             @include('layouts.manage.navigation')
         </div>
     </div>
 <div class="py-8">
-	<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+	<div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
 		<div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     @csrf
@@ -53,7 +53,7 @@
                                     Renter's Sales Information
                                 </h3>
                             </div>
-                            <div class="max-w-7xl overflow-x-auto shadow-md sm:rounded-lg " >
+                            <div class="max-w-screen-2xl overflow-x-auto shadow-md sm:rounded-lg " >
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
@@ -99,7 +99,7 @@
                           
                         </div>
                         <div class="py-4">
-                            <div class="max-w-7xl overflow-x-auto shadow-md sm:rounded-lg" >
+                            <div class="max-w-screen-2xl overflow-x-auto shadow-md sm:rounded-lg" >
                                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                         <tr>

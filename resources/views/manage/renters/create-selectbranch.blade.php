@@ -1,11 +1,11 @@
 <x-app-layout>
     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
             @include('layouts.manage.navigation')
         </div>
     </div>
 <div class="py-8">
-	<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+	<div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
 		<div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="relative p-4 w-full max-w-full max-h-full">
@@ -121,7 +121,7 @@
     </x-slot>
     <section>
         <div class="py-8">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
 

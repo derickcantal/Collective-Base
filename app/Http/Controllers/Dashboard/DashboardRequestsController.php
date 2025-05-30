@@ -51,6 +51,11 @@ class DashboardRequestsController extends Controller
                                         ->with(['RenterRequests' => $RenterRequests])
                                         ->with('i', (request()->input('page', 1) - 1) * 5);            
     }
+
+    public function search(Request $request)
+    {
+
+    }
     /**
      * Display a listing of the resource.
      */

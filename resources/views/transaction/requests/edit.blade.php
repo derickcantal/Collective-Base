@@ -1,15 +1,15 @@
 <x-app-layout>
     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
             @include('layouts.transaction.navigation')
         </div>
     </div>
 <div class="py-8">
-	<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+	<div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
 		<div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
 			<div class="py-8">
 				<div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-					<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+					<div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
                         <form action="{{ route('transactionrequest.update',$RenterRequests->salesrid) }}" enctype="multipart/form-data" method="POST" class="p-4 md:p-5">
                             @csrf
                             @method('PATCH')   

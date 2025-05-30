@@ -1,15 +1,15 @@
 <x-app-layout>
     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
             @include('layouts.manage.navigation')
         </div>
     </div>
     <section>
         <div class="py-8">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="py-8">
-                        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                        <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
                             <!-- Breadcrumb -->
                             <nav class="flex px-5 py-3 text-gray-700  bg-gray-50 dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">
                                 <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
@@ -32,18 +32,23 @@
                                     </li>
                                 </ol>
                             </nav>
-                            <!-- Start coding here -->
+                            
+                            <!-- searchbar -->
                             <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
-                                <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
-                                    <x-primary-button class="ms-4">
-                                        <a class="btn btn-primary" href="{{ route('managecr.renterinfo') }}">Create New Renter</a>
-                                    </x-primary-button>
+                                <div class="flex flex-col md:flex-row items-stretch md:items-center md:space-x-3 space-y-3 md:space-y-0 justify-between mx-4 py-4 dark:border-gray-700 ">
+                                    <a href="{{ route('managecr.renterinfo') }}" class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
+                                        <svg class="h-3.5 w-3.5 mr-1.5 -ml-1" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                                        </svg>
+                                        Create New Renter
+                                    </a>
+                                    
                                     
                                     <form class="flex items-center" action="{{ route('managecr.search') }}" method="get">
                                         @csrf
                                         <div class="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
-                                        
-                                            <select id="pagerow" name="pagerow" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" :value="old('pagerow')">
+                                            
+                                            <select id="pagerow" name="pagerow" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-gray-100 hover:text-green-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" :value="old('pagerow')">
                                                 <option value = "10">10</option>    
                                                 <option value = "25">25</option>    
                                                 <option value = "50">50</option>
@@ -52,7 +57,7 @@
                                             </select>
                                             <select id="orderrow" name="orderrow" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" :value="old('orderrow')">
                                                 <option value = "asc">A-Z</option>
-                                                <option value = "desc">Z-A</option>       
+                                                <option value = "desc">Z-A</option>   
                                             </select>
                                             <div class="w-full md:w-1/2">
                                                 <label for="simple-search" class="sr-only">Search</label>
@@ -64,12 +69,14 @@
                                                     </div>
                                                     <input type="text" name="search" id="search" class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search" >
                                                 </div>
-                                            </div>              
-                                            <div class="flex items-center w-full space-x-3 md:w-auto">
-                                                <x-primary-button class="ms-4">
-                                                            Search
-                                                </x-primary-button>
-                                            </div>
+                                            </div>            
+                        
+                                            <button type="submit" class="py-2 px-3 flex items-center text-sm font-medium text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                                <svg class="w-4 h-4 mr-2 -ml-0.5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
+                                                </svg>
+                                                Search
+                                            </button>
                                             
                                         </div>
                                     </form>
@@ -80,7 +87,7 @@
                             @include('layouts.notifications') 
 
                                     @csrf
-                                    <div class="max-w-7xl overflow-x-auto shadow-md sm:rounded-lg mt-4" >
+                                    <div class="max-w-screen-2xl overflow-x-auto shadow-md sm:rounded-lg mt-4" >
                                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                                 <tr>

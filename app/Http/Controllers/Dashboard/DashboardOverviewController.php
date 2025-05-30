@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 
 class DashboardOverviewController extends Controller
 {
+
+    public function search(Request $request)
+    {
+
+    }
+    
     /**
      * Display a listing of the resource.
      */

@@ -49,9 +49,13 @@ class DashboardAttendanceController extends Controller
                     ->with(['attendance' => $attendance])
                     ->with('i', (request()->input('page', 1) - 1) * 5);             
     }
-    /**
-     * Display a listing of the resource.
-     */
+
+
+    public function search(Request $request)
+    {
+
+    }
+
     public function index()
     {
         if(auth()->user()->status =='Active'){

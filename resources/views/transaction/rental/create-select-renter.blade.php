@@ -1,15 +1,15 @@
 <x-app-layout>
     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
             @include('layouts.transaction.navigation')
         </div>
     </div>
 <div class="py-8">
-	<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+	<div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
 		<div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
 			<div class="py-8">
 				<div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-					<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+					<div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
                         <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                             <!-- Breadcrumb -->
                             <nav class="flex px-5 py-3 text-gray-700  bg-gray-50 dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">
