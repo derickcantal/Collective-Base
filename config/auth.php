@@ -40,10 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'renter' => [
-          'driver' => 'session',
-          'provider' => 'Renter',
-      ],
+    //     'renter' => [
+    //       'driver' => 'session',
+    //       'provider' => 'Renter',
+    //   ],
     ],
 
     /*
@@ -69,10 +69,10 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        'renter' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Renter::class,
-        ],
+        // 'renter' => [
+        //     'driver' => 'eloquent',
+        //     'model' => App\Models\Renter::class,
+        // ],
 
         // 'users' => [
         //     'driver' => 'database',

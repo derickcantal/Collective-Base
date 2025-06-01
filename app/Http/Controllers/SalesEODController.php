@@ -234,14 +234,14 @@ class SalesEODController extends Controller
             if(auth()->user()->accesstype =='Cashier'){
                 return $this->loaddata();  
             }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return $this->loaddata();
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
         
     }
@@ -283,7 +283,7 @@ class SalesEODController extends Controller
                     ->with('totalrentpay',$totalrentpay)
                     ->with('totalrequests',$totalrequests);
             }else{
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }          
             
         }else{
@@ -469,14 +469,14 @@ class SalesEODController extends Controller
                             ->with('failed','EOD Failed');
                 }
             }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
     }
 
@@ -487,16 +487,16 @@ class SalesEODController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
     }
 
@@ -507,16 +507,16 @@ class SalesEODController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return redirect()->route('dashboard.index');;
+                return redirect()->route('dashboardoverview.index');;
             }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
     }
 
@@ -527,16 +527,16 @@ class SalesEODController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return redirect()->route('dashboard.index');;
+                return redirect()->route('dashboardoverview.index');;
             }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
     }
 
@@ -547,16 +547,16 @@ class SalesEODController extends Controller
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                return redirect()->route('dashboard.index');;
+                return redirect()->route('dashboardoverview.index');;
             }elseif(auth()->user()->accesstype =='Renters'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return redirect()->route('dashboard.index');
+                return redirect()->route('dashboardoverview.index');
             }
         }else{
-            return redirect()->route('dashboard.index');;
+            return redirect()->route('dashboardoverview.index');;
         }
     }
 }

@@ -120,7 +120,7 @@ class ManageCashierRenterController extends Controller
         $status = 'Failed';
         $this->userlog($notes,$status);
 
-        return redirect()->route('dashboard.index');
+        return redirect()->route('dashboardoverview.index');
         $cabinet = cabinet::where('cabid',$request->cabid)->first();
         dd('delete');
 
@@ -129,7 +129,7 @@ class ManageCashierRenterController extends Controller
     public function cabinetcreate()
     {
 
-        return redirect()->route('dashboard.index');
+        return redirect()->route('dashboardoverview.index');
     }
 
     public function cabinetstore(Request $request)
@@ -295,7 +295,7 @@ class ManageCashierRenterController extends Controller
             return view('manage.renters_cashier.index',compact('renter'))
                             ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
     }
     /**
@@ -330,7 +330,7 @@ class ManageCashierRenterController extends Controller
             return view('manage.renters_cashier.index',compact('renter'))
                             ->with('i', (request()->input('page', 1) - 1) * 5);
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
         
     }
@@ -343,7 +343,7 @@ class ManageCashierRenterController extends Controller
         if(auth()->user()->accesstype == 'Cashier'){
             return view('manage.renters_cashier.create-renter-info');
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
     }
     public function renterinfo()
@@ -351,7 +351,7 @@ class ManageCashierRenterController extends Controller
         if(auth()->user()->accesstype == 'Cashier'){
             return view('manage.renters_cashier.create-renter-info');
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
     }
     public function renterregister(Request $request)
@@ -516,7 +516,7 @@ class ManageCashierRenterController extends Controller
             $status = 'Failed';
             $this->userlog($notes,$status);
             
-            return redirect()->route('dashboard.index')
+            return redirect()->route('dashboardoverview.index')
                         ->with('failed','Renter Registration failed.');
         }
         
@@ -587,7 +587,7 @@ class ManageCashierRenterController extends Controller
             $status = 'Failed';
             $this->userlog($notes,$status);
 
-            return redirect()->route('dashboard.index')->with('failed','Renter Registration failed.');
+            return redirect()->route('dashboardoverview.index')->with('failed','Renter Registration failed.');
         }
 
     }
@@ -597,7 +597,7 @@ class ManageCashierRenterController extends Controller
      */
     public function store(Request $request)
     {
-        return redirect()->route('dashboard.index');
+        return redirect()->route('dashboardoverview.index');
 
         return redirect()->route('managecr.index')
          ->with('success','Renter created successfully.');
@@ -633,7 +633,7 @@ class ManageCashierRenterController extends Controller
                 ->with(compact('cabinets'))
                 ->with('i', (request()->input('page', 1) - 1) * 5);
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
         
     }
@@ -665,7 +665,7 @@ class ManageCashierRenterController extends Controller
         if(auth()->user()->accesstype == 'Cashier'){
             return view('manage.renters_cashier.edit',['renter' => $renter]);
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }
         
     }
@@ -728,7 +728,7 @@ class ManageCashierRenterController extends Controller
                             ->with('failed','Renter update failed');
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }  
        
     }
@@ -783,7 +783,7 @@ class ManageCashierRenterController extends Controller
                 ->with('success','User Activated successfully');
             }
         }else{
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboardoverview.index');
         }  
     }
 }

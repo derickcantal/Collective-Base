@@ -183,11 +183,6 @@
                         {{ __('EOD') }}
                     </x-responsive-nav-link>
                     @endif
-                @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
-                <x-responsive-nav-link :href="route('branch.index')">
-                    {{ __('Settings') }}
-                </x-responsive-nav-link>
-                @endif
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
