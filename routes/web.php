@@ -15,6 +15,7 @@ use App\Http\Controllers\Manage\ManageUserController;
 use App\Http\Controllers\Manage\ManageMailboxController;
 use App\Http\Controllers\Manage\ManageCashierRenterController;
 use App\Http\Controllers\Transaction\TransactionAttendanceController;
+use App\Http\Controllers\Transaction\TransactionCabinetSalesController;
 use App\Http\Controllers\Transaction\TransactionRentalController;
 use App\Http\Controllers\Transaction\TransactionRequestController;
 use App\Http\Controllers\Transaction\TransactionRenterSalesController;
@@ -158,6 +159,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/transaction/attendance/select/employee', [TransactionAttendanceController::class, 'selectemp'])->name('transactionattendance.selectemp');
     Route::get('/transaction/attendance/select/employee/search', [TransactionAttendanceController::class, 'searchemp'])->name('transactionattendance.searchemp');
     Route::put('/transaction/attendance/select/employee/{users}', [TransactionAttendanceController::class, 'putemp'])->name('transactionattendance.putemp');
+
+    Route::get('/transaction/branch/cabinet', [TransactionCabinetSalesController::class, 'index'])->name('transactioncabsales.index');
+    Route::post('/transaction/branch/cabinet', [TransactionCabinetSalesController::class, 'store'])->name('transactioncabsales.store');
+    Route::get('/transaction/branch/cabinet/create', [TransactionCabinetSalesController::class, 'create'])->name('transactioncabsales.create');
+    Route::get('/transaction/branch/{branchname}/cabinet/list', [TransactionCabinetSalesController::class, 'listcabinet'])->name('transactioncabsales.listcabinet');
+    Route::get('/transaction/branch/{branchname}/cabinet/list/search', [TransactionCabinetSalesController::class, 'listcabinetsearch'])->name('transactioncabsales.listcabinetsearch');
+    Route::get('/transaction/branch/{branchname}/cabinet/list/sales', [TransactionCabinetSalesController::class, 'listsales'])->name('transactioncabsales.listsales');
+    Route::get('/transaction/branch/{branchname}/cabinet/list/sales/search', [TransactionCabinetSalesController::class, 'listsalessearch'])->name('transactioncabsales.listsalessearch');
+    Route::get('/transaction/branch/cabinet/search', [TransactionCabinetSalesController::class, 'search'])->name('transactioncabsales.search');
+    Route::get('/transaction/branch/cabinet/{branch}', [TransactionCabinetSalesController::class, 'show'])->name('transactioncabsales.show');
+    Route::patch('/transaction/branch/cabinet/{branch}', [TransactionCabinetSalesController::class, 'update'])->name('transactioncabsales.update');
+    Route::delete('/transaction/branch/cabinet/{branch}', [TransactionCabinetSalesController::class, 'destroy'])->name('transactioncabsales.destroy');
+    Route::get('/transaction/branch/cabinet/{branch}/edit', [TransactionCabinetSalesController::class, 'edit'])->name('transactioncabsales.edit');
+
 
     Route::get('/transaction/rental', [TransactionRentalController::class, 'index'])->name('transactionrental.index');
     Route::post('/transaction/rental', [TransactionRentalController::class, 'store'])->name('transactionrental.store');

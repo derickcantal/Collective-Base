@@ -18,9 +18,9 @@
                         {{ __('Renter Sales') }}
                     </x-nav-link>
                      @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
-                    <!-- <x-nav-link :href="route('transactionrequest.index')" :active="request()->routeIs('transactionrequest.index')">
-                        {{ __('Request') }}
-                    </x-nav-link> -->
+                    <x-nav-link :href="route('transactioncabsales.index')" :active="request()->routeIs('transactioncabsales.index')">
+                        {{ __('Cabinet Sales') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('transactioneod.index')" :active="request()->routeIs('transactioneod.index')">
                         {{ __('EOD') }}
                     </x-nav-link>
