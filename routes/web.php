@@ -167,6 +167,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/transaction/branch/{branchname}/cabinet/list/search', [TransactionCabinetSalesController::class, 'listcabinetsearch'])->name('transactioncabsales.listcabinetsearch');
     Route::get('/transaction/branch/{branchname}/cabinet/list/sales', [TransactionCabinetSalesController::class, 'listsales'])->name('transactioncabsales.listsales');
     Route::get('/transaction/branch/{branchname}/cabinet/list/sales/search', [TransactionCabinetSalesController::class, 'listsalessearch'])->name('transactioncabsales.listsalessearch');
+    Route::get('/transaction/branch/cabinet/list/sales/{salesid}/modify', [TransactionCabinetSalesController::class, 'listsalesmodify'])->name('transactioncabsales.listsalesmodify');
     Route::get('/transaction/branch/cabinet/search', [TransactionCabinetSalesController::class, 'search'])->name('transactioncabsales.search');
     Route::get('/transaction/branch/cabinet/{branch}', [TransactionCabinetSalesController::class, 'show'])->name('transactioncabsales.show');
     Route::patch('/transaction/branch/cabinet/{branch}', [TransactionCabinetSalesController::class, 'update'])->name('transactioncabsales.update');

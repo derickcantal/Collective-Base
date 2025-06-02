@@ -139,10 +139,14 @@
                                             <th scope="col" class="px-6 py-3">
                                                 Payment Mode
                                             </th>
-                                        
                                             <th scope="col" class="px-6 py-3">
                                                 Time Sold
                                             </th>
+                                            @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
+                                            <th scope="col" class="px-6 py-3">
+                                                Actions
+                                            </th>
+                                            @endif
                                         </tr>
                                     </thead>
                                             
@@ -202,6 +206,30 @@
                                                 <x-input-label for="branchname" :value="$sale->branchname"/>
                                                 <x-input-label for="timerecorded" :value="$sale->timerecorded"/>
                                             </td>
+                                            @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
+                                            <td class="px-6 py-4">
+                                                @php
+                                                    $btndis='';
+                                                    $btnlabel = '';
+                                                    $btncolor = '';
+
+                                                    if($sale->status == 'Unposted'):
+                                                        $btndis = '';
+                                                        $btnlabel = 'Modify';
+                                                        $btncolor = 'green';
+                                                    elseif($sale->status == 'Posted'):
+                                                        $btndis = 'disabled';
+                                                        $btnlabel = 'Modify';
+                                                        $btncolor = 'green';
+                                                    endif;
+                                                @endphp
+                                                <form action="{{ route('transactioncabsales.listsalesmodify',$sale->salesid) }}" method="PUT">
+                                                    <x-danger-button class="ms-3 dark:text-white bg-{{ $btncolor; }}-700 hover:bg-{{ $btncolor; }}-800 focus:outline-none focus:ring-4 focus:ring-{{ $btncolor; }}-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-{{ $btncolor; }}-600 dark:hover:bg-{{ $btncolor; }}-700 dark:focus:ring-{{ $btncolor; }}-800 ">
+                                                        {{ $btnlabel; }}
+                                                    </x-danger-button>
+                                                </form>
+                                            </td>
+                                            @endif
                                         </tr>
                                         
                                         @empty
