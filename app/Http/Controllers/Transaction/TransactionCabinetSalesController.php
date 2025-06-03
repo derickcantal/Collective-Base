@@ -13,6 +13,33 @@ use App\Models\user_login_log;
 
 class TransactionCabinetSalesController extends Controller
 {
+    public function listsalesupdate(Request $request,$salesid)
+    {
+        $cabinet = cabinet::where('cabid',$request->cabinetname)->first();
+
+        $sales = history_sales::where('salesid',$salesid)->first();
+
+        $mod = $sales->mod;
+
+        $salesupdate =history_sales::where('salesid',$sales->salesid)->update([
+                'cabid' => $cabinet->cabid,
+                'cabinetname' => $cabinet->cabinetname,
+                'userid' => $cabinet->userid,
+                'username' => $cabinet->email,
+                'updated_by' => auth()->user()->email,
+                'mod' => $mod + 1,
+            ]);
+        if($salesupdate)
+        {
+            return redirect()->back()
+                        ->with('success','Sales Change Cabinet Successful.');
+        }else
+        {
+            return redirect()->back()
+                        ->with('failed','Sales Change Cabinet Failed.');
+        }
+        
+    }
     public function listsalesmodify($salesid)
     {
         $sales = history_sales::where('salesid',$salesid)->first();
@@ -62,6 +89,7 @@ class TransactionCabinetSalesController extends Controller
             ->with(['branch' => $branch])
             ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
     }
+
     public function listsales($cabinetid)
     {
         $cabinet = cabinet::where('cabid',$cabinetid)->first();
@@ -113,7 +141,17 @@ class TransactionCabinetSalesController extends Controller
             ->with(['branch' => $branch])
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
- 
+    
+    public function search(Request $request)
+    {
+        $branches = branch::where('branchname','like',"%{$request->search}%")
+                    ->orderBy('status','asc')
+                    ->orderBy('branchname','asc')
+                    ->paginate($request->pagerow);
+
+        return view ('transaction.cabinetsales.index',compact('branches'))
+            ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
+    }
     public function index()
     {
         $branches = branch::query()
