@@ -12,7 +12,7 @@
                     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
                             <!-- Breadcrumb -->
-                            <nav class="flex px-5 py-3 text-gray-700  bg-gray-50 dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">
+                            <nav class="flex px-5 py-3 text-gray-700 bg-white dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">
                                 <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                                     <li class="inline-flex items-center">
                                     <a href="{{ route('managerenter.index') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
@@ -42,22 +42,17 @@
                                 </ol>
                             </nav>
                             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                                
-                                <div class="relative p-4 w-full max-w-full max-h-full">
-                                    <!-- Error & Success Notification -->
-                                    @include('layouts.notifications') 
-                                    <!-- Modal content -->
-                                    <div class="relative bg-white rounded-lg dark:bg-gray-800">
-                                        <!-- Modal header -->
-                                        <div class="flex items-center justify-between p-4 md:p-5 border-b  dark:border-gray-600">
-                                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                                Cabinet List
-                                            </h3>
-                                        </div>
+                                <!-- Error & Success Notification -->
+                                @include('layouts.notifications') 
+                                <!-- Modal content -->
+                                <div class="relative bg-white rounded-lg dark:bg-gray-800">
+                                    <!-- Modal header -->
+                                    <div class="flex items-center justify-between p-4 md:p-5 border-b  dark:border-gray-600">
+                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                            Cabinet List
+                                        </h3>
                                     </div>
-                                    
                                 </div>
-                                    
                             </div>
                             <!-- Modal body -->
                             <div class="max-w-screen-2xl overflow-x-auto shadow-md sm:rounded-lg mt-3">

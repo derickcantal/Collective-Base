@@ -11,7 +11,7 @@
 				<div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
 					<div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
                         <!-- Breadcrumb -->
-                        <nav class="flex px-5 py-3 text-gray-700  bg-gray-50 dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">
+                        <nav class="flex px-5 py-3 text-gray-700 bg-white dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">
                             <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                                 <li class="inline-flex items-center">
                                 <a href="{{ route('transactionattendance.index') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
@@ -31,7 +31,6 @@
                                 </li>
                             </ol>
                         </nav>
-
                         <!-- searchbar -->
                         <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                             <div class="flex flex-col md:flex-row items-stretch md:items-center md:space-x-3 space-y-3 md:space-y-0 justify-between mx-4 py-4 dark:border-gray-700 ">
@@ -75,112 +74,105 @@
                                 </form>
                             </div>
                         </div>
-                   
-                        <div class="relative p-4 w-full max-w-full max-h-full">
-                            <!-- Error & Success Notification -->
-                            @include('layouts.notifications')   
-                            <!-- Modal content -->
-                            <div class="relative bg-white rounded-lg dark:bg-gray-800">
-                                
-                                <!-- Modal header -->
-                                
-                                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3">
-                                                No
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Profile
-                                            </th>
-                                            
-                                            <th scope="col" class="px-6 py-3">
-                                                Branch
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Status
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Action
-                                            </th>
-                                            
-                                        </tr>
-                                    </thead>
-                                        @forelse ($users as $user)
+                        <!-- Error & Success Notification -->
+                        @include('layouts.notifications')   
+                        <!-- Modal content -->
+                        <div class="relative bg-white rounded-lg dark:bg-gray-800">
+                            <!-- Modal header -->
+                            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            No
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Profile
+                                        </th>
                                         
-                                    <tbody>
-                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        <th scope="col" class="px-6 py-3">
+                                            Branch
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Status
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Action
+                                        </th>
                                         
-                                            <td class="px-6 py-4">
-                                                <x-input-label>{{ ++$i }}</x-input-label>
-                                            </td>
-                                            <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                                                <img class="w-10 h-10 rounded-full" src="{{ asset("/storage/$user->avatar") }}" alt="avatar">
-                                                <div class="ps-3">
-                                                    <div class="text-base font-semibold"><x-input-label for="username" :value="$user->username"/></div>
-                                                    <x-input-label>{{ $user->lastname }}, {{ $user->firstname }} {{ $user->middlename }}</x-input-label>
-                                                    <x-input-label for="email" :value="$user->email"/>
-                                            </th>
-                                            
-                                            <td class="px-6 py-4">
-                                                <x-input-label for="branchname" :value="$user->branchname"/>
-                                            </td>
-                                            
-                                            <td class="px-6 py-4">
-                                                <div class="flex items-center">
-                                                @php
-                                                    $color = '';
-                                                    if ($user->status == 'Active'):
-                                                        $color = 'green';
-                                                    elseif ($user->status == 'Inactive'):
-                                                        $color = 'red';
-                                                    endif;
-                                                @endphp
-                                                        <div class="h-2.5 w-2.5 rounded-full bg-{{ $color; }}-500 me-2"></div> <x-input-label for="status" :value="$user->status"/>
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                @php
-                                                @endphp
-                                                <form action="{{ route('transactionattendance.putemp',  ['users' => $user->userid]) }}" enctype="multipart/form-data" method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    @php
-                                                    $btndis='';
-                                                    $btnlabel = '';
-                                                    $btncolor = '';
-                                                    
-                                                    if ($user->status == 'Active'):
-                                                        $btndis = '';
-                                                        $btnlabel = 'SELECT';
-                                                        $btncolor = 'blue';
-                                                    elseif ($user->status == 'Inactive'):
-                                                        $btndis = '';
-                                                        $btnlabel = 'SELECT';
-                                                        $btncolor = 'blue';
-                                                    endif
-                                                    
-                                                    @endphp
-                                                    <x-danger-button class="ms-3 dark:text-white bg-{{ $btncolor; }}-700 hover:bg-{{ $btncolor; }}-800 focus:outline-none focus:ring-4 focus:ring-{{ $btncolor; }}-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-{{ $btncolor; }}-600 dark:hover:bg-{{ $btncolor; }}-700 dark:focus:ring-{{ $btncolor; }}-800 ">
-                                                        {{ $btnlabel; }}
-                                                    </x-danger-button>
-                                                </form>
-                                            </td>
-                                        </tr>
+                                    </tr>
+                                </thead>
+                                    @forelse ($users as $user)
                                     
-                                        @empty
-                                        <td scope="row" class="px-6 py-4">
-                                            No Records Found.
-                                        </td>	
-                                        @endforelse
-                                            
-                                    </tbody>
-                                </table>
-                                <div class="mt-4">
-                                    {!! $users->appends(request()->query())->links() !!}
-                                </div>
+                                <tbody>
+                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                     
+                                        <td class="px-6 py-4">
+                                            <x-input-label>{{ ++$i }}</x-input-label>
+                                        </td>
+                                        <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                                            <img class="w-10 h-10 rounded-full" src="{{ asset("/storage/$user->avatar") }}" alt="avatar">
+                                            <div class="ps-3">
+                                                <div class="text-base font-semibold"><x-input-label for="username" :value="$user->username"/></div>
+                                                <x-input-label>{{ $user->lastname }}, {{ $user->firstname }} {{ $user->middlename }}</x-input-label>
+                                                <x-input-label for="email" :value="$user->email"/>
+                                        </th>
+                                        
+                                        <td class="px-6 py-4">
+                                            <x-input-label for="branchname" :value="$user->branchname"/>
+                                        </td>
+                                        
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center">
+                                            @php
+                                                $color = '';
+                                                if ($user->status == 'Active'):
+                                                    $color = 'green';
+                                                elseif ($user->status == 'Inactive'):
+                                                    $color = 'red';
+                                                endif;
+                                            @endphp
+                                                    <div class="h-2.5 w-2.5 rounded-full bg-{{ $color; }}-500 me-2"></div> <x-input-label for="status" :value="$user->status"/>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            @php
+                                            @endphp
+                                            <form action="{{ route('transactionattendance.putemp',  ['users' => $user->userid]) }}" enctype="multipart/form-data" method="POST">
+                                                @csrf
+                                                @method('PUT')
+                                                @php
+                                                $btndis='';
+                                                $btnlabel = '';
+                                                $btncolor = '';
+                                                
+                                                if ($user->status == 'Active'):
+                                                    $btndis = '';
+                                                    $btnlabel = 'SELECT';
+                                                    $btncolor = 'blue';
+                                                elseif ($user->status == 'Inactive'):
+                                                    $btndis = '';
+                                                    $btnlabel = 'SELECT';
+                                                    $btncolor = 'blue';
+                                                endif
+                                                
+                                                @endphp
+                                                <x-danger-button class="ms-3 dark:text-white bg-{{ $btncolor; }}-700 hover:bg-{{ $btncolor; }}-800 focus:outline-none focus:ring-4 focus:ring-{{ $btncolor; }}-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-{{ $btncolor; }}-600 dark:hover:bg-{{ $btncolor; }}-700 dark:focus:ring-{{ $btncolor; }}-800 ">
+                                                    {{ $btnlabel; }}
+                                                </x-danger-button>
+                                            </form>
+                                        </td>
+                                    </tr>
                                 
+                                    @empty
+                                    <td scope="row" class="px-6 py-4">
+                                        No Records Found.
+                                    </td>	
+                                    @endforelse
+                                        
+                                </tbody>
+                            </table>
+                            <div class="mt-4">
+                                {!! $users->appends(request()->query())->links() !!}
                             </div>
                         </div>
                     </div>
