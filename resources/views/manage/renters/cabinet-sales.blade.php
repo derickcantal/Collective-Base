@@ -4,10 +4,9 @@
             @include('layouts.manage.navigation')
         </div>
     </div>
-<div class="py-8">
-	<div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
+	<div class="py-8 max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
 		<div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="py-8 max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
                 @csrf
                 <!-- Breadcrumb -->
                 <nav class="flex px-5 py-3 text-gray-700 bg-white dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">
@@ -241,6 +240,5 @@
             </div>
         </div>
     </div>
-</div>
 </x-app-layout>
    

@@ -4,11 +4,10 @@
             @include('layouts.manage.navigation')
         </div>
     </div>
-<div class="py-8">
-	<div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
-		<div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <form action="{{ route('managebranch.store') }}" method="POST" class="p-4 md:p-5">
+    <div class="py-8 max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="py-8 max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
+                <form action="{{ route('managebranch.store') }}" method="POST">
                     @csrf   
                     <!-- Breadcrumb -->
                     <nav class="flex px-5 py-3 text-gray-700 bg-white dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">
@@ -100,5 +99,4 @@
             </div>
         </div>
     </div>
-</div>
 </x-app-layout>

@@ -4,10 +4,9 @@
             @include('layouts.manage.navigation')
         </div>
     </div>
-<div class="py-8">
-	<div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
+	<div class="py-8 max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
 		<div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="py-8 max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
                 <!-- Error & Success Notification -->
                 @include('layouts.notifications') 
                 <!-- Modal content -->
@@ -105,26 +104,4 @@
             </div>
         </div>
     </div>
-</div>
-</x-app-layout>
-  
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <u><a href="{{ route('renters.index') }}"> Renters</a></u> / {{ __('Create New Renters') }}
-        </h2>
-    </x-slot>
-    <section>
-        <div class="py-8">
-            <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-
-                            
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 </x-app-layout>
