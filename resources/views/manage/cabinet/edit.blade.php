@@ -51,25 +51,25 @@
                         </div>
                         <!-- Modal body -->
                         <div class="grid gap-4 mb-4 grid-cols-2">
-                            <div class="col-span-2 sm:col-span-1 ">
+                            <div class="col-span-2 sm:col-span-1 p-4 ">
                                 <!-- nn -->
-                                <div class="form-group mt-4">
+                                <div class="form-group">
                                     <x-input-label for="cabinetname" :value="__('Cabinet Name')" />
                                     <x-text-input id="cabinetname" class="block mt-1 w-full" type="text" name="cabinetname" :value="old('cabinetname',$cabinet->cabinetname)" required autofocus autocomplete="off" readonly/>
                                     <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
                                 </div>
                             </div>
-                            <div class="col-span-2 sm:col-span-1 ">
+                            <div class="col-span-2 sm:col-span-1 p-4 ">
                                 <!-- nn -->
-                                <div class="form-group mt-4">
+                                <div class="form-group">
                                     <x-input-label for="cabinetprice" :value="__('Rent Price')" />
                                     <x-text-input id="cabinetprice" class="block mt-1 w-full" type="number" name="cabinetprice" :value="old('cabinetprice',$cabinet->cabinetprice)" required autofocus autocomplete="off" />
                                     <x-input-error :messages="$errors->get('cabinetprice')" class="mt-2" />
                                 </div>
                             </div>
-                            <div class="col-span-2 sm:col-span-1">
+                            <div class="col-span-2 sm:col-span-1 p-4">
                                 <!-- branchname -->
-                                <div class="form-group mt-4">
+                                <div class="form-group">
                                     <x-input-label for="renter" :value="__('Renter Name')" />
                                     <!-- <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname')" required autofocus autocomplete="off" /> -->
                                     <select id="renter" name="renter" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('branchname')">

@@ -43,50 +43,50 @@
                         </div>
                         <!-- Modal body -->
                             <div class="grid gap-4 mb-4 grid-cols-2">
-                                <div class="col-span-2 sm:col-span-1">
+                                <div class="col-span-2 sm:col-span-1 p-4">
                                     <!-- username -->
-                                    <div class="form-group mt-4">
+                                    <div class="form-group">
                                         <x-input-label for="username" :value="__('Username')" />
                                         <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" value="" required autofocus autocomplete="off"/> 
                                         
                                         <x-input-error :messages="$errors->get('username')" class="mt-2" />
                                     </div>
                                 </div>
-                                <div class="col-span-2 sm:col-span-1 ">
+                                <div class="col-span-2 sm:col-span-1 p-4">
                                     <!-- cabname -->
-                                    <div class="form-group mt-4">
+                                    <div class="form-group">
                                         <x-input-label for="fullname" :value="__('Full Name')" />
                                         <x-text-input id="fullname" class="block mt-1 w-full" type="text" name="fullname" value="" required autofocus autocomplete="off"/>
                                         <x-input-error :messages="$errors->get('fullname')" class="mt-2" />
                                     </div>
                                 </div>
-                                <div class="col-span-2 sm:col-span-1">
+                                <div class="col-span-2 sm:col-span-1 p-4">
                                     <!-- username -->
-                                    <div class="form-group mt-4">
+                                    <div class="form-group">
                                         <x-input-label for="password" :value="__('Password')" />
                                         <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" value="" required autofocus autocomplete="off" />
                                         <x-input-error :messages="$errors->get('password')" class="mt-2" />
                                     </div>
                                 </div>
-                                <div class="col-span-2 sm:col-span-1">
+                                <div class="col-span-2 sm:col-span-1 p-4">
                                     <!-- firstname -->
-                                    <div class="form-group mt-4">
+                                    <div class="form-group">
                                         <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
                                         <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" value="" required autofocus autocomplete="off" />
                                         <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                                     </div>
                                 </div>
-                                <div class="col-span-2 sm:col-span-1">
+                                <div class="col-span-2 sm:col-span-1 p-4">
                                         <!-- lastname -->
-                                        <div class="form-group mt-4">
+                                        <div class="form-group">
                                         <x-input-label for="phone" :value="__('Mobile No.')" />
                                         <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" value="" required autofocus autocomplete="off" />
                                         <x-input-error :messages="$errors->get('phone')" class="mt-2" />
                                     </div>
                                 </div>
-                                <div class="col-span-2 sm:col-span-1">
+                                <div class="col-span-2 sm:col-span-1 p-4">
                                         <!-- lastname -->
-                                        <div class="form-group mt-4">
+                                        <div class="form-group">
                                         <x-input-label for="email_other" :value="__('Other Email')" />
                                         <x-text-input id="email_other" class="block mt-1 w-full" type="text" name="email_other" value="" required autofocus autocomplete="off" />
                                         <x-input-error :messages="$errors->get('email_other')" class="mt-2" />

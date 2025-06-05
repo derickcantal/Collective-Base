@@ -42,42 +42,42 @@
                         </div>
                         <!-- Modal body -->
                             <div class="grid gap-4 mb-4 grid-cols-2">
-                                <div class="col-span-2 sm:col-span-1 ">
+                                <div class="col-span-2 sm:col-span-1 p-4">
                                     <!-- nn -->
-                                    <div class="form-group mt-4">
+                                    <div class="form-group">
                                         <x-input-label for="branchname" :value="__('Branch Name')" />
                                         <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname')" required autofocus autocomplete="off" />
                                         <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
                                     </div>
                                 </div>
-                                <div class="col-span-2 sm:col-span-1">
+                                <div class="col-span-2 sm:col-span-1 p-4">
                                     <!-- nn -->
-                                    <div class="form-group mt-4">
+                                    <div class="form-group">
                                         <x-input-label for="branchaddress" :value="__('Address')" />
                                         <x-text-input id="branchaddress" class="block mt-1 w-full" type="text" name="branchaddress" :value="old('branchaddress')" required autofocus autocomplete="off" />
                                         <x-input-error :messages="$errors->get('branchaddress')" class="mt-2" />
                                     </div>
                                 </div>
-                                <div class="col-span-2 sm:col-span-1">
+                                <div class="col-span-2 sm:col-span-1 p-4">
                                     <!-- nn -->
-                                    <div class="form-group mt-4">
+                                    <div class="form-group">
                                         <x-input-label for="branchcontact" :value="__('Contact No.')" />
                                         <x-text-input id="branchcontact" class="block mt-1 w-full" type="text" name="branchcontact" :value="old('branchcontact')" required autofocus autocomplete="off" />
                                         <x-input-error :messages="$errors->get('branchcontact')" class="mt-2" />
                                     </div>
                                 </div>
-                                <div class="col-span-2 sm:col-span-1">
+                                <div class="col-span-2 sm:col-span-1 p-4">
                                     <!-- nn -->
-                                    <div class="form-group mt-4">
+                                    <div class="form-group">
                                         <x-input-label for="branchemail" :value="__('Email')" />
                                         <x-text-input id="branchemail" class="block mt-1 w-full" type="email" name="branchemail" :value="old('branchemail')" required autocomplete="email" />
                                         <x-input-error :messages="$errors->get('branchemail')" class="mt-2" />
                                     </div>
                                 </div>
 
-                                <div class="col-span-2 sm:col-span-1">
+                                <div class="col-span-2 sm:col-span-1 p-4">
                                         <!-- nn -->
-                                        <div class="form-group mt-4">
+                                        <div class="form-group">
                                         <x-input-label for="cabinetcount" :value="__('Cabinet Count')" />
                                         <x-text-input id="cabinetcount" class="block mt-1 w-full" type="number" name="cabinetcount" :value="old('cabinetcount')" required autofocus autocomplete="off" />
                                         <x-input-error :messages="$errors->get('cabinetcount')" class="mt-2" />
@@ -93,7 +93,6 @@
                                 </div>
                                 
                             </div>
-                        
                     </div>
                 </form>
             </div>

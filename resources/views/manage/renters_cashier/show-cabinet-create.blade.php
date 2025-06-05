@@ -52,34 +52,34 @@
                         </div>
                         <!-- Modal body -->
                         <div class="grid gap-4 mb-4 grid-cols-2">
-                            <div class="col-span-2 sm:col-span-1">
+                            <div class="col-span-2 sm:col-span-1 p-4">
                                 <!-- firstname -->
-                                <div class="form-group mt-4">
+                                <div class="form-group">
                                     <x-input-label for="rentername" :value="__('Full Name')" />
                                     <x-text-input id="rentername" class="block mt-1 w-full" type="text" name="rentername" value="{{ $rentername }}" required readonly />
                                     <x-input-error :messages="$errors->get('rentername')" class="mt-2" />
                                 </div>
                             </div>
                             
-                            <div class="col-span-2 sm:col-span-1">
+                            <div class="col-span-2 sm:col-span-1 p-4">
                                 <!-- firstname -->
-                                <div class="form-group mt-4">
+                                <div class="form-group">
                                     <x-input-label for="branchname" :value="__('Branch')" />
                                     <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" value="{{ auth()->user()->branchname; }}" required readonly />
                                     <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
                                 </div>
                             </div>
-                            <div class="col-span-2 sm:col-span-1 ">
+                            <div class="col-span-2 sm:col-span-1 p-4">
                                 <!-- nn -->
-                                <div class="form-group mt-4">
+                                <div class="form-group">
                                     <x-input-label for="cabinetprice" :value="__('Rent Price')" />
                                     <x-text-input id="cabinetprice" class="block mt-1 w-full" type="number" name="cabinetprice" :value="old('cabinetprice')" required autofocus autocomplete="off" />
                                     <x-input-error :messages="$errors->get('cabinetprice')" class="mt-2" />
                                 </div>
                             </div>
-                            <div class="col-span-2 sm:col-span-1">
+                            <div class="col-span-2 sm:col-span-1 p-4">
                                 <!-- cabinetnumber -->
-                                <div class="form-group mt-4">
+                                <div class="form-group">
                                     <x-input-label for="cabinetname" :value="__('Cabinet No.')" />
                                         <select id="cabinetname" name="cabinetname" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('cabinetname', $renter->cabinetname)">
                                         @foreach($cabinet as $cabinets)
@@ -89,9 +89,9 @@
                                     <x-input-error :messages="$errors->get('cabinetname')" class="mt-2" />
                                 </div>
                             </div>
-                            <div class="col-span-2 sm:col-span-1">
+                            <div class="col-span-2 sm:col-span-1 p-4">
                                 <!-- firstname -->
-                                <div class="form-group mt-4">
+                                <div class="form-group">
                                     <x-text-input id="cabuser" class="block mt-1 w-full" type="hidden" name="cabuser" value="{{ $cabuser; }}" required readonly />
                                     <x-input-error :messages="$errors->get('cabuser')" class="mt-2" />
                                 </div>

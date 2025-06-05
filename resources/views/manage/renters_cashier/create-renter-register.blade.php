@@ -62,51 +62,51 @@
                             <!-- Modal body -->
                             <img width="100" height="100" class="rounded-full mt-4" src="{{ asset("/storage/$renter->avatar") }}" alt="user avatar" />
                                 <div class="grid gap-4 mb-4 grid-cols-2">
-                                    <div class="col-span-2 sm:col-span-1 ">
+                                    <div class="col-span-2 sm:col-span-1 p-4">
                                         <!-- username -->
-                                        <div class="form-group mt-4">
+                                        <div class="form-group">
                                             <x-input-label for="username" :value="__('Username')" />
                                             <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username', $renter->username)" required autofocus readonly/>
                                             <x-input-error :messages="$errors->get('username')" class="mt-2" />
                                         </div>
                                     </div>
-                                    <div class="col-span-2 sm:col-span-1">
+                                    <div class="col-span-2 sm:col-span-1 p-4">
                                         <!-- Email Address -->
-                                        <div class="form-group mt-4">
+                                        <div class="form-group">
                                             <x-input-label for="email" :value="__('Email')" />
                                             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $renter->email)" required readonly />
                                             <x-input-error :messages="$errors->get('email')" class="mt-2" />
                                         </div>
                                     </div>
                                     
-                                    <div class="col-span-2 sm:col-span-1">
+                                    <div class="col-span-2 sm:col-span-1 p-4">
                                         <!-- firstname -->
-                                        <div class="form-group mt-4">
+                                        <div class="form-group">
                                             <x-input-label for="firstname" :value="__('First Name')" />
                                             <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname', $renter->firstname)" required autofocus readonly/>
                                             <x-input-error :messages="$errors->get('firstname')" class="mt-2" />
                                         </div>
                                     </div>
-                                    <div class="col-span-2 sm:col-span-1">
+                                    <div class="col-span-2 sm:col-span-1 p-4">
                                             <!-- lastname -->
-                                            <div class="form-group mt-4">
+                                            <div class="form-group">
                                             <x-input-label for="lastname" :value="__('Last Name')" />
                                             <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname', $renter->lastname)" required readonly/>
                                             <x-input-error :messages="$errors->get('lastname')" class="mt-2" />
                                         </div>
                                     </div>
-                                    <div class="col-span-2 sm:col-span-1">
+                                    <div class="col-span-2 sm:col-span-1 p-4">
                                         <!-- birthdate -->
-                                        <div class="form-group mt-4">
+                                        <div class="form-group">
                                             <x-input-label for="birthdate" :value="__('Birth Date')" />
                                             <x-text-input id="birthdate" class="block mt-1 w-full" type="date" name="birthdate" :value="date('Y-m-d',strtotime(old('birthdate', $renter->birthdate)))" required autofocus autocomplete="bday" readonly/>
                                             <x-input-error :messages="$errors->get('birthdate')" class="mt-2" />
                                         </div>
                                     </div>
 
-                                    <div class="col-span-2 sm:col-span-1">
+                                    <div class="col-span-2 sm:col-span-1 p-4">
                                             <!-- lastname -->
-                                            <div class="form-group mt-4">
+                                            <div class="form-group">
                                             <x-input-label for="mobile_primary" :value="__('Mobile No. (1)')" />
                                             <x-text-input id="mobile_primary" class="block mt-1 w-full" type="text" name="mobile_primary" :value="old('mobile_primary', $renter->mobile_primary)" required readonly/>
                                             <x-input-error :messages="$errors->get('mobile_primary')" class="mt-2" />

@@ -44,26 +44,26 @@
                             </div>
                             <!-- Modal body -->
                             <div class="grid gap-4 mb-4 grid-cols-2">
-                                <div class="col-span-2 sm:col-span-1">
+                                <div class="col-span-2 sm:col-span-1 p-4">
                                     <!-- firstname -->
-                                    <div class="form-group mt-4">
+                                    <div class="form-group">
                                         <x-input-label for="firstname" :value="__('First Name')" />
                                         <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname')" required autofocus autocomplete="given-name" />
                                         <x-input-error :messages="$errors->get('firstname')" class="mt-2" />
                                     </div>
                                 </div>
         
-                                <div class="col-span-2 sm:col-span-1">
+                                <div class="col-span-2 sm:col-span-1 p-4">
                                         <!-- lastname -->
-                                        <div class="form-group mt-4">
+                                        <div class="form-group">
                                         <x-input-label for="lastname" :value="__('Last Name')" />
                                         <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname')" required autofocus autocomplete="family-name" />
                                         <x-input-error :messages="$errors->get('lastname')" class="mt-2" />
                                     </div>
                                 </div>
-                                <div class="col-span-2 sm:col-span-1">
+                                <div class="col-span-2 sm:col-span-1 p-4">
                                     <!-- birthdate -->
-                                    <div class="form-group mt-4">
+                                    <div class="form-group">
                                         <x-input-label for="birthdate" :value="__('Birth Date')" />
                                         <x-text-input id="birthdate" class="block mt-1 w-full" type="date" name="birthdate" :value="old('birthdate')" required autofocus autocomplete="bday" />
                                         <x-input-error :messages="$errors->get('birthdate')" class="mt-2" />
