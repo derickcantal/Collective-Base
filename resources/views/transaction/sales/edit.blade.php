@@ -13,7 +13,6 @@
                     <form action="{{ route('transactionsales.update',$sales->salesid) }}" enctype="multipart/form-data" method="POST" class="p-4 md:p-5">
                             @csrf
                             @method('PATCH')   
-                            <div class="relative p-4 w-full max-w-full max-h-full">
                                 <!-- Modal content -->
                                 <div class="relative bg-white rounded-lg dark:bg-gray-800">
                                     <!-- Breadcrumb -->
@@ -75,7 +74,7 @@
                                             <!-- branchname -->
                                             <div class="form-group mt-4">
                                                 <x-input-label for="branchname" :value="__('Branch Name')" />
-                                                <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" value="{{ Auth()->user()->branchname; }}" required autofocus autocomplete="off" readonly/> 
+                                                <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" value="{{ $sales->branchname; }}" required autofocus autocomplete="off" readonly/> 
                                                 
                                                 <x-input-error :messages="$errors->get('branchname')" class="mt-2" />
                                             </div>
@@ -186,7 +185,7 @@
                                         </x-primary-button>
                                     </div>
                                 </div>
-                            </div>
+                            
                             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
                                 
                             </div>
