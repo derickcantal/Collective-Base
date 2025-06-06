@@ -154,19 +154,30 @@
                                         </td>
                                         <td class="px-6 py-4">
                                             <div class="flex items-center">
-                                            @php
-                                                $color = '';
-                                                if ($cabinet->status == 'Active'):
-                                                    $color = 'green';
-                                                elseif ($cabinet->status == 'Inactive'):
-                                                    $color = 'red';
-                                                endif;
-                                            @endphp
-                                                    <div class="h-2.5 w-2.5 rounded-full bg-{{ $color; }}-500 me-2"></div> <x-input-label for="status" :value="$cabinet->status"/>
+                                                @if($cabinet->status == 'Active')
+                                                    <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-green-700"></div>
+                                                @elseif($cabinet->status == 'Inactive')
+                                                    <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-red-700"></div>
+                                                @endif
+                                                <x-input-label for="status" :value="$cabinet->status"/>
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4">
-                                            <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('transactioncabsales.listsales',$cabinet->cabid) }}">Sales Summary</a>
+                                        <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            <div class="flex items-center space-x-2">
+                                                <a href="{{ route('transactioncabsales.cabinetsales',$cabinet->cabid) }}" class="py-2 px-3 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                                    <svg class="w-4 h-4 mr-2 -ml-0.5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m4 8h6m-6-4h6m4-8v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
+                                                    </svg>
+                                                    Sales Sumamry
+                                                </a>
+
+                                                <a href="{{ route('transactioncabsales.listsales',$cabinet->cabid) }}" class="py-2 px-3 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                                    <svg class="w-4 h-4 mr-2 -ml-0.5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6m-6 4h6m-6 4h6M6 3v18l2-2 2 2 2-2 2 2 2-2 2 2V3l-2 2-2-2-2 2-2-2-2 2-2-2Z"/>
+                                                    </svg>
+                                                    Sold Products
+                                                </a>
+                                            </div>
                                         </td>
                                     </tr>
                                 

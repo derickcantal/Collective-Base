@@ -78,10 +78,8 @@
                         </form>
                     </div>
                 </div>
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                    <!-- Error & Success Notification -->
-                    @include('layouts.notifications')   
-                </div>    
+                <!-- Error & Success Notification -->
+                @include('layouts.notifications')   
 
                 @csrf
                 <div class="max-w-screen-2xl overflow-x-auto shadow-md sm:rounded-lg mt-4">
@@ -138,42 +136,47 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center">
-                                    @php
-                                        $color = '';
-                                        if ($cabinet->status == 'Active'):
-                                            $color = 'green';
-                                        elseif ($cabinet->status == 'Inactive'):
-                                            $color = 'red';
-                                        endif;
-                                    @endphp
-                                            <div class="h-2.5 w-2.5 rounded-full bg-{{ $color; }}-500 me-2"></div> <x-input-label for="status" :value="$cabinet->status"/>
+                                        @if($cabinet->status == 'Active')
+                                            <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-green-700"></div>
+                                        @elseif($cabinet->status == 'Inactive')
+                                            <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-red-700"></div>
+                                        @endif
+                                        <x-input-label for="status" :value="$cabinet->status"/>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4">
-                                    
-                                    <form action="{{ route('managecabinet.destroy',$cabinet->cabid) }}" method="POST">
-                                    <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('managecabinet.edit',$cabinet->cabid) }}">Modify</a>
-                                        @csrf
-                                        @method('DELETE')
-                                        @php
-                                        $txtbutton = '';
-                                        $colorbutton = '';
-                                        
-                                        if ($cabinet->status == 'Active'):
-                                            $txtbutton = 'Decativate';
-                                            $colorbutton = 'dark:text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800';
-                                        elseif ($cabinet->status == 'Inactive'):
-                                            $txtbutton = 'Activate';
-                                            $colorbutton = 'dark:text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800';
-                                        endif
-                                        
-                                        @endphp
-                                        
-                                        <x-danger-button class="ms-3 {{ $colorbutton }}">
-                                            {{ $txtbutton }}
-                                        </x-danger-button>
-                                    </form>
-                                </td>
+                                <form action="{{ route('managecabinet.destroy',$cabinet->cabid) }}" method="POST" >
+                                    @csrf
+                                    @method('DELETE')
+                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        <div class="flex items-center space-x-2">
+                                            <a href="{{ route('managecabinet.edit',$cabinet->cabid) }}" class="py-2 px-3 flex items-center text-sm font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                                    <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                                                </svg>
+                                                Modify
+                                            </a>
+
+                                            <a href="{{ route('managecabinet.show',$cabinet->cabid) }}" class="py-2 px-3 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="w-4 h-4 mr-2 -ml-0.5">
+                                                    <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 010-1.113zM17.25 12a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0z" />
+                                                </svg>
+                                                Show
+                                            </a>
+                                            
+                                            @if ($cabinet->status == 'Active')
+                                                <button type="submit" class="flex items-center text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
+                                                    Deactivate
+                                                </button>
+                                            @elseif ($cabinet->status == 'Inactive')
+                                                <button type="submit" class="flex items-center text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-900">
+                                                    Activate
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </td>
+                                </form>
                             </tr>
                         
                             @empty
