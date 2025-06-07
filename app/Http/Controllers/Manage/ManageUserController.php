@@ -393,15 +393,17 @@ class ManageUserController extends Controller
      */
     public function show(User $user)
     {
+        $branch = branch::all();
+
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return view('manage.users.show',['user' => $user]);
+                return view('manage.users.show',['user' => $user, 'branch' => $branch]);
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return view('manage.users.show',['user' => $user]);
+                return view('manage.users.show',['user' => $user, 'branch' => $branch]);
             }
         }else{
             return redirect()->route('dashboardoverview.index');

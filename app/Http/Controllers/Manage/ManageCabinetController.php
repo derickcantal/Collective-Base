@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\CreateCabinetRequest;
 use App\Models\cabinet;
 use App\Models\branch;
-use App\Models\Renters;
+use App\Models\Renter;
 use App\Models\user_login_log;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use \Carbon\Carbon;
@@ -36,26 +36,65 @@ class ManageCabinetController extends Controller
         ]);
     }
 
-    public function loaddata(){
-        $cabinets = cabinet::query()
+    public function searchcabinet(Request $request,$branchid)
+    {
+        $branch = branch::where('branchid',$branchid)->first();
+
+        $cabinets = cabinet::where('branchid',$branch->branchid)
+                    ->where(function(Builder $builder) use($request){
+                        $builder->where('cabinetname','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('userid','like',"%{$request->search}%")
+                                ->orWhere('email','like',"%{$request->search}%")
+                                ->orWhere('created_by','like',"%{$request->search}%")
+                                ->orWhere('updated_by','like',"%{$request->search}%")
+                                ->orWhere('status','like',"%{$request->search}%");
+                    })
+                    ->orderBy('cabid',$request->orderrow)
+                    ->paginate($request->pagerow);
+    
+        return view('manage.cabinet.cabinetlist',compact('cabinets'))
+            ->with(['branch' => $branch])
+            ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
+    }
+    public function cabinetlist($branchid){
+
+        $branch = branch::where('branchid',$branchid)->first();
+
+        $cabinets = cabinet::where('branchid',$branch->branchid)
                     ->orderBy('status','asc')
                     ->orderBy('cabid','asc')
                     ->orderBy('branchname','asc')
                     ->paginate(5);
         
-        $notes = 'Cabinet';
+        $notes = 'Cabinet. List';
         $status = 'Success';
         $this->userlog($notes,$status);
 
-        return view('manage.cabinet.index',compact('cabinets'))
+        return view('manage.cabinet.cabinetlist',compact('cabinets'))
+            ->with(['branch' => $branch])
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+
+    public function loaddata(){
+        $branches = branch::query()
+                    ->orderBy('status','asc')
+                    ->orderBy('branchname','asc')
+                    ->paginate(5);
+
+        $notes = 'Branch. Select.';
+        $status = 'Success';
+        $this->userlog($notes,$status);
+
+        return view('manage.cabinet.index',compact('branches'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
     
-    public function storedata($request){
+    public function storedata($request,$branchid){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $cabcount = (cabinet::where('branchname',$request->branchname)->count()) + 1;
 
-        $br = branch::where('branchname',$request->branchname)->first();
+        $br = branch::where('branchid',$branchid)->first();
 
         $cabn = cabinet::where('cabinetname',$request->cabinetname)
         ->where(function(Builder $builder) use($request){
@@ -89,14 +128,14 @@ class ManageCabinetController extends Controller
                     $status = 'Success';
                     $this->userlog($notes,$status);
 
-                    return redirect()->route('managecabinet.index')
+                    return redirect()->back()
                                 ->with('success','Cabinet created successfully.');
                 }else{
                     $notes = 'Cabinet. Create ' . $request->cabinetname;
                     $status = 'Failed';
                     $this->userlog($notes,$status);
 
-                    return redirect()->route('managecabinet.create')
+                    return redirect()->back()
                                 ->with('failed','Cabinet creation failed');
                 }
             }else{
@@ -104,7 +143,7 @@ class ManageCabinetController extends Controller
                 $status = 'Failed';
                 $this->userlog($notes,$status);
  
-                return redirect()->route('managecabinet.create')
+                return redirect()->back()
                                 ->with('failed','Already Exists.');
                 
             }  
@@ -114,14 +153,14 @@ class ManageCabinetController extends Controller
             $status = 'Failed';
             $this->userlog($notes,$status);
             
-            return redirect()->route('managecabinet.create')
-                                    ->with('failed','Branch Maximum Cabinet Capacity Reached');
+            return redirect()->back()
+                    ->with('failed','Branch Maximum Cabinet Capacity Reached');
         }
     }
     
     public function updatedata($request,$cabinet){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
-        $rent = Renters::where('userid',$cabinet)->first();
+        $rent = Renter::where('userid',$cabinet)->first();
          
         $cabinet = cabinet::findOrFail($cabinet);
 
@@ -144,7 +183,7 @@ class ManageCabinetController extends Controller
 
                 $totalcabown = cabinet::where('userid', $cabinet->userid)->count();
         
-                Renters::where('userid',$rent->userid)
+                Renter::where('userid',$rent->userid)
                 ->update([
                     'cabid' => $totalcabown + 1,
                 ]);
@@ -224,7 +263,7 @@ class ManageCabinetController extends Controller
         $status = 'Success';
         $this->userlog($notes,$status);
  
-        return redirect()->route('managecabinet.index')
+        return redirect()->back()
                             ->with('success','Cabinet Deactivated successfully');
         }
         elseif($cabinet->status == 'Inactive')
@@ -239,27 +278,22 @@ class ManageCabinetController extends Controller
         $status = 'Success';
         $this->userlog($notes,$status);
 
-        return redirect()->route('managecabinet.index')
+        return redirect()->back()
                             ->with('success','Cabinet Activated successfully');
         }
     }
 
     public function search(Request $request)
     {
-        $cabinets = cabinet::query()
+        $branches = branch::query()
                     ->where(function(Builder $builder) use($request){
-                        $builder->where('cabinetname','like',"%{$request->search}%")
-                                ->orWhere('branchname','like',"%{$request->search}%")
-                                ->orWhere('userid','like',"%{$request->search}%")
-                                ->orWhere('email','like',"%{$request->search}%")
-                                ->orWhere('created_by','like',"%{$request->search}%")
-                                ->orWhere('updated_by','like',"%{$request->search}%")
+                        $builder->where('branchname','like',"%{$request->search}%")
                                 ->orWhere('status','like',"%{$request->search}%");
                     })
-                    ->orderBy('cabid',$request->orderrow)
+                    ->orderBy('branchid',$request->orderrow)
                     ->paginate($request->pagerow);
     
-        return view('manage.cabinet.index',compact('cabinets'))
+        return view('manage.cabinet.index',compact('branches'))
             ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
     }
     /**
@@ -286,7 +320,7 @@ class ManageCabinetController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($branchid)
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
@@ -294,25 +328,25 @@ class ManageCabinetController extends Controller
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                $rent = Renters::where('accesstype','Renters')
+                $rent = Renter::where('accesstype','Renters')
                                 ->where(function(Builder $builder){
                                     $builder->where('status','Active')
                                             ->orderBy('lastname','asc')
                                             ;
                                 })->get();
                             
-                $branches = branch::all();
-                return view('manage.cabinet.create',['branches' => $branches])->with(['rent' => $rent]);
+                $branch = branch::where('branchid',$branchid)->first();
+                return view('manage.cabinet.create',['branch' => $branch])->with(['rent' => $rent]);
             }elseif(auth()->user()->accesstype =='Administrator'){
-                $rent = Renters::where('accesstype','Renters')
+                $rent = Renter::where('accesstype','Renters')
                 ->where(function(Builder $builder){
                     $builder->where('status','Active')
                             ->orderBy('lastname','asc')
                             ;
                 })->get();
             
-                $branches = branch::all();
-                return view('manage.cabinet.create',['branches' => $branches])->with(['rent' => $rent]);
+                $branch = branch::where('branchid',$branchid)->first();
+                return view('manage.cabinet.create',['branch' => $branch])->with(['rent' => $rent]);
             }
         }else{
             return redirect()->route('dashboardoverview.index');
@@ -322,7 +356,7 @@ class ManageCabinetController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CreateCabinetRequest $request)
+    public function store(CreateCabinetRequest $request,$branchid)
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
@@ -330,9 +364,9 @@ class ManageCabinetController extends Controller
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return $this->storedata($request);
+                return $this->storedata($request,$branchid);
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return $this->storedata($request);
+                return $this->storedata($request,$branchid);
             }
         }else{
             return redirect()->route('dashboardoverview.index');
@@ -373,7 +407,7 @@ class ManageCabinetController extends Controller
                 $cab = cabinet::where('cabid',$cabinet)->first();                      
                         
                         
-                $rent = Renters::where('accesstype','Renters')
+                $rent = Renter::where('accesstype','Renters')
                 ->where(function(Builder $builder){
                     $builder->where('status','Active')
                             ->orderBy('lastname','asc')
@@ -389,7 +423,7 @@ class ManageCabinetController extends Controller
                 $cab = cabinet::where('cabid',$cabinet)->first();                      
                         
                         
-                $rent = Renters::where('accesstype','Renters')
+                $rent = Renter::where('accesstype','Renters')
                 ->where(function(Builder $builder){
                     $builder->where('status','Active')
                             ->orderBy('lastname','asc')

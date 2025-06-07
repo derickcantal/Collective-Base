@@ -96,14 +96,16 @@ Route::middleware('auth')->group(function () {
     Route::put('/manage/renters/create/register/{renter}', [ManageRenterController::class, 'renterregister'])->name('managerenter.renterregister');
     Route::get('/manage/renters/cabinet/sales/{renter}', [ManageRenterController::class, 'cabinetsales'])->name('managerenter.cabinetsales');
 
-    Route::get('/manage/cabinet', [ManageCabinetController::class, 'index'])->name('managecabinet.index');
-    Route::post('/manage/cabinet', [ManageCabinetController::class, 'store'])->name('managecabinet.store');
-    Route::get('/manage/cabinet/create', [ManageCabinetController::class, 'create'])->name('managecabinet.create');
-    Route::get('/manage/cabinet/search', [ManageCabinetController::class, 'search'])->name('managecabinet.search');
-    Route::get('/manage/cabinet/{cabinet}', [ManageCabinetController::class, 'show'])->name('managecabinet.show');
-    Route::patch('/manage/cabinet/{cabinet}', [ManageCabinetController::class, 'update'])->name('managecabinet.update');
-    Route::delete('/manage/cabinet/{cabinet}', [ManageCabinetController::class, 'destroy'])->name('managecabinet.destroy');
-    Route::get('/manage/cabinet/{cabinet}/edit', [ManageCabinetController::class, 'edit'])->name('managecabinet.edit');
+    Route::get('/manage/branch/cabinet/select', [ManageCabinetController::class, 'index'])->name('managecabinet.index');
+    Route::get('/manage/branch/{branchid}/cabinet/list', [ManageCabinetController::class, 'cabinetlist'])->name('managecabinet.cabinetlist');
+    Route::post('/manage/branch/{branchid}/cabinet', [ManageCabinetController::class, 'store'])->name('managecabinet.store');
+    Route::get('/manage/branch/{branchid}/cabinet/create', [ManageCabinetController::class, 'create'])->name('managecabinet.create');
+    Route::get('/manage/branch/cabinet/search', [ManageCabinetController::class, 'search'])->name('managecabinet.search');
+    Route::get('/manage/branch/{branchid}/cabinet/search', [ManageCabinetController::class, 'searchcabinet'])->name('managecabinet.searchcabinet');
+    Route::get('/manage/branch/cabinet/{cabinet}', [ManageCabinetController::class, 'show'])->name('managecabinet.show');
+    Route::patch('/manage/branch/cabinet/{cabinet}', [ManageCabinetController::class, 'update'])->name('managecabinet.update');
+    Route::delete('/manage/branch/cabinet/{cabinet}', [ManageCabinetController::class, 'destroy'])->name('managecabinet.destroy');
+    Route::get('/manage/branch/cabinet/{cabinet}/edit', [ManageCabinetController::class, 'edit'])->name('managecabinet.edit');
 
     Route::get('/manage/user', [ManageUserController::class, 'index'])->name('manageuser.index');
     Route::post('/manage/user', [ManageUserController::class, 'store'])->name('manageuser.store');
