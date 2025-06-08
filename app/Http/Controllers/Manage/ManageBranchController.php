@@ -38,14 +38,14 @@ class ManageBranchController extends Controller
         $branches = branch::query()
                     ->orderBy('status','asc')
                     ->orderBy('branchname','asc')
-                    ->paginate(5);
+                    ->paginate(10);
 
         $notes = 'Branch';
         $status = 'Success';
         $this->userlog($notes,$status);
         
         return view('manage.branch.index',compact('branches'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+            ->with('i', (request()->input('page', 1) - 1) * 10);
     }
     
     public function storedata($request){
@@ -117,8 +117,44 @@ class ManageBranchController extends Controller
             
     }
     
-    public function destroydata(){
-        return redirect()->route('dashboardoverview.index');
+    public function destroydata($request,$branch){
+        // dd($request,$branch);
+
+        $mod = 0;
+        $mod = $branch->mod;
+
+        if($branch->status == 'Active')
+        {
+            branch::where('branchid', $branch->branchid)
+            ->update([
+            'status' => 'Inactive',
+            'updated_by' => auth()->user()->email,
+            'mod' => $mod + 1,
+        ]);
+
+        $notes = 'Branch. Deactivate. ' . $branch->branchname;
+        $status = 'Success';
+        $this->userlog($notes,$status);
+ 
+        return redirect()->back()
+                            ->with('success','Branch Deactivated successfully');
+        }
+        elseif($branch->status == 'Inactive')
+        {
+            branch::where('branchid', $branch->branchid)
+            ->update([
+            'status' => 'Active',
+            'updated_by' => auth()->user()->email,
+            'mod' => $mod + 1,
+        ]);
+        $notes = 'Branch. Activate. ' . $branch->branchname;
+        $status = 'Success';
+        $this->userlog($notes,$status);
+
+        return redirect()->back()
+                            ->with('success','Branch Activated successfully');
+        }
+
     }
 
     public function search(Request $request)
@@ -214,9 +250,9 @@ class ManageBranchController extends Controller
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return $this->loaddata();
+                return view('manage.branch.show',compact('branch'));
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return $this->loaddata();
+               return view('manage.branch.show',compact('branch'));
             }
         }else{
             return redirect()->route('dashboardoverview.index');
@@ -271,17 +307,17 @@ class ManageBranchController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(branch $branch)
+    public function destroy(Request $request,branch $branch)
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                
+                return redirect()->back();
             }elseif(auth()->user()->accesstype =='Renters'){
-                
+                return redirect()->back();
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                
+                return $this->destroydata($request, $branch);
             }elseif(auth()->user()->accesstype =='Administrator'){
-                
+                return $this->destroydata($request, $branch);
             }
         }else{
             return redirect()->route('dashboardoverview.index');

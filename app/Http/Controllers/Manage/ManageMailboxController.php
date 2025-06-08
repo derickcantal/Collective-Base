@@ -305,9 +305,24 @@ class ManageMailboxController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($username)
     {
-        //
+        $mailbox = mailbox::where('username',$username)->first();
+        // dd($username, $mailbox);
+
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return redirect()->route('dashboardoverview.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboardoverview.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return view('manage.mailbox.show',['mailbox' => $mailbox]);
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return view('manage.mailbox.show',['mailbox' => $mailbox]);
+            }
+        }else{
+            return redirect()->route('dashboardoverview.index');
+        }
     }
 
     /**
