@@ -80,14 +80,14 @@ class ManageCabinetController extends Controller
         $branches = branch::query()
                     ->orderBy('status','asc')
                     ->orderBy('branchname','asc')
-                    ->paginate(5);
+                    ->paginate(10);
 
         $notes = 'Branch. Select.';
         $status = 'Success';
         $this->userlog($notes,$status);
 
         return view('manage.cabinet.index',compact('branches'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+            ->with('i', (request()->input('page', 1) - 1) * 10);
     }
     
     public function storedata($request,$branchid){
@@ -160,10 +160,10 @@ class ManageCabinetController extends Controller
     
     public function updatedata($request,$cabinet){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
-        $rent = Renter::where('userid',$cabinet)->first();
-         
-        $cabinet = cabinet::findOrFail($cabinet);
+        $cabinet = cabinet::where('cabid',$cabinet)->first();
+        
 
+        
         $mod = 0;
         $mod = $cabinet->mod;
 
@@ -172,6 +172,9 @@ class ManageCabinetController extends Controller
         if($cabinet->status == 'Active')
         {
             if($request->renter != 'Vacant'){
+                $rent = Renter::where('rentersid',$request->renter)->first();
+
+                dd($cabinet,$request);
                 $cabinets = cabinet::where('cabid', $cabinet->userid)
                 ->update([
                 'userid' => $rent->userid,
@@ -195,7 +198,7 @@ class ManageCabinetController extends Controller
                     $status = 'Success';
                     $this->userlog($notes,$status);
 
-                    return redirect()->route('managecabinet.index')
+                    return redirect()->back()
                                 ->with('success','Cabinet updated successfully.');
                 }else{
 
@@ -203,7 +206,7 @@ class ManageCabinetController extends Controller
                     $status = 'Failed';
                     $this->userlog($notes,$status);
  
-                    return redirect()->route('managecabinet.index')
+                    return redirect()->back()
                                 ->with('failed','Cabinet update failed. 1');
                 }
             }else{
@@ -223,14 +226,14 @@ class ManageCabinetController extends Controller
                     $status = 'Success';
                     $this->userlog($notes,$status);
 
-                    return redirect()->route('managecabinet.index')
+                    return redirect()->back()
                                 ->with('success','Cabinet updated successfully.');
                 }else{
                     $notes = 'Cabinet. Update ' . $cabinet->cabinetname;
                     $status = 'Failed';
                     $this->userlog($notes,$status);
 
-                    return redirect()->route('managecabinet.index')
+                    return redirect()->back()
                                 ->with('failed','Cabinet update failed. 2');
                 }
             }
@@ -240,7 +243,7 @@ class ManageCabinetController extends Controller
             $status = 'Failed';
             $this->userlog($notes,$status);
             
-            return redirect()->route('managecabinet.index')
+            return redirect()->back()
                             ->with('failed','Cabinet Inactive');
         }
     }
@@ -376,17 +379,19 @@ class ManageCabinetController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(cabinet $cabinet)
+    public function show($cabinet)
     {
+        $cabinets = cabinet::where('cabid',$cabinet)->first();
+
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return $this->loaddata();
+                return view('manage.cabinet.show',compact('cabinets'));
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return $this->loaddata();
+                return view('manage.cabinet.show',compact('cabinets'));
             }
         }else{
             return redirect()->route('dashboardoverview.index');
@@ -409,12 +414,11 @@ class ManageCabinetController extends Controller
                         
                 $rent = Renter::where('accesstype','Renters')
                 ->where(function(Builder $builder){
-                    $builder->where('status','Active')
-                            ->orderBy('lastname','asc')
-                            ;
-                })->get();
+                    $builder->where('status','Active');
+                })->orderBy('lastname','asc')
+                    ->get();
             
-                $branches = branch::all();  
+                $branches = branch::where('branchid',$cab->branchid)->first();  
                 
                 return view('manage.cabinet.edit',['branches' => $branches])
                                     ->with(['rent' => $rent])
@@ -425,13 +429,12 @@ class ManageCabinetController extends Controller
                         
                 $rent = Renter::where('accesstype','Renters')
                 ->where(function(Builder $builder){
-                    $builder->where('status','Active')
-                            ->orderBy('lastname','asc')
-                            ;
-                })->get();
+                    $builder->where('status','Active');
+                })->orderBy('lastname','asc')
+                    ->get();
             
-                $branches = branch::all();  
-                
+                $branches = branch::where('branchid',$cab->branchid)->first(); 
+
                 return view('manage.cabinet.edit',['branches' => $branches])
                                     ->with(['rent' => $rent])
                                     ->with(['cabinet' => $cab]);
