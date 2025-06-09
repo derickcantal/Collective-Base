@@ -328,10 +328,10 @@ class TransactionCabinetSalesController extends Controller
         $branches = branch::query()
                     ->orderBy('status','asc')
                     ->orderBy('branchname','asc')
-                    ->paginate(5);
+                    ->paginate(10);
 
         return view ('transaction.cabinetsales.index',compact('branches'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+            ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
 

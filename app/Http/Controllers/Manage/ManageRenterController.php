@@ -43,171 +43,25 @@ class ManageRenterController extends Controller
         ]);
     }
 
-    public function cabinetsales($rentersid){
-        
-        $today = Carbon::now();
-        $tmonth = $today->month;
-        $tyear = $today->year;
+    public function renterslist($branchid){
+        $branch = branch::where('branchid', $branchid)->first();
 
-        $renter = Renter::where('rentersid',$rentersid)->first();
+        $renter = Renter::where('branchid',$branch->branchid)
+                            ->where('accesstype',"Renters")
+                            ->orderBy('status','asc')
+                            ->paginate(10);
+        $notes = 'Renter. List';
+        $status = 'Success';
+        $this->userlog($notes,$status);
 
-        $sales = Sales::where('userid',$renter->rentersid)
-                    ->where(function(Builder $builder){
-                        $builder->where('collected_status','Pending')
-                                ->where('total','!=',0);
-                    })->get();
-
-        
-
-        $totalsales = collect($sales)->sum('total');
-        // dd($cabinet->userid,$renter);
-
-        $lastweek = history_sales::where('userid',$renter->rentersid)
-                                            ->where(function(Builder $builder) {            
-                                                $builder->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])
-                                                        ->where('collected_status','Pending');
-                                                })->get();
-
-        $lastweeksales = collect($lastweek)->sum('total');
-
-
-
-        $thisweek = history_sales::where('userid',$renter->rentersid)
-                                            ->where(function(Builder $builder) {            
-                                                $builder->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
-                                                        ->where('collected_status','Pending');
-                                                })->get();
-
-        $thisweeksales = collect($thisweek)->sum('total');
-
-        $lwstartweek = Carbon::now()->subWeek()->startOfWeek()->format('Y-m-d') ;
-        $lwendweek = Carbon::now()->subWeek()->endOfWeek()->format('Y-m-d') ;
-        $curstartweek = Carbon::now()->startOfWeek()->format('Y-m-d') ;
-        $curendweek = Carbon::now()->startOfWeek()->addDays(5)->format('Y-m-d') ;
-
-        // dd($lwstartweek,$lwendweek,$curstartweek,$curendweek);
-
-
-        $jan =  history_sales::where('userid',$renter->rentersid)
-                                ->where(function(Builder $builder) use($tyear) {  
-                                    $builder->whereYear('created_at', $tyear)
-                                            ->whereMonth('created_at', 1);
-                                })->get();
-
-        $jansales = collect($jan)->sum('total');
-
-        $feb =  history_sales::where('userid',$renter->rentersid)
-                                ->where(function(Builder $builder) use($tyear) {  
-                                    $builder->whereYear('created_at', $tyear)
-                                            ->whereMonth('created_at', 2);
-                                })->get();
-
-        $febsales = collect($feb)->sum('total');
-
-        $mar =  history_sales::where('userid',$renter->rentersid)
-                                ->where(function(Builder $builder) use($tyear) {  
-                                    $builder->whereYear('created_at', $tyear)
-                                            ->whereMonth('created_at', 3);
-                                })->get();
-
-        $marsales = collect($mar)->sum('total');
-
-        $apr =  history_sales::where('userid',$renter->rentersid)
-                                ->where(function(Builder $builder) use($tyear) {  
-                                    $builder->whereYear('created_at', $tyear)
-                                            ->whereMonth('created_at', 4);
-                                })->get();
-
-        $aprsales = collect($apr)->sum('total');
-
-        $may =  history_sales::where('userid',$renter->rentersid)
-                                ->where(function(Builder $builder) use($tyear) {  
-                                    $builder->whereYear('created_at', $tyear)
-                                            ->whereMonth('created_at', 5);
-                                })->get();
-
-        $maysales = collect($may)->sum('total');
-
-        $jun =  history_sales::where('userid',$renter->rentersid)
-                                ->where(function(Builder $builder) use($tyear) {  
-                                    $builder->whereYear('created_at', $tyear)
-                                            ->whereMonth('created_at', 6);
-                                })->get();
-
-        $junsales = collect($jun)->sum('total');
-
-        $jul =  history_sales::where('userid',$renter->rentersid)
-                                ->where(function(Builder $builder) use($tyear) {  
-                                    $builder->whereYear('created_at', $tyear)
-                                            ->whereMonth('created_at', 7);
-                                })->get();
-
-        $julsales = collect($jul)->sum('total');
-
-        $aug =  history_sales::where('userid',$renter->rentersid)
-                                ->where(function(Builder $builder) use($tyear) {  
-                                    $builder->whereYear('created_at', $tyear)
-                                            ->whereMonth('created_at', 8);
-                                })->get();
-
-        $augsales = collect($aug)->sum('total');
-
-        $sept =  history_sales::where('userid',$renter->rentersid)
-                                ->where(function(Builder $builder) use($tyear) {  
-                                    $builder->whereYear('created_at', $tyear)
-                                            ->whereMonth('created_at', 9);
-                                })->get();
-
-        $septsales = collect($sept)->sum('total');
-
-        $oct =  history_sales::where('userid',$renter->rentersid)
-                                ->where(function(Builder $builder) use($tyear) {  
-                                    $builder->whereYear('created_at', $tyear)
-                                            ->whereMonth('created_at', 10);
-                                })->get();
-
-        $octsales = collect($oct)->sum('total');
-
-        $nov =  history_sales::where('userid',$renter->rentersid)
-                                ->where(function(Builder $builder) use($tyear) {  
-                                    $builder->whereYear('created_at', $tyear)
-                                            ->whereMonth('created_at', 11);
-                                })->get();
-
-        $novsales = collect($nov)->sum('total');
-
-        $dec =  history_sales::where('userid',$renter->rentersid)
-                                ->where(function(Builder $builder) use($tyear) {  
-                                    $builder->whereYear('created_at', $tyear)
-                                            ->whereMonth('created_at', 12);
-                                })->get();
-
-        $decsales = collect($dec)->sum('total');
-        
-         return view('manage.renters.cabinet-sales')
-                    ->with(['jansales' => $jansales])
-                    ->with(['febsales' => $febsales])
-                    ->with(['marsales' => $marsales])
-                    ->with(['aprsales' => $aprsales])
-                    ->with(['maysales' => $maysales])
-                    ->with(['junsales' => $junsales])
-                    ->with(['julsales' => $julsales])
-                    ->with(['augsales' => $augsales])
-                    ->with(['septsales' => $septsales])
-                    ->with(['octsales' => $octsales])
-                    ->with(['novsales' => $novsales])
-                    ->with(['decsales' => $decsales])
-                    ->with(['thisweeksales' => $thisweeksales])
-                    ->with(['lastweeksales' => $lastweeksales])
-                    ->with(['tyear' => $tyear])
-                    ->with(['totalsales' => $totalsales])
-                    ->with(['renter' => $renter])
-                    ->with(['lwstartweek' => $lwstartweek])
-                    ->with(['lwendweek' => $lwendweek])
-                    ->with(['curstartweek' => $curstartweek])
-                    ->with(['curendweek' => $curendweek]);
+        return view('manage.renters.renterslist',compact('renter'))
+        ->with(['branch' => $branch])
+        ->with('i', (request()->input('page', 1) - 1) * 10);
     }
+
     public function loaddata(){
+        $branch = branch::orderBy('branchname', 'asc')->paginate(10);
+
         $renter = Renter::where('accesstype',"Renters")
                             ->orderBy('status','asc')
                             ->paginate(5);
@@ -215,166 +69,10 @@ class ManageRenterController extends Controller
         $status = 'Success';
         $this->userlog($notes,$status);
 
-        return view('manage.renters.index',compact('renter'))
-        ->with('i', (request()->input('page', 1) - 1) * 5);
+        return view('manage.renters.index',compact('branch'))
+        ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
-    public function editcabinet($cabinet){
-        $cab = cabinet::where('cabid',$cabinet)->first();                      
-                        
-        $renter = Renter::where('rentersid', $cab->userid)->first();
-                         
-        $rent = Renter::where('accesstype','Renters')
-        ->where(function(Builder $builder){
-            $builder->where('status','Active')
-                    ->orderBy('lastname','asc')
-                    ;
-        })->get();
-       
-        $branches = branch::all();  
-        
-        return view('manage.renters.cabinetedit',['branches' => $branches])
-                            ->with(['rent' => $rent])
-                            ->with(['renter' => $renter])
-                            ->with(['cabinet' => $cab]);
-    }
-
-    public function updatecabinet(Request $request,$cabinets){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
-       
-        $cabinet = cabinet::findOrFail($cabinets);
-        $rent = Renter::where('rentersid',$cabinet->userid)->first();
-         
-        
-
-        $mod = 0;
-        $mod = $cabinet->mod;
-        
-
-        if($cabinet->status == 'Active')
-        {
-            if($request->renter != 'Vacant'){
-                $cabinets = cabinet::where('cabid', $rent->rentersid)
-                ->update([
-                'userid' => $rent->rentersid,
-                'email' => $rent->email,
-                'cabinetprice' => $request->cabinetprice,
-                'updated_by' => auth()->user()->email,
-                'mod' => $mod + 1,
-                ]);
-
-                $totalcabown = cabinet::where('userid', $cabinet->userid)->count();
-        
-                Renter::where('rentersid',$rent->rentersid)
-                ->update([
-                    'cabid' => $totalcabown + 1,
-                ]);
-
-                
-                if ($cabinets) {
-                    //query successful
-                    $notes = 'Renter. Cabinet. Update, ' . $rent->lastname;
-                    $status = 'Success';
-                    $this->userlog($notes,$status);
-
-                    return redirect()->route('managerenter.index')
-                                ->with('success','Cabinet updated successfully.');
-                }else{
-                    $notes = 'Renter. Cabinet. Update';
-                    $status = 'Failed';
-                    $this->userlog($notes,$status);
-
-                    return redirect()->route('managerenter.update')
-                                ->with('failed','Cabinet update failed');
-                }
-            }else{
-
-                $cabinets = cabinet::where('userid', $cabinet->userid)
-                ->update([
-                'userid' => 0,
-                'email' => 'Vacant',
-                'cabinetprice' => $request->cabinetprice,
-                'updated_by' => auth()->user()->email,
-                'mod' => $mod + 1,
-                ]);
-
-                $totalcabown = cabinet::where('userid', $cabinet->userid)->count();
-                
-                $rentercabUpdate = Renter::where('rentersid',$cabinet->userid)
-                            ->update([
-                                'cabid' => $totalcabown - 1,
-                            ]);
-                
-
-                if ($cabinets) {
-                    //query successful
-                    $notes = 'Renter. Cabinet. Update, ' . $rent->lastname;
-                    $status = 'Success';
-                    $this->userlog($notes,$status);
-
-                    return redirect()->route('managerenter.index')
-                                ->with('success','Cabinet updated successfully.');
-                }else{
-                    $notes = 'Renter. Cabinet. Update, ' . $rent->lastname;
-                    $status = 'Failed';
-                    $this->userlog($notes,$status);
-
-                    return redirect()->route('managerenter.update')
-                                ->with('failed','Cabinet update failed');
-                }
-            }
-            
-        }else{
-            $notes = 'Renter. Cabinet. Update, Inactive. ' . $rent->lastname;
-            $status = 'Failed';
-            $this->userlog($notes,$status);
-            
-            return redirect()->route('managecabinet.index')
-                            ->with('failed','Cabinet Inactive');
-        }
-    }
-
-    public function statuscabinet($cabid){
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
-        $cabinet = cabinet::findOrFail($cabid);
-        $mod = 0;
-        $mod = $cabinet->mod;
-
-        if($cabinet->status == 'Active')
-        {
-            cabinet::where('cabid', $cabinet->cabid)
-            ->update([
-            'status' => 'Inactive',
-            'updated_by' => auth()->user()->email,
-            'mod' => $mod + 1,
-        ]);
-
-        $notes = 'Renter. Cabinet. Deactivate. ' . $cabinet->cabinetname;
-        $status = 'Success';
-        $this->userlog($notes,$status);
-
-        return redirect()->route('managerenter.show',$cabinet->userid)
-                            ->with('success','Cabinet Deactivated successfully');
-        }
-        elseif($cabinet->status == 'Inactive')
-        {
-            cabinet::where('cabid', $cabinet->cabid)
-            ->update([
-            'status' => 'Active',
-            'updated_by' => auth()->user()->email,
-            'mod' => $mod + 1,
-        ]);
-
-        $notes = 'Renter. Cabinet. Activate. ' . $cabinet->cabinetname;
-        $status = 'Success';
-        $this->userlog($notes,$status);
-
-        
-        return redirect()->route('managerenter.show',$cabinet->userid)
-                            ->with('success','Cabinet Activated successfully');
-        }
-    }
-    
     public function storedata(Request $request){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $br = branch::where('branchname',$request->branchname)->first();
@@ -525,182 +223,6 @@ class ManageRenterController extends Controller
         }
     }
 
-    public function renterinfo()
-    {
-        return view('manage.renters.create-renter-info');
-    }
-
-    public function renterregister(Request $request)
-    {
-        $n1 = strtoupper($request->firstname[0]);
-        //$n2 = strtoupper($request->middlename[0]);
-        $n3 = strtoupper($request->lastname[0]);
-        $n4 = preg_replace('/[-]+/', '', $request->birthdate);
-
-        //$newpassword = $n1 . $n2 . $n3 . $n4;
-        $newpassword = $n1 . $n3 . $n4;
-
-        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
-        //$fullname = $request->lastname . ', ' . $request->firstname . ' ' . $request->middlename;
-        $fullname = $request->lastname . ', ' . $request->firstname;
-        
-        if(auth()->user()->accesstype == 'Administrator'){
-            if($request->newrenter == 'Y'){
-                if($request->password == $request->password_confirmation){
-                    $renter = Renter::create([
-                        'avatar' => 'avatars/avatar-default.jpg',
-                        'username' => $request->username,
-                        'email' => $request->email,
-                        'password' => Hash::make($newpassword),
-                        'firstname' => $request->firstname,
-                        'middlename' => 'Null',
-                        'lastname' => $request->lastname,
-                        'birthdate' => $request->birthdate,
-                        'mobile_primary' => $request->mobile_primary,
-                        'mobile_secondary' => 'Null',
-                        'homeno' => 'Null',
-                        'branchid' => auth()->user()->branchid,
-                        'branchname' => auth()->user()->branchname,
-                        'cabid' => 0,
-                        'cabinetname' => 'Null',
-                        'accesstype' => 'Renters',
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'timerecorded' => $timenow,
-                        'mod' => 0,
-                        'status' => 'Active',
-                    ]);
-
-                    
-
-
-                    if($renter){
-                        $notes = 'Renter. Register. ' . $fullname;
-                        $status = 'Success';
-                        $this->userlog($notes,$status);
-
-                        $rentersearch = Renter::where('firstname', $request->firstname)
-                            ->where(function(Builder $builder) use($request){
-                            $builder->where('lastname',$request->lastname)
-                                    ->where('birthdate',$request->birthdate);
-                                })->first();
-
-                        $branchlistadd =branchlist::create([
-                            'userid' => $rentersearch->userid,
-                            'branchid' => auth()->user()->branchid,
-                            'accesstype' => 'Renters',
-                            'timerecorded'  => $timenow,
-                            'cabcount' => 0,
-                            'posted'  => 'N',
-                            'created_by' => auth()->user()->email,
-                            'updated_by' => 'Null',
-                            'mod' => 0,
-                            'status' => 'Active',
-                        ]);
-                        
-                        return redirect()->route('managerenter.index')
-                                ->with('success','Renter Registered successfully.');
-                    }else{
-                        $notes = 'Renter. Register. ' . $fullname;
-                        $status = 'Failed';
-                        $this->userlog($notes,$status);
-
-                        return redirect()->back()
-                                    ->with('failed','Renter Registration failed. Save Error.');
-                    }
-        
-                }else{
-                    $notes = 'Renter. Register. Password Mismatched. ' . $fullname;
-                    $status = 'Failed';
-                    $this->userlog($notes,$status);
-                   
-                    return redirect()->back()
-                                    ->with('failed','Renter Registration failed. Password Mismatched.');
-                }
-            
-            }else{
-
-                $branchlist = branchlist::where('userid', $request->userid)
-                                ->where(function(Builder $builder) use($request){
-                                $builder->where('branchid',auth()->user()->branchid);
-                                })->first();
-                                
-                $branch = Renter::where('rentersid', $request->userid)->first();
-
-
-                if(empty($branchlist))
-                {
-
-                    $branchlistadd =branchlist::create([
-                        'userid' => $request->userid,
-                        'branchid' => auth()->user()->branchid,
-                        'accesstype' => 'Renters',
-                        'timerecorded'  => $timenow,
-                        'posted'  => 'N',
-                        'created_by' => auth()->user()->email,
-                        'updated_by' => 'Null',
-                        'mod' => 0,
-                        'status' => 'Active',
-                    ]);
-
-                    if($branchlistadd)
-                    {
-                        $notes = 'Renter. Register. ' . $fullname;
-                        $status = 'Success';
-                        $this->userlog($notes,$status);
-                        
-                        return redirect()->route('managerenter.index')
-                                ->with('success','Renter Registered successfully.');
-                    }else{
-                        $notes = 'Renter. Register. ' . $fullname;
-                        $status = 'Failed';
-                        $this->userlog($notes,$status);
-
-                        return redirect()->route('managerenter.index')
-                                    ->with('failed','Renter Registration failed');
-                    }  
-                }
-                else{
-                    $notes = 'Renter. Register. Already Registered. ' . $fullname;
-                    $status = 'Failed';
-                    $this->userlog($notes,$status);
-
-                    return redirect()->route('managerenter.index')
-                                    ->with('failed','Renter Registration failed: Already Registered.');
-
-                }
-            }
-        }else{
-            $notes = 'Renter. Register. Already Registered. ' . $fullname;
-            $status = 'Failed';
-            $this->userlog($notes,$status);
-
-            return redirect()->route('dashboardoverview.index')->with('failed','Renter Registration failed.');
-        }
-        
-    }
-
-    public function renterlogin(Request $request)
-    {
-        
-        if(auth()->user()->accesstype == 'Renters'){
-            $renter = Renter::where('firstname', $request->firstname)
-                        ->where(function(Builder $builder) use($request){
-                        $builder->where('lastname',$request->lastname)
-                                ->where('birthdate',$request->birthdate);
-                            })->first();
-            if($renter){
-                return view('manage.renters.create-renter-register',['renter' => $renter])->with('success','Renter Record Found.');
-            }else{
-                return view('manage.renters.create-renter-login')->with(['renterinfo' => $request]);
-            }
-            
-        }else{
-            return redirect()->route('dashboardoverview.index')->with('failed','Renter Registration failed.');
-        }
-
-    }
-
     public function search(Request $request)
     {
         $renter = Renter::where('accesstype',"Renters")
@@ -740,39 +262,19 @@ class ManageRenterController extends Controller
         return view('manage.renters.index');
     }
 
-    public function selectbranch(){
-        $branch = branch::orderBy('branchname', 'asc')->paginate(5);
-
-        return view('manage.renters.create-selectbranch',['branch' => $branch])
-            ->with('i', (request()->input('page', 1) - 1) * 5);
-    }
-
-    public function createrenter($branches)
+    public function create($branchid)
     {
-        $branch = branch::where('branchid',$branches)
-                        ->orderBy('branchname', 'asc')->first();
-        $cabinet = cabinet::where('branchid',$branches)
-                    ->where(function(Builder $builder){
-                        $builder->where('email','Vacant')
-                        ->orderBy('cabinetname', 'asc');
-                    })->get();
-       
+        $branch = branch::where('branchid',$branchid)->first();
 
-        return view('manage.renters.create',['cabinet' => $cabinet])
-                            ->with(['branch' => $branch]);
-    }
-
-    public function create()
-    {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return view('manage.renters.create-renter-info'); 
+                return view('manage.renters.create',compact('branch')); 
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return view('manage.renters.create-renter-info');
+                return view('manage.renters.create',compact('branch'));
 
             }
         }else{
@@ -811,22 +313,10 @@ class ManageRenterController extends Controller
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                $cabinets = cabinet::where('userid',$renters->rentersid)
-                                        ->orderBy('status','asc')
-                                        ->orderBy('branchname','asc')
-                                        ->paginate(5);
-                            return view('manage.renters.show',['renter' => $renters])
-                                ->with(compact('cabinets'))
-                                ->with('i', (request()->input('page', 1) - 1) * 5);        
+                    
             }elseif(auth()->user()->accesstype =='Administrator'){
-                $cabinets = cabinet::where('userid',$renters->rentersid)
-                                        ->orderBy('status','asc')
-                                        ->orderBy('branchname','asc')
-                                        ->paginate(5);
-                            return view('manage.renters.show',['renter' => $renters])
-                                ->with(compact('cabinets'))
-                                ->with('i', (request()->input('page', 1) - 1) * 5);
-                                    }
+               
+            }
         }else{
             return redirect()->route('dashboardoverview.index');
         }

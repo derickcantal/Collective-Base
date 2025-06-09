@@ -17,8 +17,6 @@ use App\Http\Controllers\Manage\ManageCashierRenterController;
 use App\Http\Controllers\Transaction\TransactionAttendanceController;
 use App\Http\Controllers\Transaction\TransactionCabinetSalesController;
 use App\Http\Controllers\Transaction\TransactionRentalController;
-use App\Http\Controllers\Transaction\TransactionRequestController;
-use App\Http\Controllers\Transaction\TransactionRenterSalesController;
 use App\Http\Controllers\Transaction\TransactionSalesController;
 use App\Http\Controllers\Transaction\TransactionEODController;
 use App\Http\Controllers\Dashboard\DashboardOverviewController;
@@ -78,23 +76,24 @@ Route::middleware('auth')->group(function () {
     Route::delete('/manage/branch/{branch}', [ManageBranchController::class, 'destroy'])->name('managebranch.destroy');
     Route::get('/manage/branch/{branch}/edit', [ManageBranchController::class, 'edit'])->name('managebranch.edit');
 
-    Route::get('/manage/renters', [ManageRenterController::class, 'index'])->name('managerenter.index');
-    Route::post('/manage/renters', [ManageRenterController::class, 'store'])->name('managerenter.store');
-    Route::get('/manage/renters/create', [ManageRenterController::class, 'create'])->name('managerenter.create');
-    Route::get('/manage/renters/search', [ManageRenterController::class, 'search'])->name('managerenter.search');
-    Route::get('/manage/renters/{renters}', [ManageRenterController::class, 'show'])->name('managerenter.show');
-    Route::patch('/manage/renters/{renters}', [ManageRenterController::class, 'update'])->name('managerenter.update');
-    Route::delete('/manage/renters/{renters}', [ManageRenterController::class, 'destroy'])->name('managerenter.destroy');
-    Route::get('/manage/renters/{renters}/edit', [ManageRenterController::class, 'edit'])->name('managerenter.edit');
-    Route::get('/manage/renters/selectbranch', [ManageRenterController::class, 'selectbranch'])->name('managerenter.selectbranch');
-    Route::put('/manage/renters/createrenter/{branchid}', [ManageRenterController::class, 'createrenter'])->name('managerenter.createrenter');
-    Route::put('/manage/renters/cabinet/modify/{cabinetid}', [ManageRenterController::class, 'updatecabinet'])->name('managerenter.updatecabinet');
-    Route::get('/manage/renters/cabinet/{cabinetid}', [ManageRenterController::class, 'editcabinet'])->name('managerenter.editcabinet');
-    Route::get('/manage/renters/cabinet/status/{cabinetid}', [ManageRenterController::class, 'statuscabinet'])->name('managerenter.statuscabinet');
-    Route::get('/manage/renters/create/info', [ManageRenterController::class, 'renterinfo'])->name('managerenter.renterinfo');
-    Route::get('/manage/renters/create/login', [ManageRenterController::class, 'renterlogin'])->name('managerenter.renterlogin');
-    Route::put('/manage/renters/create/register/{renter}', [ManageRenterController::class, 'renterregister'])->name('managerenter.renterregister');
-    Route::get('/manage/renters/cabinet/sales/{renter}', [ManageRenterController::class, 'cabinetsales'])->name('managerenter.cabinetsales');
+    Route::get('/manage/select/branch/renters', [ManageRenterController::class, 'index'])->name('managerenter.index');
+    Route::post('/manage/branch/renters', [ManageRenterController::class, 'store'])->name('managerenter.store');
+    Route::get('/manage/branch/{branchid}/renters/create', [ManageRenterController::class, 'create'])->name('managerenter.create');
+    Route::get('/manage/branch/renters/search', [ManageRenterController::class, 'search'])->name('managerenter.search');
+    Route::get('/manage/branch/renters/{renters}', [ManageRenterController::class, 'show'])->name('managerenter.show');
+    Route::patch('/manage/branch/renters/{renters}', [ManageRenterController::class, 'update'])->name('managerenter.update');
+    Route::delete('/manage/branch/renters/{renters}', [ManageRenterController::class, 'destroy'])->name('managerenter.destroy');
+    Route::get('/manage/branch/renters/{renters}/edit', [ManageRenterController::class, 'edit'])->name('managerenter.edit');
+    Route::get('/manage/branch/{branchid}/renters/list', [ManageRenterController::class, 'renterslist'])->name('managerenter.renterslist');
+
+    // Route::get('/manage/renters/selectbranch', [ManageRenterController::class, 'selectbranch'])->name('managerenter.selectbranch');
+    // Route::put('/manage/renters/createrenter/{branchid}', [ManageRenterController::class, 'createrenter'])->name('managerenter.createrenter');
+    // Route::put('/manage/renters/cabinet/modify/{cabinetid}', [ManageRenterController::class, 'updatecabinet'])->name('managerenter.updatecabinet');
+    // Route::get('/manage/renters/cabinet/{cabinetid}', [ManageRenterController::class, 'editcabinet'])->name('managerenter.editcabinet');
+    // Route::get('/manage/renters/cabinet/status/{cabinetid}', [ManageRenterController::class, 'statuscabinet'])->name('managerenter.statuscabinet');
+    // Route::get('/manage/renters/create/info', [ManageRenterController::class, 'renterinfo'])->name('managerenter.renterinfo');
+    // Route::get('/manage/renters/create/login', [ManageRenterController::class, 'renterlogin'])->name('managerenter.renterlogin');
+    // Route::put('/manage/renters/create/register/{renter}', [ManageRenterController::class, 'renterregister'])->name('managerenter.renterregister');
 
     Route::get('/manage/branch/cabinet/select', [ManageCabinetController::class, 'index'])->name('managecabinet.index');
     Route::get('/manage/branch/{branchid}/cabinet/list', [ManageCabinetController::class, 'cabinetlist'])->name('managecabinet.cabinetlist');
@@ -194,15 +193,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/transaction/rental/payments/set/payment/month', [TransactionRentalController::class, 'setpayment'])->name('transactionrental.setpayment');
     Route::get('/transaction/rental/payments/set/payment/month/store', [TransactionRentalController::class, 'storesetpayment'])->name('transactionrental.storesetpayment');
 
-    Route::get('/transaction/request', [TransactionRequestController::class, 'index'])->name('transactionrequest.index');
-    Route::post('/transaction/request', [TransactionRequestController::class, 'store'])->name('transactionrequest.store');
-    Route::get('/transaction/request/create', [TransactionRequestController::class, 'create'])->name('transactionrequest.create');
-    Route::get('/transaction/request/search', [TransactionRequestController::class, 'search'])->name('transactionrequest.search');
-    Route::get('/transaction/request/{request}', [TransactionRequestController::class, 'show'])->name('transactionrequest.show');
-    Route::patch('/transaction/request/{request}', [TransactionRequestController::class, 'update'])->name('transactionrequest.update');
-    Route::delete('/transaction/request/{request}', [TransactionRequestController::class, 'destroy'])->name('transactionrequest.destroy');
-    Route::get('/transaction/request/{request}/edit', [TransactionRequestController::class, 'edit'])->name('transactionrequest.edit');
-
     Route::get('/transaction/sales', [TransactionSalesController::class, 'index'])->name('transactionsales.index');
     Route::post('/transaction/sales', [TransactionSalesController::class, 'store'])->name('transactionsales.store');
     Route::get('/transaction/sales/create', [TransactionSalesController::class, 'create'])->name('transactionsales.create');
@@ -211,16 +201,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/transaction/sales/{sales}', [TransactionSalesController::class, 'update'])->name('transactionsales.update');
     Route::delete('/transaction/sales/{sales}', [TransactionSalesController::class, 'destroy'])->name('transactionsales.destroy');
     Route::get('/transaction/sales/{sales}/edit', [TransactionSalesController::class, 'edit'])->name('transactionsales.edit');
-
-    Route::get('/transaction/renter/sales', [TransactionRenterSalesController::class, 'index'])->name('transactionrentersales.index');
-    Route::post('/transaction/renter/sales', [TransactionRenterSalesController::class, 'store'])->name('transactionrentersales.store');
-    Route::get('/transaction/renter/sales/create', [TransactionRenterSalesController::class, 'create'])->name('transactionrentersales.create');
-    Route::get('/transaction/renter/sales/search', [TransactionRenterSalesController::class, 'search'])->name('transactionrentersales.search');
-    Route::get('/transaction/renter/sales/{sales}', [TransactionRenterSalesController::class, 'show'])->name('transactionrentersales.show');
-    Route::get('/transaction/renter/sales/{sales}/weekly', [TransactionRenterSalesController::class, 'weeklysales'])->name('transactionrentersales.weeklysales');
-    Route::patch('/transaction/renter/sales/{sales}', [TransactionRenterSalesController::class, 'update'])->name('transactionrentersales.update');
-    Route::delete('/transaction/renter/sales/{sales}', [TransactionRenterSalesController::class, 'destroy'])->name('transactionrentersales.destroy');
-    Route::get('/transaction/renter/sales/{sales}/edit', [TransactionRenterSalesController::class, 'edit'])->name('transactionrentersales.edit');
 
     Route::get('/transaction/eod', [TransactionEODController::class, 'index'])->name('transactioneod.index');
     Route::post('/transaction/eod', [TransactionEODController::class, 'store'])->name('transactioneod.store');
