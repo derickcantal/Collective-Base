@@ -43,6 +43,28 @@ class ManageRenterController extends Controller
         ]);
     }
 
+    public function searchrenter(Request $request, $branchid)
+    {
+        $branch = branch::where('branchid',$branchid)->first();
+
+         $renter = Renter::where('accesstype',"Renters")
+                        ->where('branchid',$branchid)
+                    ->where(function(Builder $builder) use($request){
+                        $builder->where('username','like',"%{$request->search}%")
+                                ->orWhere('firstname','like',"%{$request->search}%")
+                                ->orWhere('lastname','like',"%{$request->search}%")
+                                ->orWhere('branchname','like',"%{$request->search}%")
+                                ->orWhere('email','like',"%{$request->search}%")
+                                ->orWhere('status','like',"%{$request->search}%");
+                    })
+                    ->orderBy('lastname',$request->orderrow)
+                    ->paginate($request->pagerow);
+    
+        return view('manage.renters.renterslist',compact('renter'))
+            ->with(['branch' => $branch])
+            ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
+    }
+
     public function renterslist($branchid){
         $branch = branch::where('branchid', $branchid)->first();
 
@@ -230,7 +252,6 @@ class ManageRenterController extends Controller
                         $builder->where('username','like',"%{$request->search}%")
                                 ->orWhere('firstname','like',"%{$request->search}%")
                                 ->orWhere('lastname','like',"%{$request->search}%")
-                                //->orWhere('middlename','like',"%{$request->search}%")
                                 ->orWhere('branchname','like',"%{$request->search}%")
                                 ->orWhere('email','like',"%{$request->search}%")
                                 ->orWhere('status','like',"%{$request->search}%");
@@ -305,17 +326,18 @@ class ManageRenterController extends Controller
 
     public function show($renter)
     {
-        $renters = Renter::where('rentersid',$renter)->first();
+        $renter = Renter::where('rentersid',$renter)->first();
 
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboardoverview.index');
-            }elseif(auth()->user()->accesstype =='Supervisor'){
-                    
+            }elseif(auth()->user()->accesstype =='Supervisor')
+            {
+                return view('manage.renters.show',compact('renter'));
             }elseif(auth()->user()->accesstype =='Administrator'){
-               
+               return view('manage.renters.show',compact('renter'));
             }
         }else{
             return redirect()->route('dashboardoverview.index');

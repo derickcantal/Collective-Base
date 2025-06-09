@@ -23,7 +23,8 @@
                             <svg class="rtl:rotate-180  w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                             </svg>
-                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Cabinet List</span>
+                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">
+                                {{ $renter->branchname }}</span>
                         </div>
                         </li>
                         <li aria-current="page">
@@ -31,7 +32,8 @@
                             <svg class="rtl:rotate-180  w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                             </svg>
-                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">{{ $renter->lastname }}, {{ $renter->firstname }} {{ $renter->middlename }}</span>
+                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">
+                                {{ $renter->lastname }}, {{ $renter->firstname }} {{ $renter->middlename }}</span>
                         </div>
                         </li>
                         
@@ -43,114 +45,81 @@
                     <!-- Modal content -->
                     <div class="relative bg-white rounded-lg dark:bg-gray-800">
                         <!-- Modal header -->
-                        <div class="flex items-center justify-between p-4 md:p-5 border-b  dark:border-gray-600">
+                        <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                Cabinet List
+                                Renter Information
                             </h3>
                         </div>
-                    </div>
+                        <!-- Modal body -->
+                        <img width="100" height="100" class="rounded-full mt-4 p-1" src="{{ asset("/storage/$renter->avatar") }}" alt="user avatar" />
+                        <div class="grid gap-4 mb-4 grid-cols-2">
+                            <div class="col-span-2 sm:col-span-1 p-4">
+                                <!-- username -->
+                                <div class="form-group">
+                                    <x-input-label for="username" :value="__('Username')" />
+                                    <h5 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                        {{ $renter->username }}
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="col-span-2 sm:col-span-1 p-4">
+                                <!-- cabname -->
+                                <div class="form-group">
+                                    <x-input-label for="fullname" :value="__('Full Name')" />
+                                    <h5 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                        {{ $renter->lastname }}, {{ $renter->firstname }} {{ $renter->middlename }}
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="col-span-2 sm:col-span-1 p-4">
+                                    <!-- lastname -->
+                                <div class="form-group">
+                                    <x-input-label for="phone" :value="__('Mobile No.')" />
+                                    <h5 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                        {{ $renter->mobile_primary }}
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="col-span-2 sm:col-span-1 p-4">
+                                    <!-- lastname -->
+                                <div class="form-group">
+                                    <x-input-label for="email" :value="__('Email')" />
+                                    <h5 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                        {{ $renter->email }}
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="col-span-2 sm:col-span-1 p-4">
+                                    <!-- lastname -->
+                                <div class="form-group">
+                                    <x-input-label for="email_other" :value="__('Date Time Created')" />
+                                    <h5 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                        {{ $renter->created_at }}
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="col-span-2 sm:col-span-1 p-4">
+                                    <!-- lastname -->
+                                <div class="form-group">
+                                    <x-input-label for="email_other" :value="__('Created By')" />
+                                    <h5 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                        {{ $renter->created_by }}
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Button -->
+                        <div class="flex items-center justify-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                            <a href="{{ route('managerenter.renterslist',$renter->branchid) }}" class="py-2 px-3 ms-3 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                <svg class="w-4 h-4 mr-2 -ml-0.5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                                </svg>
+                                Close
+                            </a>
+                        </div>
+                    </div>   
                 </div>
-                <!-- Modal body -->
-                <div class="max-w-screen-2xl overflow-x-auto shadow-md sm:rounded-lg mt-3">
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">
-                                    No
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Cabinet No.
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Rent Price
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Created by
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Status
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Action
-                                </th>
-                                
-                            </tr>
-                        </thead>
-                            @forelse ($cabinets as $cabinet)
-                            
-                        <tbody>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            
-                                <td class="px-6 py-4">
-                                    <x-input-label>{{ ++$i }}</x-input-label>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <x-input-label for="cabinetname" :value="$cabinet->cabinetname"/>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <x-input-label for="email" :value="$cabinet->email"/>
-                                    <x-input-label for="cabinetprice">{{ number_format($cabinet->cabinetprice, 2) }}</x-input-label>
-                                </td>
-                            
-                                
-                                <td class="px-6 py-4">
-                                    <x-input-label for="branchname" :value="$cabinet->branchname"/>
-                                    <x-input-label for="created_by" :value="$cabinet->created_by"/>
-                                    <x-input-label for="timerecorded" :value="$cabinet->timerecorded"/>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center">
-                                    @php
-                                        $color = '';
-                                        if ($cabinet->status == 'Active'):
-                                            $color = 'green';
-                                        elseif ($cabinet->status == 'Inactive'):
-                                            $color = 'red';
-                                        endif;
-                                    @endphp
-                                            <div class="h-2.5 w-2.5 rounded-full bg-{{ $color; }}-500 me-2"></div> <x-input-label for="status" :value="$cabinet->status"/>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    
-                                    <form action="{{ route('managerenter.statuscabinet',$cabinet->cabid) }}" method="POST">
-                                        
-                                    <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ route('managerenter.editcabinet',$cabinet->cabid) }}">Modify</a>
-                                        @csrf
-                                        @method('GET')
-                                        @php
-                                        $txtbutton = '';
-                                        $colorbutton = '';
-                                        
-                                        if ($cabinet->status == 'Active'):
-                                            $txtbutton = 'Decativate';
-                                            $colorbutton = 'dark:text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800';
-                                        elseif ($cabinet->status == 'Inactive'):
-                                            $txtbutton = 'Activate';
-                                            $colorbutton = 'dark:text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800';
-                                        endif
-                                        
-                                        @endphp
-                                        
-                                        <x-danger-button class="ms-3 {{ $colorbutton }}">
-                                            {{ $txtbutton }}
-                                        </x-danger-button>
-                                    </form>
-                                </td>
-                            </tr>
-                        
-                            @empty
-                            <td scope="row" class="px-6 py-4">
-                                No Records Found.
-                            </td>	
-                            @endforelse
-                                
-                        </tbody>
-                    </table>
-                </div>
-                <div class="mt-4">
-                    {!! $cabinets->appends(request()->query())->links() !!}
-                </div>
+                
             </div>
         </div>
     </div>

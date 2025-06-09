@@ -76,15 +76,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/manage/branch/{branch}', [ManageBranchController::class, 'destroy'])->name('managebranch.destroy');
     Route::get('/manage/branch/{branch}/edit', [ManageBranchController::class, 'edit'])->name('managebranch.edit');
 
-    Route::get('/manage/select/branch/renters', [ManageRenterController::class, 'index'])->name('managerenter.index');
-    Route::post('/manage/branch/renters', [ManageRenterController::class, 'store'])->name('managerenter.store');
-    Route::get('/manage/branch/{branchid}/renters/create', [ManageRenterController::class, 'create'])->name('managerenter.create');
-    Route::get('/manage/branch/renters/search', [ManageRenterController::class, 'search'])->name('managerenter.search');
-    Route::get('/manage/branch/renters/{renters}', [ManageRenterController::class, 'show'])->name('managerenter.show');
-    Route::patch('/manage/branch/renters/{renters}', [ManageRenterController::class, 'update'])->name('managerenter.update');
-    Route::delete('/manage/branch/renters/{renters}', [ManageRenterController::class, 'destroy'])->name('managerenter.destroy');
-    Route::get('/manage/branch/renters/{renters}/edit', [ManageRenterController::class, 'edit'])->name('managerenter.edit');
-    Route::get('/manage/branch/{branchid}/renters/list', [ManageRenterController::class, 'renterslist'])->name('managerenter.renterslist');
+    Route::get('/manage/renters/branch/select', [ManageRenterController::class, 'index'])->name('managerenter.index');
+    Route::get('/manage/renters/branch/search', [ManageRenterController::class, 'search'])->name('managerenter.search');
+    Route::post('/manage/renters/branch', [ManageRenterController::class, 'store'])->name('managerenter.store');
+    Route::get('/manage/renters/branch/{branchid}/create', [ManageRenterController::class, 'create'])->name('managerenter.create');
+    Route::get('/manage/renters/branch/{branchid}/search', [ManageRenterController::class, 'searchrenter'])->name('managerenter.searchrenter');
+    Route::get('/manage/renters/branch/{renters}', [ManageRenterController::class, 'show'])->name('managerenter.show');
+    Route::patch('/manage/renters/branch/{renters}', [ManageRenterController::class, 'update'])->name('managerenter.update');
+    Route::delete('/manage/renters/branch/{renters}', [ManageRenterController::class, 'destroy'])->name('managerenter.destroy');
+    Route::get('/manage/renters/branch/{renters}/edit', [ManageRenterController::class, 'edit'])->name('managerenter.edit');
+    Route::get('/manage/renters/branch/{branchid}/list', [ManageRenterController::class, 'renterslist'])->name('managerenter.renterslist');
 
     // Route::get('/manage/renters/selectbranch', [ManageRenterController::class, 'selectbranch'])->name('managerenter.selectbranch');
     // Route::put('/manage/renters/createrenter/{branchid}', [ManageRenterController::class, 'createrenter'])->name('managerenter.createrenter');

@@ -447,14 +447,17 @@ class TransactionSalesController extends Controller
      */
     public function show($sales)
     {
-        return redirect()->route('dashboardoverview.index');
+        // return redirect()->route('dashboardoverview.index');
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
-                $sales = Sales::findOrFail($sales);
+                $sales = Sales::where('salesid',$sales)->first();
                 return view('transaction.sales.show',['sales' => $sales]);
-            }
-            else{
-                return redirect()->route('dashboardoverview.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                $sales = Sales::where('salesid',$sales)->first();
+                return view('transaction.sales.show',['sales' => $sales]);     
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                $sales = Sales::where('salesid',$sales)->first();
+                return view('transaction.sales.show',['sales' => $sales]);
             }
         }else{
             return redirect()->route('dashboardoverview.index');
