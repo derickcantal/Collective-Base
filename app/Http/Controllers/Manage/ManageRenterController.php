@@ -11,6 +11,7 @@ use App\Models\Renter;
 use App\Models\branch;
 use App\Models\cabinet;
 use App\Models\branchlist;
+use App\Models\users_temp;
 use App\Models\user_login_log;
 use App\Models\history_sales;
 use App\Models\Sales;
@@ -97,49 +98,119 @@ class ManageRenterController extends Controller
 
     public function storedata(Request $request){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
+
+        $n1 = strtoupper($request->firstname[0]);
+        $n3 = strtoupper($request->lastname[0]);
+        $n4 = preg_replace('/[-]+/', '', $request->birthdate);
+
+        $newpassword = $n1 . $n3 . $n4;
+
+        $fullname = $request->lastname . ', ' . $request->firstname;
+
         $br = branch::where('branchname',$request->branchname)->first();
 
-        $renter = Renter::create([
-            'avatar' => 'avatars/avatar-default.jpg',
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'firstname' => $request->firstname,
-            'middlename' => 'Null',
-            'lastname' => $request->lastname,
-            'birthdate' => $request->birthdate,
-            'branchid' => $br->branchid,
-            'branchname' => $br->branchname,
-            'cabid' => 0,
-            'cabinetname' => 'Null',
-            'accesstype' => 'Renters',
-            'created_by' => auth()->user()->email,
-            'updated_by' => 'Null',
-            'timerecorded' => $timenow,
-            'mod' => 0,
-            'status' => 'Active',
-        ]);
+        $usertemp = users_temp::where('firstname', $request->firstname)
+            ->where(function(Builder $builder) use($request){
+            $builder
+                    //->where('middlename',$request->middlename)
+                    ->where('lastname',$request->lastname)
+                    ->where('birthdate',$request->birthdate);
+                })->first();
 
-        //$fullname = $request->lastname . ', ' . $request->firstname . ' ' . $request->middlename;
-        $fullname = $request->lastname . ', ' . $request->firstname;
-        
+        if(empty($usertemp))
+        {
+            $searchrenter = Renter::where('firstname', $request->firstname)
+                ->where(function(Builder $builder) use($request){
+                $builder->where('lastname',$request->lastname)
+                        ->where('birthdate',$request->birthdate);
+                    })->first();
 
-        if ($renter) {
-            //query successful
-            $notes = 'Renter. Create. ' . $fullname;
-            $status = 'Success';
-            $this->userlog($notes,$status);
+            if(empty($searchrenter))
+            {
+                // dd($searchrenter,'not found');
+                $renter = Renter::create([
+                    'avatar' => 'avatars/avatar-default.jpg',
+                    'username' => $request->username,
+                    'email' => $request->email,
+                    'password' => Hash::make($newpassword),
+                    'firstname' => $request->firstname,
+                    'middlename' => 'Null',
+                    'lastname' => $request->lastname,
+                    'birthdate' => $request->birthdate,
+                    'branchid' => $br->branchid,
+                    'branchname' => $br->branchname,
+                    'cabid' => 0,
+                    'cabinetname' => 'Null',
+                    'accesstype' => 'Renters',
+                    'created_by' => auth()->user()->email,
+                    'updated_by' => 'Null',
+                    'timerecorded' => $timenow,
+                    'mod' => 0,
+                    'status' => 'Active',
+                    ]);
 
-            return redirect()->route('managerenter.index')
-                        ->with('success','Renter created successfully.');
-        }else{
-            $notes = 'Renter. Create. ' . $fullname;
-            $status = 'Failed';
-            $this->userlog($notes,$status);
 
-            return redirect()->route('managerenter.index')
-                        ->with('success','Renter creation failed');
-        }  
+                if ($renter) {
+                    //query successful
+                    $notes = 'Renter. Create. ' . $fullname;
+                    $status = 'Success';
+                    $this->userlog($notes,$status);
+
+                    return redirect()->back()
+                                ->with('success','Renter created successfully.');
+                }else{
+                    $notes = 'Renter. Create. ' . $fullname;
+                    $status = 'Failed';
+                    $this->userlog($notes,$status);
+
+                    return redirect()->back()
+                                ->with('success','Renter creation failed');
+                }  
+            }else
+            {
+                $branchlist =branchlist::create([
+                            'userid' => $searchrenter->rentersid,
+                            'branchid' => auth()->user()->branchid,
+                            'accesstype' => 'Renters',
+                            'timerecorded'  => $timenow,
+                            'cabcount' => 0, 
+                            'posted'  => 'N',
+                            'created_by' => auth()->user()->email,
+                            'updated_by' => 'Null',
+                            'mod' => 0,
+                            'status' => 'Active',
+                        ]);
+                // dd($searchrenter,'found');
+
+                if ($branchlist) {
+                    //query successful
+                    $notes = 'Renter. Create. ' . $fullname;
+                    $status = 'Success';
+                    $this->userlog($notes,$status);
+
+                    return redirect()->back()
+                                ->with('success','Renter Added to Branch successfully.');
+                }else{
+                    $notes = 'Renter. Create. ' . $fullname;
+                    $status = 'Failed';
+                    $this->userlog($notes,$status);
+
+                    return redirect()->back()
+                                ->with('failed','Renter Adding to Branch failed');
+                } 
+            }
+            return redirect()->back()
+                        ->with('success','Renter Not Found');
+        }else
+        {
+            dd($usertemp);
+            return redirect()->back()
+                        ->with('success','Renter Found');
+        }
+
+  
+
+       
     }
     
     public function updatedata($request,$renters){

@@ -363,7 +363,7 @@ class ManageCashierRenterController extends Controller
 
         //$newpassword = $n1 . $n2 . $n3 . $n4;
         $newpassword = $n1 . $n3 . $n4;
-
+ 
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         if(auth()->user()->accesstype == 'Cashier'){
             if($request->newrenter == 'Y'){
