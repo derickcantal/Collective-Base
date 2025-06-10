@@ -42,7 +42,12 @@
                 <!-- searchbar -->
                 <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                     <div class="flex flex-col md:flex-row items-stretch md:items-center md:space-x-3 space-y-3 md:space-y-0 justify-between mx-4 py-4 dark:border-gray-700 ">
-                        <div></div>
+                        <a href="{{ route('manageallrenter.allrenters') }}" class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
+                            <svg class="h-4 w-4 mr-2 -ml-0.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-3 5h3m-6 0h.01M12 16h3m-6 0h.01M10 3v4h4V3h-4Z"/>
+                            </svg>
+                            Show All Renters
+                        </a>
                         <form class="flex items-center" action="{{ route('managerenter.search') }}" method="get">
                             @csrf
                             <div class="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
@@ -97,9 +102,6 @@
                                     Branch
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Cabinet Count
-                                </th>
-                                <th scope="col" class="px-6 py-3">
                                     Status
                                 </th>
                                 <th scope="col" class="px-6 py-3">
@@ -118,9 +120,6 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <x-input-label for="branchname" :value="$branches->branchname"/>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <x-input-label for="cabinetcount" :value="$branches->cabinetcount"/>
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center">

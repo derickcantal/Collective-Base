@@ -44,6 +44,24 @@ class ManageRenterController extends Controller
         ]);
     }
 
+    
+    public function allrentersearch()
+    {
+
+    }
+    public function allrenters()
+    {
+        $renter = Renter::query()
+            ->paginate(10);
+
+        $branch = branch::all();
+
+        // dd($renter);
+        return view('manage.renters.allrenters',compact('branch'))
+        ->with(['renter' => $renter])
+        ->with('i', (request()->input('page', 1) - 1) * 10);
+    }
+
     public function searchrenter(Request $request, $branchid)
     {
         $branch = branch::where('branchid',$branchid)->first();
@@ -69,10 +87,19 @@ class ManageRenterController extends Controller
     public function renterslist($branchid){
         $branch = branch::where('branchid', $branchid)->first();
 
-        $renter = Renter::where('branchid',$branch->branchid)
-                            ->where('accesstype',"Renters")
-                            ->orderBy('status','asc')
-                            ->paginate(10);
+        $renter = branchlist::leftJoin('renters', function($join) {
+                $join->on('branchlist.userid','=','renters.rentersid' );
+                    })
+                    ->where(function(Builder $builder) use($branch){
+                        $builder
+                        ->where('renters.accesstype', 'Renters')
+                        ->where('branchlist.branchid', $branch->branchid);
+                        })
+              ->paginate(10);
+        // $renter = Renter::where('branchid',$branch->branchid)
+        //                     ->where('accesstype',"Renters")
+        //                     ->orderBy('status','asc')
+        //                     ->paginate(10);
         $notes = 'Renter. List';
         $status = 'Success';
         $this->userlog($notes,$status);
@@ -127,7 +154,16 @@ class ManageRenterController extends Controller
 
             if(empty($searchrenter))
             {
-                // dd($searchrenter,'not found');
+                $searchemail = Renter::where('email',$request->email)->first();
+
+                if(!empty($searchemail))
+                {
+                    // dd($searchemail,'found');
+                    return redirect()->back()
+                                ->with('failed','Renter Email Already Registered');
+
+                }
+
                 $renter = Renter::create([
                     'avatar' => 'avatars/avatar-default.jpg',
                     'username' => $request->username,
@@ -139,6 +175,7 @@ class ManageRenterController extends Controller
                     'birthdate' => $request->birthdate,
                     'branchid' => $br->branchid,
                     'branchname' => $br->branchname,
+                    'mobile_primary' => $request->mobile_primary,
                     'cabid' => 0,
                     'cabinetname' => 'Null',
                     'accesstype' => 'Renters',
@@ -147,10 +184,10 @@ class ManageRenterController extends Controller
                     'timerecorded' => $timenow,
                     'mod' => 0,
                     'status' => 'Active',
-                    ]);
+                ]);
 
 
-                if ($renter) {
+                if($renter) {
                     //query successful
                     $notes = 'Renter. Create. ' . $fullname;
                     $status = 'Success';
@@ -168,9 +205,21 @@ class ManageRenterController extends Controller
                 }  
             }else
             {
+                $branchlistsearch = branchlist::where('userid', $searchrenter->rentersid)
+                                ->where(function(Builder $builder) use($request,$br){
+                                $builder->where('branchid',$br->branchid);
+                                })->first();
+                
+                if(!empty($branchlistsearch))
+                {
+                    // dd($branchlistsearch,'not found');
+                    return redirect()->back()
+                                ->with('failed','Renter Already Registered to Branch.');
+                }
+                
                 $branchlist =branchlist::create([
                             'userid' => $searchrenter->rentersid,
-                            'branchid' => auth()->user()->branchid,
+                            'branchid' => $br->branchid,
                             'accesstype' => 'Renters',
                             'timerecorded'  => $timenow,
                             'cabcount' => 0, 
@@ -179,8 +228,7 @@ class ManageRenterController extends Controller
                             'updated_by' => 'Null',
                             'mod' => 0,
                             'status' => 'Active',
-                        ]);
-                // dd($searchrenter,'found');
+                ]);
 
                 if ($branchlist) {
                     //query successful
@@ -228,13 +276,14 @@ class ManageRenterController extends Controller
                 'firstname' => $request->firstname,
                 'lastname' => $request->lastname,
                 'birthdate' => $request->birthdate,
+                'mobile_primary' => $request->mobile_primary,
                 'updated_by' => auth()->user()->email,
                 'mod' => $mod + 1,
                 'status' => $request->status,
             ]);
 
         
-        }else{
+        }elseif($request->password == $request->password_confirmation){
             $renter =Renter::where('rentersid',$renters->rentersid)->update([
                 'username' => $request->username,
                 'email' => $request->email,
@@ -242,12 +291,15 @@ class ManageRenterController extends Controller
                 'firstname' => $request->firstname,
                 'lastname' => $request->lastname,
                 'birthdate' => $request->birthdate,
+                'mobile_primary' => $request->mobile_primary,
                 'updated_by' => auth()->user()->email,
                 'mod' => $mod + 1,
                 'status' => $request->status,
             ]);
-
-            
+        }else
+        {
+            return redirect()->back()
+                        ->with('failed','Renter Password Mismatch.');
         }
         
         if($renter){
@@ -255,14 +307,14 @@ class ManageRenterController extends Controller
             $status = 'Success';
             $this->userlog($notes,$status);
             
-            return redirect()->route('managerenter.index')
+            return redirect()->route('managerenter.renterslist',$br->branchid)
                         ->with('success','Renter updated successfully');
         }else{
             $notes = 'Renter. Update. ' . $fullname;
             $status = 'Failed';
             $this->userlog($notes,$status);
 
-            return redirect()->route('managerenter.index')
+            return redirect()->route('managerenter.renterslist',$br->branchid)
                         ->with('failed','Renter update failed');
         }
     }
@@ -291,7 +343,7 @@ class ManageRenterController extends Controller
         $status = 'Success';
         $this->userlog($notes,$status);
         
-        return redirect()->route('managerenter.index')
+        return redirect()->back()
             ->with('success','User Deactivated successfully'); 
         }
         elseif($renter->status == 'Inactive')
@@ -311,7 +363,7 @@ class ManageRenterController extends Controller
         $status = 'Success';
         $this->userlog($notes,$status);
 
-        return redirect()->route('managerenter.index')
+        return redirect()->back()
             ->with('success','User Activated successfully');
         }
     }
@@ -395,9 +447,11 @@ class ManageRenterController extends Controller
         }
     }
 
-    public function show($renter)
+    public function show($renter,$branchid)
     {
         $renter = Renter::where('rentersid',$renter)->first();
+
+        $branch = branch::where('branchid',$branchid)->first();
 
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
@@ -406,9 +460,11 @@ class ManageRenterController extends Controller
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor')
             {
-                return view('manage.renters.show',compact('renter'));
+                return view('manage.renters.show',compact('renter'))
+                            ->with(['branch' => $branch]);
             }elseif(auth()->user()->accesstype =='Administrator'){
-               return view('manage.renters.show',compact('renter'));
+               return view('manage.renters.show',compact('renter'))
+                            ->with(['branch' => $branch]);
             }
         }else{
             return redirect()->route('dashboardoverview.index');
@@ -419,26 +475,23 @@ class ManageRenterController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($renter)
+    public function edit($renter,$branchid)
     {
         
         $renters = Renter::where('rentersid',$renter)->first();
+
+        $branch = branch::where('branchid',$branchid)->first();
+
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                $cabinet = cabinet::all();
-                $branch = branch::all();
                 return view('manage.renters.edit',['renter' => $renters])
-                                ->with(['cabinet' => $cabinet])
                                 ->with(['branch' => $branch]);         
             }elseif(auth()->user()->accesstype =='Administrator'){
-                $cabinet = cabinet::all();
-                $branch = branch::all();
                 return view('manage.renters.edit',['renter' => $renters])
-                                ->with(['cabinet' => $cabinet])
                                 ->with(['branch' => $branch]); 
             }
         }else{

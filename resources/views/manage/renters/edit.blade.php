@@ -30,7 +30,8 @@
                                     <svg class="rtl:rotate-180  w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                                     </svg>
-                                    <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">{{ $renter->username }}</span>
+                                    <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">
+                                        {{ $branch->branchname }}</span>
                                 </div>
                                 </li>
                                 <li aria-current="page">
@@ -38,7 +39,17 @@
                                     <svg class="rtl:rotate-180  w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                                     </svg>
-                                    <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Modify Information</span>
+                                    <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">
+                                        {{ $renter->username }}</span>
+                                </div>
+                                </li>
+                                <li aria-current="page">
+                                <div class="flex items-center">
+                                    <svg class="rtl:rotate-180  w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                    </svg>
+                                    <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">
+                                        Modify Information</span>
                                 </div>
                                 </li>
                             </ol>
@@ -53,25 +64,26 @@
                         <!-- Modal body -->
                         <img width="100" height="100" class="rounded-full mt-4" src="{{ asset("/storage/$renter->avatar") }}" alt="user avatar" />
                         <div class="grid gap-4 mb-4 grid-cols-2">
-                            
+                            <!-- username -->
                             <div class="col-span-2 sm:col-span-1 p-4">
-                                <!-- username -->
                                 <div class="form-group">
                                     <x-input-label for="username" :value="__('Username')" />
                                     <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username', $renter->username)" required autofocus />
                                     <x-input-error :messages="$errors->get('username')" class="mt-2" />
                                 </div>
                             </div>
+
+                            <!-- Email Address -->
                             <div class="col-span-2 sm:col-span-1 p-4">
-                                <!-- Email Address -->
                                 <div class="form-group">
                                     <x-input-label for="email" :value="__('Email')" />
                                     <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $renter->email)" required />
                                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                                 </div>
                             </div>
+
+                            <!-- Password -->
                             <div class="col-span-2 sm:col-span-1 p-4">
-                                <!-- Password -->
                                 <div class="form-group">
                                     <x-input-label for="password" :value="__('Password')" />
 
@@ -83,8 +95,9 @@
                                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                                 </div>
                             </div>
+
+                            <!-- Confirm Password -->
                             <div class="col-span-2 sm:col-span-1 p-4">
-                                <!-- Confirm Password -->
                                 <div class="form-group">
                                     <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
 
@@ -95,40 +108,44 @@
                                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                                 </div>                    
                             </div>
+
+                            <!-- firstname -->
                             <div class="col-span-2 sm:col-span-1 p-4">
-                                <!-- firstname -->
                                 <div class="form-group">
                                     <x-input-label for="firstname" :value="__('First Name')" />
                                     <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname', $renter->firstname)" required autofocus/>
                                     <x-input-error :messages="$errors->get('firstname')" class="mt-2" />
                                 </div>
                             </div>
-                            <!-- <div class="col-span-2 sm:col-span-1 p-4">
-                                middlename
-                                <div class="form-group">
-                                    <x-input-label for="middlename" :value="__('Middle Name')" />
-                                    <x-text-input id="middlename" class="block mt-1 w-full" type="text" name="middlename" :value="old('middlename', $renter->middlename)" required autofocus />
-                                    <x-input-error :messages="$errors->get('username')" class="mt-2" />
-                                </div>
-                            </div> -->
+
+                            <!-- lastname -->
                             <div class="col-span-2 sm:col-span-1 p-4">
-                                    <!-- lastname -->
-                                    <div class="form-group">
+                                <div class="form-group">
                                     <x-input-label for="lastname" :value="__('Last Name')" />
                                     <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname', $renter->lastname)" required />
                                     <x-input-error :messages="$errors->get('lastname')" class="mt-2" />
                                 </div>
                             </div>
+                            <!-- birthdate -->
                             <div class="col-span-2 sm:col-span-1 p-4">
-                                <!-- birthdate -->
                                 <div class="form-group">
                                     <x-input-label for="birthdate" :value="__('Birth Date')" />
                                     <x-text-input id="birthdate" class="block mt-1 w-full" type="date" name="birthdate" :value="date('Y-m-d',strtotime(old('birthdate', $renter->birthdate)))" required autofocus autocomplete="bday" />
                                     <x-input-error :messages="$errors->get('birthdate')" class="mt-2" />
                                 </div>
                             </div>
+
+                            <!-- Mobile -->
                             <div class="col-span-2 sm:col-span-1 p-4">
-                                <!-- status -->
+                                <div class="form-group">
+                                    <x-input-label for="mobile_primary" :value="__('Mobile')" />
+                                    <x-text-input id="mobile_primary" class="block mt-1 w-full" type="text" name="mobile_primary" :value="old('mobile_primary', $renter->mobile_primary)" required />
+                                    <x-input-error :messages="$errors->get('mobile_primary')" class="mt-2" />
+                                </div>
+                            </div>
+                            
+                            <!-- status -->
+                            <div class="col-span-2 sm:col-span-1 p-4">
                                 @php
                                     $op1 = '';
                                     $op2 = '';
@@ -158,7 +175,7 @@
                                 </svg>
                                 Save
                             </button>
-                            <a href="{{ route('managerenter.renterslist',$renter->branchid) }}" class="py-2 px-3 ms-3 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                            <a href="{{ route('managerenter.renterslist',$branch->branchid) }}" class="py-2 px-3 ms-3 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                 <svg class="w-4 h-4 mr-2 -ml-0.5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
                                 </svg>
