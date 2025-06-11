@@ -43,6 +43,42 @@ class ManageCashierRenterController extends Controller
             'status'  => $status,
         ]);
     }
+
+    public function cabinetlist($rentersid)
+    {
+        $renter = Renter::where('rentersid',$rentersid)->first();
+
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
+        $branchlists = branchlist::where('userid', $renter->rentersid)->first();
+
+        if(empty($branchlists)){
+            $notes = 'Renter. Cashier. Access to other Account.';
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+
+            return redirect()->route('managecr.index')
+                            ->with('failed','Unknown Command');
+        }
+        if(auth()->user()->accesstype == 'Cashier'){
+            $cabinets = cabinet::where('userid',$renter->rentersid)
+                                ->where(function(Builder $builder){
+                                    $builder->where('branchname', auth()->user()->branchname)
+                                            ->orderBy('status','asc')
+                                            ->orderBy('branchname','asc');
+            })->paginate(5);
+            
+            $branch = branch::where('branchid',$branchlists->branchid)->first();
+
+            return view('manage.renters_cashier.show-cabinet-list',['renter' => $renter])
+                ->with(compact('cabinets'))
+                ->with(compact('branch'))
+                ->with('i', (request()->input('page', 1) - 1) * 5);
+        }else{
+            return redirect()->route('dashboardoverview.index');
+        }
+        
+    }
+
     public function cabinetupdate(Request $request)
     {
         $cabid = $request->cabid;
@@ -77,9 +113,9 @@ class ManageCashierRenterController extends Controller
         
     }
 
-    public function cabinetmodify(Request $request)
+    public function cabinetmodify(Request $request,$renterid,$cabid)
     {
-
+        dd($request,$renterid,$cabid);
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
 
         $cabinet = cabinet::where('cabid',$request->cabid)
@@ -132,13 +168,12 @@ class ManageCashierRenterController extends Controller
         return redirect()->route('dashboardoverview.index');
     }
 
-    public function cabinetstore(Request $request)
+    public function cabinetstore(Request $request,$rentersid)
     {
 
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
-        $cabuser = $request->cabuser;
         
-        $renter = Renter::where('rentersid',$cabuser)->first();
+        $renter = Renter::where('rentersid',$rentersid)->first();
 
         $cabinet = cabinet::where('cabid',$request->cabinetname)->first();
 
@@ -152,7 +187,7 @@ class ManageCashierRenterController extends Controller
             $status = 'Failed';
             $this->userlog($notes,$status);
             
-            return redirect()->route('managecr.show',$renter->rentersid)
+            return redirect()->route('managecr.cabinetlist',$renter->rentersid)
          ->with('failed','Inactive Cabinet.');
         }
 
@@ -163,7 +198,7 @@ class ManageCashierRenterController extends Controller
             $status = 'Failed';
             $this->userlog($notes,$status);
 
-            return redirect()->route('managecr.show',$renter->rentersid)
+            return redirect()->route('managecr.cabinetlist',$renter->rentersid)
          ->with('failed','Cabinet Occupied.');
         }
 
@@ -202,32 +237,76 @@ class ManageCashierRenterController extends Controller
             $status = 'Success';
             $this->userlog($notes,$status);
 
-            return redirect()->route('managecr.show',$renter->rentersid)
+            return redirect()->route('managecr.cabinetlist',$renter->rentersid)
                         ->with('success','Cabinet Assigned successfully.');
         }else{
             $notes = 'Renter. Cashier. Cabinet. Assign.';
             $status = 'Failed';
             $this->userlog($notes,$status);
 
-            return redirect()->route('managecr.show',$renter->rentersid)
+            return redirect()->route('managecr.cabinetlist',$renter->rentersid)
                         ->with('failed','Cabinet Assigned failed');
         }
 
-        return redirect()->route('managecr.show',$renter->rentersid)
+        return redirect()->route('managecr.cabinetlist',$renter->rentersid)
          ->with('success','Cabinet Assigned Successfully.');
     }
 
-    public function cabinetsearch(Request $request)
+    public function cabinetsearch(Request $request,$rentersid,$branchid)
     {
-        
+        // dd($request,$rentersid,$branchid);
+        $renter = Renter::where('rentersid',$rentersid)->first();
+
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
+        $branchlists = branchlist::where('userid', $renter->rentersid)->first();
+
+        if(empty($branchlists)){
+            $notes = 'Renter. Cashier. Access to other Account.';
+            $status = 'Failed';
+            $this->userlog($notes,$status);
+
+            return redirect()->route('managecr.index')
+                            ->with('failed','Unknown Command');
+        }
+        if(auth()->user()->accesstype == 'Cashier'){
+            if(!empty($request->search))
+            {
+                $cabinets = cabinet::where('userid',$renter->rentersid)
+                                ->where('branchname', auth()->user()->branchname)
+                                ->where(function(Builder $builder) use($request){
+                                    $builder->where('cabinetname','=',$request->search);
+            })->orderBy('status','asc')
+              ->orderBy('branchname','asc')
+              ->paginate(5);
+            }else
+            {
+                $cabinets = cabinet::where('userid',$renter->rentersid)
+                                ->where('branchname', auth()->user()->branchname)
+                                ->orderBy('status','asc')
+                                ->orderBy('branchname','asc')
+                                ->paginate(5);
+            }
+            
+
+            $branch = branch::where('branchid',$branchlists->branchid)->first();
+            
+            return view('manage.renters_cashier.show-cabinet-list',['renter' => $renter])
+                ->with(compact('cabinets'))
+                ->with(compact('branch'))
+                ->with('i', (request()->input('page', 1) - 1) * 5);
+        }else{
+            return redirect()->route('dashboardoverview.index');
+        }
     }
-    public function cabinetadd(Request $request)
+    public function cabinetadd(Request $request,$rentersid)
     {
 
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $cabuser = $request->cabuser;
 
-        $branchlist = branchlist::where('userid', $cabuser)
+        $renter = Renter::where('rentersid',$request->rentersid)->first();
+
+        $branchlist = branchlist::where('userid', $renter->rentersid)
                         ->where(function(Builder $builder){
                             $builder->where('branchid',auth()->user()->branchid);
                         })->first();
@@ -243,7 +322,7 @@ class ManageCashierRenterController extends Controller
         }
         else
         {
-            $renter = Renter::where('rentersid',$request->cabuser)->first();
+            
 
             $cabinet = cabinet::where('branchname',auth()->user()->branchname)
                             ->where(function(Builder $builder){

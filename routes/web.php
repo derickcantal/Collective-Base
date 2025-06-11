@@ -138,13 +138,14 @@ Route::middleware('auth')->group(function () {
     Route::put('/manage/cashier/renter/{renters}', [ManageCashierRenterController::class, 'update'])->name('managecr.update');
     Route::delete('/manage/cashier/renter/{renters}', [ManageCashierRenterController::class, 'destroy'])->name('managecr.destroy');
     Route::get('/manage/cashier/renter/{renters}/edit', [ManageCashierRenterController::class, 'edit'])->name('managecr.edit');
-    Route::get('/manage/cashier/renter/cabinet/search', [ManageCashierRenterController::class, 'cabinetsearch'])->name('managecr.cabinetsearch');
-    Route::get('/manage/cashier/renter/cabinet/add', [ManageCashierRenterController::class, 'cabinetadd'])->name('managecr.cabinetadd');
+    Route::get('/manage/cashier/renter/cabinet/{renters}', [ManageCashierRenterController::class, 'cabinetlist'])->name('managecr.cabinetlist');
+    Route::get('/manage/cashier/renter/{rentersid}/cabinet/{cabinetid}/search', [ManageCashierRenterController::class, 'cabinetsearch'])->name('managecr.cabinetsearch');
+    Route::get('/manage/cashier/renter/{rentersid}/cabinet/add', [ManageCashierRenterController::class, 'cabinetadd'])->name('managecr.cabinetadd');
     Route::get('/manage/cashier/renter/cabinet/create', [ManageCashierRenterController::class, 'cabinetcreate'])->name('managecr.cabinetcreate');
-    Route::get('/manage/cashier/renter/cabinet/modify/{cabid}', [ManageCashierRenterController::class, 'cabinetmodify'])->name('managecr.cabinetmodify');
+    Route::get('/manage/cashier/renter/{rentersid}/cabinet/modify/{cabid}', [ManageCashierRenterController::class, 'cabinetmodify'])->name('managecr.cabinetmodify');
     Route::put('/manage/cashier/renter/cabinet/delete/{cabid}', [ManageCashierRenterController::class, 'cabinetdelete'])->name('managecr.cabinetdelete');
     Route::put('/manage/cashier/renter/cabinet/update/{cabid}', [ManageCashierRenterController::class, 'cabinetupdate'])->name('managecr.cabinetupdate');
-    Route::post('/manage/cashier/renter/cabinet/store', [ManageCashierRenterController::class, 'cabinetstore'])->name('managecr.cabinetstore');
+    Route::post('/manage/cashier/renter/{rentersid}/cabinet/store', [ManageCashierRenterController::class, 'cabinetstore'])->name('managecr.cabinetstore');
     Route::get('/manage/cashier/renter/create/info', [ManageCashierRenterController::class, 'renterinfo'])->name('managecr.renterinfo');
     Route::get('/manage/cashier/renter/create/login', [ManageCashierRenterController::class, 'renterlogin'])->name('managecr.renterlogin');
     Route::post('/manage/cashier/renter/create/register', [ManageCashierRenterController::class, 'renterregister'])->name('managecr.renterregisternew');

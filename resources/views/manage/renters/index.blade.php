@@ -141,7 +141,7 @@
                                             Manage Renters
                                         </a>
                                     </div>
-                                    </td>
+                                </td>
                             </tr>
                         
                             @empty
