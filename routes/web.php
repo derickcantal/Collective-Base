@@ -3,7 +3,6 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Reports\ReportAttendanceController;
 use App\Http\Controllers\Reports\ReportRentalsController;
-use App\Http\Controllers\Reports\ReportRequestsController;
 use App\Http\Controllers\Reports\ReportSalesController;
 use App\Http\Controllers\Reports\ReportTopSalesController;
 use Illuminate\Support\Facades\Route;
@@ -22,7 +21,6 @@ use App\Http\Controllers\Transaction\TransactionSalesController;
 use App\Http\Controllers\Transaction\TransactionEODController;
 use App\Http\Controllers\Dashboard\DashboardOverviewController;
 use App\Http\Controllers\Dashboard\DashboardRentalsController;
-use App\Http\Controllers\Dashboard\DashboardRequestsController;
 use App\Http\Controllers\Dashboard\DashboardSalesController;
 use App\Http\Controllers\Dashboard\DashboardAttendanceController;
 use App\Http\Controllers\SalesEODController;
@@ -55,9 +53,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard/rentals', [DashboardRentalsController::class, 'index'])->name('dashboardrentals.index');
     Route::get('/dashboard/rentals/search', [DashboardRentalsController::class, 'search'])->name('dashboardrentals.search');
-
-    Route::get('/dashboard/requests', [DashboardRequestsController::class, 'index'])->name('dashboardrequests.index');
-    Route::get('/dashboard/requests/search', [DashboardRequestsController::class, 'search'])->name('dashboardrequests.search');
 
     Route::get('/dashboard/sales', [DashboardSalesController::class, 'index'])->name('dashboardsales.index');
     Route::get('/dashboard/sales/search', [DashboardSalesController::class, 'search'])->name('dashboardsales.search');
@@ -223,9 +218,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/reports/rentals', [ReportRentalsController::class, 'index'])->name('reportsrentals.index');
     Route::get('/reports/rentals/search', [ReportRentalsController::class, 'search'])->name('reportsrentals.search');
-
-    Route::get('/reports/requests', [ReportRequestsController::class, 'index'])->name('reportsrequests.index');
-    Route::get('/reports/requests/search', [ReportRequestsController::class, 'search'])->name('reportsrequests.search');
 
     Route::get('/reports/sales', [ReportSalesController::class, 'index'])->name('reportssales.index');
     Route::get('/reports/sales/search', [ReportSalesController::class, 'search'])->name('reportssales.search');

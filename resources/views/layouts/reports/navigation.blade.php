@@ -11,9 +11,6 @@
                         {{ __('Top Sales') }}
                     </x-nav-link>
                     @endif
-                    <x-nav-link :href="route('reportsrequests.index')" :active="request()->routeIs('reportsrequests.index')">
-                        {{ __('Requests') }}
-                    </x-nav-link>
                     <x-nav-link :href="route('reportsrentals.index')" :active="request()->routeIs('reportsrentals.index')">
                         {{ __('Rental Payments') }}
                     </x-nav-link>

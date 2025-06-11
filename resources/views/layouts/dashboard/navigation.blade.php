@@ -9,9 +9,6 @@
                     <x-nav-link :href="route('dashboardsales.index')" :active="request()->routeIs('dashboardsales.index')">
                         {{ __('Sales') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('dashboardrequests.index')" :active="request()->routeIs('dashboardrequests.index')">
-                        {{ __('Requests') }}
-                    </x-nav-link>
                     <x-nav-link :href="route('dashboardrentals.index')" :active="request()->routeIs('dashboardrentals.index')">
                         {{ __('Rental Payments') }}
                     </x-nav-link>

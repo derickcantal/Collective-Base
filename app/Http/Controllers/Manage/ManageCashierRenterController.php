@@ -99,29 +99,31 @@ class ManageCashierRenterController extends Controller
             $status = 'Success';
             $this->userlog($notes,$status);
             
-            return redirect()->route('managecr.show',$cabinet->userid)
+            return redirect()->route('managecr.cabinetlist',$cabinet->userid)
                         ->with('success','Cabinet Update Successful.');
         }else{
             $notes = 'Renter. Cashier. Cabinet. Update';
             $status = 'Failed';
             $this->userlog($notes,$status);
 
-            return redirect()->route('managecr.show',$cabinet->userid)
+            return redirect()->route('managecr.cabinetlist',$cabinet->userid)
                          ->with('failed','Cabinet Update Failed.');
         }
 
         
     }
 
-    public function cabinetmodify(Request $request,$renterid,$cabid)
+    public function cabinetmodify(Request $request,$rentersid,$cabid)
     {
-        dd($request,$renterid,$cabid);
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
 
-        $cabinet = cabinet::where('cabid',$request->cabid)
+        $cabinet = cabinet::where('cabid',$cabid)
                         ->where(function(Builder $builder){
                             $builder->where('branchid',auth()->user()->branchid);
                         })->first();
+
+        $renter = Renter::where('rentersid',$rentersid)->first();
+
         if(empty($cabinet))
         {
             $notes = 'Renter. Cashier. Cabinet. Modify. Account Not in Branch';
@@ -146,7 +148,8 @@ class ManageCashierRenterController extends Controller
                     ->with('failed','Unknown Command.');
         }
 
-        return view('manage.renters_cashier.show-cabinet-modify',['cabinet' => $cabinet]);
+        return view('manage.renters_cashier.show-cabinet-modify',compact('cabinet'))
+                    ->with(['renter' => $renter]);
     }
 
 
