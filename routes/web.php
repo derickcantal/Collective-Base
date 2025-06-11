@@ -158,7 +158,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/transaction/attendance/{attendance}/edit', [TransactionAttendanceController::class, 'edit'])->name('transactionattendance.edit');
     Route::get('/transaction/attendance/select/employee', [TransactionAttendanceController::class, 'selectemp'])->name('transactionattendance.selectemp');
     Route::get('/transaction/attendance/select/employee/search', [TransactionAttendanceController::class, 'searchemp'])->name('transactionattendance.searchemp');
-    Route::put('/transaction/attendance/select/employee/{users}', [TransactionAttendanceController::class, 'putemp'])->name('transactionattendance.putemp');
+    Route::get('/transaction/attendance/select/employee/{users}', [TransactionAttendanceController::class, 'putemp'])->name('transactionattendance.putemp');
 
     Route::get('/transaction/branch/cabinet', [TransactionCabinetSalesController::class, 'index'])->name('transactioncabsales.index');
     Route::post('/transaction/branch/cabinet', [TransactionCabinetSalesController::class, 'store'])->name('transactioncabsales.store');
