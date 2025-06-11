@@ -196,7 +196,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/transaction/sales', [TransactionSalesController::class, 'store'])->name('transactionsales.store');
     Route::get('/transaction/sales/create', [TransactionSalesController::class, 'create'])->name('transactionsales.create');
     Route::get('/transaction/sales/search', [TransactionSalesController::class, 'search'])->name('transactionsales.search');
-    Route::get('/transaction/sales/{sales}', [TransactionSalesController::class, 'show'])->name('transactionsales.show');
+    Route::get('/transaction/sales/{sales}/info', [TransactionSalesController::class, 'show'])->name('transactionsales.show');
     Route::patch('/transaction/sales/{sales}', [TransactionSalesController::class, 'update'])->name('transactionsales.update');
     Route::delete('/transaction/sales/{sales}', [TransactionSalesController::class, 'destroy'])->name('transactionsales.destroy');
     Route::get('/transaction/sales/{sales}/edit', [TransactionSalesController::class, 'edit'])->name('transactionsales.edit');
@@ -221,6 +221,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/reports/sales', [ReportSalesController::class, 'index'])->name('reportssales.index');
     Route::get('/reports/sales/search', [ReportSalesController::class, 'search'])->name('reportssales.search');
+    Route::get('/transaction/sales/{sales}', [ReportSalesController::class, 'show'])->name('reportssales.show');
 
     Route::get('/reports/sales/top/branch', [ReportTopSalesController::class, 'index'])->name('reportstopsales.index');
     Route::get('/reports/sales/top/branch/search', [ReportTopSalesController::class, 'search'])->name('reportstopsales.search');

@@ -123,11 +123,9 @@
                                     <th scope="col" class="px-6 py-3">
                                         Time Sold
                                     </th>
-                                    @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
                                     <th scope="col" class="px-6 py-3">
                                         Actions
                                     </th>
-                                    @endif
                                 </tr>
                             </thead>
                                     
@@ -187,9 +185,9 @@
                                         <x-input-label for="branchname" :value="$sale->branchname"/>
                                         <x-input-label for="timerecorded" :value="$sale->timerecorded"/>
                                     </td>
-                                    @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
                                     <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         <div class="flex items-center space-x-2">
+                                        @if(auth()->user()->accesstype == 'Administrator' or auth()->user()->accesstype == 'Supervisor')
                                             <a href="{{ route('transactionsales.edit',$sale->salesid) }}" class="py-2 px-3 flex items-center text-sm font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                     <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
@@ -197,7 +195,7 @@
                                                 </svg>
                                                 Modify
                                             </a>
-
+                                        @endif
                                             <a href="{{ route('transactionsales.show',$sale->salesid) }}" class="py-2 px-3 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="w-4 h-4 mr-2 -ml-0.5">
                                                     <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
@@ -208,7 +206,6 @@
                                         
                                         </div>
                                     </td>
-                                    @endif
                                 </tr>
                                 
                                 @empty

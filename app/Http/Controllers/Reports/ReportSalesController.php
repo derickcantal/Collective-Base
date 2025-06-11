@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Reports;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\history_sales;
+use App\Models\Renter;
 use App\Models\user_login_log;
 use App\Models\branch;
 use \Carbon\Carbon;
@@ -336,9 +337,25 @@ class ReportSalesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($salesid)
     {
-        //
+        $sales = history_sales::where('salesid',$salesid)->first();
+
+        $renter = Renter::where('rentersid',$sales->userid)->first();
+        // dd($salesid,$sales, $renter);
+
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return view('reports.Sales.show',['sales' => $sales]);
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return view('reports.Sales.show',['sales' => $sales]);     
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return view('reports.Sales.show',['sales' => $sales]);
+            }
+        }else{
+            return redirect()->route('dashboardoverview.index');
+        }
+
     }
 
     /**
