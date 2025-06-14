@@ -14,6 +14,8 @@ use App\Models\cabinet;
 use App\Models\branchlist;
 use App\Models\users_temp;
 use App\Models\user_login_log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RenterDue;
 
 class ManageAllRenterController extends Controller
 {
@@ -41,8 +43,46 @@ class ManageAllRenterController extends Controller
 
     public function sendmail($rentersid)
     {
-        return redirect()->back()
-                        ->with('failed','Send Mail. Still on Progress.');
+        // return redirect()->back()
+        //                 ->with('failed','Send Mail. Still on Progress.');
+
+        $today = Carbon::now();
+        $today->month;
+        $today->year;
+
+        $monthyear = $today->month . '-' . $today->year;
+
+        $duedate = ($today->month + 1). '-5-' . $today->year;
+        
+        $renter =Renter::where('rentersid',$rentersid)->first();
+ 
+        $fullname = $renter->firstname . ' ' . $renter->lastname;
+
+        $cabinets = cabinet::where('userid',$renter->rentersid)->get();
+        
+        if(empty($cabinets))
+        {
+            return redirect()->back()
+                        ->with('failed','Send Mail. No Cabinet Records Found.');
+        }
+        foreach ($cabinets as $cabinet){
+            $mailcontent = [
+                'fullname' => $fullname,
+                'cabinetno' => $cabinet->cabinetname,
+                'cabinetprice' => $cabinet->cabinetprice,
+                'monthyear' => $monthyear,
+                'duedate' => $duedate,
+                'branch' => $cabinet->branchname,
+            ];
+
+            // dd($fullname, $renter, $cabinet, $monthyear,$duedate, $mailcontent);
+            
+            Mail::to($renter->email)->send(new RenterDue($mailcontent));
+        }
+
+        //  $request->message = 'Successfully Sent';
+         return redirect()->back()->with(['mailcontent' => $mailcontent])
+                                            ->with('success','Email Sent.');
     }
 
     public function updatedata($request,$renters){
