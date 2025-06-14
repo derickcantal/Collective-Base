@@ -81,8 +81,7 @@ class ManageAllRenterController extends Controller
         }
 
         //  $request->message = 'Successfully Sent';
-         return redirect()->back()->with(['mailcontent' => $mailcontent])
-                                            ->with('success','Email Sent.');
+         return redirect()->back()->with('success','Email Sent.');
     }
 
     public function updatedata($request,$renters){
