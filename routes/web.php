@@ -185,12 +185,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/transaction/rental/{rental}', [TransactionRentalController::class, 'update'])->name('transactionrental.update');
     Route::delete('/transaction/rental/{rental}', [TransactionRentalController::class, 'destroy'])->name('transactionrental.destroy');
     Route::get('/transaction/rental/{rental}/edit', [TransactionRentalController::class, 'edit'])->name('transactionrental.edit');
-    Route::get('/transaction/rental/payments/select/renter', [TransactionRentalController::class, 'selectrenter'])->name('transactionrental.selectrenter');
-    Route::get('/transaction/rental/payments/search/renter', [TransactionRentalController::class, 'searchrenter'])->name('transactionrental.searchrenter');
-    Route::get('/transaction/rental/payments/select/{renters}/cabinet', [TransactionRentalController::class, 'selectcabinet'])->name('transactionrental.selectcabinet');
-    Route::get('/transaction/rental/payments/select/payment', [TransactionRentalController::class, 'selectpayment'])->name('transactionrental.selectpayment');
-    Route::get('/transaction/rental/payments/set/payment/month', [TransactionRentalController::class, 'setpayment'])->name('transactionrental.setpayment');
-    Route::get('/transaction/rental/payments/set/payment/month/store', [TransactionRentalController::class, 'storesetpayment'])->name('transactionrental.storesetpayment');
+    Route::get('/transaction/rental/branch/{branchid}/renter/all', [TransactionRentalController::class, 'showbranchrenter'])->name('transactionrental.showbranchrenter');
+    Route::get('/transaction/rental/branch/{branchid}/search', [TransactionRentalController::class, 'searchbranchrenter'])->name('transactionrental.searchbranchrenter');
+    Route::get('/transaction/rental/branch/{branchid}/renter/{rentersid}/cabinet/all', [TransactionRentalController::class, 'selectrentercabinet'])->name('transactionrental.selectrentercabinet');
 
     Route::get('/transaction/sales', [TransactionSalesController::class, 'index'])->name('transactionsales.index');
     Route::post('/transaction/sales', [TransactionSalesController::class, 'store'])->name('transactionsales.store');
