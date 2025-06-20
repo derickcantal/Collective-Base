@@ -67,20 +67,7 @@
                                     <x-input-error :messages="$errors->get('cabinetprice')" class="mt-2" />
                                 </div>
                             </div>
-                            <div class="col-span-2 sm:col-span-1 p-4">
-                                <!-- branchname -->
-                                <div class="form-group">
-                                    <x-input-label for="renter" :value="__('Renter Name')" />
-                                    <!-- <x-text-input id="branchname" class="block mt-1 w-full" type="text" name="branchname" :value="old('branchname')" required autofocus autocomplete="off" /> -->
-                                    <select id="renter" name="renter" class="form-select mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('branchname')">
-                                    <option value = "Vacant">Vacant</option>
-                                        @foreach($rent as $renter)    
-                                            <option value = "{{ $renter->userid}}">{{ $renter->lastname }}, {{ $renter->firstname }} - {{ $renter->email }}</option>
-                                        @endforeach
-                                    </select>
-                                    <x-input-error :messages="$errors->get('renter')" class="mt-2" />
-                                </div>
-                            </div>
+                            
                         </div>
                         <!-- Button -->
                         <div class="flex items-center justify-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">

@@ -8,6 +8,9 @@ use App\Http\Requests\CreateCabinetRequest;
 use App\Models\cabinet;
 use App\Models\branch;
 use App\Models\Renter;
+use App\Models\branchlist; 
+use App\Models\sales;
+use App\Models\history_sales;
 use App\Models\user_login_log;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use \Carbon\Carbon;
@@ -34,6 +37,161 @@ class ManageCabinetController extends Controller
             'notes' => $notes,
             'status'  => $status,
         ]);
+    }
+
+    public function removerenter($cabid)
+    {
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
+        $cabinet = cabinet::where('cabid',$cabid)->first();
+        
+        $mod = 0;
+        $mod = $cabinet->mod;
+
+        if($cabinet->email != 'Vacant')
+        {
+            $totalcabown = cabinet::where('userid', $cabinet->userid)->count();
+            
+            $renterupdate = Renter::where('rentersid',$cabinet->userid)->update([
+                        'cabid' => $totalcabown,
+                    ]);
+
+            $cabinets = cabinet::where('cabid', $cabinet->cabid)
+                    ->update([
+                    'userid' => 0,
+                    'email' => 'Vacant',
+                    'updated_by' => auth()->user()->email,
+                    'mod' => $mod + 1,
+                    ]);
+
+            $branchcabinet = cabinet::where('branchid',$cabinet->branchid)->paginate(5);
+            
+            if ($cabinets) {
+                //query successful
+                $notes = 'Cabinet. Update ' . $cabinet->cabinetname;
+                $status = 'Success';
+                $this->userlog($notes,$status);
+
+                return redirect()->route('managecabinet.cabinetlist',$cabinet->branchid)
+                                ->with(['cabinet' => $branchcabinet])
+                                ->with('success','Renter removed from Cabinet.')
+                                ->with('i', (request()->input('page', 1) - 1) * 5);
+            }else{
+                $notes = 'Cabinet. Update ' . $cabinet->cabinetname;
+                $status = 'Failed';
+                $this->userlog($notes,$status);
+
+                return redirect()->route('managecabinet.cabinetlist',$cabinet->branchid)
+                                ->with(['cabinet' => $branchcabinet])
+                                ->with('failed','Renter removal failed')
+                                ->with('i', (request()->input('page', 1) - 1) * 5);
+            }
+        }else
+        {
+            $branchcabinet = cabinet::where('branchid',$cabinet->branchid)->paginate(5);
+
+            return redirect()->route('managecabinet.cabinetlist',$cabinet->branchid)
+                                ->with(['cabinet' => $branchcabinet])
+                                ->with('failed','No Renter Assigned.')
+                                ->with('i', (request()->input('page', 1) - 1) * 5);
+        }
+        
+    }
+    public function searchrenter(Request $request,$cabid)
+    {
+        $cabinet = cabinet::where('cabid',$cabid)->first();
+        $renter = Renter::where('accesstype',"Renters")
+                        ->where(function(Builder $builder) use($request){
+                            $builder->where('firstname','like',"%{$request->search}%")
+                                    ->orWhere('lastname','like',"%{$request->search}%")
+                                    ->orWhere('email','like',"%{$request->search}%");
+                        })->orderBy('lastname',$request->orderrow)
+                          ->paginate($request->pagerow);
+        $notes = 'Renter';
+        $status = 'Success';
+        $this->userlog($notes,$status);
+
+        return view('manage.cabinet.allrenters',compact('renter'))
+        ->with(['cabinet' => $cabinet])
+        ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
+
+    }
+    public function selectrenter($cabid,$rentersid)
+    {
+        $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
+        
+        $cabinet = cabinet::where('cabid',$cabid)->first();
+        $renter = Renter::where('rentersid',$rentersid)->first();
+
+        $mod = $cabinet->mod;
+
+        $branchlist = branchlist::where('userid',$renter->rentersid)
+                                ->where('branchid',$cabinet->branchid)
+                                ->first();
+
+        // dd(empty($branchlist));
+
+        if(empty($branchlist))
+        {
+            $branchlistadd = branchlist::create([
+                            'userid' => $renter->rentersid,
+                            'branchid' => $cabinet->branchid,
+                            'accesstype' => 'Renters',
+                            'timerecorded'  => $timenow,
+                            'cabcount' => 0, 
+                            'posted'  => 'N',
+                            'created_by' => auth()->user()->email,
+                            'updated_by' => 'Null',
+                            'mod' => 0,
+                            'status' => 'Active',
+                        ]);
+        }
+
+        if($cabinet->email == 'Vacant')
+        {
+            $cabinets = cabinet::where('cabid', $cabinet->cabid)->update([
+                'userid' => $renter->rentersid,
+                'email' => $renter->email,
+                'updated_by' => auth()->user()->email,
+                'mod' => $mod + 1,
+                ]);
+
+            $totalcabown = cabinet::where('userid', $renter->rentersid)->count();
+            
+            $renterupdate = Renter::where('rentersid',$renter->rentersid)->update([
+                        'cabid' => $totalcabown,
+                    ]);
+
+            $branchcabinet = cabinet::where('branchid',$cabinet->branchid)->paginate(5);
+
+            return redirect()->route('managecabinet.cabinetlist',$cabinet->branchid)
+                            ->with(['cabinet' => $branchcabinet])
+                            ->with('success','Renter Assigned Successfully.')
+                            ->with('i', (request()->input('page', 1) - 1) * 5);
+        }
+        else
+        {
+            $branchcabinet = cabinet::where('branchid',$cabinet->branchid)->paginate(5);
+
+            return redirect()->route('managecabinet.cabinetlist',$cabinet->branchid)
+                            ->with(['cabinet' => $branchcabinet])
+                            ->with('failed','Cabinet has already assigned Renter.')
+                            ->with('i', (request()->input('page', 1) - 1) * 5);
+        }
+
+    }
+    public function allrenters($cabid)
+    {
+        $cabinet = cabinet::where('cabid',$cabid)->first();
+        $renter = Renter::where('accesstype',"Renters")
+                            ->orderBy('status','asc')
+                            ->paginate(10);
+        $notes = 'Renter';
+        $status = 'Success';
+        $this->userlog($notes,$status);
+
+        return view('manage.cabinet.allrenters',compact('renter'))
+        ->with(['cabinet' => $cabinet])
+        ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
     public function searchcabinet(Request $request,$branchid)
@@ -162,80 +320,44 @@ class ManageCabinetController extends Controller
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         $cabinet = cabinet::where('cabid',$cabinet)->first();
         
-
-        
         $mod = 0;
         $mod = $cabinet->mod;
 
-        
-
         if($cabinet->status == 'Active')
         {
-            if($request->renter != 'Vacant'){
-                $rent = Renter::where('rentersid',$request->renter)->first();
+            $rent = Renter::where('rentersid',$request->renter)->first();
 
-                dd($cabinet,$request);
-                $cabinets = cabinet::where('cabid', $cabinet->userid)
-                ->update([
-                'userid' => $rent->userid,
-                'email' => $rent->email,
-                'cabinetprice' => $request->cabinetprice,
-                'updated_by' => auth()->user()->email,
-                'mod' => $mod + 1,
-                ]);
+            // dd($cabinet,$request);
+            $cabinets = cabinet::where('cabid', $cabinet->cabid)
+            ->update([
+            'cabinetprice' => $request->cabinetprice,
+            'updated_by' => auth()->user()->email,
+            'mod' => $mod + 1,
+            ]);
 
-                $totalcabown = cabinet::where('userid', $cabinet->userid)->count();
-        
-                Renter::where('userid',$rent->userid)
-                ->update([
-                    'cabid' => $totalcabown + 1,
-                ]);
+            $branchcabinet = cabinet::where('branchid',$cabinet->branchid)->paginate(5);
+            
+            if ($cabinets) {
+                //query successful
+                $notes = 'Cabinet. Update ' . $cabinet->cabinetname;
+                $status = 'Success';
+                $this->userlog($notes,$status);
 
-                
-                if ($cabinets) {
-                    //query successful
-                    $notes = 'Cabinet. Update ' . $cabinet->cabinetname;
-                    $status = 'Success';
-                    $this->userlog($notes,$status);
-
-                    return redirect()->back()
-                                ->with('success','Cabinet updated successfully.');
-                }else{
-
-                    $notes = 'Cabinet. Update ' . $cabinet->cabinetname;
-                    $status = 'Failed';
-                    $this->userlog($notes,$status);
- 
-                    return redirect()->back()
-                                ->with('failed','Cabinet update failed. 1');
-                }
+                return redirect()->route('managecabinet.cabinetlist',$cabinet->branchid)
+                                ->with(['cabinet' => $branchcabinet])
+                                ->with('success','Cabinet updated successfully.')
+                                ->with('i', (request()->input('page', 1) - 1) * 5);
             }else{
-                $cabinets = cabinet::where('cabid', $cabinet->cabid)
-                ->update([
-                'userid' => 0,
-                'email' => 'Vacant',
-                'cabinetprice' => $request->cabinetprice,
-                'updated_by' => auth()->user()->email,
-                'mod' => $mod + 1,
-                ]);
 
+                $notes = 'Cabinet. Update ' . $cabinet->cabinetname;
+                $status = 'Failed';
+                $this->userlog($notes,$status);
 
-                if ($cabinets) {
-                    //query successful
-                    $notes = 'Cabinet. Update ' . $cabinet->cabinetname;
-                    $status = 'Success';
-                    $this->userlog($notes,$status);
-
-                    return redirect()->back()
-                                ->with('success','Cabinet updated successfully.');
-                }else{
-                    $notes = 'Cabinet. Update ' . $cabinet->cabinetname;
-                    $status = 'Failed';
-                    $this->userlog($notes,$status);
-
-                    return redirect()->back()
-                                ->with('failed','Cabinet update failed. 2');
-                }
+                return redirect()->route('managecabinet.cabinetlist',$cabinet->branchid)
+                                ->with(['cabinet' => $branchcabinet])
+                                ->with('failed','Cabinet update failed. 1')
+                                ->with('i', (request()->input('page', 1) - 1) * 5);
+                            
             }
             
         }else{
