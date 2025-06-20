@@ -370,19 +370,11 @@ class ManageRenterController extends Controller
 
     public function search(Request $request)
     {
-        $renter = Renter::where('accesstype',"Renters")
-                    ->where(function(Builder $builder) use($request){
-                        $builder->where('username','like',"%{$request->search}%")
-                                ->orWhere('firstname','like',"%{$request->search}%")
-                                ->orWhere('lastname','like',"%{$request->search}%")
-                                ->orWhere('branchname','like',"%{$request->search}%")
-                                ->orWhere('email','like',"%{$request->search}%")
-                                ->orWhere('status','like',"%{$request->search}%");
-                    })
-                    ->orderBy('lastname',$request->orderrow)
+        $branch = branch::where('branchname','like',"%{$request->search}%")
+                    ->orderBy('branchname',$request->orderrow)
                     ->paginate($request->pagerow);
     
-        return view('manage.renters.index',compact('renter'))
+        return view('manage.renters.index',compact('branch'))
             ->with('i', (request()->input('page', 1) - 1) * $request->pagerow);
     }
     /**
