@@ -8,8 +8,8 @@ use App\Http\Requests\CreateCabinetRequest;
 use App\Models\cabinet;
 use App\Models\branch;
 use App\Models\Renter;
-use App\Models\branchlist; 
-use App\Models\sales;
+use App\Models\branchlist;
+use App\Models\Sales;
 use App\Models\history_sales;
 use App\Models\user_login_log;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -49,11 +49,6 @@ class ManageCabinetController extends Controller
 
         if($cabinet->email != 'Vacant')
         {
-            $totalcabown = cabinet::where('userid', $cabinet->userid)->count();
-            
-            $renterupdate = Renter::where('rentersid',$cabinet->userid)->update([
-                        'cabid' => $totalcabown,
-                    ]);
 
             $cabinets = cabinet::where('cabid', $cabinet->cabid)
                     ->update([
@@ -61,6 +56,22 @@ class ManageCabinetController extends Controller
                     'email' => 'Vacant',
                     'updated_by' => auth()->user()->email,
                     'mod' => $mod + 1,
+                    ]);
+
+            $totalcabown = cabinet::where('userid', $cabinet->userid)->count();
+            
+            $renterupdate = Renter::where('rentersid',$cabinet->userid)->update([
+                        'cabid' => $totalcabown,
+                    ]);
+
+            $sales = Sales::where('cabid',$cabinet->cabid)->update([
+                        'userid' => 0,
+                        'username' => ' ',
+                    ]);
+            
+            $history_sales = history_sales::where('cabid',$cabinet->cabid)->update([
+                        'userid' => 0,
+                        'username' => ' ',
                     ]);
 
             $branchcabinet = cabinet::where('branchid',$cabinet->branchid)->paginate(5);
@@ -159,6 +170,16 @@ class ManageCabinetController extends Controller
             
             $renterupdate = Renter::where('rentersid',$renter->rentersid)->update([
                         'cabid' => $totalcabown,
+                    ]);
+            
+            $sales = Sales::where('cabid',$cabinet->cabid)->update([
+                        'userid' => $renter->rentersid,
+                        'username' => $renter->email,
+                    ]);
+            
+            $history_sales = history_sales::where('cabid',$cabinet->cabid)->update([
+                        'userid' => $renter->rentersid,
+                        'username' => $renter->email,
                     ]);
 
             $branchcabinet = cabinet::where('branchid',$cabinet->branchid)->paginate(5);
