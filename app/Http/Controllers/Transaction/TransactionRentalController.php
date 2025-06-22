@@ -43,6 +43,46 @@ class TransactionRentalController extends Controller
         ]);
     }
 
+    public function rentalpaymentrecords($branchid,$rentersid,$cabid)
+    {
+        $branch = branch::where('branchid',$branchid)->first();
+
+        $renter = Renter::where('rentersid', $rentersid)->first();
+
+        $cabinet = cabinet::where('cabid',$cabid)->first();
+
+        $rentalpayments = RentalPayments::where('cabid',$cabinet->cabid)
+                                        ->latest()
+                                        ->paginate(12);
+
+        return view('transaction.rental.rental-payment-records',['renter' => $renter])
+                ->with(compact('cabinet'))
+                ->with(compact('branch'))
+                ->with(compact('rentalpayments'))
+                ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+
+    public function selectrentercabinet($branchid,$rentersid)
+    {
+        // dd($branchid,$rentersid);
+
+        $branch = branch::where('branchid',$branchid)->first();
+
+        $renter = Renter::where('rentersid', $rentersid)->first();
+
+        $cabinets = cabinet::where('userid',$rentersid)
+                            ->where('branchid',$branch->branchid)
+                            ->paginate(10);
+
+        // dd($branch,$renter,$cabinet);
+
+        return view('transaction.rental.show-cabinet-list',['renter' => $renter])
+                ->with(compact('cabinets')) 
+                ->with(compact('branch'))
+                ->with('i', (request()->input('page', 1) - 1) * 5);
+
+
+    }
     public function showbranchrenter($branchid)
     {
         $branch = branch::where('branchid', $branchid)->first();
@@ -425,17 +465,29 @@ class TransactionRentalController extends Controller
     }
     
 
-    public function create()
+    public function create($branchid,$rentersid,$cabid)
     {
+        $branch = branch::where('branchid',$branchid)->first();
+
+        $renter = Renter::where('rentersid', $rentersid)->first();
+
+        $cabinet = cabinet::where('cabid',$cabid)->first();
+
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return view('transaction.rental.create');   
+                return view('transaction.rental.create')
+                                ->with(['branch' => $branch])
+                                ->with(['renter' => $renter])
+                                ->with(['cabinet' => $cabinet]);   
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return view('transaction.rental.create');
+                return view('transaction.rental.create')
+                                ->with(['branch' => $branch])
+                                ->with(['renter' => $renter])
+                                ->with(['cabinet' => $cabinet]);   
             }
         }else{
             return redirect()->route('dashboardoverview.index');
