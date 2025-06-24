@@ -31,6 +31,7 @@ class history_rental_payments extends Model
         'rpbal',
         'rppaytype',
         'rpmonthyear',
+        'rptotaldue',
         'rpnotes',
         'branchid',
         'branchname',

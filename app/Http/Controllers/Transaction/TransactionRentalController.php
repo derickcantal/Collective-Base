@@ -45,6 +45,12 @@ class TransactionRentalController extends Controller
 
     public function rentalpaymentrecords($branchid,$rentersid,$cabid)
     {
+        $today = Carbon::now();
+        $tmonth = $today->month;
+        $tyear = $today->year;
+        
+        $daysno = Carbon::now()->month($tmonth)->daysInMonth;
+
         $branch = branch::where('branchid',$branchid)->first();
 
         $renter = Renter::where('rentersid', $rentersid)->first();
@@ -55,7 +61,7 @@ class TransactionRentalController extends Controller
                                         ->latest()
                                         ->paginate(12);
 
-        return view('transaction.rental.rental-payment-records',['renter' => $renter])
+        return view('transaction.rental.rental-payment-records',compact('renter'))
                 ->with(compact('cabinet'))
                 ->with(compact('branch'))
                 ->with(compact('rentalpayments'))
@@ -73,6 +79,15 @@ class TransactionRentalController extends Controller
         $cabinets = cabinet::where('userid',$rentersid)
                             ->where('branchid',$branch->branchid)
                             ->paginate(10);
+        
+        $cabinetcount = cabinet::where('userid',$rentersid)
+                            ->where('branchid',$branch->branchid)
+                            ->count();
+        if($cabinetcount == 0)
+        {
+            return redirect()->back()
+                                ->with('failed','No Cabinet Record Found in this branch.');
+        }
 
         // dd($branch,$renter,$cabinet);
 
@@ -172,7 +187,7 @@ class TransactionRentalController extends Controller
         else{
             $totalbalance = $rentalpayment->rpbal - $request->paidamount; 
         }
-        dd($totalbalance);
+        // dd($totalbalance,$request);
 
 
         if($rentalpayment)
@@ -273,6 +288,7 @@ class TransactionRentalController extends Controller
             'rppaytype' => $request->rppaytype,
             'rpmonth' => $request->rpmonth,
             'rpyear' => $request->rpyear,
+            'rptotaldue' => $cabinet->cabinetprice,
             'rpnotes' => $rpnotes,
             'branchid' => $renter->branchid,
             'branchname' => $renter->branchname,
@@ -467,6 +483,7 @@ class TransactionRentalController extends Controller
 
     public function create($branchid,$rentersid,$cabid)
     {
+
         $branch = branch::where('branchid',$branchid)->first();
 
         $renter = Renter::where('rentersid', $rentersid)->first();

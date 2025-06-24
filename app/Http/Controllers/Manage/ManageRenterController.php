@@ -261,11 +261,17 @@ class ManageRenterController extends Controller
        
     }
     
-    public function updatedata($request,$renters){
+    public function updatedata($request,$rentersid,$branchid){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
+
+        $renters = Renter::where('rentersid',$rentersid)->first();
+
         $mod = 0;
         $mod = $renters->mod;
-        $br = branch::where('branchname',$request->branchname)->first();
+        
+        $br = branch::where('branchid',$branchid)->first();
+
+        // dd($renters,$branchid,$br);
        // $fullname = $request->lastname . ', ' . $request->firstname . ' ' . $request->middlename;
         $fullname = $request->lastname . ', ' . $request->firstname;
 
@@ -495,7 +501,7 @@ class ManageRenterController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(RenterUpdateRequests $request, Renter $renters)
+    public function update(RenterUpdateRequests $request,$rentersid,$branchid)
     {
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
@@ -503,9 +509,9 @@ class ManageRenterController extends Controller
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return $this->updatedata($request,$renters);
+                return $this->updatedata($request,$rentersid,$branchid);
             }elseif(auth()->user()->accesstype =='Administrator'){
-                return $this->updatedata($request,$renters);
+                return $this->updatedata($request,$rentersid,$branchid);
             }
             
         }else{

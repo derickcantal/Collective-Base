@@ -32,6 +32,7 @@ class RentalPayments extends Model
         'rppaytype',
         'rpmonth',
         'rpyear',
+        'rptotaldue',
         'rpnotes',
         'branchid',
         'branchname',

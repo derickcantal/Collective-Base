@@ -78,7 +78,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/manage/renters/branch/{branchid}/create', [ManageRenterController::class, 'create'])->name('managerenter.create');
     Route::get('/manage/renters/branch/{branchid}/search', [ManageRenterController::class, 'searchrenter'])->name('managerenter.searchrenter');
     Route::get('/manage/renters/{renters}/branch/{branchid}/info', [ManageRenterController::class, 'show'])->name('managerenter.show');
-    Route::patch('/manage/renters/branch/{renters}', [ManageRenterController::class, 'update'])->name('managerenter.update');
+    Route::patch('/manage/renters/{rentersid}/branch//{branchid}', [ManageRenterController::class, 'update'])->name('managerenter.update');
     Route::delete('/manage/renters/branch/{renters}', [ManageRenterController::class, 'destroy'])->name('managerenter.destroy');
     Route::get('/manage/renters/{renters}/branch/{branchid}/edit', [ManageRenterController::class, 'edit'])->name('managerenter.edit');
     Route::get('/manage/renters/branch/{branchid}/list', [ManageRenterController::class, 'renterslist'])->name('managerenter.renterslist');
@@ -88,7 +88,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/manage/renters', [ManageAllRenterController::class, 'store'])->name('manageallrenter.store');
     Route::get('/manage/renters/create', [ManageAllRenterController::class, 'create'])->name('manageallrenter.create');
     Route::get('/manage/renters/{renters}/info', [ManageAllRenterController::class, 'show'])->name('manageallrenter.show');
-    Route::patch('/manage/renters/{renters}', [ManageAllRenterController::class, 'update'])->name('manageallrenter.update');
+    Route::patch('/manage/renters/{rentersid}', [ManageAllRenterController::class, 'update'])->name('manageallrenter.update');
     Route::delete('/manage/renters/{renters}', [ManageAllRenterController::class, 'destroy'])->name('manageallrenter.destroy');
     Route::get('/manage/renters/{renters}/edit', [ManageAllRenterController::class, 'edit'])->name('manageallrenter.edit');
     Route::get('/manage/renters/{renters}/sendmail', [ManageAllRenterController::class, 'sendmail'])->name('manageallrenter.sendmail');
