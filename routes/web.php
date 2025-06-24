@@ -184,8 +184,9 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/transaction/rental', [TransactionRentalController::class, 'index'])->name('transactionrental.index');
-    Route::post('/transaction/rental', [TransactionRentalController::class, 'store'])->name('transactionrental.store');
+    Route::post('/transaction/rental/branch/renter/cabinet/{cabinetid}/save', [TransactionRentalController::class, 'store'])->name('transactionrental.store');
     Route::get('/transaction/rental/branch/{branchid}/renter/{rentersid}/cabinet/{cabid}/create', [TransactionRentalController::class, 'create'])->name('transactionrental.create');
+    Route::get('/transaction/rental/branch/{branchid}/renter/{rentersid}/cabinet/{cabid}/create/details', [TransactionRentalController::class, 'createdetails'])->name('transactionrental.createdetails');
     Route::get('/transaction/rental/search', [TransactionRentalController::class, 'search'])->name('transactionrental.search');
     Route::get('/transaction/rental/{rental}', [TransactionRentalController::class, 'show'])->name('transactionrental.show');
     Route::patch('/transaction/rental/{rental}', [TransactionRentalController::class, 'update'])->name('transactionrental.update');

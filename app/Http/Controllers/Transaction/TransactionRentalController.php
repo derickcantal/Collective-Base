@@ -153,7 +153,8 @@ class TransactionRentalController extends Controller
                                         ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
-    public function storedata($request){
+    public function storedata($request,$cabinetid)
+    {
         
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
 
@@ -161,7 +162,9 @@ class TransactionRentalController extends Controller
         $today->month;
         $today->year;
 
-        $cabinet = cabinet::where('cabid', $request->cabinetname)->first();
+        $cabinet = cabinet::where('cabid', $cabinetid)->first();
+
+        $branch = branch::where('branchid',$cabinet->branchid)->first();
 
         $renter = Renter::where('rentersid', $cabinet->userid)->first();
 
@@ -172,7 +175,7 @@ class TransactionRentalController extends Controller
                         ->where('rpyear',$request->rpyear);
                     })
                     ->latest()->first();
-
+        
         $rentalpaymenthistory = history_rental_payments::where('userid',$renter->rentersid)
                     ->where(function(Builder $builder) use($request,$cabinet) {
                         $builder->where('cabid',$cabinet->cabid)
@@ -180,13 +183,35 @@ class TransactionRentalController extends Controller
                             ->where('rpyear',$request->rpyear);
                         })
                         ->latest()->first();
-        if(empty($rentalpayment))
-        {
-            $totalbalance = $cabinet->cabinetprice - $request->paidamount; 
-        }
-        else{
-            $totalbalance = $rentalpayment->rpbal - $request->paidamount; 
-        }
+
+        $rentalpaymenttotal = RentalPayments::where('userid',$renter->rentersid)
+                ->where(function(Builder $builder) use($request,$cabinet) {
+                    $builder->where('cabid',$cabinet->cabid)
+                        ->where('rpmonth',$request->rpmonth)
+                        ->where('rpyear',$request->rpyear);
+                    })
+                    ->sum('rpamount');
+
+        $rentalpaymenthistorytotal = history_rental_payments::where('userid',$renter->rentersid)
+                    ->where(function(Builder $builder) use($request,$cabinet) {
+                        $builder->where('cabid',$cabinet->cabid)
+                            ->where('rpmonth',$request->rpmonth)
+                            ->where('rpyear',$request->rpyear);
+                        })
+                        ->sum('rpamount');
+
+        $totalbalance = $cabinet->cabinetprice - ($rentalpaymenttotal + $rentalpaymenthistorytotal);
+
+        // dd($totalrp);
+
+        
+        // if(empty($rentalpayment))
+        // {
+        //     $totalbalance = $cabinet->cabinetprice - $request->paidamount; 
+        // }
+        // else{
+        //     $totalbalance = $rentalpayment->rpbal - $request->paidamount; 
+        // }
         // dd($totalbalance,$request);
 
 
@@ -238,13 +263,13 @@ class TransactionRentalController extends Controller
             return redirect()->back()
                                 ->with('failed','Please pay exact amount');
         }
-        if($totalbalance == 0)
+        // dd($totalbalance <= 0, $totalbalance);
+        if($totalbalance <= 0)
         {
-            if($today->month == $cabinet->rpmonth && $today->year == $cabinet->rpyear){
-                $fullypaid = 'Y';
-            }else{
-                $fullypaid = 'N';
-            }
+            $fullypaid = 'Y';
+
+            return redirect()->back()
+                                ->with('failed','Balance already settled.');
         }
         elseif($totalbalance > 0)
         {
@@ -284,7 +309,7 @@ class TransactionRentalController extends Controller
             'firstname' => $renter->firstname,
             'lastname' => $renter->lastname,
             'rpamount' => $request->paidamount,
-            'rpbal' => $totalbalance,
+            'rpbal' => $totalbalance - $request->paidamount,
             'rppaytype' => $request->rppaytype,
             'rpmonth' => $request->rpmonth,
             'rpyear' => $request->rpyear,
@@ -480,6 +505,61 @@ class TransactionRentalController extends Controller
         }
     }
     
+    public function createdetails(Request $request,$branchid,$rentersid,$cabid)
+    {
+        $branch = branch::where('branchid',$branchid)->first();
+
+        $renter = Renter::where('rentersid', $rentersid)->first();
+
+        $cabinet = cabinet::where('cabid',$cabid)->first();
+
+        $rentalpaymenttotal = RentalPayments::where('userid',$renter->rentersid)
+                ->where(function(Builder $builder) use($request,$cabinet) {
+                    $builder->where('cabid',$cabinet->cabid)
+                        ->where('rpmonth',$request->rpmonth)
+                        ->where('rpyear',$request->rpyear);
+                    })
+                    ->sum('rpamount');
+
+        $rentalpaymenthistorytotal = history_rental_payments::where('userid',$renter->rentersid)
+                    ->where(function(Builder $builder) use($request,$cabinet) {
+                        $builder->where('cabid',$cabinet->cabid)
+                            ->where('rpmonth',$request->rpmonth)
+                            ->where('rpyear',$request->rpyear);
+                        })
+                        ->sum('rpamount');
+
+        $totalbalance = $cabinet->cabinetprice - ($rentalpaymenttotal + $rentalpaymenthistorytotal);
+        
+        if($totalbalance <= 0)
+        {
+            return redirect()->back()
+                                ->with('failed','Selected Applicable Month Already Paid');
+        }
+        
+
+        if(auth()->user()->status =='Active'){
+            if(auth()->user()->accesstype =='Cashier'){
+                return redirect()->route('dashboardoverview.index');
+            }elseif(auth()->user()->accesstype =='Renters'){
+                return redirect()->route('dashboardoverview.index');
+            }elseif(auth()->user()->accesstype =='Supervisor'){
+                return view('transaction.rental.create-details')
+                                ->with(['branch' => $branch])
+                                ->with(['renter' => $renter])
+                                ->with(['cabinet' => $cabinet])
+                                ->with(['totalbalance' => $totalbalance]);   
+            }elseif(auth()->user()->accesstype =='Administrator'){
+                return view('transaction.rental.create-details')
+                                ->with(['branch' => $branch])
+                                ->with(['renter' => $renter])
+                                ->with(['cabinet' => $cabinet])
+                                ->with(['totalbalance' => $totalbalance]);      
+            }
+        }else{
+            return redirect()->route('dashboardoverview.index');
+        }
+    }
 
     public function create($branchid,$rentersid,$cabid)
     {
@@ -489,6 +569,8 @@ class TransactionRentalController extends Controller
         $renter = Renter::where('rentersid', $rentersid)->first();
 
         $cabinet = cabinet::where('cabid',$cabid)->first();
+
+        // dd('Test Filter');
 
         if(auth()->user()->status =='Active'){
             if(auth()->user()->accesstype =='Cashier'){
@@ -512,7 +594,7 @@ class TransactionRentalController extends Controller
         
     }
 
-    public function store(Request $request)
+    public function store(Request $request,$cabinetid)
     {
 
         if(auth()->user()->status =='Active'){
@@ -521,10 +603,10 @@ class TransactionRentalController extends Controller
             }elseif(auth()->user()->accesstype =='Renters'){
                 return redirect()->route('dashboardoverview.index');
             }elseif(auth()->user()->accesstype =='Supervisor'){
-                return $this->storedata($request);         
+                return $this->storedata($request,$cabinetid);         
             }elseif(auth()->user()->accesstype =='Administrator'){
 
-                return $this->storedata($request); 
+                return $this->storedata($request,$cabinetid); 
             }
         }else{
             return redirect()->route('dashboardoverview.index');
