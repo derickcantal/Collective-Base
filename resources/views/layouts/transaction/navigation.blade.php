@@ -13,7 +13,7 @@
                     <x-nav-link :href="route('transactionrental.index')" :active="request()->routeIs('transactionrental.index')">
                         {{ __('Rental Payment') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('transactionrental.index')" :active="request()->routeIs('transactionrental.index')">
+                    <x-nav-link :href="route('transactionremittance.index')" :active="request()->routeIs('transactionremittance.index')">
                         {{ __('Renter Remittance') }}
                     </x-nav-link>
                     @endif

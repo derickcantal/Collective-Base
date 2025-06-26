@@ -19,6 +19,7 @@ use App\Http\Controllers\Transaction\TransactionCabinetSalesController;
 use App\Http\Controllers\Transaction\TransactionRentalController;
 use App\Http\Controllers\Transaction\TransactionSalesController;
 use App\Http\Controllers\Transaction\TransactionEODController;
+use App\Http\Controllers\Transaction\TransactionRenterRemittanceController;
 use App\Http\Controllers\Dashboard\DashboardOverviewController;
 use App\Http\Controllers\Dashboard\DashboardRentalsController;
 use App\Http\Controllers\Dashboard\DashboardSalesController;
@@ -182,6 +183,20 @@ Route::middleware('auth')->group(function () {
     Route::delete('/transaction/branch/cabinet/{branch}', [TransactionCabinetSalesController::class, 'destroy'])->name('transactioncabsales.destroy');
     Route::get('/transaction/branch/cabinet/{branch}/edit', [TransactionCabinetSalesController::class, 'edit'])->name('transactioncabsales.edit');
 
+
+    Route::get('/transaction/remittance', [TransactionRenterRemittanceController::class, 'index'])->name('transactionremittance.index');
+    Route::post('/transaction/remittance/branch/renter/cabinet/{cabinetid}/save', [TransactionRenterRemittanceController::class, 'store'])->name('transactionremittance.store');
+    Route::get('/transaction/remittance/branch/{branchid}/renter/{rentersid}/cabinet/{cabid}/create', [TransactionRenterRemittanceController::class, 'create'])->name('transactionremittance.create');
+    Route::get('/transaction/remittance/branch/{branchid}/renter/{rentersid}/cabinet/{cabid}/create/details', [TransactionRenterRemittanceController::class, 'createdetails'])->name('transactionremittance.createdetails');
+    Route::get('/transaction/remittance/search', [TransactionRenterRemittanceController::class, 'search'])->name('transactionremittance.search');
+    Route::get('/transaction/remittance/{remittance}', [TransactionRenterRemittanceController::class, 'show'])->name('transactionremittance.show');
+    Route::patch('/transaction/remittance/{remittance}', [TransactionRenterRemittanceController::class, 'update'])->name('transactionremittance.update');
+    Route::delete('/transaction/remittance/{remittance}', [TransactionRenterRemittanceController::class, 'destroy'])->name('transactionremittance.destroy');
+    Route::get('/transaction/remittance/{remittance}/edit', [TransactionRenterRemittanceController::class, 'edit'])->name('transactionremittance.edit');
+    Route::get('/transaction/remittance/branch/{branchid}/renter/all', [TransactionRenterRemittanceController::class, 'showbranchrenter'])->name('transactionremittance.showbranchrenter');
+    Route::get('/transaction/remittance/branch/{branchid}/search', [TransactionRenterRemittanceController::class, 'searchbranchrenter'])->name('transactionremittance.searchbranchrenter');
+    Route::get('/transaction/remittance/branch/{branchid}/renter/{rentersid}/cabinet/all', [TransactionRenterRemittanceController::class, 'selectrentercabinet'])->name('transactionremittance.selectrentercabinet');
+    Route::get('/transaction/remittance/branch/{branchid}/renter/{rentersid}/cabinet/{cabinetid}/payment/records', [TransactionRenterRemittanceController::class, 'rentalpaymentrecords'])->name('transactionremittance.rentalpaymentrecords');
 
     Route::get('/transaction/rental', [TransactionRentalController::class, 'index'])->name('transactionrental.index');
     Route::post('/transaction/rental/branch/renter/cabinet/{cabinetid}/save', [TransactionRentalController::class, 'store'])->name('transactionrental.store');
