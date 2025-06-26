@@ -155,7 +155,7 @@ class TransactionRentalController extends Controller
 
     public function storedata($request,$cabinetid)
     {
-        
+
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
 
         $today = Carbon::now();
@@ -202,57 +202,14 @@ class TransactionRentalController extends Controller
 
         $totalbalance = $cabinet->cabinetprice - ($rentalpaymenttotal + $rentalpaymenthistorytotal);
 
-        // dd($totalrp);
-
-        
-        // if(empty($rentalpayment))
-        // {
-        //     $totalbalance = $cabinet->cabinetprice - $request->paidamount; 
-        // }
-        // else{
-        //     $totalbalance = $rentalpayment->rpbal - $request->paidamount; 
-        // }
-        // dd($totalbalance,$request);
-
-
-        if($rentalpayment)
-        {
-            
-            if($rentalpayment->fully_paid == 'Y')
-            {
-                $notes = 'Rental Payments. Month/Year has been paid';
-                $status = 'Failed';
-                $this->userlog($notes,$status);
-
-                return redirect()->back()
-                                ->with('failed','Rental Month/Year has been paid.');
-            }
-            
-        }       
-        
-        if($rentalpaymenthistory)
-        {
-            
-            if($rentalpaymenthistory->fully_paid == 'Y')
-            {
-                $notes = 'Rental Payments. Month/Year has been paid';
-                $status = 'Failed';
-                $this->userlog($notes,$status);
-
-                return redirect()->back()
-                                ->with('failed','Rental Month/Year has been paid.');
-            }
-            
-        }   
-
         if($request->paidamount <= 0)
         {
             $notes = 'Rental Payments. Total amount paid must not be equal 0.';
             $status = 'Failed';
             $this->userlog($notes,$status);
 
-            return redirect()->back()
-                                ->with('failed','Total amount paid must not be equal 0.');
+            return redirect()->route('transactionrental.create',[$branch->branchid,$renter->rentersid,$cabinet->cabid])
+                    ->with('failed','Total amount paid must not be equal 0.');
         }
         if($request->totalbalance < 0)
         {
@@ -260,7 +217,7 @@ class TransactionRentalController extends Controller
             $status = 'Failed';
             $this->userlog($notes,$status);
 
-            return redirect()->back()
+            return redirect()->route('transactionrental.create',[$branch->branchid,$renter->rentersid,$cabinet->cabid])
                                 ->with('failed','Please pay exact amount');
         }
         // dd($totalbalance <= 0, $totalbalance);
@@ -268,8 +225,6 @@ class TransactionRentalController extends Controller
         {
             $fullypaid = 'Y';
 
-            return redirect()->back()
-                                ->with('failed','Balance already settled.');
         }
         elseif($totalbalance > 0)
         {
@@ -284,6 +239,7 @@ class TransactionRentalController extends Controller
         {
             $rpnotes = $request->rpnotes;
         }
+
         if(empty($request->payavatar))
         {
             $payavatar = 'avatars/cash-default.jpg';
@@ -315,8 +271,8 @@ class TransactionRentalController extends Controller
             'rpyear' => $request->rpyear,
             'rptotaldue' => $cabinet->cabinetprice,
             'rpnotes' => $rpnotes,
-            'branchid' => $renter->branchid,
-            'branchname' => $renter->branchname,
+            'branchid' => $cabinet->branchid,
+            'branchname' => $cabinet->branchname,
             'cabid' => $cabinet->cabid,
             'cabinetname' => $cabinet->cabinetname,
             'avatarproof' => $payavatar,
@@ -329,11 +285,6 @@ class TransactionRentalController extends Controller
             'status' => 'Active',
         ]);
 
-        $cabinetupdate = cabinet::where('cabid',$cabinet->cabid)
-                    ->update([
-                        'fully_paid' => $fullypaid,
-                    ]);
-
         $rentalpaymentupdate = RentalPayments::where('userid',$renter->rentersid)
                 ->where(function(Builder $builder) use($request,$cabinet) {
                     $builder->where('cabid',$cabinet->cabid)
@@ -342,28 +293,46 @@ class TransactionRentalController extends Controller
                     })
                     ->latest()->first();
         
-        if($rentalpaymentupdate->fully_paid == 'Y')
+        $rentalpaymenttotal = RentalPayments::where('userid',$renter->rentersid)
+                ->where(function(Builder $builder) use($request,$cabinet) {
+                    $builder->where('cabid',$cabinet->cabid)
+                        ->where('rpmonth',$request->rpmonth)
+                        ->where('rpyear',$request->rpyear);
+                    })
+                    ->sum('rpamount');
+
+        $rentalpaymenthistorytotal = history_rental_payments::where('userid',$renter->rentersid)
+                    ->where(function(Builder $builder) use($request,$cabinet) {
+                        $builder->where('cabid',$cabinet->cabid)
+                            ->where('rpmonth',$request->rpmonth)
+                            ->where('rpyear',$request->rpyear);
+                        })
+                        ->sum('rpamount');
+
+        $totalbalance = $cabinet->cabinetprice - ($rentalpaymenttotal + $rentalpaymenthistorytotal);
+        
+        if($totalbalance <= 0)
         {
-            $rpu = RentalPayments::where('branchname',auth()->user()->branchname)
+            $rpu = RentalPayments::where('userid',$renter->rentersid)
                     ->where(function(Builder $builder)use($request,$cabinet,$renter){
-                        $builder->where('userid',$renter->rentersid)
-                                ->where('cabid',$cabinet->cabid)
+                        $builder->where('cabid',$cabinet->cabid)
                                 ->where('rpmonth',$request->rpmonth)
                                 ->where('rpyear',$request->rpyear)
                                 ->where('fully_paid', 'N');
                     })->update([
                         'fully_paid' => "Y",
                     ]);
-            
-            if($today->month == $cabinet->rpmonth && $today->year == $cabinet->rpyear){
-                $fp = 'Y';
-                $cabinetupdate = cabinet::where('cabid',$cabinet->cabid)
-                        ->update([
-                            'fully_paid' => $fp,
-                        ]);
-            }else{
-                $fp = 'N';
-            }        
+            $cabinetupdate = cabinet::where('cabid',$cabinet->cabid)
+                    ->update([
+                        'fully_paid' => 'Y',
+                    ]);
+          
+        }elseif($totalbalance > 0)
+        {
+            $cabinetupdate = cabinet::where('cabid',$cabinet->cabid)
+                    ->update([
+                        'fully_paid' => 'N',
+                    ]);
         }
 
         if($RentalPayments)
@@ -372,14 +341,14 @@ class TransactionRentalController extends Controller
             $status = 'Success';
             $this->userlog($notes,$status);
            
-            return redirect()->route('transactionrental.index')
+            return redirect()->route('transactionrental.rentalpaymentrecords',[$branch->branchid,$renter->rentersid,$cabinet->cabid])
                                 ->with('success','Payment Successful.');
         }else{
             $notes = 'Rental Payments. Create.';
             $status = 'Failed';
             $this->userlog($notes,$status);
 
-            return redirect()->route('transactionrental.index')
+            return redirect()->route('transactionrental.rentalpaymentrecords',[$branch->branchid,$renter->rentersid,$cabinet->cabid])
                                 ->with('failed','Payment Unsuccessful');
         }
     }
@@ -513,6 +482,9 @@ class TransactionRentalController extends Controller
 
         $cabinet = cabinet::where('cabid',$cabid)->first();
 
+        $rpmonth = $request->rpmonth;
+        $rpyear = $request->rpyear;
+
         $rentalpaymenttotal = RentalPayments::where('userid',$renter->rentersid)
                 ->where(function(Builder $builder) use($request,$cabinet) {
                     $builder->where('cabid',$cabinet->cabid)
@@ -548,12 +520,16 @@ class TransactionRentalController extends Controller
                                 ->with(['branch' => $branch])
                                 ->with(['renter' => $renter])
                                 ->with(['cabinet' => $cabinet])
+                                ->with(['rpmonth' => $rpmonth])
+                                ->with(['rpyear' => $rpyear])
                                 ->with(['totalbalance' => $totalbalance]);   
             }elseif(auth()->user()->accesstype =='Administrator'){
                 return view('transaction.rental.create-details')
                                 ->with(['branch' => $branch])
                                 ->with(['renter' => $renter])
                                 ->with(['cabinet' => $cabinet])
+                                ->with(['rpmonth' => $rpmonth])
+                                ->with(['rpyear' => $rpyear])
                                 ->with(['totalbalance' => $totalbalance]);      
             }
         }else{

@@ -100,34 +100,9 @@
                                 <div class="form-group mt-4">
                                     <x-input-label for="rpmonth" :value="__('Applicable Month')" />
                                     <div class="flex flex-col items-stretch justify-start flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3  mt-2">
-                                        <select id="rpmonth" name="rpmonth" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-gray-100 hover:text-green-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" :value="old('rpmonth')">
-                                            <option value = "01">January</option>    
-                                            <option value = "02">February</option>    
-                                            <option value = "03">March</option>
-                                            <option value = "04">April</option>
-                                            <option value = "05">May</option>            
-                                            <option value = "06">June</option>            
-                                            <option value = "07">July</option>            
-                                            <option value = "08">August</option>            
-                                            <option value = "09">September</option>            
-                                            <option value = "10">October</option>            
-                                            <option value = "11">November</option>            
-                                            <option value = "12">December</option>            
-                                        </select>
+                                        <x-text-input id="rpmonth" class="block mt-1 w-full" type="text" name="rpmonth" :value="old('rpmonth', $rpmonth)" required autofocus autocomplete="off" readonly/>
                                         <x-input-error :messages="$errors->get('rpmonth')" class="mt-2" />
-                                        <select id="rpyear" name="rpyear" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" :value="old('rpyear')">
-                                            <option value = "2025">2025</option>
-                                            <option value = "2026">2026</option>
-                                            <option value = "2027">2027</option>
-                                            <option value = "2028">2028</option>
-                                            <option value = "2029">2029</option>
-                                            <option value = "2030">2030</option>
-                                            <option value = "2031">2031</option>
-                                            <option value = "2032">2032</option>
-                                            <option value = "2033">2033</option>
-                                            <option value = "2034">2034</option>
-                                            <option value = "2045">2035</option>
-                                        </select>
+                                        <x-text-input id="rpyear" class="block mt-1 w-full" type="text" name="rpyear" :value="old('rpmonth', $rpyear)" required autofocus autocomplete="off" readonly/>
                                         <x-input-error :messages="$errors->get('rpyear')" class="mt-2" />
                                     </div>
                                 </div>
@@ -192,7 +167,7 @@
                                     <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 0 1 1-1h11.586a1 1 0 0 1 .707.293l2.414 2.414a1 1 0 0 1 .293.707V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5Z"/>
                                     <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M8 4h8v4H8V4Zm7 10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
                                 </svg>
-                                Next
+                                Save
                             </button>
                             <a href="{{ route('transactionrental.rentalpaymentrecords',[$branch->branchid,$renter->rentersid,$cabinet->cabid]) }}" class="py-2 px-3 ms-3 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                 <svg class="w-4 h-4 mr-2 -ml-0.5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">

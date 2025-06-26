@@ -34,7 +34,7 @@ class DashboardRentalsController extends Controller
     }
     public function administrator(){
         
-        $rentalpayments = RentalPayments::where('status','Unpaid')->orderBy('status','desc')->paginate(5);
+        $rentalpayments = RentalPayments::latest()->paginate(5);
 
         return view('dashboard.Rentals.index')->with(['rentalpayments' => $rentalpayments])
                                         ->with('i', (request()->input('page', 1) - 1) * 5);
