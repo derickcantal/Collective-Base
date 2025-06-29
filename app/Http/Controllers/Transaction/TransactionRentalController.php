@@ -140,7 +140,8 @@ class TransactionRentalController extends Controller
               ->with('i', (request()->input('page', 1) - 1) * 10);
     }
     
-    public function loaddata(){
+    public function loaddata()
+    {
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         
         $branch = branch::orderby('branchid')->paginate(10);

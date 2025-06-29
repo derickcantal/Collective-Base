@@ -196,7 +196,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/transaction/remittance/branch/{branchid}/renter/all', [TransactionRenterRemittanceController::class, 'showbranchrenter'])->name('transactionremittance.showbranchrenter');
     Route::get('/transaction/remittance/branch/{branchid}/search', [TransactionRenterRemittanceController::class, 'searchbranchrenter'])->name('transactionremittance.searchbranchrenter');
     Route::get('/transaction/remittance/branch/{branchid}/renter/{rentersid}/cabinet/all', [TransactionRenterRemittanceController::class, 'selectrentercabinet'])->name('transactionremittance.selectrentercabinet');
-    Route::get('/transaction/remittance/branch/{branchid}/renter/{rentersid}/cabinet/{cabinetid}/payment/records', [TransactionRenterRemittanceController::class, 'rentalpaymentrecords'])->name('transactionremittance.rentalpaymentrecords');
+    Route::get('/transaction/remittance/branch/{branchid}/renter/{rentersid}/cabinet/{cabinetid}/payment/records', [TransactionRenterRemittanceController::class, 'renterremittancerecords'])->name('transactionremittance.renterremittancerecords');
 
     Route::get('/transaction/rental', [TransactionRentalController::class, 'index'])->name('transactionrental.index');
     Route::post('/transaction/rental/branch/renter/cabinet/{cabinetid}/save', [TransactionRentalController::class, 'store'])->name('transactionrental.store');

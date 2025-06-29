@@ -7,7 +7,7 @@
 	<div class="py-8 max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
 		<div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <div class="py-8 max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
-                <form action="{{ route('transactionrental.update',$rentalPayments->rpid) }}" enctype="multipart/form-data" method="POST">
+                <form action="{{ route('transactionremittance.update',$rentalPayments->rpid) }}" enctype="multipart/form-data" method="POST">
                     @csrf
                     @method('PATCH')   
                     <!-- Error & Success Notification -->
