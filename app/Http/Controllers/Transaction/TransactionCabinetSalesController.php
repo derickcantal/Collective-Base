@@ -56,7 +56,7 @@ class TransactionCabinetSalesController extends Controller
                                                 })->get();
 
         $thisweeksales = collect($thisweek)->sum('total');
-
+ 
         $lwstartweek = Carbon::now()->subWeek()->startOfWeek()->format('Y-m-d') ;
         $lwendweek = Carbon::now()->subWeek()->endOfWeek()->format('Y-m-d') ;
         $curstartweek = Carbon::now()->startOfWeek()->format('Y-m-d') ;
