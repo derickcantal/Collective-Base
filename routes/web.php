@@ -108,6 +108,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/manage/branch/cabinet/{cabid}/renter/search', [ManageCabinetController::class, 'searchrenter'])->name('managecabinet.searchrenter');
     Route::get('/manage/branch/cabinet/{cabid}/renter/{rentersid}/assign', [ManageCabinetController::class, 'selectrenter'])->name('managecabinet.selectrenter');
     Route::get('/manage/branch/cabinet/{cabid}/assign/vacant', [ManageCabinetController::class, 'removerenter'])->name('managecabinet.removerenter');
+    Route::get('/manage/branch/{branchid}/cabinet/{cabid}/archive', [ManageCabinetController::class, 'archive'])->name('managecabinet.archive');
+    Route::post('/manage/branch/{branchid}/cabinet/{cabid}/archive', [ManageCabinetController::class, 'archivestore'])->name('managecabinet.archivestore');
     
 
 

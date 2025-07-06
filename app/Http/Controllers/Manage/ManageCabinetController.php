@@ -11,12 +11,73 @@ use App\Models\Renter;
 use App\Models\branchlist;
 use App\Models\Sales;
 use App\Models\history_sales;
+use App\Models\archive_history_sales;
 use App\Models\user_login_log;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use \Carbon\Carbon;
 
 class ManageCabinetController extends Controller
 {
+    public function archivestore(Request $request, $branchid, $cabid)
+    {
+        $branch = branch::where('branchid',$branchid)->first();
+        $cabinet = cabinet::where('cabid',$cabid)->first();
+
+        $startDate = Carbon::parse($request->startdate)->format('Y-m-d');
+        $endDate = Carbon::parse($request->enddate)->format('Y-m-d');
+
+        $branchcabinet = cabinet::where('branchid',$cabinet->branchid)->paginate(5);
+
+        // dd($request,$branch,$cabinet);
+        $archivedata = history_sales::where('cabid',$cabinet->cabid)
+                    ->where(function(Builder $builder) use($startDate,$endDate) {
+                        $builder->whereBetween('timerecorded', [$startDate .' 00:00:00', $endDate .' 23:59:59']);
+                    })->get();
+        // dd($archivedata->isEmpty());
+        if($archivedata->isEmpty())
+        {
+             return redirect()->route('managecabinet.cabinetlist',$cabinet->branchid)
+                            ->with(['cabinet' => $branchcabinet])
+                            ->with('failed','No Data to Archive.')
+                            ->with('i', (request()->input('page', 1) - 1) * 5);
+        }
+
+        $archive = history_sales::where('cabid',$cabinet->cabid)
+                    ->where(function(Builder $builder) use($startDate,$endDate){
+                        $builder->whereBetween('timerecorded', [$startDate .' 00:00:00', $endDate .' 23:59:59']);
+                    })
+                    ->each(function ($oldRecord) {
+                        $newRecord = $oldRecord->replicate();
+                        $newRecord->setTable('archive_history_sales');
+                        $newRecord->save();
+                        $oldRecord->delete();
+                    });
+
+        if($archive){
+            return redirect()->route('managecabinet.cabinetlist',$cabinet->branchid)
+                            ->with(['cabinet' => $branchcabinet])
+                            ->with('success','Data Archived Successfully.')
+                            ->with('i', (request()->input('page', 1) - 1) * 5);
+        }else
+        {
+            return redirect()->route('managecabinet.cabinetlist',$cabinet->branchid)
+                            ->with(['cabinet' => $branchcabinet])
+                            ->with('failed','Data Archived Failed.')
+                            ->with('i', (request()->input('page', 1) - 1) * 5);
+        }
+
+    }
+    public function archive (Request $request, $branchid, $cabid)
+    {
+        $cabinet = cabinet::where('cabid',$cabid)->first();
+        $branch = branch::where('branchid',$branchid)->first();
+
+        // dd($cabinet,$branch);
+
+         return view('manage.cabinet.archive',compact('branch'))
+        ->with(['cabinet' => $cabinet]);
+    }
+
     public function userlog($notes,$status){
         $timenow = Carbon::now()->timezone('Asia/Manila')->format('Y-m-d H:i:s');
         
